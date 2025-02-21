@@ -8,6 +8,7 @@ data class GitHubRepoResponse(
     val description: String?,
     val url: String?
 ){
+
     fun toDomain() = GitHubRepo(
         id = id,
         name = name,

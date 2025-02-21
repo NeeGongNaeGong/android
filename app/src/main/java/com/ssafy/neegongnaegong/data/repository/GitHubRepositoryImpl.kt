@@ -8,6 +8,7 @@ import javax.inject.Inject
 class GitHubRepositoryImpl @Inject constructor(
     private val api: GitHubApi
 ) : GitHubRepository {
+
     override suspend fun getUserRepos(username: String): List<GitHubRepo> {
         return api.getUserRepo(username).map { it.toDomain() }
     }

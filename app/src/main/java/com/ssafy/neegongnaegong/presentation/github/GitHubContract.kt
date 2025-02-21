@@ -21,6 +21,6 @@ class GitHubContract {
     }
 
     sealed class Effect : UiEffect {
-        data object showRepos : Effect()
+        data object ShowRepos : Effect()
     }
 }

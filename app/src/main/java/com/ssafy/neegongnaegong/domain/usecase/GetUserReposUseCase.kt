@@ -6,7 +6,8 @@ import javax.inject.Inject
 
 class GetUserReposUseCase @Inject constructor(
     private val repository: GitHubRepository
-){
+) {
+
     suspend operator fun invoke(username: String): List<GitHubRepo> {
         return repository.getUserRepos(username)
     }

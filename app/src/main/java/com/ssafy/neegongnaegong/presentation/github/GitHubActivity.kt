@@ -50,7 +50,7 @@ fun GitHubRepoScreen(viewModel: GitHubViewModel) {
     LaunchedEffect(viewModel.effect) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is GitHubContract.Effect.showRepos -> {
+                is GitHubContract.Effect.ShowRepos -> {
                     Toast.makeText(context, "Repositories loaded successfully!", Toast.LENGTH_SHORT)
                         .show()
                 }

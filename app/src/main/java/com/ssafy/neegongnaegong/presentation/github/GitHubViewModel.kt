@@ -32,7 +32,7 @@ class GitHubViewModel @Inject constructor(
             try {
                 val repos = getUserReposUseCase(userName)
                 setState { copy(githubState = GitHubContract.GitHubState.Success(repos)) }
-                setEffect { GitHubContract.Effect.showRepos }
+                setEffect { GitHubContract.Effect.ShowRepos }
             } catch (e: Exception) {
                 setState { copy(githubState = GitHubContract.GitHubState.Error(e.message ?: "네트워크 통신 실패")) }
             }
