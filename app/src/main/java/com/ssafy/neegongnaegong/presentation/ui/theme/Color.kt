@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.ui.theme
+package com.ssafy.neegongnaegong.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
