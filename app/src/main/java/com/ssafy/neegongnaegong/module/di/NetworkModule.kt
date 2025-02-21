@@ -33,9 +33,4 @@ object NetworkModule {
         return retrofit.create(GitHubApi::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideGitHubRepository(api: GitHubApi): GitHubRepository {
-        return GitHubRepositoryImpl(api)
-    }
 }

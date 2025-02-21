@@ -6,12 +6,12 @@ data class GitHubRepoResponse(
     val id: Int,
     val name: String,
     val description: String?,
-    val hteml_url: String
+    val url: String?
 ){
     fun toDomain() = GitHubRepo(
         id = id,
         name = name,
         description = description ?: "No description",
-        url = hteml_url
+        url = url
     )
 }
