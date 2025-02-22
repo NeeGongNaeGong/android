@@ -15,14 +15,14 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     private val initialState : State by lazy { createInitialState() }
     abstract fun createInitialState() : State
 
-    val currentState: State
+    private val currentState: State
         get() = uiState.value
 
     private val _uiState : MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState = _uiState.asStateFlow()
 
     private val _event : MutableSharedFlow<Event> = MutableSharedFlow()
-    val event = _event.asSharedFlow()
+    private val event = _event.asSharedFlow()
 
     private val _effect : Channel<Effect> = Channel()
     val effect = _effect.receiveAsFlow()
