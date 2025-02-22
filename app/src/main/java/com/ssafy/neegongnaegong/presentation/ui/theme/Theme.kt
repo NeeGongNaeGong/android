@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.ui.theme
+package com.ssafy.neegongnaegong.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
