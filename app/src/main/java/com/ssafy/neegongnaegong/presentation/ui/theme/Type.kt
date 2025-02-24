@@ -2,33 +2,68 @@ package com.ssafy.neegongnaegong.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+val letterSpacing = (-0.06).em
+val Typography =
+    Typography(
+        titleLarge =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+            fontSize = 28.sp,
+            letterSpacing = letterSpacing,
+        ),
+        titleMedium =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+            fontSize = 24.sp,
+            letterSpacing = letterSpacing,
+        ),
+        titleSmall =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+            fontSize = 20.sp,
+            letterSpacing = letterSpacing,
+        ),
+        bodyLarge =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_semibold)),
+            fontSize = 20.sp,
+            letterSpacing = letterSpacing,
+        ),
+        bodyMedium =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_semibold)),
+            fontSize = 18.sp,
+            letterSpacing = letterSpacing,
+        ),
+        bodySmall =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_semibold)),
+            fontSize = 16.sp,
+            letterSpacing = letterSpacing,
+        ),
+        labelLarge =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
+            fontSize = 16.sp,
+            letterSpacing = letterSpacing,
+        ),
+        labelMedium =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
+            fontSize = 14.sp,
+            letterSpacing = letterSpacing,
+        ),
+        labelSmall =
+        TextStyle(
+            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
+            fontSize = 12.sp,
+            letterSpacing = letterSpacing,
+        ),
     )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
-)
