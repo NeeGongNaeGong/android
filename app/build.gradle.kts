@@ -59,10 +59,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //hilt
+    // hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
-    //network
+    // network
     implementation(libs.bundles.network)
+
+    // material icon
+    implementation(libs.androidx.material.icons.extended)
 }
