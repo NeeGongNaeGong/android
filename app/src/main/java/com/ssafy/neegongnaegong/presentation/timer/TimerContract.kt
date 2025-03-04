@@ -1,13 +1,12 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
-import com.ssafy.neegongnaegong.domain.model.GitHubRepo
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class TimerContract {
     sealed class Event : UiEvent {
-        data object OnStopClicked : Event()
+        data object OnPauseClicked : Event()
     }
 
     data class State(val timerState: TimerState) : UiState
