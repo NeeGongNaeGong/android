@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NeeGongNaeGong</string>
+
+
+    <!-- Timer Screen-->
+    <string name="txt_timer_guide">휴대폰을 덮으면 자동으로 공부 시간이 측정되요!</string>
+    <string name="img_timer_main_character">메인 캐릭터</string>
 </resources>
