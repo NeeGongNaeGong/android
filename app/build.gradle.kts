@@ -61,6 +61,7 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
+    implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler)
 
     // network
