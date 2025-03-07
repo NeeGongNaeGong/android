@@ -19,10 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
@@ -43,7 +45,7 @@ fun PauseDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "공부를 종료 할까요?",
+                    text = stringResource(R.string.txt_dialog_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -52,7 +54,7 @@ fun PauseDialog(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
-                    text = "휴대폰을 다시 덮으면 공부를 계속 할 수 있어요.",
+                    text = stringResource(R.string.txt_dialog_content),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
@@ -70,7 +72,7 @@ fun PauseDialog(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
-                            "일시 정지",
+                            stringResource(R.string.txt_dialog_pause),
                             style = Typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Peach
@@ -92,7 +94,7 @@ fun PauseDialog(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
-                            "종료",
+                            stringResource(R.string.txt_dialog_close),
                             style = Typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Blue
