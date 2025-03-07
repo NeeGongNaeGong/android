@@ -7,14 +7,31 @@ import javax.inject.Inject
 @HiltViewModel
 class TimerViewModel @Inject constructor() :
     BaseViewModel<TimerContract.Event, TimerContract.State, TimerContract.Effect>() {
+
     override fun createInitialState(): TimerContract.State {
-        return TimerContract.State(TimerContract.TimerState.Idle)
+        return TimerContract.State()
     }
 
     override fun handleEvent(event: TimerContract.Event) {
         when (event) {
             is TimerContract.Event.OnPauseClicked -> {
-                pauseTimer()
+                setState {
+                    copy(
+                        isRunning = false,
+                        isPauseDialogVisible = true
+                    )
+                }
+            }
+            is TimerContract.Event.OnDismissDialog -> {
+                setState { copy(isPauseDialogVisible = false) }
+            }
+            is TimerContract.Event.OnAcceptDialog -> {
+                setState {
+                    copy(
+                        isRunning = true,
+                        isPauseDialogVisible = false
+                    )
+                }
             }
         }
     }

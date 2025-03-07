@@ -7,18 +7,19 @@ import com.ssafy.neegongnaegong.presentation.base.UiState
 class TimerContract {
     sealed class Event : UiEvent {
         data object OnPauseClicked : Event()
+        data object OnDismissDialog : Event()
+        data object OnAcceptDialog : Event()
     }
 
-    data class State(val timerState: TimerState) : UiState
-
-    // todo retrofit 통신 연결 시 상태 수정
-    sealed class TimerState {
-        data object Idle : TimerState()
-        data object Loading : TimerState()
-        data object Success : TimerState()
-    }
+    data class State(
+        val isRunning: Boolean = true,
+        val isLoading: Boolean = false,
+        val isSuccess: Boolean = false,
+        val isFailure: Boolean = false,
+        val isPauseDialogVisible: Boolean = false
+    ) : UiState
 
     sealed class Effect : UiEffect {
-
+        data object ShowPauseDialog : Effect()
     }
 }
