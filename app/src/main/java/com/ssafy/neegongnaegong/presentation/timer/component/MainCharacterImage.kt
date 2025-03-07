@@ -12,8 +12,8 @@ import com.ssafy.neegongnaegong.R
 @Composable
 fun MainCharacterImage(){
     Image(
+        modifier = Modifier.size(340.dp),
         painter = painterResource(id = R.drawable.img_main_character),
         contentDescription = stringResource(R.string.img_timer_main_character),
-        modifier = Modifier.size(340.dp)
     )
 }

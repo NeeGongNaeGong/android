@@ -43,7 +43,7 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.height(screenHeight * 0.16f))
+        Spacer(modifier = Modifier.height(screenHeight * 0.1f))
 
         TimerText()
 
@@ -55,9 +55,9 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
 
         MainCharacterImage()
 
-        Spacer(modifier = Modifier.height(screenHeight * 0.05f))
-
         PauseButton(onClick = { viewModel.setEvent(TimerContract.Event.OnPauseClicked) })
+
+        Spacer(modifier = Modifier.height(screenHeight * 0.03f))
     }
 
     if (uiState.isPauseDialogVisible) {

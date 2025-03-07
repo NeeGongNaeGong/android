@@ -14,7 +14,7 @@ import com.ssafy.neegongnaegong.R
 fun PauseButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Image(
         modifier = modifier
-            .size(92.dp)
+            .size(100.dp)
             .clickable { onClick.invoke() },
         painter = painterResource(id = R.drawable.btn_pause),
         contentDescription = stringResource(R.string.txt_timer_pause),
