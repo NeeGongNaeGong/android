@@ -2,7 +2,9 @@ package com.ssafy.neegongnaegong.presentation.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.credentials.CredentialManager
@@ -36,7 +38,7 @@ class GoogleSignInUtils {
                 .build()
 
             scope.launch {
-                try {
+                runCatching {
                     val result = credentialManager.getCredential(context, request)
                     when (result.credential) {
                         is CustomCredential -> {
@@ -61,14 +63,15 @@ class GoogleSignInUtils {
 
                         }
                     }
-                } catch (e: NoCredentialException) {
-                    launcher?.launch(getIntent())
-                } catch (e: GetCredentialException) {
-                    e.printStackTrace()
+                }.onFailure { exception ->
+                    when (exception) {
+                        is NoCredentialException -> launcher?.launch(getIntent())
+                        is GetCredentialException -> exception.printStackTrace()
+                        else -> exception.printStackTrace()
+                    }
                 }
             }
         }
-
 
 
         fun getIntent(): Intent {
