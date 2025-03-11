@@ -8,7 +8,10 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2024.04.01"
-# hilt
+credentials = "1.5.0-beta01"
+firebaseBom = "33.5.1"
+googleid = "1.1.1"
+#hilt
 hilt = "2.52"
 ksp = "2.0.0-1.0.24"
 hiltCompose = "1.2.0"
@@ -44,6 +47,13 @@ retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref =
 okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp3-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2" }
+#oauth
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+
 
 # material icon
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -54,6 +64,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = {id = "com.google.gms.google-services", version= "4.4.2"}
 
 [bundles]
 network = ["retrofit2", "okhttp3", "okhttp3-logging", "gson"]
