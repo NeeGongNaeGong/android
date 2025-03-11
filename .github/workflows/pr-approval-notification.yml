@@ -1,14 +1,11 @@
 name: PR Approval Notification
-
 on:
   pull_request_review:
     types: [submitted]
-
 # 명시적 권한 설정
 permissions:
   contents: read
   pull-requests: read
-
 jobs:
   check-approvals:
     runs-on: ubuntu-latest
@@ -45,11 +42,11 @@ jobs:
             return { 
               count: approvalCount, 
               users: approversList,
-              threshold_reached: approvalCount >= 2
+              exactly_two: approvalCount == 2
             };
             
       - name: Send email notification
-        if: ${{ fromJSON(steps.get-approvals.outputs.result).threshold_reached }}
+        if: ${{ fromJSON(steps.get-approvals.outputs.result).exactly_two }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.MAIL_SERVER }}
@@ -58,7 +55,7 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "[APPROVED✅] PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}"
           body: |
-            Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 2명 이상의 승인을 받았습니다.
+            Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 2명의 승인을 받았습니다.
             
             승인자 목록: ${{ fromJSON(steps.get-approvals.outputs.result).users }}
             
