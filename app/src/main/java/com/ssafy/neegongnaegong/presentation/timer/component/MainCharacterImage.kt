@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
 
 @Composable
-fun MainCharacterImage(){
+fun MainCharacterImage() {
     Image(
         modifier = Modifier.size(340.dp),
         painter = painterResource(id = R.drawable.img_main_character),
