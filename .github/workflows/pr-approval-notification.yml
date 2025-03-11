@@ -1,0 +1,67 @@
+name: PR Approval Notification
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+# 명시적 권한 설정
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  check-approvals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR approvals
+        id: get-approvals
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          script: |
+            const { owner, repo, number } = context.issue;
+            const reviews = await github.rest.pulls.listReviews({
+              owner,
+              repo,
+              pull_number: number
+            });
+            
+            // 고유한 승인자 목록 만들기
+            const approvers = new Set();
+            reviews.data.forEach(review => {
+              if (review.state === 'APPROVED') {
+                approvers.add(review.user.login);
+              }
+            });
+            
+            // 승인자 수 확인
+            const approvalCount = approvers.size;
+            console.log(`승인자 수: ${approvalCount}`);
+            
+            // 승인자 목록을 출력
+            const approversList = Array.from(approvers).join(', ');
+            console.log(`승인자 목록: ${approversList}`);
+            
+            return { 
+              count: approvalCount, 
+              users: approversList,
+              threshold_reached: approvalCount >= 2
+            };
+            
+      - name: Send email notification
+        if: ${{ fromJSON(steps.get-approvals.outputs.result).threshold_reached }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "[APPROVED✅] PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}"
+          body: |
+            Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 2명 이상의 승인을 받았습니다.
+            
+            승인자 목록: ${{ fromJSON(steps.get-approvals.outputs.result).users }}
+            
+            PR 링크: ${{ github.event.pull_request.html_url }}
+          to: ${{ secrets.NOTIFICATION_EMAILS }}
+          from: GitHub Actions
