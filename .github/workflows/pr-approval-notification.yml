@@ -63,8 +63,10 @@ jobs:
         if: ${{ fromJSON(steps.get-pr-info.outputs.result).exactly_two }}
         run: |
           AUTHOR="${{ fromJSON(steps.get-pr-info.outputs.result).author }}"
+          # 줄바꿈이 포함된 JSON을 처리하기 위한 코드
           EMAIL_MAPPING='${{ secrets.AUTHOR_EMAIL_MAPPING }}'
-          AUTHOR_EMAIL=$(echo $EMAIL_MAPPING | jq -r ".[\"$AUTHOR\"]")
+          # jq는 자동으로 여러 줄 JSON을 처리할 수 있음
+          AUTHOR_EMAIL=$(echo "$EMAIL_MAPPING" | jq -r --raw-input --slurp 'fromjson | .["'"$AUTHOR"'"]')
           echo "email=$AUTHOR_EMAIL" >> $GITHUB_OUTPUT
       
       - name: Send email notification to mapped author email
