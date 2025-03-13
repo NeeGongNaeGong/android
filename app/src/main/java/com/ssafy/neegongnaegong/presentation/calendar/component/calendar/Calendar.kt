@@ -1,0 +1,82 @@
+package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import java.time.LocalDate
+import java.time.YearMonth
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Calendar(
+    modifier: Modifier = Modifier,
+    initialDate: LocalDate = LocalDate.now(),
+    initialMonth: YearMonth = YearMonth.now(),
+    onMonthChanged: (YearMonth) -> Unit = {},
+    onDateSelected: (LocalDate) -> Unit = {},
+    dateInfoItem: @Composable (LocalDate) -> Unit = {},
+) {
+    val pagerState = rememberPagerState(
+        pageCount = { Int.MAX_VALUE },
+        initialPage = Int.MAX_VALUE / 2
+    )
+    var currentPage by remember { mutableIntStateOf(pagerState.currentPage) }
+    var selectedMonth by remember { mutableStateOf(initialMonth) }
+    var selectedDate by remember { mutableStateOf(initialDate) }
+
+    LaunchedEffect(pagerState.currentPage) {
+        selectedMonth = selectedMonth.plusMonths((pagerState.currentPage - currentPage).toLong())
+        currentPage = pagerState.currentPage
+        onMonthChanged(selectedMonth)
+    }
+
+    LaunchedEffect(selectedDate) {
+        onDateSelected(selectedDate)
+    }
+
+    Column(modifier = modifier) {
+        CalendarHeader(
+            modifier = Modifier.padding(20.dp),
+            selectedMonth = selectedMonth
+        )
+        HorizontalPager(state = pagerState) { page ->
+            if (page in pagerState.currentPage - 1..pagerState.currentPage + 1) {
+                CalendarBody(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedMonth = selectedMonth.plusMonths((page - currentPage).toLong()),
+                    selectedDate = selectedDate,
+                    onDateSelected = { date -> selectedDate = date },
+                    dateInfoItem = dateInfoItem
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewCalendar() {
+    MaterialTheme {
+        Calendar(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth(),
+        )
+    }
+}
