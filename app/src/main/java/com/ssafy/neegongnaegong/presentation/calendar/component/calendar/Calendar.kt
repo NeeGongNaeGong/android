@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -11,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -28,20 +31,22 @@ fun Calendar(
     modifier: Modifier = Modifier,
     initialDate: LocalDate = LocalDate.now(),
     initialMonth: YearMonth = YearMonth.now(),
+    minMonth: YearMonth = YearMonth.of(1900, 1),
+    maxMonth: YearMonth = YearMonth.of(2100, 12),
     onMonthChanged: (YearMonth) -> Unit = {},
     onDateSelected: (LocalDate) -> Unit = {},
-    dateInfoItem: @Composable (LocalDate) -> Unit = {},
+    dateContent: @Composable (LocalDate) -> Unit = {},
 ) {
     val pagerState = rememberPagerState(
-        pageCount = { Int.MAX_VALUE },
-        initialPage = Int.MAX_VALUE / 2
+        pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
+        initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
     )
     var currentPage by remember { mutableIntStateOf(pagerState.currentPage) }
     var selectedMonth by remember { mutableStateOf(initialMonth) }
     var selectedDate by remember { mutableStateOf(initialDate) }
 
     LaunchedEffect(pagerState.currentPage) {
-        selectedMonth = selectedMonth.plusMonths((pagerState.currentPage - currentPage).toLong())
+        selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
         currentPage = pagerState.currentPage
         onMonthChanged(selectedMonth)
     }
@@ -55,14 +60,21 @@ fun Calendar(
             modifier = Modifier.padding(20.dp),
             selectedMonth = selectedMonth
         )
-        HorizontalPager(state = pagerState) { page ->
-            if (page in pagerState.currentPage - 1..pagerState.currentPage + 1) {
+        HorizontalPager(
+            state = pagerState,
+            beyondBoundsPageCount = 1
+        ) { page ->
+            key(page) {
+                val displayedMonth by remember(page) {
+                    mutableStateOf(minMonth.plusMonths(page.toLong()))
+                }
+
                 CalendarBody(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedMonth = selectedMonth.plusMonths((page - currentPage).toLong()),
+                    modifier = Modifier.fillMaxSize(),
+                    selectedMonth = displayedMonth,
                     selectedDate = selectedDate,
                     onDateSelected = { date -> selectedDate = date },
-                    dateInfoItem = dateInfoItem
+                    dateContent = dateContent
                 )
             }
         }

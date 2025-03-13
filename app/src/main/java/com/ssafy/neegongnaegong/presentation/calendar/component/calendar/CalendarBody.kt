@@ -27,7 +27,7 @@ fun CalendarBody(
     selectedMonth: YearMonth,
     selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit,
-    dateInfoItem: @Composable (LocalDate) -> Unit = {},
+    dateContent: @Composable (LocalDate) -> Unit = {},
 ) {
     val lastDay by remember { mutableIntStateOf(selectedMonth.lengthOfMonth()) }
     val firstDayOfWeek by remember { mutableIntStateOf(selectedMonth.atDay(1).dayOfWeek.value) }
@@ -58,7 +58,7 @@ fun CalendarBody(
                     isSelected = isSelected,
                     onSelect = onDateSelected,
                 ) {
-                    dateInfoItem(date)
+                    dateContent(date)
                 }
             }
         }

@@ -29,7 +29,7 @@ fun CalendarCell(
     date: LocalDate,
     isSelected: Boolean = false,
     onSelect: (LocalDate) -> Unit = { },
-    child: @Composable () -> Unit = { },
+    content: @Composable () -> Unit = { },
 ) {
     CalendarCell(
         modifier = modifier,
@@ -39,7 +39,7 @@ fun CalendarCell(
         isSaturday = date.dayOfWeek.value == 6,
         isHoliday = date.dayOfWeek.value == 7,
         onSelect = { onSelect(date) },
-        child = child,
+        content = content,
     )
 }
 
@@ -52,7 +52,7 @@ fun CalendarCell(
     isSaturday: Boolean = false,
     isHoliday: Boolean = false,
     onSelect: () -> Unit = {},
-    child: @Composable () -> Unit = { }
+    content: @Composable () -> Unit = { }
 ) {
     Box(
         modifier = modifier
@@ -91,7 +91,7 @@ fun CalendarCell(
                     textAlign = TextAlign.Center
                 )
             }
-            child()
+            content()
         }
 
     }
