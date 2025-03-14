@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 
 @Composable
@@ -83,7 +84,7 @@ fun CalendarCell(
                     text = date.toString(),
                     style = MaterialTheme.typography.bodyMedium,
                     color = when {
-                        isToday -> Color.White
+                        isToday -> MaterialTheme.colorScheme.surface
                         isSaturday -> Color.Blue
                         isHoliday -> Color.Red
                         else -> MaterialTheme.colorScheme.onBackground
@@ -100,7 +101,7 @@ fun CalendarCell(
 @Preview
 @Composable
 fun CalendarCellPreview() {
-    MaterialTheme {
+    NeeGongNaeGongTheme {
         Row(
             modifier = Modifier
                 .background(Color.White)

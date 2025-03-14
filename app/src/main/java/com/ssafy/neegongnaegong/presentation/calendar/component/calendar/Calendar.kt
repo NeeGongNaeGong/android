@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
@@ -83,11 +84,11 @@ fun Calendar(
 
 @Preview
 @Composable
-fun PreviewCalendar() {
-    MaterialTheme {
+fun CalendarPreview() {
+    NeeGongNaeGongTheme {
         Calendar(
             modifier = Modifier
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxWidth(),
         )
     }

@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.data.model.calendar.Schedule
@@ -17,13 +19,14 @@ import java.time.LocalDateTime
 fun ScheduleSummary(
     modifier: Modifier = Modifier,
     title: String,
+    color: Color = Color.Transparent
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.background(color)
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelMedium,
         )
     }
 }
@@ -58,7 +61,7 @@ fun ScheduleSummaryPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(1.dp),
-                title = schedule.title
+                title = schedule.title,
             )
         }
     }

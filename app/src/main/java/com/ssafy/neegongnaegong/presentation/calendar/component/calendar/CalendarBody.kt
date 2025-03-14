@@ -15,9 +15,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -71,9 +71,9 @@ fun CalendarBodyPreview() {
     val currentMonth = remember { YearMonth.now() }
     val currentDate = remember { LocalDate.now() }
 
-    MaterialTheme {
+    NeeGongNaeGongTheme {
         CalendarBody(
-            modifier = Modifier.background(Color.White),
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
             selectedMonth = currentMonth,
             selectedDate = currentDate,
             onDateSelected = { }
