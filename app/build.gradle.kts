@@ -59,13 +59,17 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //hilt
+    // hilt
     implementation(libs.hilt)
+    implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler)
 
-    //network
+    // network
     implementation(libs.bundles.network)
 
+    // material icon
+    implementation(libs.androidx.material.icons.extended)
+    
     //google login
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -73,3 +77,4 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 }
+
