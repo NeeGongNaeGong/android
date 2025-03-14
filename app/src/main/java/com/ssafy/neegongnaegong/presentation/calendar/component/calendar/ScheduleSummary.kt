@@ -1,9 +1,11 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,12 +23,13 @@ fun ScheduleSummary(
     title: String,
     color: Color = Color.Transparent
 ) {
-    Column(
-        modifier = modifier.background(color)
+    Box(
+        modifier = modifier.background(color, RoundedCornerShape(5.dp))
     ) {
         Text(
+            modifier = modifier.padding(2.dp),
             text = title,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
         )
     }
 }
@@ -62,6 +65,7 @@ fun ScheduleSummaryPreview() {
                     .fillMaxWidth()
                     .padding(1.dp),
                 title = schedule.title,
+                color = Color.Gray
             )
         }
     }

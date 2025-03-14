@@ -1,20 +1,18 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -30,35 +28,44 @@ fun CalendarBody(
     dateContent: @Composable (LocalDate) -> Unit = {},
 ) {
     val lastDay by remember { mutableIntStateOf(selectedMonth.lengthOfMonth()) }
-    val firstDayOfWeek by remember { mutableIntStateOf(selectedMonth.atDay(1).dayOfWeek.value) }
-    val days by remember { mutableStateOf(IntRange(1, lastDay).toList()) }
+    val firstDayOfWeek by remember { mutableIntStateOf(selectedMonth.atDay(1).dayOfWeek.value % 7) }
 
     Column(modifier = modifier) {
         DayOfWeek()
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxHeight(),
-            columns = GridCells.Fixed(7)
+        Spacer(Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.fillMaxHeight()
         ) {
-            for (i in 1 until firstDayOfWeek) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .height(100.dp)
-                    )
-                }
-            }
-            items(days) { day ->
-                val date = selectedMonth.atDay(day)
-                val isSelected = remember(selectedDate) {
-                    selectedDate.compareTo(date) == 0
-                }
-                CalendarCell(
-                    modifier = Modifier.height(100.dp),
-                    date = date,
-                    isSelected = isSelected,
-                    onSelect = onDateSelected,
-                ) {
-                    dateContent(date)
+            val totalRows = (firstDayOfWeek + lastDay + 6) / 7
+            for (row in 0 until totalRows) {
+                Row(modifier = Modifier.weight(1f)) {
+                    for (column in 0..6) {
+                        val calendarIndex = row * 7 + column
+                        val dayOffset = calendarIndex - firstDayOfWeek + 1
+                        val date = if (dayOffset < 1) {
+                            val previousMonth = selectedMonth.minusMonths(1)
+                            val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
+                            previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
+                        } else if (dayOffset > lastDay) {
+                            val nextMonth = selectedMonth.plusMonths(1)
+                            nextMonth.atDay(dayOffset - lastDay)
+                        } else {
+                            selectedMonth.atDay(dayOffset)
+                        }
+
+                        CalendarCell(
+                            modifier = Modifier
+                                .weight(1f)
+                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
+                            date = date,
+                            isSelected = remember(selectedDate) {
+                                selectedDate.compareTo(date) == 0
+                            },
+                            onSelect = onDateSelected,
+                        ) {
+                            dateContent(date)
+                        }
+                    }
                 }
             }
         }

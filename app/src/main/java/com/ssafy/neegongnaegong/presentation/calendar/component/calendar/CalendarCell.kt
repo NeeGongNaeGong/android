@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Composable
@@ -37,8 +38,10 @@ fun CalendarCell(
         date = date.dayOfMonth,
         isSelected = isSelected,
         isToday = date == LocalDate.now(),
-        isSaturday = date.dayOfWeek.value == 6,
-        isHoliday = date.dayOfWeek.value == 7,
+        dateColor = when {
+            date == LocalDate.now() -> MaterialTheme.colorScheme.surface
+            else -> date.dayOfWeek.color
+        },
         onSelect = { onSelect(date) },
         content = content,
     )
@@ -50,8 +53,7 @@ fun CalendarCell(
     date: Int,
     isSelected: Boolean = false,
     isToday: Boolean = false,
-    isSaturday: Boolean = false,
-    isHoliday: Boolean = false,
+    dateColor: Color = MaterialTheme.colorScheme.onBackground,
     onSelect: () -> Unit = {},
     content: @Composable () -> Unit = { }
 ) {
@@ -82,13 +84,8 @@ fun CalendarCell(
             ) {
                 Text(
                     text = date.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = when {
-                        isToday -> MaterialTheme.colorScheme.surface
-                        isSaturday -> Color.Blue
-                        isHoliday -> Color.Red
-                        else -> MaterialTheme.colorScheme.onBackground
-                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    color = dateColor,
                     textAlign = TextAlign.Center
                 )
             }
@@ -110,45 +107,47 @@ fun CalendarCellPreview() {
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 1,
-                isHoliday = true
+                dateColor = DayOfWeek.SUNDAY.color
             )
 
             // Regular day
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 2,
-                isSelected = false,
+                dateColor = DayOfWeek.MONDAY.color
             )
 
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 3,
+                dateColor = DayOfWeek.TUESDAY.color
             )
 
             // Selected day
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 4,
-                isSelected = true,
+                dateColor = DayOfWeek.THURSDAY.color
             )
 
             // Today
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 5,
-                isToday = true
+                isToday = true,
+                dateColor = DayOfWeek.FRIDAY.color
             )
 
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 6,
+                dateColor = DayOfWeek.SATURDAY.color
             )
 
             // Holiday
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 7,
-                isSaturday = true
             )
         }
     }

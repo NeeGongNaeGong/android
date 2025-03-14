@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -53,12 +52,16 @@ fun Calendar(
     }
 
     LaunchedEffect(selectedDate) {
+        if (selectedMonth != YearMonth.from(selectedDate)) {
+            selectedMonth = YearMonth.from(selectedDate)
+            pagerState.animateScrollToPage(ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt())
+        }
         onDateSelected(selectedDate)
     }
 
     Column(modifier = modifier) {
         CalendarHeader(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(10.dp).fillMaxWidth(),
             selectedMonth = selectedMonth
         )
         HorizontalPager(

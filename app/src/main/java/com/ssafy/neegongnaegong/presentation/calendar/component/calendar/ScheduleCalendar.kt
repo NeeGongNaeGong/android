@@ -39,7 +39,7 @@ fun ScheduleCalendar(
     ) { date ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(top = 2.dp)
         ) {
             schedules[date]?.take(3)?.forEach { schedule ->

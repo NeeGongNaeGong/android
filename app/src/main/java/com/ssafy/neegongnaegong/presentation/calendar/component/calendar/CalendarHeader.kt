@@ -21,9 +21,11 @@ fun CalendarHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
 fun CalendarHeader(modifier: Modifier = Modifier, text: String) {
     Box(modifier = modifier.fillMaxWidth()) {
         Text(
+            modifier = modifier.fillMaxWidth(),
             text = text,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.titleSmall,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
