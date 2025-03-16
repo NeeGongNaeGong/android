@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.data.model.calendar
+package com.ssafy.neegongnaegong.domain.model.calendar
 
 import java.time.LocalDate
 

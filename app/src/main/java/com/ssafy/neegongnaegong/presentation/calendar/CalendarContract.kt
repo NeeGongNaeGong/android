@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.calendar
 
-import com.ssafy.neegongnaegong.data.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState

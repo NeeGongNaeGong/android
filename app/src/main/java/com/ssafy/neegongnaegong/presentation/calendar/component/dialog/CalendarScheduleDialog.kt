@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.data.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme

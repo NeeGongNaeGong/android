@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.data.model.calendar.Schedule
-import com.ssafy.neegongnaegong.data.model.calendar.ScheduleType
+import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import java.time.LocalDateTime
 
 @Composable

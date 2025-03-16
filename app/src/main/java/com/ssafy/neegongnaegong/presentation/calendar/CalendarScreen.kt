@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ssafy.neegongnaegong.data.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
