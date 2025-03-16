@@ -61,7 +61,7 @@ fun Calendar(
 
     Column(modifier = modifier) {
         CalendarHeader(
-            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
             selectedMonth = selectedMonth
         )
         HorizontalPager(
