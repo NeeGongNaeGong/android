@@ -37,9 +37,9 @@ fun ScheduleInfo(
 ) {
     ScheduleInfo(
         modifier = modifier,
-        startTime = schedule.startDate,
-        endTime = schedule.endDate,
-        title = schedule.title,
+        startTime = schedule.info.startDate,
+        endTime = schedule.info.endDate,
+        title = schedule.info.title,
         color = Color.Transparent,
         onClick = { onClick(schedule) },
     )
