@@ -24,18 +24,18 @@ interface UserCalendarApi {
     ): Response<ApiResponse<GetUserScheduleResponse>>
 
     @POST("/api/user/calendar/schedules")
-    suspend fun createUserSchedule(
+    suspend fun createPersonalSchedule(
         @Body request: CreatePersonalScheduleRequest
     ): Response<ApiResponse<CreatePersonalScheduleResponse>>
 
     @PUT("/api/user/calendar/schedules/{scheduleId}")
-    suspend fun updateUserSchedule(
+    suspend fun updatePersonalSchedule(
         @Path("scheduleId") scheduleId: Long,
         @Body request: UpdatePersonalScheduleRequest
     ): Response<ApiResponse<UpdatePersonalScheduleResponse>>
 
     @DELETE("/api/user/calendar/schedules/{scheduleId}")
-    suspend fun deleteUserSchedule(
+    suspend fun deletePersonalSchedule(
         @Path("scheduleId") scheduleId: Long,
         @Body request: DeletePersonalScheduleRequest
     ): Response<ApiResponse<Unit>>

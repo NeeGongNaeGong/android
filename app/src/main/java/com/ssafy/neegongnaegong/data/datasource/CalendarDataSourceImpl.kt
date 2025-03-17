@@ -21,23 +21,23 @@ class CalendarDataSourceImpl(
         api.getUserSchedules(month)
     }.toFlow()
 
-    override suspend fun createUserSchedule(
+    override suspend fun createPersonalSchedule(
         request: CreatePersonalScheduleRequest
     ): Flow<CreatePersonalScheduleResponse> = safeApiCall {
-        api.createUserSchedule(request)
+        api.createPersonalSchedule(request)
     }.toFlow()
 
-    override suspend fun updateUserSchedule(
+    override suspend fun updatePersonalSchedule(
         scheduleId: Long,
         request: UpdatePersonalScheduleRequest
     ): Flow<UpdatePersonalScheduleResponse> = safeApiCall {
-        api.updateUserSchedule(scheduleId, request)
+        api.updatePersonalSchedule(scheduleId, request)
     }.toFlow()
 
-    override suspend fun deleteUserSchedule(
+    override suspend fun deletePersonalSchedule(
         scheduleId: Long,
         request: DeletePersonalScheduleRequest
     ): Flow<Unit> = safeApiCall {
-        api.deleteUserSchedule(scheduleId, request)
+        api.deletePersonalSchedule(scheduleId, request)
     }.toFlow()
 }

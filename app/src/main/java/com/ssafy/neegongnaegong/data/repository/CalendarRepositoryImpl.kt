@@ -28,30 +28,30 @@ class CalendarRepositoryImpl @Inject constructor(
         dataSource.getUserSchedules(month).map { it.schedules.map { it.toDomain() } }
     }
 
-    override suspend fun createUserSchedule(
+    override suspend fun createPersonalSchedule(
         schedule: ScheduleInfo
     ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.createUserSchedule(CreatePersonalScheduleRequest.fromDomain(schedule))
+        dataSource.createPersonalSchedule(CreatePersonalScheduleRequest.fromDomain(schedule))
             .map { it.toDomain() }
     }
 
-    override suspend fun updateUserSchedule(
+    override suspend fun updatePersonalSchedule(
         id: Long,
         schedule: ScheduleInfo,
         type: UpdateType,
         date: LocalDate
     ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.updateUserSchedule(
+        dataSource.updatePersonalSchedule(
             id,
             UpdatePersonalScheduleRequest.fromDomain(type, date, schedule)
         ).map { it.toDomain() }
     }
 
-    override suspend fun deleteUserSchedule(
+    override suspend fun deletePersonalSchedule(
         id: Long,
         type: DeleteType,
         date: LocalDate
     ): Flow<Unit> = withContext(ioDispatcher) {
-        dataSource.deleteUserSchedule(id, DeletePersonalScheduleRequest(type, date))
+        dataSource.deletePersonalSchedule(id, DeletePersonalScheduleRequest(type, date))
     }
 }

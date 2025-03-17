@@ -14,16 +14,16 @@ interface CalendarDataSource {
         month: YearMonth
     ): Flow<GetUserScheduleResponse>
 
-    suspend fun createUserSchedule(
+    suspend fun createPersonalSchedule(
         request: CreatePersonalScheduleRequest
     ): Flow<CreatePersonalScheduleResponse>
 
-    suspend fun updateUserSchedule(
+    suspend fun updatePersonalSchedule(
         scheduleId: Long,
         request: UpdatePersonalScheduleRequest
     ): Flow<UpdatePersonalScheduleResponse>
 
-    suspend fun deleteUserSchedule(
+    suspend fun deletePersonalSchedule(
         scheduleId: Long,
         request: DeletePersonalScheduleRequest
     ): Flow<Unit>
