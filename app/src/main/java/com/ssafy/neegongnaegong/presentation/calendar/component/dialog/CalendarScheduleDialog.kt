@@ -29,7 +29,7 @@ fun CalendarScheduleDialog(
         date = date,
         onDismissRequest = onDismissRequest,
     ) {
-        Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
