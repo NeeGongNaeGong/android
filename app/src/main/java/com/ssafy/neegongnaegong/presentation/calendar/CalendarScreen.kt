@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
@@ -25,6 +27,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun CalendarRoute(
@@ -47,7 +50,14 @@ fun CalendarRoute(
         onDateSelected = { viewModel.setEvent(CalendarContract.Event.OnDateSelected(it)) },
         onDialogDismissRequest = { viewModel.setEvent(CalendarContract.Event.OnDialogDismissed) },
         onScheduleClicked = { viewModel.setEvent(CalendarContract.Event.OnScheduleClicked(it)) },
-        createSchedule = { date, title -> viewModel.setEvent(CalendarContract.Event.OnCreateScheduleClicked(date, title)) },
+        createSchedule = { date, title ->
+            viewModel.setEvent(
+                CalendarContract.Event.OnCreateScheduleClicked(
+                    date,
+                    title
+                )
+            )
+        },
         navigateToScheduleDetail = navigateToScheduleDetail,
         navigateToScheduleCreate = navigateToScheduleCreate,
     )
@@ -69,9 +79,14 @@ fun CalendarContent(
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
-            when(effect) {
-                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(effect.schedule)
-                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(effect.date)
+            when (effect) {
+                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(
+                    effect.schedule
+                )
+
+                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
+                    effect.date
+                )
             }
         }
     }
@@ -127,13 +142,53 @@ fun CalendarScreen(
 @Preview
 @Composable
 private fun PreviewCalendarScreen() {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
+    val schedules = listOf(
+        Schedule(
+            type = ScheduleType.PERSONAL,
+            id = 1,
+            info = ScheduleInfo(
+                title = "Meeting",
+                content = "Meeting",
+                startDate = LocalDateTime.now(),
+                endDate = LocalDateTime.now().plusHours(1),
+            ),
+        ),
+        Schedule(
+            type = ScheduleType.PERSONAL,
+            id = 2,
+            info = ScheduleInfo(
+                title = "Lunch",
+                content = "Lunch",
+                startDate = LocalDateTime.now(),
+                endDate = LocalDateTime.now().plusHours(1)
+            )
+        ),
+    )
+
     NeeGongNaeGongTheme(dynamicColor = false) {
         Surface {
             CalendarScreen(
                 selectedDate = LocalDate.now(),
-                schedules = emptyMap(),
+                schedules = mapOf(LocalDate.now() to schedules),
                 onDateSelected = { },
                 createSchedule = { _, _ -> }
+            )
+
+            CalendarScheduleDialog(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.background,
+                        RoundedCornerShape(20.dp)
+                    )
+                    .height(screenHeight * 0.7f)
+                    .padding(20.dp),
+                onDismissRequest = {},
+                date = LocalDate.now(),
+                schedules = schedules,
+                onSubmit = { _, _ -> },
+                onScheduleClick = {},
             )
         }
     }
