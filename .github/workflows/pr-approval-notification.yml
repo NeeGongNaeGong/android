@@ -10,13 +10,25 @@ jobs:
   check-approvals:
     runs-on: ubuntu-latest
     steps:
-      - name: Get PR approvals
-        id: get-approvals
+      - name: Get PR approvals and author
+        id: get-pr-info
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
             const { owner, repo, number } = context.issue;
+            
+            // PR 정보 가져오기 (작성자 포함)
+            const pr = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: number
+            });
+            
+            const prAuthor = pr.data.user.login;
+            console.log(`PR 작성자: ${prAuthor}`);
+            
+            // 리뷰 정보 가져오기
             const reviews = await github.rest.pulls.listReviews({
               owner,
               repo,
@@ -42,11 +54,23 @@ jobs:
             return { 
               count: approvalCount, 
               users: approversList,
-              exactly_two: approvalCount == 2
+              exactly_two: approvalCount == 2,
+              author: prAuthor
             };
             
-      - name: Send email notification
-        if: ${{ fromJSON(steps.get-approvals.outputs.result).exactly_two }}
+      - name: Get author email
+        id: get-author-email
+        if: ${{ fromJSON(steps.get-pr-info.outputs.result).exactly_two }}
+        run: |
+          AUTHOR="${{ fromJSON(steps.get-pr-info.outputs.result).author }}"
+          # 줄바꿈이 포함된 JSON을 처리하기 위한 코드
+          EMAIL_MAPPING='${{ secrets.AUTHOR_EMAIL_MAPPING }}'
+          # jq는 자동으로 여러 줄 JSON을 처리할 수 있음
+          AUTHOR_EMAIL=$(echo "$EMAIL_MAPPING" | jq -r --raw-input --slurp 'fromjson | .["'"$AUTHOR"'"]')
+          echo "email=$AUTHOR_EMAIL" >> $GITHUB_OUTPUT
+      
+      - name: Send email notification to mapped author email
+        if: ${{ fromJSON(steps.get-pr-info.outputs.result).exactly_two }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.MAIL_SERVER }}
@@ -55,10 +79,10 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "[APPROVED✅] PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}"
           body: |
-            Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 2명의 승인을 받았습니다.
+            ${{ fromJSON(steps.get-pr-info.outputs.result).author }}님의 Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 2명의 승인을 받았습니다.
             
-            승인자 목록: ${{ fromJSON(steps.get-approvals.outputs.result).users }}
+            승인자 목록: ${{ fromJSON(steps.get-pr-info.outputs.result).users }}
             
             PR 링크: ${{ github.event.pull_request.html_url }}
-          to: ${{ secrets.NOTIFICATION_EMAILS }}
+          to: ${{ steps.get-author-email.outputs.email }}
           from: GitHub Actions
