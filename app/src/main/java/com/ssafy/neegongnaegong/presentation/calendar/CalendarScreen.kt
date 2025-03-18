@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 
 @Composable
 fun CalendarRoute(
@@ -47,6 +48,7 @@ fun CalendarRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
+        onMonthSelected = { viewModel.setEvent(CalendarContract.Event.OnMonthSelected(it)) },
         onDateSelected = { viewModel.setEvent(CalendarContract.Event.OnDateSelected(it)) },
         onDialogDismissRequest = { viewModel.setEvent(CalendarContract.Event.OnDialogDismissed) },
         onScheduleClicked = { viewModel.setEvent(CalendarContract.Event.OnScheduleClicked(it)) },
@@ -68,6 +70,7 @@ fun CalendarContent(
     modifier: Modifier = Modifier,
     effect: Flow<CalendarContract.Effect>,
     uiState: CalendarContract.State,
+    onMonthSelected: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onDialogDismissRequest: () -> Unit,
     onScheduleClicked: (Schedule) -> Unit,
@@ -95,6 +98,7 @@ fun CalendarContent(
         modifier = modifier,
         selectedDate = uiState.selectedDate,
         schedules = uiState.schedules,
+        onMonthSelected = onMonthSelected,
         onDateSelected = onDateSelected,
         createSchedule = createSchedule,
     )
@@ -120,6 +124,7 @@ fun CalendarScreen(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
     schedules: Map<LocalDate, List<Schedule>>,
+    onMonthSelected: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     createSchedule: (LocalDate, String) -> Unit,
 ) {
@@ -129,6 +134,7 @@ fun CalendarScreen(
     ) {
         ScheduleCalendar(
             modifier = Modifier.weight(1f),
+            onMonthChanged = onMonthSelected,
             onDateSelected = onDateSelected,
             schedules = schedules
         )
@@ -172,6 +178,7 @@ private fun PreviewCalendarScreen() {
             CalendarScreen(
                 selectedDate = LocalDate.now(),
                 schedules = mapOf(LocalDate.now() to schedules),
+                onMonthSelected = { },
                 onDateSelected = { },
                 createSchedule = { _, _ -> }
             )
