@@ -8,10 +8,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +30,7 @@ import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarS
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -79,6 +84,8 @@ fun CalendarContent(
     navigateToScheduleCreate: (LocalDate) -> Unit,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
@@ -90,6 +97,14 @@ fun CalendarContent(
                 is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
                     effect.date
                 )
+
+                is CalendarContract.Effect.ShowErrorSnackBar -> scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = effect.message,
+                        actionLabel = "확인",
+                        duration = SnackbarDuration.Short
+                    )
+                }
             }
         }
     }

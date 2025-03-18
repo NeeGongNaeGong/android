@@ -11,8 +11,9 @@ import com.ssafy.neegongnaegong.data.model.toFlow
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
+import javax.inject.Inject
 
-class CalendarDataSourceImpl(
+class CalendarDataSourceImpl @Inject constructor(
     private val api: UserCalendarApi
 ) : CalendarDataSource {
     override suspend fun getUserSchedules(

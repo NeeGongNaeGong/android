@@ -30,20 +30,23 @@ class CalendarViewModel @Inject constructor(
 
             is CalendarContract.Event.OnDateSelected -> setSelectedDate(event.date)
 
-            is CalendarContract.Event.OnCreateScheduleClicked -> createSchedule(event.date, event.title)
+            is CalendarContract.Event.OnCreateScheduleClicked -> createSchedule(
+                event.date,
+                event.title
+            )
 
-            is CalendarContract.Event.OnDeleteScheduleClicked -> deleteSchedule(event.id, event.type, event.date)
+            is CalendarContract.Event.OnDeleteScheduleClicked -> deleteSchedule(
+                event.id,
+                event.type,
+                event.date
+            )
 
-            is CalendarContract.Event.OnEditScheduleClicked -> {
-                setEffect {
-                    CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
-                }
+            is CalendarContract.Event.OnEditScheduleClicked -> setEffect {
+                CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
             }
 
-            is CalendarContract.Event.OnScheduleClicked -> {
-                setEffect {
-                    CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
-                }
+            is CalendarContract.Event.OnScheduleClicked -> setEffect {
+                CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
             }
 
             CalendarContract.Event.OnDialogDismissed -> {
@@ -57,7 +60,9 @@ class CalendarViewModel @Inject constructor(
             val schedules = uiState.value.schedules.toMutableMap().apply {
                 result.forEach { schedule ->
                     val date = schedule.info.startDate.toLocalDate()
-                    put(date, getOrDefault(date, emptyList()).toMutableList().apply { add(schedule) })
+                    put(
+                        date,
+                        getOrDefault(date, emptyList()).toMutableList().apply { add(schedule) })
                 }
             }
             setState { copy(schedules = schedules) }
@@ -81,9 +86,10 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun deleteSchedule(id: Long, type: DeleteType, date: LocalDate) = viewModelScope.launch {
-         deletePersonalSchedulesUseCase(id, type, date).safeCollect()
-    }
+    private fun deleteSchedule(id: Long, type: DeleteType, date: LocalDate) =
+        viewModelScope.launch {
+            deletePersonalSchedulesUseCase(id, type, date).safeCollect()
+        }
 
     private fun setSelectedDate(date: LocalDate) {
         setState {
@@ -100,6 +106,9 @@ class CalendarViewModel @Inject constructor(
         }.onFailure { error ->
             error.printStackTrace()
             setState { copy(isFailure = true) }
+            setEffect {
+                CalendarContract.Effect.ShowErrorSnackBar(error.message ?: "에러 발생",)
+            }
         }
     }
 }
