@@ -43,15 +43,13 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
-fun StudyGroupCard(
+fun StudiesCard(
     modifier: Modifier = Modifier,
     category: String = "",
     title: String = "",
     goalTime: String = "",
     memberInfo: String = "",
     leader: String = "",
-    attendance: String = "",
-    studyTime: String = "",
     startInfo: String = "",
     description: String = "",
     initialExpanded: Boolean = false,
@@ -102,7 +100,7 @@ fun StudyGroupCard(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // 그룹 제목 (예: "개발, 코딩(프론트, 백엔드 등) 취준방")
+                    // 그룹 제목
                     Text(
                         text = title,
                         style = Typography.titleMedium.copy(fontSize = 16.sp), // 제목 크기 약간 축소
@@ -110,7 +108,7 @@ fun StudyGroupCard(
 
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    // 예) "목표 3시간 | 인원 3/20명 | 그룹장 박준식"
+                    // 목표 시간 | 인원수
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = goalTime,
@@ -121,24 +119,14 @@ fun StudyGroupCard(
                             text = memberInfo,
                             style = Typography.bodyMedium.copy(fontSize = 12.sp),
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = leader,
-                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
-                        )
                     }
 
                     Spacer(modifier = Modifier.height(2.dp))
 
-                    // 예) "출석 100% | 공부량 3시간 28분 | 시작일 2일 전"
+                    // 그룹장 | 시작일"
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = attendance,
-                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = studyTime,
+                            text = leader,
                             style = Typography.bodyMedium.copy(fontSize = 12.sp),
                         )
                         Spacer(modifier = Modifier.width(6.dp))
@@ -204,16 +192,14 @@ fun StudyGroupCard(
 
 @Composable
 @Preview(widthDp = 400, heightDp = 140)
-fun StudyGroupCardPreview() {
+private fun PreviewStudiesCard() {
     NeeGongNaeGongTheme {
-        StudyGroupCard(
+        StudiesCard(
             category = "대학생",
             title = "개발, 코딩(프론트, 백엔드 등) 취준방",
             goalTime = "목표 3시간",
             memberInfo = "인원 3/20명",
             leader = "그룹장 박준식",
-            attendance = "출석 100%",
-            studyTime = "공부량 3시간 28분",
             startInfo = "시작일 2일 전",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
         )
@@ -222,16 +208,14 @@ fun StudyGroupCardPreview() {
 
 @Composable
 @Preview(widthDp = 400, heightDp = 200)
-fun StudyGroupCardExpandedPreview() {
+private fun PreviewStudiesCardExpanded() {
     NeeGongNaeGongTheme {
-        StudyGroupCard(
+        StudiesCard(
             category = "대학생",
             title = "개발, 코딩(프론트, 백엔드 등) 취준방",
             goalTime = "목표 3시간",
             memberInfo = "인원 3/20명",
             leader = "그룹장 박준식",
-            attendance = "출석 100%",
-            studyTime = "공부량 3시간 28분",
             startInfo = "시작일 2일 전",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
             initialExpanded = true,
