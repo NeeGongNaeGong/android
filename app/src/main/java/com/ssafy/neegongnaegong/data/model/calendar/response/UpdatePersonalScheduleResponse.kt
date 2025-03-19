@@ -7,9 +7,9 @@ import java.time.LocalDateTime
 
 data class UpdatePersonalScheduleResponse(
     val type: ScheduleType,
-    val id: Int,
+    val id: Long,
     val title: String,
-    val content: String,
+    val content: String?,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
     val location: String?,
