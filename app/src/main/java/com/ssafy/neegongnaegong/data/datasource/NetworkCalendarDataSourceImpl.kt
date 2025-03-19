@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 import javax.inject.Inject
 
-class CalendarDataSourceImpl @Inject constructor(
+class NetworkCalendarDataSourceImpl @Inject constructor(
     private val api: UserCalendarApi
-) : CalendarDataSource {
+) : NetworkCalendarDataSource {
     override suspend fun getUserSchedules(
         month: YearMonth
     ): Flow<GetUserScheduleResponse> = safeApiCall {

@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.module.di
 
-import com.ssafy.neegongnaegong.data.datasource.CalendarDataSource
-import com.ssafy.neegongnaegong.data.datasource.CalendarDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.NetworkCalendarDataSource
+import com.ssafy.neegongnaegong.data.datasource.NetworkCalendarDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 internal interface DataSourceModule {
     @Singleton
     @Binds
-    fun bindCalendarDataSource(calendarDataSourceImpl: CalendarDataSourceImpl): CalendarDataSource
+    fun bindCalendarDataSource(calendarDataSourceImpl: NetworkCalendarDataSourceImpl): NetworkCalendarDataSource
 }

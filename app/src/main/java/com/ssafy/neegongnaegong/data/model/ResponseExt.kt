@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.data.model
 
-import com.ssafy.neegongnaegong.data.model.calendar.ApiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.json.JSONObject

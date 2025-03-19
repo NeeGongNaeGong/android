@@ -9,7 +9,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalSched
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 
-interface CalendarDataSource {
+interface NetworkCalendarDataSource {
     suspend fun getUserSchedules(
         month: YearMonth
     ): Flow<GetUserScheduleResponse>

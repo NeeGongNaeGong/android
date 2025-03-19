@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.data.repository
 
-import com.ssafy.neegongnaegong.data.datasource.CalendarDataSource
+import com.ssafy.neegongnaegong.data.datasource.NetworkCalendarDataSource
 import com.ssafy.neegongnaegong.data.model.calendar.request.CreatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest
@@ -19,7 +19,7 @@ import java.time.YearMonth
 import javax.inject.Inject
 
 class CalendarRepositoryImpl @Inject constructor(
-    private val dataSource: CalendarDataSource,
+    private val dataSource: NetworkCalendarDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : CalendarRepository {
     override suspend fun getUserSchedules(
