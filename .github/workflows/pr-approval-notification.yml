@@ -55,7 +55,7 @@ jobs:
             console.log(`승인자 목록: ${approversList}`);
             
             // 정확히 2명이 승인했고, 그 승인이 방금 2개가 되었는지 확인
-            const exactlyTwoApprovals = approvalCount >= 2;
+            const exactlyTwoApprovals = approvalCount === 2;
             
             return { 
               count: approvalCount, 
