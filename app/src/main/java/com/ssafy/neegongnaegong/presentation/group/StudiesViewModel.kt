@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.Studies
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
-import com.ssafy.neegongnaegong.presentation.group.component.StudiesContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +14,10 @@ class StudiesViewModel
     constructor(
         private val getStudiesUseCase: GetStudiesUseCase,
     ) : BaseViewModel<StudiesContract.Event, StudiesContract.State, StudiesContract.Effect>() {
-        override fun createInitialState(): StudiesContract.State = StudiesContract.State(StudiesContract.StudiesState.Idle)
+        override fun createInitialState(): StudiesContract.State =
+            StudiesContract.State(
+                StudiesContract.StudiesState.Idle,
+            )
 
         override fun handleEvent(event: StudiesContract.Event) {
             when (event) {

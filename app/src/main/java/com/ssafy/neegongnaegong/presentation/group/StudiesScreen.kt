@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.neegongnaegong.domain.model.Studies
-import com.ssafy.neegongnaegong.presentation.group.component.StudiesContract
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesCard
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
@@ -159,7 +158,8 @@ private fun PreviewStudiesScreen() {
                 memberInfo = "인원 3/20명",
                 leader = "그룹장 박준식",
                 startInfo = "시작일 2일 전",
-                description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요!",
+                description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 우리 같이해요 함께해요! 열심히 해볼까요!\n" +
+                        "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 우리 같이해요 함께해요! 열심히 해볼까요!\n",
             ),
             Studies(
                 id = 2L,

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group.component
+package com.ssafy.neegongnaegong.presentation.group
 
 import com.ssafy.neegongnaegong.domain.model.Studies
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
