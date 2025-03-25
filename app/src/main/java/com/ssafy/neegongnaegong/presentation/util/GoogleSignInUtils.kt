@@ -35,7 +35,7 @@ class GoogleSignInUtils {
             val credentialManager = CredentialManager.create(context)
 
             val request = GetCredentialRequest.Builder()
-                .addCredentialOption(getCredentialsOptions(context))
+                .addCredentialOption(getCredentialsOptions())
                 .build()
 
             scope.launch {
