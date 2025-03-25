@@ -15,8 +15,6 @@ class TimerViewModel @Inject constructor() :
 
     private var timerJob: Job? = null
 
-    // TODO 문제 1. 0.9초때 일시정지 누르면 초기화
-
     override fun createInitialState(): TimerContract.State {
         return TimerContract.State()
     }
