@@ -1,9 +1,11 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.picker
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -29,10 +31,10 @@ fun DateTimePicker(
     onDateClicked: () -> Unit = {},
     isTimeFocused: Boolean = false,
     onTimeClicked: () -> Unit = {},
+    isTimeVisible: Boolean = true,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -48,19 +50,22 @@ fun DateTimePicker(
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyMedium
         )
-        Text(
-            modifier = Modifier
-                .clip(RoundedCornerShape(100))
-                .clickable(onClick = onTimeClicked)
-                .background(
-                    color = if (isTimeFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
-                    shape = RoundedCornerShape(100)
-                )
-                .padding(4.dp),
-            text = DateTimeFormatter.ofPattern("a h:mm", Locale.KOREAN).format(dateTime),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium,
-        )
+        AnimatedVisibility(isTimeVisible) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(100))
+                    .clickable(onClick = onTimeClicked)
+                    .background(
+                        color = if (isTimeFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+                        shape = RoundedCornerShape(100)
+                    )
+                    .padding(4.dp),
+                text = DateTimeFormatter.ofPattern("a h:mm", Locale.KOREAN).format(dateTime),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
     }
 }
 

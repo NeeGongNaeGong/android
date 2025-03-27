@@ -24,7 +24,7 @@ fun TimePicker(
 ) {
     val amPmList = listOf("AM", "PM")
     val hourList = (0 until 24).toList()
-    val minuteList = ((0 until 60 step 5)).toList()
+    val minuteList = ((0 until 60)).toList()
 
     val amPmPickerState = rememberPickerState(if (selectedTime.hour < 12) "AM" else "PM")
     val hourPickerState = rememberPickerState(selectedTime.hour)

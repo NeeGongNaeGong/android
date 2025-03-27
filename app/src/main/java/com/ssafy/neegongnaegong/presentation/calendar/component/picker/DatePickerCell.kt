@@ -77,7 +77,7 @@ fun DatePickerCell(
                         bottomEnd = if (!isRightEdge) 0.dp else 10.dp
                     )
                 )
-                .padding(4.dp),
+                .padding(vertical = 4.dp, horizontal = 8.dp),
             text = date.toString(),
             style = MaterialTheme.typography.labelMedium,
             color = dateColor,

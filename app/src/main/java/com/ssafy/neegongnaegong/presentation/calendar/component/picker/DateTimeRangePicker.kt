@@ -1,5 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.picker
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +50,18 @@ fun DateTimeRangePicker(
     onEndDateTimeChange: (LocalDateTime) -> Unit = {},
 ) {
     var focusState by remember { mutableStateOf(DateTimePickerState.UNFOCUSED) }
-    var isAllDay by remember { mutableStateOf(false) }
+    var isAllDay by remember { mutableStateOf(endDateTime.second == 59) }
+
+    LaunchedEffect(isAllDay) {
+        if (isAllDay) {
+            if (focusState == DateTimePickerState.START_TIME_FOCUSED || focusState == DateTimePickerState.END_TIME_FOCUSED) focusState =
+                DateTimePickerState.UNFOCUSED
+            onStartDateTimeChange(startDateTime.withHour(0).withMinute(0).withSecond(0))
+            onEndDateTimeChange(endDateTime.withHour(23).withMinute(59).withSecond(59))
+        } else {
+            onEndDateTimeChange(endDateTime.withSecond(0))
+        }
+    }
 
     Column(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -94,6 +108,7 @@ fun DateTimeRangePicker(
                         DateTimePickerState.START_TIME_FOCUSED
                     }
                 },
+                isTimeVisible = !isAllDay
             )
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 Icon(
@@ -121,10 +136,11 @@ fun DateTimeRangePicker(
                         DateTimePickerState.END_TIME_FOCUSED
                     }
                 },
+                isTimeVisible = !isAllDay
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (focusState == DateTimePickerState.START_DATE_FOCUSED || focusState == DateTimePickerState.END_DATE_FOCUSED) {
+        AnimatedVisibility(focusState == DateTimePickerState.START_DATE_FOCUSED || focusState == DateTimePickerState.END_DATE_FOCUSED) {
             DateRangePicker(
                 initialDate = if (focusState == DateTimePickerState.START_DATE_FOCUSED) startDateTime.toLocalDate() else endDateTime.toLocalDate(),
                 initialMonth = YearMonth.from(startDateTime),
@@ -140,19 +156,24 @@ fun DateTimeRangePicker(
                 }
             )
         }
-        if (focusState == DateTimePickerState.START_TIME_FOCUSED) {
-            TimePicker(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                selectedTime = startDateTime.toLocalTime(),
-                onTimeChange = { onStartDateTimeChange(it.atDate(startDateTime.toLocalDate())) }
-            )
-        }
-        if (focusState == DateTimePickerState.END_TIME_FOCUSED) {
-            TimePicker(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                selectedTime = endDateTime.toLocalTime(),
-                onTimeChange = { onEndDateTimeChange(it.atDate(startDateTime.toLocalDate())) }
-            )
+        AnimatedVisibility(visible = focusState == DateTimePickerState.START_TIME_FOCUSED || focusState == DateTimePickerState.END_TIME_FOCUSED) {
+            Crossfade(targetState = focusState) { state ->
+                when (state) {
+                    DateTimePickerState.START_TIME_FOCUSED -> TimePicker(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        selectedTime = startDateTime.toLocalTime(),
+                        onTimeChange = { onStartDateTimeChange(it.atDate(startDateTime.toLocalDate())) }
+                    )
+
+                    DateTimePickerState.END_TIME_FOCUSED -> TimePicker(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        selectedTime = endDateTime.toLocalTime(),
+                        onTimeChange = { onEndDateTimeChange(it.atDate(startDateTime.toLocalDate())) }
+                    )
+
+                    else -> {}
+                }
+            }
         }
     }
 }
