@@ -39,6 +39,7 @@ class ScheduleEditViewModel @Inject constructor(
             copy(
                 id = schedule.id,
                 schedule = schedule.info,
+                repeatRule = schedule.info.repeatRule?.info,
                 date = schedule.info.startDate.toLocalDate()
             )
         }
@@ -50,7 +51,7 @@ class ScheduleEditViewModel @Inject constructor(
         startDate: LocalDateTime = uiState.value.schedule?.startDate ?: uiState.value.date?.atStartOfDay() ?: LocalDateTime.now(),
         endDate: LocalDateTime = uiState.value.schedule?.endDate ?: uiState.value.date?.atStartOfDay()?.plusDays(1)?.minusSeconds(1) ?: LocalDateTime.now(),
         location: String? = uiState.value.schedule?.location,
-        repeatRule: RepeatRuleInfo? = uiState.value.schedule?.repeatRule?.info,
+        repeatRule: RepeatRuleInfo? = uiState.value.repeatRule,
     ) {
         setState {
             copy(
