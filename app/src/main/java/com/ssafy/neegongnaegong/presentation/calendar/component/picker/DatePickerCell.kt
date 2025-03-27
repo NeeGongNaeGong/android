@@ -62,7 +62,7 @@ fun DatePickerCell(
             modifier = Modifier
                 .weight(1f)
                 .background(if (isSelected && !isLeftEdge) MaterialTheme.colorScheme.primary else Color.Transparent)
-                .padding(2.dp),
+                .padding(4.dp),
             text = "",
             style = MaterialTheme.typography.labelMedium,
         )
@@ -71,13 +71,13 @@ fun DatePickerCell(
                 .background(
                     if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
                     shape = RoundedCornerShape(
-                        topStart = if (!isLeftEdge) 0.dp else 5.dp,
-                        bottomStart = if (!isLeftEdge) 0.dp else 5.dp,
-                        topEnd = if (!isRightEdge) 0.dp else 5.dp,
-                        bottomEnd = if (!isRightEdge) 0.dp else 5.dp
+                        topStart = if (!isLeftEdge) 0.dp else 10.dp,
+                        bottomStart = if (!isLeftEdge) 0.dp else 10.dp,
+                        topEnd = if (!isRightEdge) 0.dp else 10.dp,
+                        bottomEnd = if (!isRightEdge) 0.dp else 10.dp
                     )
                 )
-                .padding(2.dp),
+                .padding(4.dp),
             text = date.toString(),
             style = MaterialTheme.typography.labelMedium,
             color = dateColor,
@@ -87,7 +87,7 @@ fun DatePickerCell(
             modifier = Modifier
                 .weight(1f)
                 .background(if (isSelected && !isRightEdge) MaterialTheme.colorScheme.primary else Color.Transparent)
-                .padding(2.dp),
+                .padding(4.dp),
             text = "",
             style = MaterialTheme.typography.labelMedium,
         )
