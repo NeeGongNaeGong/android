@@ -12,7 +12,9 @@ fun TimerText(elapsedTime: Long){
     val formattedTime = remember(elapsedTime) { formatElapsedTime(elapsedTime) }
     Text(
         text = formattedTime,
-        style = Typography.bodyLarge,
+        style = Typography.bodyLarge.copy(
+            fontFeatureSettings = "tnum",
+        ),
         fontSize = 64.sp
     )
 }
