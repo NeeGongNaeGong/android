@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.model.calendar.request
 
+import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import java.time.LocalDate
@@ -16,7 +17,7 @@ data class UpdatePersonalScheduleRequest(
     val repeatRule: UpdateRepeatRuleRequest? = null,
 ) {
     companion object {
-        fun fromDomain(type: UpdateType, date: LocalDate, schedule: ScheduleInfo) =
+        fun fromDomain(type: UpdateType, date: LocalDate, schedule: ScheduleInfo, repeatRule: RepeatRuleInfo?) =
             UpdatePersonalScheduleRequest(
                 type = type,
                 date = date,
@@ -25,7 +26,7 @@ data class UpdatePersonalScheduleRequest(
                 startDate = schedule.startDate,
                 endDate = schedule.endDate,
                 location = schedule.location,
-                repeatRule = schedule.repeatRule?.let { UpdateRepeatRuleRequest.fromDomain(it.info) }
+                repeatRule = repeatRule?.let { UpdateRepeatRuleRequest.fromDomain(it) }
             )
     }
 }

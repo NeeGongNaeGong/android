@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.request.CreatePersonalSchedu
 import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
+import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
@@ -38,12 +39,13 @@ class CalendarRepositoryImpl @Inject constructor(
     override suspend fun updatePersonalSchedule(
         id: Long,
         schedule: ScheduleInfo,
+        repeatRule: RepeatRuleInfo?,
         type: UpdateType,
         date: LocalDate
     ): Flow<Schedule> = withContext(ioDispatcher) {
         dataSource.updatePersonalSchedule(
             id,
-            UpdatePersonalScheduleRequest.fromDomain(type, date, schedule)
+            UpdatePersonalScheduleRequest.fromDomain(type, date, schedule, repeatRule)
         ).map { it.toDomain() }
     }
 
