@@ -49,6 +49,7 @@ fun TimePicker(
             modifier = Modifier.weight(1f),
             items = amPmList,
             state = amPmPickerState,
+            visibleItemsCount = 2,
         )
         ScrollPicker(
             modifier = Modifier.weight(1f),

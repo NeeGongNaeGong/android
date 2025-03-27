@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,24 +37,26 @@ fun DateTimePicker(
     ) {
         Text(
             modifier = Modifier
+                .clip(RoundedCornerShape(100))
+                .clickable(onClick = onDateClicked)
                 .background(
-                    color = if (isDateFocused) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                    color = if (isDateFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                     shape = RoundedCornerShape(100)
                 )
-                .padding(2.dp)
-                .clickable(onClick = onDateClicked),
+                .padding(4.dp),
             text = DateTimeFormatter.ofPattern("M월 d일 (E)", Locale.KOREAN).format(dateTime),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
             modifier = Modifier
+                .clip(RoundedCornerShape(100))
+                .clickable(onClick = onTimeClicked)
                 .background(
-                    color = if (isTimeFocused) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                    color = if (isTimeFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                     shape = RoundedCornerShape(100)
                 )
-                .padding(2.dp)
-                .clickable(onClick = onTimeClicked),
+                .padding(4.dp),
             text = DateTimeFormatter.ofPattern("a h:mm", Locale.KOREAN).format(dateTime),
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyMedium,
@@ -64,6 +68,8 @@ fun DateTimePicker(
 @Composable
 private fun PreviewDateTimePicker() {
     NeeGongNaeGongTheme(dynamicColor = false) {
-        DateTimePicker(dateTime = LocalDateTime.now(), isDateFocused = true)
+        Surface(color = MaterialTheme.colorScheme.background) {
+            DateTimePicker(dateTime = LocalDateTime.now(), isDateFocused = true)
+        }
     }
 }

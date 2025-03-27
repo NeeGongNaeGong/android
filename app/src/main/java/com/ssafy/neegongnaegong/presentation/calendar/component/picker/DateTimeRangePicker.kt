@@ -88,7 +88,7 @@ fun DateTimeRangePicker(
                     }
                 },
                 onTimeClicked = {
-                    focusState = if (focusState == DateTimePickerState.START_DATE_FOCUSED) {
+                    focusState = if (focusState == DateTimePickerState.START_TIME_FOCUSED) {
                         DateTimePickerState.UNFOCUSED
                     } else {
                         DateTimePickerState.START_TIME_FOCUSED
@@ -108,14 +108,14 @@ fun DateTimeRangePicker(
                 isDateFocused = focusState == DateTimePickerState.END_DATE_FOCUSED,
                 isTimeFocused = focusState == DateTimePickerState.END_TIME_FOCUSED,
                 onDateClicked = {
-                    focusState = if (focusState == DateTimePickerState.START_DATE_FOCUSED) {
+                    focusState = if (focusState == DateTimePickerState.END_DATE_FOCUSED) {
                         DateTimePickerState.UNFOCUSED
                     } else {
                         DateTimePickerState.END_DATE_FOCUSED
                     }
                 },
                 onTimeClicked = {
-                    focusState = if (focusState == DateTimePickerState.START_DATE_FOCUSED) {
+                    focusState = if (focusState == DateTimePickerState.END_TIME_FOCUSED) {
                         DateTimePickerState.UNFOCUSED
                     } else {
                         DateTimePickerState.END_TIME_FOCUSED
