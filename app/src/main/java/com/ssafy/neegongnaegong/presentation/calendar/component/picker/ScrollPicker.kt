@@ -49,6 +49,7 @@ fun <T> ScrollPicker(
     items: List<T>,
     state: PickerState<T> = rememberPickerState(items.first()),
     visibleItemsCount: Int = 3,
+    content: @Composable (modifier: Modifier, item: T) -> Unit
 ) {
     val visibleItemsMiddle = visibleItemsCount / 2
     val listScrollCount = Integer.MAX_VALUE
@@ -72,6 +73,10 @@ fun <T> ScrollPicker(
         )
     }
 
+    LaunchedEffect(state.selectedItem) {
+        listState.scrollToItem(listStartIndex)
+    }
+
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .map { index -> getItem(index + visibleItemsMiddle) }
@@ -88,15 +93,9 @@ fun <T> ScrollPicker(
             .fadingEdge(fadingEdgeGradient)
     ) {
         items(listScrollCount) { index ->
-            Text(
-                text = getItem(index).toString(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .onSizeChanged { size -> itemHeightPixels = size.height }
-                    .padding(vertical = 4.dp)
+            content(
+                Modifier.onSizeChanged { size -> itemHeightPixels = size.height },
+                getItem(index)
             )
         }
     }
@@ -120,7 +119,16 @@ private fun NumberPickerPreview() {
             ScrollPicker(
                 modifier = Modifier.fillMaxWidth(),
                 items = listOf(1, 2, 3, 4, 5),
-            )
+            ) { modifier, item ->
+                Text(
+                    text = item.toString(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = modifier.padding(vertical = 4.dp)
+                )
+            }
         }
     }
 }
