@@ -22,12 +22,15 @@ import java.time.LocalDate
 fun DatePickerCell(
     modifier: Modifier = Modifier,
     date: LocalDate,
-    startDate: LocalDate,
-    endDate: LocalDate,
+    startDate: LocalDate?,
+    endDate: LocalDate?,
     onSelect: (LocalDate) -> Unit = { },
 ) {
-    val isSelected =
+    val isSelected = if (startDate == null || endDate == null) {
+        false
+    } else {
         date.isAfter(startDate) && date.isBefore(endDate) || date == startDate || date == endDate
+    }
 
     DatePickerCell(
         modifier = modifier,

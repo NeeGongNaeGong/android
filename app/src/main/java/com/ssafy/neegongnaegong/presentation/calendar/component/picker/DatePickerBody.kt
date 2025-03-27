@@ -23,8 +23,8 @@ import java.time.YearMonth
 fun DatePickerBody(
     modifier: Modifier = Modifier,
     selectedMonth: YearMonth,
-    startDate: LocalDate,
-    endDate: LocalDate,
+    startDate: LocalDate?,
+    endDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
 ) {
     val lastDay by remember { mutableIntStateOf(selectedMonth.lengthOfMonth()) }

@@ -27,13 +27,13 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun DateRangePicker(
     modifier: Modifier = Modifier,
-    initialDate: LocalDate = LocalDate.now(),
+    initialDate: LocalDate? = LocalDate.now(),
     initialMonth: YearMonth = YearMonth.now(),
     minMonth: YearMonth = YearMonth.of(1900, 1),
     maxMonth: YearMonth = YearMonth.of(2100, 12),
     onDateSelected: (LocalDate) -> Unit = {},
-    startDate: LocalDate = LocalDate.now(),
-    endDate: LocalDate = LocalDate.now(),
+    startDate: LocalDate? = LocalDate.now(),
+    endDate: LocalDate? = LocalDate.now(),
 ) {
     val pagerState = rememberPagerState(
         pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
@@ -49,13 +49,14 @@ fun DateRangePicker(
     }
 
     LaunchedEffect(selectedDate) {
+        if (selectedDate == null) return@LaunchedEffect
         if (selectedMonth != YearMonth.from(selectedDate)) {
             selectedMonth = YearMonth.from(selectedDate)
             pagerState.animateScrollToPage(
                 ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
             )
         }
-        onDateSelected(selectedDate)
+        selectedDate?.let { onDateSelected(it) }
     }
 
     Column(modifier = modifier) {
