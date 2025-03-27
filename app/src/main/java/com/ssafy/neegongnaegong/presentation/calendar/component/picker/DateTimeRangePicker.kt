@@ -126,6 +126,7 @@ fun DateTimeRangePicker(
         Spacer(modifier = Modifier.height(16.dp))
         if (focusState == DateTimePickerState.START_DATE_FOCUSED || focusState == DateTimePickerState.END_DATE_FOCUSED) {
             DateRangePicker(
+                initialDate = if (focusState == DateTimePickerState.START_DATE_FOCUSED) startDateTime.toLocalDate() else endDateTime.toLocalDate(),
                 initialMonth = YearMonth.from(startDateTime),
                 startDate = startDateTime.toLocalDate(),
                 endDate = endDateTime.toLocalDate(),

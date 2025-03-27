@@ -27,6 +27,7 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun DateRangePicker(
     modifier: Modifier = Modifier,
+    initialDate: LocalDate = LocalDate.now(),
     initialMonth: YearMonth = YearMonth.now(),
     minMonth: YearMonth = YearMonth.of(1900, 1),
     maxMonth: YearMonth = YearMonth.of(2100, 12),
@@ -40,7 +41,7 @@ fun DateRangePicker(
     )
     var currentPage by remember { mutableIntStateOf(pagerState.currentPage) }
     var selectedMonth by remember { mutableStateOf(initialMonth) }
-    var selectedDate by remember { mutableStateOf(startDate) }
+    var selectedDate by remember { mutableStateOf(initialDate) }
 
     LaunchedEffect(pagerState.currentPage) {
         selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
