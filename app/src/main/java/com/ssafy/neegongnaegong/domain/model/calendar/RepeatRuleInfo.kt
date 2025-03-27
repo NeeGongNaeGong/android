@@ -6,6 +6,5 @@ data class RepeatRuleInfo(
     val repeatType: RepeatType,
     val repeatInterval: Int,
     val repeatDay: Int,
-    val startDate: LocalDate,
     val endDate: LocalDate?,
 )
