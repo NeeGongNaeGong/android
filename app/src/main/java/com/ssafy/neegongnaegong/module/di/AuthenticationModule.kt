@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.module.di
 
-import com.ssafy.neegongnaegong.data.remote.TokenManager
+import com.ssafy.neegongnaegong.data.remote.utils.TokenManager
 import com.ssafy.neegongnaegong.data.remote.utils.KeyStoreTokenManager
 import dagger.Binds
 import dagger.Module

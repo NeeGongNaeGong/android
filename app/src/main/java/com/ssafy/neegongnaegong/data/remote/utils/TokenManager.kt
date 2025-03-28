@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.data.remote
+package com.ssafy.neegongnaegong.data.remote.utils
 
 interface TokenManager {
     fun saveToken(tokenType: String, token: String)

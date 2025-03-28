@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.data.remote.interceptor
 
 import com.ssafy.neegongnaegong.BuildConfig
-import com.ssafy.neegongnaegong.data.remote.TokenManager
+import com.ssafy.neegongnaegong.data.remote.utils.TokenManager
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import okhttp3.Interceptor
 import okhttp3.Response

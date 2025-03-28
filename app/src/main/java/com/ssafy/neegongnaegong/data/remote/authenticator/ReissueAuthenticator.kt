@@ -2,7 +2,7 @@ package com.ssafy.neegongnaegong.data.remote.authenticator
 
 import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
-import com.ssafy.neegongnaegong.data.remote.TokenManager
+import com.ssafy.neegongnaegong.data.remote.utils.TokenManager
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -17,12 +17,15 @@ class ReissueAuthenticator @Inject constructor(
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request {
         // TODO: token 401인지 확인하기
+        synchronized(this) {
+            val newAccessToken = runBlocking { fetchNewAccessToken() } ?: throw AuthException.InvalidTokenException()
 
-        val newAccessToken = runBlocking { fetchNewAccessToken() } ?: throw AuthException.InvalidTokenException()
+            // TODO: 만약 새로 받아온 accessToken으로도 실패하면 어떻게 할지 고민
 
-        return response.request.newBuilder()
-            .header("Authorization", "Bearer $newAccessToken")
-            .build()
+            return response.request.newBuilder()
+                .header("Authorization", "Bearer $newAccessToken")
+                .build()
+        }
     }
 
     private suspend fun fetchNewAccessToken(): String? {
@@ -33,8 +36,8 @@ class ReissueAuthenticator @Inject constructor(
         }.fold(
             onSuccess = { response ->
                 response.takeIf { it.isSuccessful }?.body()?.data?.createJwt?.also {
-                    tokenManager.saveToken(BuildConfig.TOKEN_TYPE_ACCESS, it.accessToken)
-                    tokenManager.saveToken(BuildConfig.TOKEN_TYPE_REFRESH, it.refreshToken)
+                    tokenManager.saveToken(BuildConfig.TOKEN_TYPE_ACCESS, it.accessToken.removePrefix("Bearer "))
+                    tokenManager.saveToken(BuildConfig.TOKEN_TYPE_REFRESH, it.refreshToken.removePrefix("Bearer "))
                 }?.accessToken
             },
             onFailure = { null }
