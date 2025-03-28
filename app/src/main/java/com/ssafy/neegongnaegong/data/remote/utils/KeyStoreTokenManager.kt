@@ -1,17 +1,22 @@
-package com.ssafy.neegongnaegong.data.remote
+package com.ssafy.neegongnaegong.data.remote.utils
 
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import com.ssafy.neegongnaegong.BuildConfig
+import com.ssafy.neegongnaegong.data.remote.TokenManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import javax.inject.Inject
 
-class KeyStoreTokenManager(private val context: Context): TokenManager {
+class KeyStoreTokenManager @Inject constructor(
+    @ApplicationContext private val context: Context
+) : TokenManager {
     private val keystore: KeyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
     private val aliasPrefix = BuildConfig.KEYSTORE_ALIAS_PREFIX
 
