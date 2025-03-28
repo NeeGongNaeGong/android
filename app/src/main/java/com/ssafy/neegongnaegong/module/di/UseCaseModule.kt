@@ -1,6 +1,8 @@
 package com.ssafy.neegongnaegong.module.di
 
 import com.ssafy.neegongnaegong.domain.repository.GitHubRepository
+import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
+import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.GetUserReposUseCase
 import dagger.Module
 import dagger.Provides
@@ -15,4 +17,8 @@ object UseCaseModule {
     @Provides
     @ViewModelScoped
     fun provideGetUserReposUseCase(repository: GitHubRepository): GetUserReposUseCase = GetUserReposUseCase(repository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetGroupsUseCase(repository: StudiesRepository): GetStudiesUseCase = GetStudiesUseCase(repository)
 }

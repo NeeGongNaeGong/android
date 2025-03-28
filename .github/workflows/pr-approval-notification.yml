@@ -9,6 +9,8 @@ permissions:
 jobs:
   check-approvals:
     runs-on: ubuntu-latest
+    # 현재 리뷰가 승인(APPROVED) 일 때만 작업 실행
+    if: github.event.review.state == 'APPROVED'
     steps:
       - name: Get PR approvals and author
         id: get-pr-info
@@ -38,6 +40,7 @@ jobs:
             // 고유한 승인자 목록 만들기
             const approvers = new Set();
             reviews.data.forEach(review => {
+              // 가장 최근 리뷰만 고려하기 위한 맵
               if (review.state === 'APPROVED') {
                 approvers.add(review.user.login);
               }
@@ -51,10 +54,13 @@ jobs:
             const approversList = Array.from(approvers).join(', ');
             console.log(`승인자 목록: ${approversList}`);
             
+            // 정확히 2명이 승인했고, 그 승인이 방금 2개가 되었는지 확인
+            const exactlyTwoApprovals = approvalCount === 2;
+            
             return { 
               count: approvalCount, 
               users: approversList,
-              exactly_two: approvalCount == 2,
+              exactly_two: exactlyTwoApprovals,
               author: prAuthor
             };
             
