@@ -18,6 +18,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class GoogleSignInUtils {
             val credentialManager = CredentialManager.create(context)
 
             val request = GetCredentialRequest.Builder()
-                .addCredentialOption(getCredentialsOptions(context))
+                .addCredentialOption(getCredentialsOptions())
                 .build()
 
             scope.launch {
@@ -74,16 +75,16 @@ class GoogleSignInUtils {
         }
 
 
-        fun getIntent(): Intent {
+        private fun getIntent(): Intent {
             return Intent(Settings.ACTION_ADD_ACCOUNT).apply {
                 putExtra(Settings.EXTRA_ACCOUNT_TYPES, arrayOf("com.google"))
             }
         }
 
-        fun getCredentialsOptions(context: Context): CredentialOption {
+        private fun getCredentialsOptions(): CredentialOption {
             return GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(true)
-                .setServerClientId(context.getString(R.string.google_web_client_id))
+                .setServerClientId(BuildConfig.GOOGLE_CLIENT_ID)
                 .build()
         }
     }
