@@ -1,12 +1,13 @@
-package com.ssafy.neegongnaegong.data.model.calendar
+package com.ssafy.neegongnaegong.data.model.calendar.response
 
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRule
+import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import java.time.LocalDate
 
 data class RepeatRuleResponse(
     val id: Long,
-    val repeatType: String,
+    val repeatType: RepeatType,
     val repeatInterval: Int,
     val repeatDay: Int,
     val startDate: LocalDate,
@@ -15,11 +16,13 @@ data class RepeatRuleResponse(
     fun toDomain(): RepeatRule {
         return RepeatRule(
             id = id,
-            repeatType = RepeatType.valueOf(repeatType),
-            repeatInterval = repeatInterval,
-            repeatDay = repeatDay,
-            startDate = startDate,
-            endDate = endDate
+            info = RepeatRuleInfo(
+                repeatType = repeatType,
+                repeatInterval = repeatInterval,
+                repeatDay = repeatDay,
+                startDate = startDate,
+                endDate = endDate
+            )
         )
     }
 }
