@@ -31,10 +31,11 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun PauseDialog(
+    onCancel: () -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = { onCancel.invoke() }) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
