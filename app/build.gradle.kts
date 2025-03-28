@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,10 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.google.services)
+}
+
+val properties = Properties().apply {
+    load(File(rootProject.rootDir, "local.properties").inputStream())
 }
 
 android {
@@ -19,6 +25,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", properties.getProperty("baseUrl"))
+        buildConfigField("String", "TOKEN_TYPE_ACCESS", properties.getProperty("tokenTypeAccess"))
+        buildConfigField("String", "TOKEN_TYPE_REFRESH", properties.getProperty("tokenTypeRefresh"))
+        buildConfigField("String", "KEYSTORE_ALIAS_PREFIX", properties.getProperty("keystoreAliasPrefix"))
+        buildConfigField("String", "TOKEN_PREFERENCES_NAME", properties.getProperty("tokenPreferencesName"))
     }
 
     buildTypes {
@@ -39,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
