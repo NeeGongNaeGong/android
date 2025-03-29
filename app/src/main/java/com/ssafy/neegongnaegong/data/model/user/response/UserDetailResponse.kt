@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.data.model.auth.response
+package com.ssafy.neegongnaegong.data.model.user.response
 
 data class UserDetailResponse(
     val id: Long,
