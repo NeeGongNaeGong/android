@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.module.di
 
-import com.ssafy.neegongnaegong.data.remote.utils.TokenManager
-import com.ssafy.neegongnaegong.data.remote.utils.KeyStoreTokenManager
+import com.ssafy.neegongnaegong.data.local.TokenManager
+import com.ssafy.neegongnaegong.data.local.TokenManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface AuthenticationModule {
     @Singleton
     @Binds
-    fun bindTokenManager(keystoreTokenManager: KeyStoreTokenManager): TokenManager
+    fun bindTokenManager(tokenManagerImpl: TokenManagerImpl): TokenManager
 }

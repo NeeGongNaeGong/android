@@ -26,10 +26,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", properties.getProperty("baseUrl"))
-        buildConfigField("String", "TOKEN_TYPE_ACCESS", properties.getProperty("tokenTypeAccess"))
-        buildConfigField("String", "TOKEN_TYPE_REFRESH", properties.getProperty("tokenTypeRefresh"))
-        buildConfigField("String", "KEYSTORE_ALIAS_PREFIX", properties.getProperty("keystoreAliasPrefix"))
-        buildConfigField("String", "TOKEN_PREFERENCES_NAME", properties.getProperty("tokenPreferencesName"))
     }
 
     buildTypes {
@@ -88,5 +84,8 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    // EncryptedSharedPreferences
+    implementation(libs.androidx.security.crypto.ktx)
 }
 

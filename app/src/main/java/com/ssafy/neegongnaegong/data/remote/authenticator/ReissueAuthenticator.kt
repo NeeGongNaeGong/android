@@ -1,8 +1,8 @@
 package com.ssafy.neegongnaegong.data.remote.authenticator
 
-import com.ssafy.neegongnaegong.BuildConfig
+import com.ssafy.neegongnaegong.data.local.TokenManager
+import com.ssafy.neegongnaegong.data.local.TokenType
 import com.ssafy.neegongnaegong.data.remote.AuthApi
-import com.ssafy.neegongnaegong.data.remote.utils.TokenManager
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -29,15 +29,15 @@ class ReissueAuthenticator @Inject constructor(
     }
 
     private suspend fun fetchNewAccessToken(): String? {
-        val refreshToken = tokenManager.getToken(BuildConfig.TOKEN_TYPE_REFRESH) ?: return null
+        val refreshToken = tokenManager.getToken(TokenType.ACCESS_TOKEN) ?: return null
 
         return runCatching {
             authApi.reissue(refreshToken)
         }.fold(
             onSuccess = { response ->
                 response.takeIf { it.isSuccessful }?.body()?.data?.createJwt?.also {
-                    tokenManager.saveToken(BuildConfig.TOKEN_TYPE_ACCESS, it.accessToken.removePrefix("Bearer "))
-                    tokenManager.saveToken(BuildConfig.TOKEN_TYPE_REFRESH, it.refreshToken.removePrefix("Bearer "))
+                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, it.accessToken.removePrefix("Bearer "))
+                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, it.refreshToken.removePrefix("Bearer "))
                 }?.accessToken
             },
             onFailure = { null }
