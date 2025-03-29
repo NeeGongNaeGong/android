@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.data.datasource
+package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest

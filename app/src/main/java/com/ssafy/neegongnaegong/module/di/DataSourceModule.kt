@@ -1,9 +1,9 @@
 package com.ssafy.neegongnaegong.module.di
 
-import com.ssafy.neegongnaegong.data.datasource.NetworkAuthDataSource
-import com.ssafy.neegongnaegong.data.datasource.NetworkAuthDataSourceImpl
-import com.ssafy.neegongnaegong.data.datasource.NetworkCalendarDataSource
-import com.ssafy.neegongnaegong.data.datasource.NetworkCalendarDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
