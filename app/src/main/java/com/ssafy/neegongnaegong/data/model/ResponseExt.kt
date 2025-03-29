@@ -32,11 +32,10 @@ inline fun <reified T> Response<ApiResponse<T>>.toApiResult(): ApiResult<T> {
     errorBody()?.let {
         val errorMessage = it.charStream().readLines().joinToString()
         val json = JSONObject(errorMessage)
-        val message = runCatching { json.getString("message") }
-            .fold(
-                onSuccess = { message -> message },
-                onFailure = { "" }
-            )
+        val message = runCatching { json.getString("message") }.fold(
+            onSuccess = { message -> message },
+            onFailure = { "" }
+        )
 
         if (message.isNotBlank()) return ApiResult.Error(ApiException.fromCode(code(), message))
         else return ApiResult.Error(ApiException.fromCode(code()))
@@ -45,5 +44,5 @@ inline fun <reified T> Response<ApiResponse<T>>.toApiResult(): ApiResult<T> {
     return if (isSuccessful) {
         if (T::class == Unit::class) ApiResult.Success(Unit as T)
         else ApiResult.Error(ApiException.UnknownException())
-    } else  ApiResult.Error(ApiException.fromCode(code()))
+    } else ApiResult.Error(ApiException.fromCode(code()))
 }
