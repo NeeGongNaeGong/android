@@ -84,8 +84,8 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-
-    // EncryptedSharedPreferences
-    implementation(libs.androidx.security.crypto.ktx)
+    
+    // data store
+    implementation(libs.androidx.datastore.preferences)
 }
 

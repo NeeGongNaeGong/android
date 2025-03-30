@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.module.di
 
-import com.ssafy.neegongnaegong.data.local.EncryptedSharedPreferencesManager
+import com.ssafy.neegongnaegong.data.local.DataStoreManager
 import com.ssafy.neegongnaegong.data.local.LocalStorageManager
 import dagger.Binds
 import dagger.Module
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface LocalStorageModule {
     @Singleton
     @Binds
-    fun bindLocalStorageManager(localStorageManager: EncryptedSharedPreferencesManager): LocalStorageManager
+    fun bindLocalStorageManager(localStorageManager: DataStoreManager): LocalStorageManager
 }
