@@ -16,6 +16,13 @@ class LocalUserDataSourceImpl @Inject constructor(
         )
     }
 
+    override suspend fun clearUser(): Flow<Boolean> = flow {
+        runCatching { localStorageManager.removeData("user") }.fold(
+            onSuccess = { emit(true) },
+            onFailure = { emit(false) }
+        )
+    }
+
     override suspend fun getUser(): Flow<User> = flow {
         localStorageManager.getData<User>("user")?.let { emit(it) }
     }

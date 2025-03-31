@@ -54,6 +54,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logout(): Flow<Boolean> = withContext(ioDispatcher) {
         flow {
             tokenManager.clearToken()
+            localUserDataSource.clearUser()
             emit(true)
         }
     }
