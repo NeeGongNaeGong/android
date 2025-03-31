@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.GitHubApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
+import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import com.ssafy.neegongnaegong.data.remote.authenticator.ReissueAuthenticator
 import com.ssafy.neegongnaegong.data.remote.interceptor.AuthInterceptor
@@ -87,6 +88,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideAuthApi(@AuthRetrofit retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserApi(@SecureRetrofit retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
 
     @Provides
     @Singleton
