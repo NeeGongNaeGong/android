@@ -5,11 +5,13 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
+import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest
 import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
@@ -35,11 +37,24 @@ class AuthRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun register(id: String, password: String, name: String): Flow<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun register(
+        email: String,
+        nickname: String,
+        profileImage: String
+    ): Flow<Boolean> = withContext(ioDispatcher) {
+        networkAuthDataSource.register(
+            RegisterRequest(
+                email = email,
+                nickname = nickname,
+                profileImage = profileImage
+            )
+        ).map { true }
     }
 
-    override suspend fun logout(): Flow<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun logout(): Flow<Boolean> = withContext(ioDispatcher) {
+        flow {
+            tokenManager.clearToken()
+            emit(true)
+        }
     }
 }

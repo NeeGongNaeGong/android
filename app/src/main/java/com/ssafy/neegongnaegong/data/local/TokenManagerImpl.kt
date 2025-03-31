@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.data.local
 
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class TokenManagerImpl @Inject constructor(
@@ -15,6 +14,7 @@ class TokenManagerImpl @Inject constructor(
     }
 
     override fun clearToken() {
-        runBlocking { localStorageManager.clearData() }
+        localStorageManager.removeData(TokenType.ACCESS_TOKEN.type)
+        localStorageManager.removeData(TokenType.REFRESH_TOKEN.type)
     }
 }
