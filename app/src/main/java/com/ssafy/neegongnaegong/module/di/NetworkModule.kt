@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.module.di
 
 import com.ssafy.neegongnaegong.data.remote.GitHubApi
+import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import dagger.Module
 import dagger.Provides
@@ -28,6 +29,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideGitHubApi(retrofit: Retrofit): GitHubApi = retrofit.create(GitHubApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserCalendarApi(retrofit: Retrofit): UserCalendarApi = retrofit.create(UserCalendarApi::class.java)
 
     @Provides
     @Singleton
