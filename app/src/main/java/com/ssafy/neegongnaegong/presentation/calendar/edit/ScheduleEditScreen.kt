@@ -159,7 +159,7 @@ fun ScheduleEditScreen(
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize().then(modifier)) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).padding(vertical = 16.dp).weight(1f)) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f)) {
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,

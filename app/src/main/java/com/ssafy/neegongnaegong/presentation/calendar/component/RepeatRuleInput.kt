@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -59,6 +60,7 @@ fun RepeatRuleInput(
         RepeatRuleTypeRadioButton(
             type = RepeatType.DAILY,
             selected = repeatRule?.repeatType == RepeatType.DAILY,
+            initialInterval = if (repeatRule?.repeatType == RepeatType.DAILY) repeatRule.repeatInterval else 1,
             onClick = { interval ->
                 onRepeatRuleChange(
                     RepeatRuleInfo(
@@ -73,6 +75,7 @@ fun RepeatRuleInput(
         RepeatRuleTypeRadioButton(
             type = RepeatType.WEEKLY,
             selected = repeatRule?.repeatType == RepeatType.WEEKLY,
+            initialInterval = if (repeatRule?.repeatType == RepeatType.WEEKLY) repeatRule.repeatInterval else 1,
             onClick = { interval ->
                 onRepeatRuleChange(
                     RepeatRuleInfo(
@@ -87,6 +90,7 @@ fun RepeatRuleInput(
         RepeatRuleTypeRadioButton(
             type = RepeatType.MONTHLY,
             selected = repeatRule?.repeatType == RepeatType.MONTHLY,
+            initialInterval = if (repeatRule?.repeatType == RepeatType.MONTHLY) repeatRule.repeatInterval else 1,
             onClick = { interval ->
                 onRepeatRuleChange(
                     RepeatRuleInfo(
@@ -112,30 +116,51 @@ fun RepeatRuleTypeRadioButton(
     modifier: Modifier = Modifier,
     type: RepeatType?,
     selected: Boolean,
-    onClick: (Int) -> Unit
+    initialInterval: Int = 1,
+    onClick: (Int) -> Unit,
 ) {
-    var interval by remember { mutableIntStateOf(1) }
+    var string by remember { mutableStateOf(initialInterval.toString()) }
+
+    LaunchedEffect(string) {
+        onClick(string.toIntOrNull() ?: 1)
+    }
 
     RepeatRuleRadioButton(
         modifier = modifier,
         selected = selected,
-        onClick = { onClick(interval) },
+        onClick = { onClick(string.toIntOrNull() ?: 1) },
     ) {
-        if (type != null) BasicTextField(
-            modifier = Modifier
-                .width(IntrinsicSize.Min)
-                .padding(end = 8.dp)
-                .bottomBorder(1.dp, MaterialTheme.colorScheme.onBackground),
-            value = interval.toString(),
-            onValueChange = {
-                interval = it.toIntOrNull() ?: 1
-                onClick(interval)
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
-        )
+        if (type != null) {
+            Box {
+                if (string.isEmpty()) Text(
+                    modifier = Modifier
+                        .width(IntrinsicSize.Min)
+                        .padding(end = 8.dp)
+                        .bottomBorder(1.dp, MaterialTheme.colorScheme.onBackground),
+                    text = "1",
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground)
+                )
+                BasicTextField(
+                    modifier = Modifier
+                        .width(IntrinsicSize.Min)
+                        .padding(end = 8.dp)
+                        .bottomBorder(1.dp, MaterialTheme.colorScheme.onBackground),
+                    value = string,
+                    onValueChange = {
+                        string = it
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
+                )
+            }
+        }
         Text(
-            modifier = Modifier.weight(1f).padding(end = 16.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 16.dp),
             text = type?.toDisplayString() ?: "반복 안 함",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
