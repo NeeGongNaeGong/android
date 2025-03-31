@@ -88,6 +88,9 @@ dependencies {
     implementation(libs.googleid)
 
     // with life cycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // test
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
