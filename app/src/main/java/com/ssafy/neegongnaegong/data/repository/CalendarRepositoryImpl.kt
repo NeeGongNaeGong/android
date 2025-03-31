@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.data.repository
 
-import com.ssafy.neegongnaegong.data.datasource.NetworkCalendarDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSource
 import com.ssafy.neegongnaegong.data.model.calendar.request.CreatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest

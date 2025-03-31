@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.data.datasource
+package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.calendar.request.CreatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalScheduleRequest
