@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 
 @Composable
@@ -49,13 +50,17 @@ fun <T> ScrollPicker(
     items: List<T>,
     state: PickerState<T> = rememberPickerState(items.first()),
     visibleItemsCount: Int = 3,
-    content: @Composable (modifier: Modifier, item: T) -> Unit
+    isInfinite: Boolean = true,
+    text: (T) -> String = { it.toString() }
 ) {
     val visibleItemsMiddle = visibleItemsCount / 2
-    val listScrollCount = Integer.MAX_VALUE
+    val listScrollCount = if (isInfinite) Integer.MAX_VALUE else items.size
     val listScrollMiddle = listScrollCount / 2
-    val listStartIndex =
+    val listStartIndex = if (isInfinite) {
         listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + items.indexOf(state.selectedItem)
+    } else {
+        items.indexOf(state.selectedItem)
+    }
 
     fun getItem(index: Int) = items[index % items.size]
 
@@ -79,7 +84,9 @@ fun <T> ScrollPicker(
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
-            .map { index -> getItem(index + visibleItemsMiddle) }
+            .map { index -> index + visibleItemsMiddle - if(isInfinite) 0 else visibleItemsCount / 2 }
+            .filter { if(isInfinite) true else it in items.indices }
+            .map { getItem(it) }
             .distinctUntilChanged()
             .collect { item -> state.selectedItem = item }
     }
@@ -92,10 +99,40 @@ fun <T> ScrollPicker(
             .height(itemHeightDp * visibleItemsCount)
             .fadingEdge(fadingEdgeGradient)
     ) {
+        if (!isInfinite) items(visibleItemsCount / 2) {
+            Text(
+                modifier = Modifier
+                    .onSizeChanged { size -> itemHeightPixels = size.height }
+                    .padding(vertical = 4.dp),
+                text = "",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
         items(listScrollCount) { index ->
-            content(
-                Modifier.onSizeChanged { size -> itemHeightPixels = size.height },
-                getItem(index)
+            Text(
+                modifier = Modifier
+                    .onSizeChanged { size -> itemHeightPixels = size.height }
+                    .padding(vertical = 4.dp),
+                text = text(getItem(index)),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
+        if (!isInfinite) items(visibleItemsCount / 2) {
+            Text(
+                modifier = Modifier
+                    .onSizeChanged { size -> itemHeightPixels = size.height }
+                    .padding(vertical = 4.dp),
+                text = "",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
             )
         }
     }
@@ -119,16 +156,8 @@ private fun NumberPickerPreview() {
             ScrollPicker(
                 modifier = Modifier.fillMaxWidth(),
                 items = listOf(1, 2, 3, 4, 5),
-            ) { modifier, item ->
-                Text(
-                    text = item.toString(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = modifier.padding(vertical = 4.dp)
-                )
-            }
+                isInfinite = false
+            )
         }
     }
 }

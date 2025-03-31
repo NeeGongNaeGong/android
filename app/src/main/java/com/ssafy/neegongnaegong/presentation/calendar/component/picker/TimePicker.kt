@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.presentation.calendar.component.picker
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -10,9 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalTime
 
@@ -61,30 +58,14 @@ fun TimePicker(
             items = amPmList,
             state = amPmPickerState,
             visibleItemsCount = 3,
-        ) { modifier, item ->
-            Text(
-                text = item,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = modifier.padding(vertical = 4.dp)
-            )
-        }
+            isInfinite = false,
+        )
         ScrollPicker(
             modifier = Modifier.weight(1f),
             items = hourList,
             state = hourPickerState,
-        ) { modifier, item ->
-            Text(
-                text = (if (item % 12 == 0) 12 else item % 12).toString(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = modifier.padding(vertical = 4.dp)
-            )
-        }
+            text = { (if (it % 12 == 0) 12 else it % 12).toString() },
+        )
         Text(
             ":",
             style = MaterialTheme.typography.bodyMedium,
@@ -94,16 +75,7 @@ fun TimePicker(
             modifier = Modifier.weight(1f),
             items = minuteList,
             state = minutePickerState,
-        ) { modifier, item ->
-            Text(
-                text = item.toString(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = modifier.padding(vertical = 4.dp)
-            )
-        }
+        )
     }
 }
 
