@@ -1,5 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
+import com.ssafy.neegongnaegong.domain.data.TagData
+import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,6 +17,7 @@ class WriteViewModel @Inject constructor() :
 
     override fun handleEvent(event: WriteContract.Event) {
         when (event) {
+            // 글 작성
             is WriteContract.Event.OnTitleChanged -> {
                 setState { copy(title = event.title) }
             }
@@ -23,18 +26,101 @@ class WriteViewModel @Inject constructor() :
                 setState { copy(content = event.content) }
             }
 
-            WriteContract.Event.OnCancelClicked -> {
+            // 취소, 확인
+            is WriteContract.Event.OnCancelClicked -> {
 
             }
-            WriteContract.Event.OnConfirmClicked -> {
+
+            is WriteContract.Event.OnConfirmClicked -> {
 
             }
-            WriteContract.Event.OnTagEraseClicked -> {
+
+            // 태그 추가,삭제
+            is WriteContract.Event.OnTagEraseClicked -> {
 
             }
-            WriteContract.Event.OnTagPlusClicked -> {
 
+            is WriteContract.Event.OnTagSelected -> {
+                selectTag(event.tag)
+            }
+
+            is WriteContract.Event.OnTagDeselected -> {
+                deselectTag(event.tag)
+            }
+
+            is WriteContract.Event.OnSearchTextChanged -> {
+                updateDialogTags(event.query)
+            }
+
+            is WriteContract.Event.onTagPlusClicked -> {
+                setState {
+                    copy(isDialogShow = true)
+                }
+            }
+
+            is WriteContract.Event.OnDialogClose -> {
+                setState { copy(isDialogShow = false) }
+            }
+
+            is WriteContract.Event.OnDialogConfirmClicked -> {
+                moveFromSelectedTagsToTags()
+            }
+
+            is WriteContract.Event.OnDialogCancelClicked -> {
+                setState { copy(isDialogShow = false) }
             }
         }
+    }
+
+    private fun moveFromSelectedTagsToTags() {
+        val newTags = uiState.value.tags + uiState.value.selectedTags
+        setState {
+            copy(
+                tags = newTags,
+                selectedTags = emptyList(),
+                unSelectedTags = emptyList()
+            )
+        }
+    }
+
+    private fun selectTag(tag: Tag) {
+        setState {
+            copy(
+                selectedTags = uiState.value.selectedTags + tag,
+                unSelectedTags = uiState.value.unSelectedTags - tag
+            )
+        }
+    }
+
+    private fun deselectTag(tag: Tag) {
+        setState {
+            copy(
+                selectedTags = uiState.value.selectedTags - tag,
+                unSelectedTags = uiState.value.unSelectedTags + tag,
+            )
+        }
+    }
+
+    private fun updateDialogTags(query: String) {
+
+        val filtered = if (query.isBlank()) {
+            emptyList()
+        } else {
+            TagData.tags
+                .filterNot { tag ->
+                    uiState.value.tags.contains(tag) || uiState.value.selectedTags.contains(
+                        tag
+                    )
+                }
+                .filter { tag ->
+                    tag.koName.contains(query) || tag.enName.contains(
+                        query,
+                        ignoreCase = true
+                    )
+                }
+                .take(10)
+        }
+
+        setState { copy(unSelectedTags = filtered) }
     }
 }
