@@ -1,6 +1,5 @@
 [versions]
 agp = "8.7.2"
-datastorePreferences = "1.1.4"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -21,7 +20,10 @@ retrofit2 = "2.9.0"
 okhttp = "4.9.3"
 # material icon
 materialIconsExtended = "1.7.8"
-securityCryptoKtx = "1.1.0-alpha06"
+# lifecycleRuntimeComposeAndroid
+lifecycleRuntimeComposeAndroid = "2.8.7"
+# datastore
+datastorePreferences = "1.1.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,11 +57,15 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
-# data store
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 # material icon
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+
+# lifecycle
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
+
+# data store
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

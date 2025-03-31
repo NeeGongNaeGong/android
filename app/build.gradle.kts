@@ -25,7 +25,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", properties.getProperty("baseUrl"))
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
+        buildConfigField("String", "GOOGLE_CLIENT_ID", properties.getProperty("GOOGLE_CLIENT_ID"))
     }
 
     buildTypes {
@@ -77,15 +78,17 @@ dependencies {
 
     // material icon
     implementation(libs.androidx.material.icons.extended)
-    
-    //google login
+
+    // google login
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-    
+
+    // with life cycle
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
+
     // data store
     implementation(libs.androidx.datastore.preferences)
 }
-
