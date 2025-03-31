@@ -7,6 +7,7 @@ import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import com.ssafy.neegongnaegong.data.remote.authenticator.ReissueAuthenticator
+import com.ssafy.neegongnaegong.data.remote.converter.ListQueryConverter
 import com.ssafy.neegongnaegong.data.remote.interceptor.AuthInterceptor
 import com.ssafy.neegongnaegong.data.remote.interceptor.NetworkErrorInterceptor
 import dagger.Module
@@ -34,6 +35,7 @@ object NetworkModule {
         .Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
+        .addConverterFactory(ListQueryConverter())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -46,6 +48,7 @@ object NetworkModule {
         .Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
+        .addConverterFactory(ListQueryConverter())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
