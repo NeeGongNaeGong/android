@@ -1,0 +1,42 @@
+package com.ssafy.neegongnaegong.data.repository
+
+import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
+import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
+import com.ssafy.neegongnaegong.domain.model.User
+import com.ssafy.neegongnaegong.domain.repository.UserRepository
+import com.ssafy.neegongnaegong.module.di.IoDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+class UserRepositoryImpl @Inject constructor(
+    private val localUserDataSource: LocalUserDataSource,
+    private val networkUserDataSource: NetworkUserDataSource,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) : UserRepository {
+    override suspend fun getUser(): Flow<User> = withContext(ioDispatcher) {
+        localUserDataSource.getUser()
+    }
+
+    override suspend fun getUser(id: Long): Flow<User> = withContext(ioDispatcher) {
+        networkUserDataSource.getUser(id).map { it.toDomain() }
+    }
+
+    override suspend fun validateNickname(nickname: String): Flow<Boolean> = withContext(ioDispatcher) {
+        networkUserDataSource.validateUserNickname(nickname).map { it.isAvailable }
+    }
+
+    override suspend fun updateNickname(nickname: String): Flow<Unit> = withContext(ioDispatcher) {
+        val user = localUserDataSource.getUser().first()
+        networkUserDataSource.updateUser(UpdateUserRequest(nickname = nickname, profileImg = user.profileImg)).map { Unit }
+    }
+
+    override suspend fun updateProfileImage(profileImage: String): Flow<Unit> = withContext(ioDispatcher) {
+        val user = localUserDataSource.getUser().first()
+        networkUserDataSource.updateUser(UpdateUserRequest(nickname = user.nickname, profileImg = profileImage)).map { Unit }
+    }
+}
