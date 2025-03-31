@@ -43,7 +43,6 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Spacer(modifier = Modifier.height(screenHeight * 0.1f))
 
         TimerText(elapsedTime = uiState.totalElapsedTime)

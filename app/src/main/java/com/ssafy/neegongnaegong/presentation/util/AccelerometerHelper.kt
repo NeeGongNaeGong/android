@@ -7,7 +7,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 
 class AccelerometerHelper(
-    private val context: Context,
+    context: Context,
     private val onFlipDetected: (Boolean) -> Unit
 ) {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -16,12 +16,8 @@ class AccelerometerHelper(
     private val sensorEventListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
             event?.let {
-                val z = it.values[2]
-                if (z < -8f) {
-                    onFlipDetected(true)
-                } else {
-                    onFlipDetected(false)
-                }
+                val zDimension = it.values[2]
+                onFlipDetected(zDimension < MINIMUM_FLIPPING_VALUE)
             }
         }
 
@@ -40,5 +36,9 @@ class AccelerometerHelper(
 
     fun unregister() {
         sensorManager.unregisterListener(sensorEventListener)
+    }
+
+    companion object {
+        private const val MINIMUM_FLIPPING_VALUE = -8f
     }
 }

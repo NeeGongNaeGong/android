@@ -16,11 +16,11 @@ class WriteViewModel @Inject constructor() :
     override fun handleEvent(event: WriteContract.Event) {
         when (event) {
             is WriteContract.Event.OnTitleChanged -> {
-
+                setState { copy(title = event.title) }
             }
 
             is WriteContract.Event.OnContentChanged -> {
-
+                setState { copy(content = event.content) }
             }
 
             WriteContract.Event.OnCancelClicked -> {

@@ -49,9 +49,7 @@ class TimerViewModel @Inject constructor() :
             // Dialog
             is TimerContract.Event.OnCancelDialog -> {
                 setState {
-                    copy(
-                        isPauseDialogVisible = false
-                    )
+                    copy(isPauseDialogVisible = false)
                 }
             }
 
