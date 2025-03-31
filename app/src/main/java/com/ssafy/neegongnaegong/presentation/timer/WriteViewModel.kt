@@ -53,12 +53,12 @@ class WriteViewModel @Inject constructor() :
             }
 
             is WriteContract.Event.onTagPlusClicked -> {
-                setState {
-                    copy(isDialogShow = true)
-                }
+                clearDialogTags()
+                setState { copy(isDialogShow = true) }
             }
 
             is WriteContract.Event.OnDialogClose -> {
+                clearDialogTags()
                 setState { copy(isDialogShow = false) }
             }
 
@@ -71,6 +71,8 @@ class WriteViewModel @Inject constructor() :
             }
         }
     }
+
+    private fun clearDialogTags() = setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
 
     private fun moveFromSelectedTagsToTags() {
         val newTags = uiState.value.tags + uiState.value.selectedTags
