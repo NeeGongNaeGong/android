@@ -46,22 +46,12 @@ fun DateTimeRangePicker(
     modifier: Modifier = Modifier,
     startDateTime: LocalDateTime,
     endDateTime: LocalDateTime,
+    isAllDay: Boolean,
     onStartDateTimeChange: (LocalDateTime) -> Unit = {},
     onEndDateTimeChange: (LocalDateTime) -> Unit = {},
+    onIsAllDayToggle: (Boolean) -> Unit = {}
 ) {
     var focusState by remember { mutableStateOf(DateTimePickerState.UNFOCUSED) }
-    var isAllDay by remember { mutableStateOf(endDateTime.second == 59) }
-
-    LaunchedEffect(isAllDay) {
-        if (isAllDay) {
-            if (focusState == DateTimePickerState.START_TIME_FOCUSED || focusState == DateTimePickerState.END_TIME_FOCUSED) focusState =
-                DateTimePickerState.UNFOCUSED
-            onStartDateTimeChange(startDateTime.withHour(0).withMinute(0).withSecond(0))
-            onEndDateTimeChange(endDateTime.withHour(23).withMinute(59).withSecond(59))
-        } else {
-            onEndDateTimeChange(endDateTime.withSecond(0))
-        }
-    }
 
     Column(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -76,7 +66,7 @@ fun DateTimeRangePicker(
                     .scale(0.75f)
                     .padding(end = 16.dp),
                 checked = isAllDay,
-                onCheckedChange = { isAllDay = it },
+                onCheckedChange = onIsAllDayToggle,
                 colors = SwitchDefaults.colors().copy(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,
                     checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
@@ -185,7 +175,8 @@ private fun PreviewDateTimeRangePicker() {
         Surface {
             DateTimeRangePicker(
                 startDateTime = LocalDateTime.of(2024, 1, 1, 0, 0),
-                endDateTime = LocalDateTime.of(2024, 1, 2, 23, 59)
+                endDateTime = LocalDateTime.of(2024, 1, 2, 23, 59),
+                isAllDay = true,
             )
         }
     }

@@ -79,6 +79,7 @@ class CalendarViewModel @Inject constructor(
                     content = "",
                     startDate = LocalDateTime.of(date, LocalTime.MIN),
                     endDate = LocalDateTime.of(date, LocalTime.MAX),
+                    isAllDay = true,
                     location = null,
                     repeatRule = null
                 )

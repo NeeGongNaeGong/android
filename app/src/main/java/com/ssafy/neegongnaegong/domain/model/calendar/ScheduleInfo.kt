@@ -7,6 +7,7 @@ data class ScheduleInfo(
     val content: String?,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
+    val isAllDay: Boolean,
     val location: String? = null,
     val repeatRule: RepeatRule? = null,
 )
