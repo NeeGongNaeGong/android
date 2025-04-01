@@ -71,6 +71,7 @@ fun ScheduleEditRoute(
         onContentChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnContentChanged(it)) },
         onStartDateChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnStartDateChanged(it)) },
         onEndDateChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnEndDateChanged(it)) },
+        onIsAllDayChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnIsAllDayChanged(it)) },
         onLocationChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnLocationChanged(it)) },
         onRepeatRuleChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnRepeatRuleChanged(it)) },
         onSaveScheduleClicked = {
@@ -93,6 +94,7 @@ fun ScheduleEditContent(
     onContentChanged: (String) -> Unit,
     onStartDateChanged: (LocalDateTime) -> Unit,
     onEndDateChanged: (LocalDateTime) -> Unit,
+    onIsAllDayChanged: (Boolean) -> Unit,
     onLocationChanged: (String) -> Unit,
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
@@ -125,6 +127,7 @@ fun ScheduleEditContent(
         content = uiState.schedule.content,
         startDate = uiState.schedule.startDate,
         endDate = uiState.schedule.endDate,
+        isAllDay = uiState.schedule.isAllDay,
         location = uiState.schedule.location,
         repeatRule = uiState.repeatRule,
         onTitleChange = onTitleChanged,
@@ -132,6 +135,7 @@ fun ScheduleEditContent(
         onRepeatRuleChanged = onRepeatRuleChanged,
         onStartDateChange = onStartDateChanged,
         onEndDateChange = onEndDateChanged,
+        onIsAllDayChange = onIsAllDayChanged,
         onLocationChange = onLocationChanged,
         onSaveScheduleClicked = onSaveScheduleClicked,
         onCancelClick = onCancelClick
@@ -145,6 +149,7 @@ fun ScheduleEditScreen(
     content: String? = null,
     startDate: LocalDateTime,
     endDate: LocalDateTime,
+    isAllDay: Boolean,
     location: String?,
     repeatRule: RepeatRuleInfo?,
     onTitleChange: (String) -> Unit,
@@ -153,6 +158,7 @@ fun ScheduleEditScreen(
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onStartDateChange: (LocalDateTime) -> Unit,
     onEndDateChange: (LocalDateTime) -> Unit,
+    onIsAllDayChange: (Boolean) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
     onCancelClick: () -> Unit,
 ) {
@@ -169,8 +175,10 @@ fun ScheduleEditScreen(
             DateTimeRangePicker(
                 startDateTime = startDate,
                 endDateTime = endDate,
+                isAllDay = isAllDay,
                 onStartDateTimeChange = onStartDateChange,
                 onEndDateTimeChange = onEndDateChange,
+                onIsAllDayToggle = onIsAllDayChange,
             )
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
@@ -237,6 +245,7 @@ private fun PreviewScheduleEditScreen() {
                 content = null,
                 startDate = LocalDateTime.now(),
                 endDate = LocalDateTime.now().plusHours(1),
+                isAllDay = false,
                 location = null,
                 repeatRule = RepeatRuleInfo(
                     repeatType = RepeatType.MONTHLY,
@@ -250,6 +259,7 @@ private fun PreviewScheduleEditScreen() {
                 onRepeatRuleChanged = { },
                 onStartDateChange = { },
                 onEndDateChange = { },
+                onIsAllDayChange = { },
                 onSaveScheduleClicked = { },
                 onCancelClick = { }
             )
