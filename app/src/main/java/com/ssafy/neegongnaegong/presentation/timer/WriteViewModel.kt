@@ -37,7 +37,7 @@ class WriteViewModel @Inject constructor() :
 
             // 태그 추가,삭제
             is WriteContract.Event.OnTagEraseClicked -> {
-
+                deleteTag(event.tag)
             }
 
             is WriteContract.Event.OnTagSelected -> {
@@ -52,7 +52,7 @@ class WriteViewModel @Inject constructor() :
                 updateDialogTags(event.query)
             }
 
-            is WriteContract.Event.onTagPlusClicked -> {
+            is WriteContract.Event.OnTagPlusClicked -> {
                 clearDialogTags()
                 setState { copy(isDialogShow = true) }
             }
@@ -64,6 +64,8 @@ class WriteViewModel @Inject constructor() :
 
             is WriteContract.Event.OnDialogConfirmClicked -> {
                 moveFromSelectedTagsToTags()
+                clearDialogTags()
+                setState { copy(isDialogShow = false) }
             }
 
             is WriteContract.Event.OnDialogCancelClicked -> {
@@ -84,6 +86,12 @@ class WriteViewModel @Inject constructor() :
             )
         }
     }
+
+    private fun deleteTag(tag: Tag){
+        val newTags = uiState.value.tags - tag
+        setState { copy(tags = newTags) }
+    }
+
 
     private fun selectTag(tag: Tag) {
         setState {

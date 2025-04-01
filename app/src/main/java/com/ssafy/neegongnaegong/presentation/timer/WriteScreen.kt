@@ -76,9 +76,10 @@ fun WriteScreenRoute(
         onConfirmClicked = { viewModel.setEvent(WriteContract.Event.OnConfirmClicked) },
         onTitleChanged = { viewModel.setEvent(WriteContract.Event.OnTitleChanged(it)) },
         onContentChanged = { viewModel.setEvent(WriteContract.Event.OnContentChanged(it)) },
-        onTagPlusClicked = { viewModel.setEvent(WriteContract.Event.onTagPlusClicked) },
-        onTagEraseClicked = { viewModel.setEvent(WriteContract.Event.OnTagEraseClicked) },
+        onTagPlusClicked = { viewModel.setEvent(WriteContract.Event.OnTagPlusClicked) },
+        onTagEraseClicked = { viewModel.setEvent(WriteContract.Event.OnTagEraseClicked(it)) },
         onDialogClosed = { viewModel.setEvent(WriteContract.Event.OnDialogClose) },
+        onDialogConfirmed = { viewModel.setEvent(WriteContract.Event.OnDialogConfirmClicked) },
         onSearchQueryChanged = { viewModel.setEvent(WriteContract.Event.OnSearchTextChanged(it)) },
         onTagSelected = { viewModel.setEvent(WriteContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(WriteContract.Event.OnTagDeselected(it)) },
@@ -97,8 +98,9 @@ fun WriteContent(
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
     onTagPlusClicked: () -> Unit,
-    onTagEraseClicked: (String) -> Unit,
+    onTagEraseClicked: (Tag) -> Unit,
     onDialogClosed: () -> Unit,
+    onDialogConfirmed: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
@@ -110,7 +112,7 @@ fun WriteContent(
             selectedTags = uiState.selectedTags,
             unSelectedTags = uiState.unSelectedTags,
             onCancel =  onDialogClosed,
-            onConfirm = onDialogClosed,
+            onConfirm = onDialogConfirmed,
             onSearchQueryChanged = onSearchQueryChanged,
             onTagSelected = onTagSelected,
             onTagDeselected = onTagDeselected,
@@ -167,7 +169,7 @@ fun WriteScreen(
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit = {},
     onTagPlusClicked: () -> Unit = {},
-    onTagEraseClicked: (String) -> Unit = {},
+    onTagEraseClicked: (Tag) -> Unit = {},
     onCancelClicked: () -> Unit = {},
     onConfirmClicked: () -> Unit = {},
 ) {
@@ -285,7 +287,7 @@ fun WriteScreen(
                             Icon(
                                 modifier = Modifier
                                     .size(16.dp)
-                                    .clickable { onTagEraseClicked(tag.koName) },
+                                    .clickable { onTagEraseClicked(tag) },
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "삭제",
                                 tint = Color.White
