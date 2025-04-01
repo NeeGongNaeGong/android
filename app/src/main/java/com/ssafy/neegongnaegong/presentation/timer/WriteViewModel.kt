@@ -49,7 +49,7 @@ class WriteViewModel @Inject constructor() :
             }
 
             is WriteContract.Event.OnSearchTextChanged -> {
-                updateDialogTags(event.query)
+                updateDialogTagsWithKmp(event.query)
             }
 
             is WriteContract.Event.OnTagPlusClicked -> {
@@ -74,7 +74,8 @@ class WriteViewModel @Inject constructor() :
         }
     }
 
-    private fun clearDialogTags() = setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
+    private fun clearDialogTags() =
+        setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
 
     private fun moveFromSelectedTagsToTags() {
         val newTags = uiState.value.tags + uiState.value.selectedTags
@@ -87,7 +88,7 @@ class WriteViewModel @Inject constructor() :
         }
     }
 
-    private fun deleteTag(tag: Tag){
+    private fun deleteTag(tag: Tag) {
         val newTags = uiState.value.tags - tag
         setState { copy(tags = newTags) }
     }
@@ -133,4 +134,58 @@ class WriteViewModel @Inject constructor() :
 
         setState { copy(unSelectedTags = filtered) }
     }
+
+    private fun updateDialogTagsWithKmp(query: String) {
+        val filtered = if (query.isBlank()) {
+            emptyList()
+        } else {
+            TagData.tags
+                .filterNot { tag ->
+                    uiState.value.tags.contains(tag) || uiState.value.selectedTags.contains(tag)
+                }
+                .filter { tag ->
+                    kmp(tag.koName, query) || kmp(tag.enName.lowercase(), query.lowercase())
+                }
+                .take(10)
+        }
+
+        setState { copy(unSelectedTags = filtered) }
+    }
+
+    private fun kmp(text: String, pattern: String): Boolean {
+        if (pattern.isEmpty()) return false
+        val pi = getPi(pattern)
+        var j = 0
+        for (i in text.indices) {
+            while (j > 0 && text[i] != pattern[j]) {
+                j = pi[j - 1]
+            }
+            if (text[i] == pattern[j]) {
+                if (j == pattern.length - 1) {
+                    return true
+                } else {
+                    j++
+                }
+            }
+        }
+        return false
+    }
+
+    private fun getPi(pattern: String): IntArray {
+        val pi = IntArray(pattern.length)
+        var j = 0
+        for (i in 1 until pattern.length) {
+            while (j > 0 && pattern[i] != pattern[j]) {
+                j = pi[j - 1]
+            }
+            if (pattern[i] == pattern[j]) {
+                j++
+                pi[i] = j
+            }
+        }
+        return pi
+    }
+
+
 }
+
