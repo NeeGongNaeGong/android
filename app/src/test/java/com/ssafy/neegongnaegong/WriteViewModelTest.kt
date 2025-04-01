@@ -29,18 +29,33 @@ class WriteViewModelTest {
     }
 
     @Test
-    fun `updateDialogTags without kmp performance test`() {
+    fun updateDialogTagsWithoutKmpPerformanceTest() {
         val viewModel = WriteViewModel()
 
         val time = measureTimeMillis {
             repeat(1000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("프")
+                    WriteContract.Event.OnSearchTextChanged("aaaaa")
                 )
             }
         }
 
         println("updateDialogTags 1000회 수행 시간: ${time}ms")
+    }
+
+    @Test
+    fun updateDialogTagsWithKmpPerformanceTest() {
+        val viewModel = WriteViewModel()
+
+        val time = measureTimeMillis {
+            repeat(1000) {
+                viewModel.setEvent(
+                    WriteContract.Event.OnSearchTextChanged("aaaaa")
+                )
+            }
+        }
+
+        println("updateDialogTags with kmp 1000회 수행 시간: ${time}ms")
     }
 
 
