@@ -155,21 +155,32 @@ class WriteViewModel @Inject constructor() :
     }
 
     private fun updateDialogTagsWithKmp(query: String) {
-        val filtered = if (query.isBlank()) {
-            emptyList()
-        } else {
-            TagData.tags
-                .filterNot { tag ->
-                    uiState.value.tags.contains(tag) || uiState.value.selectedTags.contains(tag)
-                }
-                .filter { tag ->
-                    kmp(tag.koName, query) || kmp(tag.enName.lowercase(), query.lowercase())
-                }
-                .take(10)
+        if (query.isBlank()) {
+            setState { copy(unSelectedTags = emptyList()) }
+            return
         }
 
-        setState { copy(unSelectedTags = filtered) }
+        val selected = uiState.value.tags
+        val selectedInDialog = uiState.value.selectedTags
+
+        val availableTags = TagData.tags.filterNot { selected.contains(it) || selectedInDialog.contains(it) }
+
+        val startsWithList = availableTags.filter { tag ->
+            tag.koName.startsWith(query) || tag.enName.lowercase().startsWith(query.lowercase())
+        }
+
+        val kmpList = availableTags.filter { tag ->
+            kmp(tag.koName, query) || kmp(tag.enName.lowercase(), query.lowercase())
+        }
+
+        val merged = buildList {
+            addAll(startsWithList)
+            addAll(kmpList.filterNot { it in startsWithList })
+        }.take(10)
+
+        setState { copy(unSelectedTags = merged) }
     }
+
 
     private fun kmp(text: String, pattern: String): Boolean {
         if (pattern.isEmpty()) return false
