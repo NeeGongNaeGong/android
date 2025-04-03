@@ -53,7 +53,7 @@ class WriteViewModel @Inject constructor() :
             }
 
             is WriteContract.Event.OnTagPlusClicked -> {
-                clearDialogTags()
+                moveFromTagsToSelectedTags()
                 setState { copy(isDialogShow = true) }
             }
 
@@ -78,22 +78,33 @@ class WriteViewModel @Inject constructor() :
         }
     }
 
+    private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
+
     private fun clearDialogTags() =
         setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
 
     private fun moveFromSelectedTagsToTags() {
-        val newTags = uiState.value.tags + uiState.value.selectedTags
+        val tags = uiState.value.tags.toSet()
+        val selected = uiState.value.selectedTags.toSet()
+
+        val merged = tags + selected
+
         setState {
             copy(
-                tags = newTags,
+                tags = merged.toList(),
                 selectedTags = emptyList(),
                 unSelectedTags = emptyList()
             )
         }
     }
 
-    private fun checkTagSize() =
-        ((uiState.value.tags.size + uiState.value.selectedTags.size) > MAX_TAG_LIMIT)
+    private fun checkTagSize(): Boolean {
+        val tags = uiState.value.tags
+        val selected = uiState.value.selectedTags
+
+        val merged = (tags + selected).toSet()
+        return merged.size > MAX_TAG_LIMIT
+    }
 
 
     private fun deleteTag(tag: Tag) {
