@@ -115,6 +115,10 @@ fun WriteContent(
                 is WriteContract.Effect.ShowSuccessToast -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
+
+                is WriteContract.Effect.ShowTagLimitExceededToast -> {
+                    Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.",Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -139,6 +143,11 @@ fun WriteContent(
 
 }
 
+// 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
+// 태그선택한거 다이얼로그에 보여주기
+// a -> a 시작부터하는거 쿼리 먼저 보여주기, 만 쳐야 만화나오는거
+// 태그 최대 제한 5개 O
+
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
@@ -148,7 +157,7 @@ fun WriteScreen(
     startTime: Long = 0,
     endTime: Long = 0,
     tags: List<Tag> = emptyList(),
-    onTitleChanged: (String) -> Unit,
+    onTitleChanged: (String) -> Unit = {},
     onContentChanged: (String) -> Unit = {},
     onTagPlusClicked: () -> Unit = {},
     onTagEraseClicked: (Tag) -> Unit = {},

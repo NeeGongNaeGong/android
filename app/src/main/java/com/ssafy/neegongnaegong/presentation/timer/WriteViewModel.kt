@@ -63,9 +63,13 @@ class WriteViewModel @Inject constructor() :
             }
 
             is WriteContract.Event.OnDialogConfirmClicked -> {
-                moveFromSelectedTagsToTags()
-                clearDialogTags()
-                setState { copy(isDialogShow = false) }
+                if (checkTagSize()) {
+                    setEffect { WriteContract.Effect.ShowTagLimitExceededToast }
+                } else {
+                    moveFromSelectedTagsToTags()
+                    clearDialogTags()
+                    setState { copy(isDialogShow = false) }
+                }
             }
 
             is WriteContract.Event.OnDialogCancelClicked -> {
@@ -87,6 +91,10 @@ class WriteViewModel @Inject constructor() :
             )
         }
     }
+
+    private fun checkTagSize() =
+        ((uiState.value.tags.size + uiState.value.selectedTags.size) > MAX_TAG_LIMIT)
+
 
     private fun deleteTag(tag: Tag) {
         val newTags = uiState.value.tags - tag
@@ -187,5 +195,8 @@ class WriteViewModel @Inject constructor() :
     }
 
 
+    companion object {
+        const val MAX_TAG_LIMIT = 5
+    }
 }
 
