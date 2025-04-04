@@ -30,9 +30,10 @@ class CalendarRepositoryImpl @Inject constructor(
     }
 
     override suspend fun createPersonalSchedule(
-        schedule: ScheduleInfo
+        schedule: ScheduleInfo,
+        repeatRule: RepeatRuleInfo?
     ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.createPersonalSchedule(CreatePersonalScheduleRequest.fromDomain(schedule))
+        dataSource.createPersonalSchedule(CreatePersonalScheduleRequest.fromDomain(schedule, repeatRule))
             .map { it.toDomain() }
     }
 
