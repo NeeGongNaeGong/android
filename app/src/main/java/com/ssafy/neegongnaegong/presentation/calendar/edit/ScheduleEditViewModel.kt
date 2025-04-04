@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class ScheduleEditViewModel @Inject constructor(
 
     override fun handleEvent(event: ScheduleEditContract.Event) {
         when (event) {
-            is ScheduleEditContract.Event.InitSchedule -> initSchedule(event.schedule)
+            is ScheduleEditContract.Event.OnLoad -> onLoad(event.date, event.schedule)
             is ScheduleEditContract.Event.OnSaveScheduleClicked -> saveSchedule(event.type)
             is ScheduleEditContract.Event.OnTitleChanged -> setSchedule(title = event.title)
             is ScheduleEditContract.Event.OnContentChanged -> setSchedule(content = event.content)
@@ -36,13 +37,13 @@ class ScheduleEditViewModel @Inject constructor(
         }
     }
 
-    private fun initSchedule(schedule: Schedule) {
+    private fun onLoad(date: LocalDate, schedule: Schedule) {
         setState {
             copy(
                 id = schedule.id,
+                date = date,
                 schedule = schedule.info,
                 repeatRule = schedule.info.repeatRule?.info,
-                date = schedule.info.startDate.toLocalDate()
             )
         }
     }
