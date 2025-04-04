@@ -32,6 +32,7 @@ fun DateTimePicker(
     isTimeFocused: Boolean = false,
     onTimeClicked: () -> Unit = {},
     isTimeVisible: Boolean = true,
+    enable: Boolean = true,
 ) {
     Column(
         modifier = modifier,
@@ -40,7 +41,7 @@ fun DateTimePicker(
         Text(
             modifier = Modifier
                 .clip(RoundedCornerShape(100))
-                .clickable(onClick = onDateClicked)
+                .clickable(onClick = onDateClicked, enabled = enable)
                 .background(
                     color = if (isDateFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                     shape = RoundedCornerShape(100)

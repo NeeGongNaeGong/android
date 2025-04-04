@@ -18,7 +18,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +48,8 @@ fun DateTimeRangePicker(
     isAllDay: Boolean,
     onStartDateTimeChange: (LocalDateTime) -> Unit = {},
     onEndDateTimeChange: (LocalDateTime) -> Unit = {},
-    onIsAllDayToggle: (Boolean) -> Unit = {}
+    onIsAllDayToggle: (Boolean) -> Unit = {},
+    enable: Boolean = true,
 ) {
     var focusState by remember { mutableStateOf(DateTimePickerState.UNFOCUSED) }
 
@@ -67,6 +67,7 @@ fun DateTimeRangePicker(
                     .padding(end = 16.dp),
                 checked = isAllDay,
                 onCheckedChange = onIsAllDayToggle,
+                enabled = enable,
                 colors = SwitchDefaults.colors().copy(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,
                     checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
@@ -74,7 +75,16 @@ fun DateTimeRangePicker(
                     checkedIconColor = MaterialTheme.colorScheme.onPrimary,
                     uncheckedThumbColor = MaterialTheme.colorScheme.onBackground,
                     uncheckedTrackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                    uncheckedBorderColor = MaterialTheme.colorScheme.onBackground
+                    uncheckedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    uncheckedIconColor = MaterialTheme.colorScheme.onBackground,
+                    disabledCheckedThumbColor = MaterialTheme.colorScheme.primary,
+                    disabledCheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                    disabledCheckedBorderColor = MaterialTheme.colorScheme.primary,
+                    disabledCheckedIconColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledUncheckedThumbColor = MaterialTheme.colorScheme.onBackground,
+                    disabledUncheckedTrackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    disabledUncheckedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    disabledUncheckedIconColor = MaterialTheme.colorScheme.onBackground,
                 )
             )
         }
@@ -98,7 +108,8 @@ fun DateTimeRangePicker(
                         DateTimePickerState.START_TIME_FOCUSED
                     }
                 },
-                isTimeVisible = !isAllDay
+                isTimeVisible = !isAllDay,
+                enable = enable,
             )
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 Icon(
@@ -126,7 +137,8 @@ fun DateTimeRangePicker(
                         DateTimePickerState.END_TIME_FOCUSED
                     }
                 },
-                isTimeVisible = !isAllDay
+                isTimeVisible = !isAllDay,
+                enable = enable,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
