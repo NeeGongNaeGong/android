@@ -43,7 +43,6 @@ import java.time.LocalDateTime
 fun ScheduleDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ScheduleDetailViewModel = hiltViewModel(),
-    date: LocalDate,
     schedule: Schedule,
     popBackStack: () -> Unit,
     navigateToEditScheduleScreen: (Schedule) -> Unit
@@ -55,7 +54,7 @@ fun ScheduleDetailRoute(
     val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(ScheduleDetailContract.Event.OnLoad(date, schedule))
+        viewModel.setEvent(ScheduleDetailContract.Event.OnLoad(schedule))
     }
 
     ScheduleDetailContent(

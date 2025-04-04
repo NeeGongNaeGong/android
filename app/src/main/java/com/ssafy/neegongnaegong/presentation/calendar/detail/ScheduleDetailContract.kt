@@ -5,11 +5,10 @@ import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
-import java.time.LocalDate
 
 class ScheduleDetailContract {
     sealed class Event : UiEvent {
-        data class OnLoad(val date: LocalDate, val schedule: Schedule) : Event()
+        data class OnLoad(val schedule: Schedule) : Event()
         data object OnEditClick : Event()
         data class OnDeleteClick(val type: DeleteType) : Event()
     }
@@ -18,7 +17,6 @@ class ScheduleDetailContract {
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
-        val date: LocalDate? = null,
         val schedule: Schedule? = null,
     ) : UiState
 

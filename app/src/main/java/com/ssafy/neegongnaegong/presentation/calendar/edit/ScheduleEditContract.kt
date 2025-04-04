@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 
 class ScheduleEditContract {
     sealed class Event : UiEvent {
-        data class OnLoad(val date: LocalDate, val schedule: Schedule) : Event()
+        data class OnLoad(val schedule: Schedule) : Event()
         data class OnTitleChanged(val title: String) : Event()
         data class OnContentChanged(val content: String?) : Event()
         data class OnStartDateChanged(val date: LocalDateTime) : Event()

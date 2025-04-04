@@ -19,16 +19,14 @@ class ScheduleDetailViewModel @Inject constructor(
 
     override fun handleEvent(event: ScheduleDetailContract.Event) {
         when (event) {
-            is ScheduleDetailContract.Event.OnLoad -> onLoad(event.date, event.schedule)
+            is ScheduleDetailContract.Event.OnLoad -> onLoad(event.schedule)
             ScheduleDetailContract.Event.OnEditClick -> navigateToEditScheduleScreen()
             is ScheduleDetailContract.Event.OnDeleteClick -> deleteSchedule(event.type)
         }
     }
 
-    private fun onLoad(date: LocalDate, schedule: Schedule) {
-        setState {
-            copy(date = date, schedule = schedule)
-        }
+    private fun onLoad(schedule: Schedule) {
+        setState { copy(schedule = schedule) }
     }
 
     private fun navigateToEditScheduleScreen() {
@@ -44,11 +42,11 @@ class ScheduleDetailViewModel @Inject constructor(
 
     private fun deleteSchedule(type: DeleteType) = viewModelScope.launch {
         with(uiState.value) {
-            if (date == null || schedule == null) {
+            if (schedule == null) {
                 setEffect { ScheduleDetailContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
                 setEffect { ScheduleDetailContract.Effect.NavigateBack }
             } else {
-                deletePersonalSchedulesUseCase(schedule.id, type, date)
+                deletePersonalSchedulesUseCase(schedule.id, type, schedule.info.startDate.toLocalDate())
             }
         }
     }

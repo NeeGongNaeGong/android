@@ -48,7 +48,6 @@ import java.time.LocalDateTime
 @Composable
 fun ScheduleEditRoute(
     modifier: Modifier = Modifier,
-    date: LocalDate,
     schedule: Schedule,
     viewModel: ScheduleEditViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
@@ -58,7 +57,7 @@ fun ScheduleEditRoute(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(ScheduleEditContract.Event.OnLoad(date, schedule))
+        viewModel.setEvent(ScheduleEditContract.Event.OnLoad(schedule))
     }
 
     val uiState = viewModel.uiState.collectAsState()

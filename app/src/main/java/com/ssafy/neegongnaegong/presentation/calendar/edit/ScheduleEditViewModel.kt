@@ -24,7 +24,7 @@ class ScheduleEditViewModel @Inject constructor(
 
     override fun handleEvent(event: ScheduleEditContract.Event) {
         when (event) {
-            is ScheduleEditContract.Event.OnLoad -> onLoad(event.date, event.schedule)
+            is ScheduleEditContract.Event.OnLoad -> onLoad(event.schedule)
             is ScheduleEditContract.Event.OnSaveScheduleClicked -> saveSchedule(event.type)
             is ScheduleEditContract.Event.OnTitleChanged -> setSchedule(title = event.title)
             is ScheduleEditContract.Event.OnContentChanged -> setSchedule(content = event.content)
@@ -37,11 +37,11 @@ class ScheduleEditViewModel @Inject constructor(
         }
     }
 
-    private fun onLoad(date: LocalDate, schedule: Schedule) {
+    private fun onLoad(schedule: Schedule) {
         setState {
             copy(
                 id = schedule.id,
-                date = date,
+                date = schedule.info.startDate.toLocalDate(),
                 schedule = schedule.info,
                 repeatRule = schedule.info.repeatRule?.info,
             )
