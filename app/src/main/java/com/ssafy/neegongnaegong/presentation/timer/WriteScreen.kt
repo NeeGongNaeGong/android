@@ -144,11 +144,7 @@ fun WriteContent(
 }
 
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
-// 태그선택한거 다이얼로그에 보여주기
-// a -> a 시작부터하는거 쿼리 먼저 보여주기, 만 쳐야 만화나오는거
-// 태그 최대 제한 5개 O
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WriteScreen(
     modifier: Modifier = Modifier,
