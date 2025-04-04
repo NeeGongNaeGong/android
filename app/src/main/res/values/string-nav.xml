@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="studies">스터디</string>
+    <string name="personal">개인</string>
+    <string name="calendar">캘린더</string>
+    <string name="profile">마이페이지</string>
+</resources>
