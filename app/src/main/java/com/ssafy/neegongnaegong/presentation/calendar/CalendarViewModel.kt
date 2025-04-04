@@ -42,7 +42,7 @@ class CalendarViewModel @Inject constructor(
             )
 
             is CalendarContract.Event.OnEditScheduleClicked -> setEffect {
-                CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
+                CalendarContract.Effect.NavigateToScheduleEditScreen(event.schedule)
             }
 
             is CalendarContract.Event.OnScheduleClicked -> setEffect {

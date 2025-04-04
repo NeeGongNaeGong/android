@@ -41,8 +41,9 @@ fun CalendarRoute(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
-    navigateToScheduleDetail: (Schedule) -> Unit,
     navigateToScheduleCreate: (LocalDate) -> Unit,
+    navigateToScheduleDetail: (Schedule) -> Unit,
+    navigateToScheduleEdit: (Schedule) -> Unit,
 ) {
     BackHandler {
         popBackStack()
@@ -59,15 +60,11 @@ fun CalendarRoute(
         onDialogDismissRequest = { viewModel.setEvent(CalendarContract.Event.OnDialogDismissed) },
         onScheduleClicked = { viewModel.setEvent(CalendarContract.Event.OnScheduleClicked(it)) },
         createSchedule = { date, title ->
-            viewModel.setEvent(
-                CalendarContract.Event.OnCreateScheduleClicked(
-                    date,
-                    title
-                )
-            )
+            viewModel.setEvent(CalendarContract.Event.OnCreateScheduleClicked(date, title))
         },
         navigateToScheduleDetail = navigateToScheduleDetail,
         navigateToScheduleCreate = navigateToScheduleCreate,
+        navigateToEditSchedule = navigateToScheduleEdit
     )
 }
 
@@ -83,6 +80,7 @@ fun CalendarContent(
     createSchedule: (LocalDate, String) -> Unit,
     navigateToScheduleDetail: (Schedule) -> Unit,
     navigateToScheduleCreate: (LocalDate) -> Unit,
+    navigateToEditSchedule: (Schedule) -> Unit,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val snackbarHostState = remember { SnackbarHostState() }
@@ -91,13 +89,11 @@ fun CalendarContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(
-                    effect.schedule
-                )
+                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(effect.schedule)
 
-                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
-                    effect.date
-                )
+                is CalendarContract.Effect.NavigateToScheduleEditScreen -> navigateToEditSchedule(effect.schedule)
+
+                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(effect.date)
 
                 is CalendarContract.Effect.ShowErrorSnackBar -> scope.launch {
                     snackbarHostState.showSnackbar(
