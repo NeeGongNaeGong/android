@@ -13,7 +13,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
@@ -47,12 +48,12 @@ fun CalendarRoute(
         popBackStack()
     }
 
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CalendarContent(
         modifier = modifier,
         effect = viewModel.effect,
-        uiState = uiState.value,
+        uiState = uiState,
         onMonthSelected = { viewModel.setEvent(CalendarContract.Event.OnMonthSelected(it)) },
         onDateSelected = { viewModel.setEvent(CalendarContract.Event.OnDateSelected(it)) },
         onDialogDismissRequest = { viewModel.setEvent(CalendarContract.Event.OnDialogDismissed) },

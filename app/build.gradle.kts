@@ -9,8 +9,9 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
+val properties = Properties().apply {
+    load(File(rootProject.rootDir, "local.properties").inputStream())
+}
 
 android {
     namespace = "com.ssafy.neegongnaegong"
@@ -24,6 +25,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
         buildConfigField("String", "GOOGLE_CLIENT_ID", properties.getProperty("GOOGLE_CLIENT_ID"))
     }
 
@@ -58,7 +60,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.lifecycle.runtime.compose.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,7 +78,7 @@ dependencies {
 
     // material icon
     implementation(libs.androidx.material.icons.extended)
-    
+
     // google login
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
@@ -86,6 +87,8 @@ dependencies {
     implementation(libs.googleid)
 
     // with life cycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-}
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
 
+    // data store
+    implementation(libs.androidx.datastore.preferences)
+}
