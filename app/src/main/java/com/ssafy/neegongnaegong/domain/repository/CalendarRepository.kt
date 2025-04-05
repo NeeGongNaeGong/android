@@ -11,6 +11,7 @@ import java.time.YearMonth
 
 interface CalendarRepository {
     suspend fun getUserSchedules(month: YearMonth): Flow<List<Schedule>>
+    suspend fun getScheduleDetail(id: Long): Flow<Schedule>
     suspend fun createPersonalSchedule(schedule: ScheduleInfo, repeatRule: RepeatRuleInfo?): Flow<Schedule>
     suspend fun updatePersonalSchedule(id: Long, schedule: ScheduleInfo, repeatRule: RepeatRuleInfo?, type: UpdateType, date: LocalDate): Flow<Schedule>
     suspend fun deletePersonalSchedule(id: Long, type: DeleteType, date: LocalDate): Flow<Unit>

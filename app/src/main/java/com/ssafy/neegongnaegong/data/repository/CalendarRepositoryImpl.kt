@@ -29,6 +29,12 @@ class CalendarRepositoryImpl @Inject constructor(
         dataSource.getUserSchedules(month).map { it.schedules.map { it.toDomain() } }
     }
 
+    override suspend fun getScheduleDetail(
+        id: Long
+    ): Flow<Schedule> = withContext(ioDispatcher) {
+        dataSource.getPersonalSchedule(id).map { it.toDomain() }
+    }
+
     override suspend fun createPersonalSchedule(
         schedule: ScheduleInfo,
         repeatRule: RepeatRuleInfo?
