@@ -36,16 +36,15 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
 fun ScheduleDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ScheduleDetailViewModel = hiltViewModel(),
-    schedule: Schedule,
+    scheduleId: Long,
     popBackStack: () -> Unit,
-    navigateToEditScheduleScreen: (Schedule) -> Unit
+    navigateToEditScheduleScreen: (Long) -> Unit
 ) {
     BackHandler {
         popBackStack()
@@ -54,7 +53,7 @@ fun ScheduleDetailRoute(
     val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(ScheduleDetailContract.Event.OnLoad(schedule))
+        viewModel.setEvent(ScheduleDetailContract.Event.OnLoad(scheduleId))
     }
 
     ScheduleDetailContent(
@@ -63,7 +62,7 @@ fun ScheduleDetailRoute(
         uiState = uiState.value,
         onEditClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnEditClick) },
         onDeleteClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnDeleteClick(it)) },
-        navigateToEditScheduleScreen = navigateToEditScheduleScreen,
+        navigateToEditScheduleScreen = { navigateToEditScheduleScreen(it.id) },
     )
 }
 

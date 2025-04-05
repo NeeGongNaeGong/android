@@ -2,21 +2,21 @@ package com.ssafy.neegongnaegong.presentation.calendar.edit
 
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
-import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
+import com.ssafy.neegongnaegong.domain.usecase.calendar.GetScheduleDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.calendar.UpdatePersonalSchedulesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleEditViewModel @Inject constructor(
+    private val getScheduleDetailUseCase: GetScheduleDetailUseCase,
     private val updatePersonalSchedulesUseCase: UpdatePersonalSchedulesUseCase,
 ) : BaseViewModel<ScheduleEditContract.Event, ScheduleEditContract.State, ScheduleEditContract.Effect>() {
 
@@ -24,7 +24,7 @@ class ScheduleEditViewModel @Inject constructor(
 
     override fun handleEvent(event: ScheduleEditContract.Event) {
         when (event) {
-            is ScheduleEditContract.Event.OnLoad -> onLoad(event.schedule)
+            is ScheduleEditContract.Event.OnLoad -> onLoad(event.scheduleId)
             is ScheduleEditContract.Event.OnSaveScheduleClicked -> saveSchedule(event.type)
             is ScheduleEditContract.Event.OnTitleChanged -> setSchedule(title = event.title)
             is ScheduleEditContract.Event.OnContentChanged -> setSchedule(content = event.content)
@@ -37,14 +37,18 @@ class ScheduleEditViewModel @Inject constructor(
         }
     }
 
-    private fun onLoad(schedule: Schedule) {
-        setState {
-            copy(
-                id = schedule.id,
-                date = schedule.info.startDate.toLocalDate(),
-                schedule = schedule.info,
-                repeatRule = schedule.info.repeatRule?.info,
-            )
+    private fun onLoad(scheduleId: Long) = viewModelScope.launch {
+        getScheduleDetailUseCase(scheduleId).withLoading {
+            setState { copy(isLoading = it) }
+        }.safeCollect { schedule ->
+            setState {
+                copy(
+                    id = schedule.id,
+                    date = schedule.info.startDate.toLocalDate(),
+                    schedule = schedule.info,
+                    repeatRule = schedule.info.repeatRule?.info,
+                )
+            }
         }
     }
 
@@ -66,7 +70,10 @@ class ScheduleEditViewModel @Inject constructor(
                 schedule = ScheduleInfo(
                     title = title,
                     content = content,
-                    startDate = if (isAllDay) LocalDateTime.of(startDate.toLocalDate(), LocalTime.MIN)
+                    startDate = if (isAllDay) LocalDateTime.of(
+                        startDate.toLocalDate(),
+                        LocalTime.MIN
+                    )
                     else if (startDate.isAfter(endDate)) endDate
                     else startDate,
                     endDate = if (isAllDay) LocalDateTime.of(endDate.toLocalDate(), LocalTime.MAX)

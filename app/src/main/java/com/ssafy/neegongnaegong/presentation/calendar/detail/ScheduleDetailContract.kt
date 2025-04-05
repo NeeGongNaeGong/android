@@ -8,7 +8,7 @@ import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class ScheduleDetailContract {
     sealed class Event : UiEvent {
-        data class OnLoad(val schedule: Schedule) : Event()
+        data class OnLoad(val scheduleId: Long) : Event()
         data object OnEditClick : Event()
         data class OnDeleteClick(val type: DeleteType) : Event()
     }

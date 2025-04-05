@@ -33,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
-import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
@@ -42,13 +41,12 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
 fun ScheduleEditRoute(
     modifier: Modifier = Modifier,
-    schedule: Schedule,
+    scheduleId: Long,
     viewModel: ScheduleEditViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
 ) {
@@ -57,7 +55,7 @@ fun ScheduleEditRoute(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(ScheduleEditContract.Event.OnLoad(schedule))
+        viewModel.setEvent(ScheduleEditContract.Event.OnLoad(scheduleId))
     }
 
     val uiState = viewModel.uiState.collectAsState()
@@ -106,7 +104,10 @@ fun ScheduleEditContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                ScheduleEditContract.Effect.NavigateBack -> backDispatcher?.onBackPressed()
+                ScheduleEditContract.Effect.NavigateBack -> {
+                    backDispatcher?.onBackPressed()
+                }
+
                 is ScheduleEditContract.Effect.ShowErrorSnackBar -> scope.launch {
                     snackbarHostState.showSnackbar(
                         message = effect.message,
@@ -163,8 +164,12 @@ fun ScheduleEditScreen(
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize().then(modifier)) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .then(modifier)) {
+        Column(modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .weight(1f)) {
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
@@ -194,7 +199,9 @@ fun ScheduleEditScreen(
                 prefix = Icons.Outlined.LocationOn,
             )
             ScheduleEditText(
-                modifier = Modifier.fillMaxWidth().clickable { isRepeatRuleFocused = !isRepeatRuleFocused },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { isRepeatRuleFocused = !isRepeatRuleFocused },
                 text = repeatRule?.toDisplayString() ?: "반복 안 함",
                 placeHolder = "반복 안 함",
                 prefix = Icons.Outlined.Repeat,
