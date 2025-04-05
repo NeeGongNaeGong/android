@@ -38,14 +38,6 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
-    val screens =
-        listOf(
-            BottomNavItem.StudiesScreen,
-            BottomNavItem.PersonalScreen,
-            BottomNavItem.CalendarScreen,
-            BottomNavItem.ProfileScreen,
-        )
-
     NavigationBar(
         modifier =
             modifier
@@ -64,7 +56,7 @@ fun BottomNavigationBar(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
-        screens.forEach { screen ->
+        BottomNavItem.itemList.forEach { screen ->
             val selected = currentRoute == screen.route
 
             NavigationBarItem(
@@ -73,7 +65,7 @@ fun BottomNavigationBar(
                     Icon(
                         painter =
                             painterResource(
-                                id = if (currentRoute == screen.route) screen.iconSelected else screen.icon,
+                                id = if (selected) screen.iconSelected else screen.icon,
                             ),
                         contentDescription = stringResource(id = screen.title),
                     )
@@ -84,7 +76,7 @@ fun BottomNavigationBar(
                         style = if (selected) Typography.bodySmall.copy(fontSize = 12.sp) else Typography.labelSmall,
                     )
                 },
-                selected = currentRoute == screen.route,
+                selected = selected,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {

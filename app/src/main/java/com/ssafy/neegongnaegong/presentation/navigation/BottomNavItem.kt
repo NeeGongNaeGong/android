@@ -37,4 +37,13 @@ sealed class BottomNavItem(
         iconSelected = R.drawable.ic_bot_nav_fill_profile,
         route = ScreenDestinations.Profile.createRoute(-1),
     )
+
+    companion object {
+        val itemList = listOf(
+            StudiesScreen,
+            PersonalScreen,
+            CalendarScreen,
+            ProfileScreen,
+        )
+    }
 }
