@@ -14,28 +14,28 @@ sealed class BottomNavItem(
         title = R.string.studies,
         icon = R.drawable.ic_bot_nav_outline_studies,
         iconSelected = R.drawable.ic_bot_nav_fill_studies,
-        route = ScreenDestinations.Studies.route,
+        route = AppNavigation.Tab.Studies.route,
     )
 
     data object PersonalScreen : BottomNavItem(
         title = R.string.personal,
         icon = R.drawable.ic_bot_nav_outline_individual,
         iconSelected = R.drawable.ic_bot_nav_fill_individual,
-        route = ScreenDestinations.Personal.route,
+        route = AppNavigation.Tab.Personal.route,
     )
 
     data object CalendarScreen : BottomNavItem(
         title = R.string.calendar,
         icon = R.drawable.ic_bot_nav_outline_calendar,
         iconSelected = R.drawable.ic_bot_nav_fill_calendar,
-        route = ScreenDestinations.Calendar.route,
+        route = AppNavigation.Tab.Calendar.route,
     )
 
     data object ProfileScreen : BottomNavItem(
         title = R.string.profile,
         icon = R.drawable.ic_bot_nav_outline_profile,
         iconSelected = R.drawable.ic_bot_nav_fill_profile,
-        route = ScreenDestinations.Profile.createRoute(-1),
+        route = AppNavigation.Tab.Profile.createRoute(-1),
     )
 
     companion object {
