@@ -38,7 +38,7 @@ fun CalendarScheduleDialog(
             ) {
                 schedules.fastForEachIndexed { index, schedule ->
                     ScheduleInfo(
-                        modifier = Modifier.padding(1.dp),
+                        modifier = Modifier.padding(1.dp).fillMaxWidth(),
                         schedule = schedule,
                         showPrefix = index == 0
                                 || schedule.info.startDate.toLocalTime() != schedules[index - 1].info.startDate.toLocalTime()
