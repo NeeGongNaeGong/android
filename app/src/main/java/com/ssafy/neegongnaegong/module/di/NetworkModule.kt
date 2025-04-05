@@ -1,11 +1,15 @@
 package com.ssafy.neegongnaegong.module.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.GitHubApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
+import com.ssafy.neegongnaegong.data.remote.adapter.LocalDateAdapter
+import com.ssafy.neegongnaegong.data.remote.adapter.LocalDateTimeAdapter
 import com.ssafy.neegongnaegong.data.remote.authenticator.ReissueAuthenticator
 import com.ssafy.neegongnaegong.data.remote.converter.ListQueryConverter
 import com.ssafy.neegongnaegong.data.remote.interceptor.AuthInterceptor
@@ -18,6 +22,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -28,15 +34,25 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder()
+            .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
+            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
+            .create()
+    }
+
+    @Provides
+    @Singleton
     @AuthRetrofit
     fun provideAuthRetrofit(
         @AuthOkHttpClient okHttpClient: OkHttpClient,
+        gson: Gson,
     ): Retrofit = Retrofit
         .Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(ListQueryConverter())
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
     @Provides
@@ -44,12 +60,13 @@ object NetworkModule {
     @SecureRetrofit
     fun provideSecureRetrofit(
         @SecureOkHttpClient okHttpClient: OkHttpClient,
+        gson: Gson,
     ): Retrofit = Retrofit
         .Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(ListQueryConverter())
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
     @Provides
