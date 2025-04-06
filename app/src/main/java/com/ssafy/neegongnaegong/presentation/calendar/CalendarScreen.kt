@@ -28,6 +28,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -89,11 +90,17 @@ fun CalendarContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(effect.schedule)
+                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(
+                    effect.schedule
+                )
 
-                is CalendarContract.Effect.NavigateToScheduleEditScreen -> navigateToEditSchedule(effect.schedule)
+                is CalendarContract.Effect.NavigateToScheduleEditScreen -> navigateToEditSchedule(
+                    effect.schedule
+                )
 
-                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(effect.date)
+                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
+                    effect.date
+                )
 
                 is CalendarContract.Effect.ShowErrorSnackBar -> scope.launch {
                     snackbarHostState.showSnackbar(
@@ -114,6 +121,8 @@ fun CalendarContent(
         onDateSelected = onDateSelected,
         createSchedule = createSchedule,
     )
+
+    if (uiState.isLoading) LoadingDialog()
 
     if (uiState.isCalendarDialogShow) CalendarScheduleDialog(
         modifier = Modifier
