@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -30,6 +32,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.calendar.component.picker.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
@@ -99,20 +102,24 @@ fun ScheduleDetailContent(
         }
     }
 
-    if (uiState.isLoading || uiState.isOnDelete) LoadingDialog()
+    Scaffold(
+        topBar = { CalendarTopAppBar() }
+    ) { innerPadding ->
+        ScheduleDetailScreen(
+            modifier = modifier.padding(innerPadding),
+            title = uiState.schedule.info.title,
+            content = uiState.schedule.info.content,
+            startDate = uiState.schedule.info.startDate,
+            endDate = uiState.schedule.info.endDate,
+            isAllDay = uiState.schedule.info.isAllDay,
+            location = uiState.schedule.info.location,
+            repeatRule = uiState.schedule.info.repeatRule?.info,
+            onEditClick = onEditClick,
+            onDeleteClick = onDeleteClick,
+        )
+    }
 
-    ScheduleDetailScreen(
-        modifier = modifier,
-        title = uiState.schedule.info.title,
-        content = uiState.schedule.info.content,
-        startDate = uiState.schedule.info.startDate,
-        endDate = uiState.schedule.info.endDate,
-        isAllDay = uiState.schedule.info.isAllDay,
-        location = uiState.schedule.info.location,
-        repeatRule = uiState.schedule.info.repeatRule?.info,
-        onEditClick = onEditClick,
-        onDeleteClick = onDeleteClick,
-    )
+    if (uiState.isLoading || uiState.isOnDelete) LoadingDialog()
 }
 
 @Composable
