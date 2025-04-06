@@ -37,6 +37,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.calendar.component.picker.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -71,7 +72,13 @@ fun ScheduleCreateRoute(
         onEndDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnEndDateChanged(it)) },
         onIsAllDayChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnIsAllDayChanged(it)) },
         onLocationChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnLocationChanged(it)) },
-        onRepeatRuleChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnRepeatRuleChanged(it)) },
+        onRepeatRuleChanged = {
+            viewModel.setEvent(
+                ScheduleCreateContract.Event.OnRepeatRuleChanged(
+                    it
+                )
+            )
+        },
         onSaveScheduleClicked = {
             viewModel.setEvent(
                 ScheduleCreateContract.Event.OnCreateScheduleClicked
@@ -115,9 +122,9 @@ fun ScheduleCreateContent(
         }
     }
 
-    if (uiState.schedule == null) return
+    if (uiState.isOnCreate) LoadingDialog()
 
-    ScheduleCreateScreen(
+    if (uiState.schedule != null) ScheduleCreateScreen(
         modifier = modifier,
         title = uiState.schedule.title,
         content = uiState.schedule.content,
@@ -160,8 +167,12 @@ fun ScheduleCreateScreen(
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize().then(modifier)) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()).weight(1f)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .then(modifier)) {
+        Column(modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .weight(1f)) {
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
@@ -191,7 +202,9 @@ fun ScheduleCreateScreen(
                 prefix = Icons.Outlined.LocationOn,
             )
             ScheduleEditText(
-                modifier = Modifier.fillMaxWidth().clickable { isRepeatRuleFocused = !isRepeatRuleFocused },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { isRepeatRuleFocused = !isRepeatRuleFocused },
                 text = repeatRule?.toDisplayString() ?: "반복 안 함",
                 placeHolder = "반복 안 함",
                 prefix = Icons.Outlined.Repeat,

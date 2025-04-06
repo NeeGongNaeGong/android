@@ -37,6 +37,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.calendar.component.picker.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -119,9 +120,9 @@ fun ScheduleEditContent(
         }
     }
 
-    if (uiState.schedule == null) return
+    if (uiState.isLoading) LoadingDialog()
 
-    ScheduleEditScreen(
+    if (uiState.schedule != null) ScheduleEditScreen(
         modifier = modifier,
         title = uiState.schedule.title,
         content = uiState.schedule.content,
@@ -164,12 +165,16 @@ fun ScheduleEditScreen(
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .then(modifier)) {
-        Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .weight(1f)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
+    ) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .weight(1f)
+        ) {
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,

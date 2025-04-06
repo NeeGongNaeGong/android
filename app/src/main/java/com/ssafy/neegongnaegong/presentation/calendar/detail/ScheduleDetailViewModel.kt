@@ -56,7 +56,7 @@ class ScheduleDetailViewModel @Inject constructor(
                     type,
                     schedule.info.startDate.toLocalDate()
                 ).withLoading {
-                    setState { copy(isLoading = it) }
+                    setState { copy(isOnDelete = it) }
                 }.safeCollect {
                     setEffect { ScheduleDetailContract.Effect.NavigateBack }
                 }

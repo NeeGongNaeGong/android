@@ -32,6 +32,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.calendar.component.picker.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -98,9 +99,9 @@ fun ScheduleDetailContent(
         }
     }
 
-    if (uiState.schedule == null) return
+    if (uiState.isLoading || uiState.isOnDelete) LoadingDialog()
 
-    ScheduleDetailScreen(
+    if (uiState.schedule != null) ScheduleDetailScreen(
         modifier = modifier,
         title = uiState.schedule.info.title,
         content = uiState.schedule.info.content,

@@ -23,9 +23,9 @@ class ScheduleCreateContract {
     }
 
     data class State(
-        val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
+        val isOnCreate: Boolean = false,
         val schedule: ScheduleInfo? = null,
         val repeatRule: RepeatRuleInfo? = null,
     ) : UiState

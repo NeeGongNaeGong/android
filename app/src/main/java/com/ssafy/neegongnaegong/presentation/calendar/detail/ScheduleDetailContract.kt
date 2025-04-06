@@ -17,6 +17,7 @@ class ScheduleDetailContract {
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
+        val isOnDelete: Boolean = false,
         val schedule: Schedule? = null,
     ) : UiState
 

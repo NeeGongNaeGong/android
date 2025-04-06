@@ -83,7 +83,9 @@ class ScheduleCreateViewModel @Inject constructor(
                 createPersonalSchedulesUseCase(
                     schedule = schedule,
                     repeatRule = repeatRule,
-                ).safeCollect {
+                ).withLoading {
+                    setState { copy(isOnCreate = it) }
+                }.safeCollect {
                     setEffect { ScheduleCreateContract.Effect.NavigateBack }
                 }
             }
