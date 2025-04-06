@@ -22,6 +22,7 @@ fun CalendarScheduleDialog(
     onDismissRequest: () -> Unit = {},
     date: LocalDate,
     schedules: List<Schedule> = emptyList(),
+    isOnCreate: Boolean = false,
     onSubmit: (LocalDate, String) -> Unit = { _, _ -> },
     onScheduleClick: (Schedule) -> Unit = {},
 ) {
@@ -38,7 +39,9 @@ fun CalendarScheduleDialog(
             ) {
                 schedules.fastForEachIndexed { index, schedule ->
                     ScheduleInfo(
-                        modifier = Modifier.padding(1.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(1.dp)
+                            .fillMaxWidth(),
                         schedule = schedule,
                         showPrefix = index == 0
                                 || schedule.info.startDate.toLocalTime() != schedules[index - 1].info.startDate.toLocalTime()
@@ -49,7 +52,8 @@ fun CalendarScheduleDialog(
             }
             ScheduleInput(
                 selectedDate = date,
-                onSubmit = onSubmit
+                onSubmit = onSubmit,
+                isLoading = isOnCreate,
             )
         }
     }

@@ -26,6 +26,7 @@ class CalendarContract {
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
+        val isOnCreate: Boolean = false,
         val isCalendarDialogShow: Boolean = false,
         val selectedMonth: YearMonth = YearMonth.now(),
         val selectedDate: LocalDate = LocalDate.now(),

@@ -117,6 +117,7 @@ fun CalendarContent(
         modifier = modifier,
         selectedDate = uiState.selectedDate,
         schedules = uiState.schedules,
+        isOnCreate = uiState.isOnCreate,
         onMonthSelected = onMonthSelected,
         onDateSelected = onDateSelected,
         createSchedule = createSchedule,
@@ -135,6 +136,7 @@ fun CalendarContent(
         onDismissRequest = onDialogDismissRequest,
         date = uiState.selectedDate,
         schedules = uiState.schedules[uiState.selectedDate] ?: emptyList(),
+        isOnCreate = uiState.isOnCreate,
         onSubmit = createSchedule,
         onScheduleClick = onScheduleClicked,
     )
@@ -144,6 +146,7 @@ fun CalendarContent(
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
+    isOnCreate: Boolean,
     schedules: Map<LocalDate, List<Schedule>>,
     onMonthSelected: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
@@ -161,7 +164,8 @@ fun CalendarScreen(
         )
         ScheduleInput(
             selectedDate = selectedDate,
-            onSubmit = createSchedule
+            isLoading = isOnCreate,
+            onSubmit = createSchedule,
         )
     }
 }
@@ -170,7 +174,7 @@ fun CalendarScreen(
 @Composable
 private fun PreviewCalendarScreen() {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
+    val isOnCreate = true
     val schedules = listOf(
         Schedule(
             type = ScheduleType.PERSONAL,
@@ -200,6 +204,7 @@ private fun PreviewCalendarScreen() {
         Surface {
             CalendarScreen(
                 selectedDate = LocalDate.now(),
+                isOnCreate = isOnCreate,
                 schedules = mapOf(LocalDate.now() to schedules),
                 onMonthSelected = { },
                 onDateSelected = { },
@@ -218,6 +223,7 @@ private fun PreviewCalendarScreen() {
                 date = LocalDate.now(),
                 schedules = schedules,
                 onSubmit = { _, _ -> },
+                isOnCreate = isOnCreate,
                 onScheduleClick = {},
             )
         }

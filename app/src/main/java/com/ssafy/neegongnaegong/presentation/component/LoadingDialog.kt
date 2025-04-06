@@ -17,6 +17,8 @@ fun LoadingDialog(modifier: Modifier = Modifier) {
             .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.5f)),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
