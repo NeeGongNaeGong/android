@@ -53,17 +53,7 @@ fun ScheduleInput(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                disabledTextColor = MaterialTheme.colorScheme.onBackground,
-            )
+            colors = MaterialTheme.textFieldColors()
         )
         Spacer(modifier = Modifier.width(16.dp))
         SuspendIconButton(

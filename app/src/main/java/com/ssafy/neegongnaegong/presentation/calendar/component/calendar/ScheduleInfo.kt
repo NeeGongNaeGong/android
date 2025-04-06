@@ -99,7 +99,7 @@ fun ScheduleInfo(
             Box(
                 modifier = Modifier
                     .width(3.dp)
-                    .height(20.dp)
+                    .height(getTextHeightDp("", MaterialTheme.typography.bodyMedium))
                     .background(color, shape = RoundedCornerShape(100)),
             )
             Spacer(Modifier.width(5.dp))
