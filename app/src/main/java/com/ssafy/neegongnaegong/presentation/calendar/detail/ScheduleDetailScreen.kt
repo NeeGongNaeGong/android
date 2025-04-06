@@ -101,7 +101,7 @@ fun ScheduleDetailContent(
 
     if (uiState.isLoading || uiState.isOnDelete) LoadingDialog()
 
-    if (uiState.schedule != null) ScheduleDetailScreen(
+    ScheduleDetailScreen(
         modifier = modifier,
         title = uiState.schedule.info.title,
         content = uiState.schedule.info.content,

@@ -36,30 +36,20 @@ class ScheduleDetailViewModel @Inject constructor(
 
     private fun navigateToEditScheduleScreen() {
         with(uiState.value) {
-            if (schedule == null) {
-                setEffect { ScheduleDetailContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
-                setEffect { ScheduleDetailContract.Effect.NavigateBack }
-            } else {
-                setEffect { ScheduleDetailContract.Effect.NavigateToEditScheduleScreen(schedule) }
-            }
+            setEffect { ScheduleDetailContract.Effect.NavigateToEditScheduleScreen(schedule) }
         }
     }
 
     private fun deleteSchedule(type: DeleteType) = viewModelScope.launch {
         with(uiState.value) {
-            if (schedule == null) {
-                setEffect { ScheduleDetailContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
+            deletePersonalSchedulesUseCase(
+                schedule.id,
+                type,
+                schedule.info.startDate.toLocalDate()
+            ).withLoading {
+                setState { copy(isOnDelete = it) }
+            }.safeCollect {
                 setEffect { ScheduleDetailContract.Effect.NavigateBack }
-            } else {
-                deletePersonalSchedulesUseCase(
-                    schedule.id,
-                    type,
-                    schedule.info.startDate.toLocalDate()
-                ).withLoading {
-                    setState { copy(isOnDelete = it) }
-                }.safeCollect {
-                    setEffect { ScheduleDetailContract.Effect.NavigateBack }
-                }
             }
         }
     }

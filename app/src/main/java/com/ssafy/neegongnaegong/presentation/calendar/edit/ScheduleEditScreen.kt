@@ -120,9 +120,9 @@ fun ScheduleEditContent(
         }
     }
 
-    if (uiState.isLoading) LoadingDialog()
+    if (uiState.isLoading || uiState.isOnSave) LoadingDialog()
 
-    if (uiState.schedule != null) ScheduleEditScreen(
+    ScheduleEditScreen(
         modifier = modifier,
         title = uiState.schedule.title,
         content = uiState.schedule.content,

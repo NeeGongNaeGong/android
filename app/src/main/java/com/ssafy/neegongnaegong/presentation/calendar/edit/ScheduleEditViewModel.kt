@@ -53,16 +53,12 @@ class ScheduleEditViewModel @Inject constructor(
     }
 
     private fun setSchedule(
-        title: String = uiState.value.schedule?.title ?: "내 일정",
-        content: String? = uiState.value.schedule?.content,
-        startDate: LocalDateTime = uiState.value.schedule?.startDate
-            ?: uiState.value.date?.atStartOfDay()
-            ?: LocalDateTime.now(),
-        endDate: LocalDateTime = uiState.value.schedule?.endDate
-            ?: uiState.value.date?.atStartOfDay()?.plusDays(1)?.minusSeconds(1)
-            ?: LocalDateTime.now(),
-        isAllDay: Boolean = uiState.value.schedule?.isAllDay ?: false,
-        location: String? = uiState.value.schedule?.location,
+        title: String = uiState.value.schedule.title,
+        content: String? = uiState.value.schedule.content,
+        startDate: LocalDateTime = uiState.value.schedule.startDate,
+        endDate: LocalDateTime = uiState.value.schedule.endDate,
+        isAllDay: Boolean = uiState.value.schedule.isAllDay,
+        location: String? = uiState.value.schedule.location,
         repeatRule: RepeatRuleInfo? = uiState.value.repeatRule,
     ) {
         setState {
@@ -89,10 +85,8 @@ class ScheduleEditViewModel @Inject constructor(
 
     private fun saveSchedule(type: UpdateType) = viewModelScope.launch {
         with(uiState.value) {
-            if (id == null || schedule == null || date == null) {
-                setEffect {
-                    ScheduleEditContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.")
-                }
+            if (id == null) {
+                setEffect { ScheduleEditContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
             } else {
                 updatePersonalSchedulesUseCase(
                     id = id,
@@ -100,7 +94,9 @@ class ScheduleEditViewModel @Inject constructor(
                     repeatRule = repeatRule,
                     type = type,
                     date = date,
-                ).safeCollect {
+                ).withLoading {
+                    setState { copy(isOnSave = it) }
+                }.safeCollect {
                     setEffect { ScheduleEditContract.Effect.NavigateBack }
                 }
             }

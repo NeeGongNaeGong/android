@@ -18,7 +18,7 @@ class ScheduleDetailContract {
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
         val isOnDelete: Boolean = false,
-        val schedule: Schedule? = null,
+        val schedule: Schedule = Schedule.empty(),
     ) : UiState
 
     sealed class Effect : UiEffect {

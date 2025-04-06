@@ -1,7 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.calendar.edit
 
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
-import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
@@ -21,16 +20,17 @@ class ScheduleEditContract {
         data class OnLocationChanged(val location: String?) : Event()
         data class OnRepeatRuleChanged(val repeatRule: RepeatRuleInfo?) : Event()
         data class OnSaveScheduleClicked(val type: UpdateType) : Event()
-        data object OnCancelClick: Event()
+        data object OnCancelClick : Event()
     }
 
     data class State(
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
+        val isOnSave: Boolean = false,
         val id: Long? = null,
-        val date: LocalDate? = null,
-        val schedule: ScheduleInfo? = null,
+        val date: LocalDate = LocalDate.now(),
+        val schedule: ScheduleInfo = ScheduleInfo.empty(),
         val repeatRule: RepeatRuleInfo? = null,
     ) : UiState
 

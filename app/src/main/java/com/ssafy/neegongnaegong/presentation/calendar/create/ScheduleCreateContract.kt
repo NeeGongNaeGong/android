@@ -26,7 +26,7 @@ class ScheduleCreateContract {
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
         val isOnCreate: Boolean = false,
-        val schedule: ScheduleInfo? = null,
+        val schedule: ScheduleInfo = ScheduleInfo.empty(),
         val repeatRule: RepeatRuleInfo? = null,
     ) : UiState
 

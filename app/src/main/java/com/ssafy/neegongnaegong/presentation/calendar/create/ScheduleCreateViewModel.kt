@@ -43,14 +43,12 @@ class ScheduleCreateViewModel @Inject constructor(
     }
 
     private fun setSchedule(
-        title: String = uiState.value.schedule?.title ?: "내 일정",
-        content: String? = uiState.value.schedule?.content,
-        startDate: LocalDateTime = uiState.value.schedule?.startDate
-            ?: LocalDateTime.now(),
-        endDate: LocalDateTime = uiState.value.schedule?.endDate
-            ?: LocalDateTime.now(),
-        isAllDay: Boolean = uiState.value.schedule?.isAllDay ?: false,
-        location: String? = uiState.value.schedule?.location,
+        title: String = uiState.value.schedule.title,
+        content: String? = uiState.value.schedule.content,
+        startDate: LocalDateTime = uiState.value.schedule.startDate,
+        isAllDay: Boolean = uiState.value.schedule.isAllDay,
+        endDate: LocalDateTime = uiState.value.schedule.endDate,
+        location: String? = uiState.value.schedule.location,
         repeatRule: RepeatRuleInfo? = uiState.value.repeatRule,
     ) {
         setState {
@@ -77,17 +75,13 @@ class ScheduleCreateViewModel @Inject constructor(
 
     private fun createSchedule() = viewModelScope.launch {
         with(uiState.value) {
-            if (schedule == null) {
-                setEffect { ScheduleCreateContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
-            } else {
-                createPersonalSchedulesUseCase(
-                    schedule = schedule,
-                    repeatRule = repeatRule,
-                ).withLoading {
-                    setState { copy(isOnCreate = it) }
-                }.safeCollect {
-                    setEffect { ScheduleCreateContract.Effect.NavigateBack }
-                }
+            createPersonalSchedulesUseCase(
+                schedule = schedule,
+                repeatRule = repeatRule,
+            ).withLoading {
+                setState { copy(isOnCreate = it) }
+            }.safeCollect {
+                setEffect { ScheduleCreateContract.Effect.NavigateBack }
             }
         }
     }

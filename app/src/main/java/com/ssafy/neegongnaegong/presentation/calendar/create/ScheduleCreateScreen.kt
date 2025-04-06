@@ -124,7 +124,7 @@ fun ScheduleCreateContent(
 
     if (uiState.isOnCreate) LoadingDialog()
 
-    if (uiState.schedule != null) ScheduleCreateScreen(
+    ScheduleCreateScreen(
         modifier = modifier,
         title = uiState.schedule.title,
         content = uiState.schedule.content,
@@ -167,12 +167,16 @@ fun ScheduleCreateScreen(
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .then(modifier)) {
-        Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .weight(1f)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
+    ) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .weight(1f)
+        ) {
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
                 text = title,
