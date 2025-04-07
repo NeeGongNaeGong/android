@@ -7,11 +7,10 @@ import androidx.navigation.navigation
 import com.ssafy.neegongnaegong.presentation.ProfileScreen
 
 fun NavGraphBuilder.profileNavGraph(navController: NavController){
-    navigation(
-        startDestination = AppNavigation.Screen.Profile.Main.route,
-        route = AppNavigation.Tab.Profile.createRoute(-1)
+    navigation<AppNavigation.Tab.Profile>(
+        startDestination = AppNavigation.Screen.Profile.Main(-1),
     ){
-        composable(AppNavigation.Screen.Profile.Main.route) {
+        composable<AppNavigation.Screen.Profile.Main> {
             ProfileScreen()
         }
     }

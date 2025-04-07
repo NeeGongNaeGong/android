@@ -17,11 +17,10 @@ import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
  */
 // Study 탭의 Navigation을 설정하는 곳
 fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
-    navigation(
-        startDestination = AppNavigation.Screen.Studies.Main.route,
-        route = AppNavigation.Tab.Studies.route
+    navigation<AppNavigation.Tab.Studies>(
+        startDestination = AppNavigation.Screen.Studies.Main,
     ) {
-        composable(AppNavigation.Screen.Studies.Main.route) {
+        composable<AppNavigation.Screen.Studies.Main> {
 //            StudiesScreen()
             StudiesRoute(
                 modifier = Modifier,

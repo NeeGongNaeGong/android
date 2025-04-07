@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 fun MainNavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = AppNavigation.Tab.Studies.route,
+        startDestination = AppNavigation.Tab.Studies,
     ) {
         studiesNavGraph(navController)
         personalNavGraph(navController)

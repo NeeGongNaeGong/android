@@ -17,7 +17,6 @@ hilt = "2.52"
 ksp = "2.0.0-1.0.24"
 hiltCompose = "1.2.0"
 # network
-navigationCompose = "2.8.9"
 retrofit2 = "2.9.0"
 okhttp = "4.9.3"
 # material icon
@@ -26,6 +25,8 @@ materialIconsExtended = "1.7.8"
 lifecycleRuntimeComposeAndroid = "2.8.7"
 # datastore
 datastorePreferences = "1.1.4"
+# navigation
+navigationCompose = "2.8.9"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

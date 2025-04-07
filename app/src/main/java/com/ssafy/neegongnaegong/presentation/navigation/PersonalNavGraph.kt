@@ -7,11 +7,10 @@ import androidx.navigation.navigation
 import com.ssafy.neegongnaegong.presentation.PersonalScreen
 
 fun NavGraphBuilder.personalNavGraph(navController: NavController){
-    navigation(
-        startDestination = AppNavigation.Screen.Personal.Main.route,
-        route = AppNavigation.Tab.Personal.route
+    navigation<AppNavigation.Tab.Personal>(
+        startDestination = AppNavigation.Screen.Personal.Main
     ){
-        composable(AppNavigation.Screen.Personal.Main.route) {
+        composable<AppNavigation.Screen.Personal.Main> {
             PersonalScreen()
 //            StudiesRoute(
 //                modifier = Modifier,

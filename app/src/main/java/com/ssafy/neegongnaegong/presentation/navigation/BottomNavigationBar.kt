@@ -21,13 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.neegongnaegong.presentation.ui.theme.DarkColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.BackGround
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
@@ -54,10 +55,15 @@ fun BottomNavigationBar(
             },
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+
+
+        val currentDestination = navBackStackEntry?.destination
 
         BottomNavItem.itemList.forEach { screen ->
-            val selected = currentRoute == screen.route
+
+            val selected = currentDestination?.hierarchy?.any {
+                it.hasRoute(screen.route::class)
+            } == true
 
             NavigationBarItem(
                 interactionSource = NoRippleInteractionSource,
