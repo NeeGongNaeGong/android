@@ -2,9 +2,7 @@ package com.ssafy.neegongnaegong.presentation.util
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.credentials.CredentialManager
@@ -19,7 +17,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.ssafy.neegongnaegong.BuildConfig
-import com.ssafy.neegongnaegong.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -60,6 +57,7 @@ class GoogleSignInUtils {
                                 }
                             }
                         }
+
                         else -> {
 
                         }
@@ -83,7 +81,8 @@ class GoogleSignInUtils {
 
         private fun getCredentialsOptions(): CredentialOption {
             return GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(true)
+                .setFilterByAuthorizedAccounts(false)
+                .setAutoSelectEnabled(true)
                 .setServerClientId(BuildConfig.GOOGLE_CLIENT_ID)
                 .build()
         }
