@@ -11,7 +11,7 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController){
         startDestination = AppNavigation.Screen.Calendar.Main.route,
         route = AppNavigation.Tab.Calendar.route
     ){
-        composable(AppNavigation.Screen.Calendar.Main.route) {
+        composable(AppNavigation.Screen.Calendar.Main.route) {xx ->
             CalendarScreen()
         }
     }

@@ -16,6 +16,7 @@ hilt = "2.52"
 ksp = "2.0.0-1.0.24"
 hiltCompose = "1.2.0"
 # network
+navigationCompose = "2.8.9"
 retrofit2 = "2.9.0"
 okhttp = "4.9.3"
 # material icon
@@ -28,6 +29,7 @@ datastorePreferences = "1.1.4"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
