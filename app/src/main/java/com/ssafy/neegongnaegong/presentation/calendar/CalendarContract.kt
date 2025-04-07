@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.calendar
 
+import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -9,11 +10,12 @@ import java.time.YearMonth
 
 class CalendarContract {
     sealed class Event : UiEvent {
+        data class OnMonthSelected(val month: YearMonth) : Event()
         data class OnDateSelected(val date: LocalDate) : Event()
 
         data class OnCreateScheduleClicked(val date: LocalDate, val title: String) : Event()
         data class OnEditScheduleClicked(val schedule: Schedule) : Event()
-        data class OnDeleteScheduleClicked(val id: Long) : Event()
+        data class OnDeleteScheduleClicked(val id: Long, val type: DeleteType, val date: LocalDate) : Event()
 
         data class OnScheduleClicked(val schedule: Schedule) : Event()
 
@@ -31,6 +33,7 @@ class CalendarContract {
     ) : UiState
 
     sealed class Effect : UiEffect {
+        data class ShowErrorSnackBar(val message: String) : Effect()
         data class NavigateToCreateScheduleScreen(val date: LocalDate) : Effect()
         data class NavigateToScheduleDetailScreen(val schedule: Schedule) : Effect()
     }

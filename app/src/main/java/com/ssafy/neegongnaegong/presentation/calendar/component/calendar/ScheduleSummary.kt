@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import java.time.LocalDateTime
 
@@ -41,18 +42,22 @@ fun ScheduleSummaryPreview() {
         Schedule(
             type = ScheduleType.PERSONAL,
             id = 1,
-            title = "Meeting",
-            content = "Meeting",
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now().plusHours(1)
+            info = ScheduleInfo(
+                title = "Meeting",
+                content = "Meeting",
+                startDate = LocalDateTime.now(),
+                endDate = LocalDateTime.now().plusHours(1)
+            )
         ),
         Schedule(
             type = ScheduleType.PERSONAL,
             id = 2,
-            title = "Lunch",
-            content = "Lunch",
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now().plusHours(1)
+            info = ScheduleInfo(
+                title = "Lunch",
+                content = "Lunch",
+                startDate = LocalDateTime.now(),
+                endDate = LocalDateTime.now().plusHours(1)
+            )
         ),
     )
 
@@ -64,7 +69,7 @@ fun ScheduleSummaryPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(1.dp),
-                title = schedule.title,
+                title = schedule.info.title,
                 color = Color.Gray
             )
         }
