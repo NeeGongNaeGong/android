@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.serialization)
 }
 
 val properties = Properties().apply {
@@ -98,4 +99,10 @@ dependencies {
 
     // data store
     implementation(libs.androidx.datastore.preferences)
+
+    // compose navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // serialization
+    implementation(libs.kotlinx.serialization.json)
 }
