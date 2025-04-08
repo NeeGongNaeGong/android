@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.component
+package com.ssafy.neegongnaegong.presentation.timer.component.timer
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

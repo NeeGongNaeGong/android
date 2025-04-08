@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.component
+package com.ssafy.neegongnaegong.presentation.timer.component.timer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size

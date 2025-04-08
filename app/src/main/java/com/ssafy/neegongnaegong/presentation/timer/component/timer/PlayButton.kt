@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.component
+package com.ssafy.neegongnaegong.presentation.timer.component.timer
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
