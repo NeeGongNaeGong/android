@@ -8,8 +8,8 @@ import com.ssafy.neegongnaegong.data.remote.GitHubApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
-import com.ssafy.neegongnaegong.data.remote.adapter.LocalDateAdapter
-import com.ssafy.neegongnaegong.data.remote.adapter.LocalDateTimeAdapter
+import com.ssafy.neegongnaegong.data.remote.adapter.json.LocalDateAdapter
+import com.ssafy.neegongnaegong.data.remote.adapter.json.LocalDateTimeAdapter
 import com.ssafy.neegongnaegong.data.remote.authenticator.ReissueAuthenticator
 import com.ssafy.neegongnaegong.data.remote.converter.ListQueryConverter
 import com.ssafy.neegongnaegong.data.remote.interceptor.AuthInterceptor
