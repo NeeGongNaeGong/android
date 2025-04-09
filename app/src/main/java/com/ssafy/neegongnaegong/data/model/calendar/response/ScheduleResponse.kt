@@ -7,9 +7,9 @@ import java.time.LocalDateTime
 
 data class ScheduleResponse(
     val type: ScheduleType,
-    val id: Int,
+    val id: Long,
     val title: String,
-    val content: String,
+    val content: String?,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
     val location: String?,
@@ -24,6 +24,7 @@ data class ScheduleResponse(
                 content = content,
                 startDate = startDate,
                 endDate = endDate,
+                isAllDay = endDate.second == 59, // TODO: 추후 수정
                 location = location,
                 repeatRule = repeatRule?.toDomain()
             ),

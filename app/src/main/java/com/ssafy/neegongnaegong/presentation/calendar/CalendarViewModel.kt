@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.calendar
 
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
+import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.usecase.calendar.CreatePersonalSchedulesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.calendar.DeletePersonalSchedulesUseCase
@@ -42,7 +43,7 @@ class CalendarViewModel @Inject constructor(
             )
 
             is CalendarContract.Event.OnEditScheduleClicked -> setEffect {
-                CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
+                CalendarContract.Effect.NavigateToScheduleEditScreen(event.schedule)
             }
 
             is CalendarContract.Event.OnScheduleClicked -> setEffect {
@@ -56,13 +57,16 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun getSchedules(month: YearMonth) = viewModelScope.launch {
-        getUserSchedulesUseCase(month).safeCollect { result ->
-            val schedules = uiState.value.schedules.toMutableMap().apply {
+        getUserSchedulesUseCase(month).withLoading {
+            setState { copy(isLoading = it) }
+        }.safeCollect { result ->
+            val schedules = mutableMapOf<LocalDate, MutableList<Schedule>>().apply {
                 result.forEach { schedule ->
                     val date = schedule.info.startDate.toLocalDate()
                     put(
                         date,
-                        getOrDefault(date, emptyList()).toMutableList().apply { add(schedule) })
+                        getOrDefault(date, emptyList()).toMutableList().apply { add(schedule) }
+                    )
                 }
             }
             setState { copy(schedules = schedules) }
@@ -71,7 +75,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun createSchedule(date: LocalDate, title: String) = viewModelScope.launch {
         if (title.isBlank()) {
-            CalendarContract.Effect.NavigateToCreateScheduleScreen(date)
+            setEffect { CalendarContract.Effect.NavigateToCreateScheduleScreen(date) }
         } else {
             createPersonalSchedulesUseCase(
                 ScheduleInfo(
@@ -79,10 +83,15 @@ class CalendarViewModel @Inject constructor(
                     content = "",
                     startDate = LocalDateTime.of(date, LocalTime.MIN),
                     endDate = LocalDateTime.of(date, LocalTime.MAX),
+                    isAllDay = true,
                     location = null,
                     repeatRule = null
                 )
-            )
+            ).withLoading {
+                setState { copy(isOnCreate = it) }
+            }.safeCollect {
+                getSchedules(YearMonth.from(date))
+            }
         }
     }
 
@@ -95,7 +104,7 @@ class CalendarViewModel @Inject constructor(
         setState {
             copy(
                 selectedDate = date,
-                isCalendarDialogShow = uiState.value.schedules[selectedDate]?.isNotEmpty() ?: false
+                isCalendarDialogShow = uiState.value.schedules[date]?.isNotEmpty() ?: false
             )
         }
     }
@@ -107,7 +116,7 @@ class CalendarViewModel @Inject constructor(
             error.printStackTrace()
             setState { copy(isFailure = true) }
             setEffect {
-                CalendarContract.Effect.ShowErrorSnackBar(error.message ?: "에러 발생",)
+                CalendarContract.Effect.ShowErrorSnackBar(error.message ?: "에러 발생")
             }
         }
     }
