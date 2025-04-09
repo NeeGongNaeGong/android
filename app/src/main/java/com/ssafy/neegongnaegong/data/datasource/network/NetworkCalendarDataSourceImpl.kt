@@ -24,9 +24,9 @@ class NetworkCalendarDataSourceImpl @Inject constructor(
 
     override suspend fun getPersonalSchedule(
         scheduleId: Long
-    ): Flow<ScheduleResponse> = safeApiCall {
+    ): Flow<ScheduleResponse> = apiFlow {
         api.getPersonalSchedule(scheduleId)
-    }.toFlow()
+    }
 
     override suspend fun createPersonalSchedule(
         request: CreatePersonalScheduleRequest

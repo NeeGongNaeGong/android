@@ -8,7 +8,6 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.CreatePersonalSched
 import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -22,27 +21,27 @@ interface UserCalendarApi {
     @GET("/api/user/calendar/schedules")
     suspend fun getUserSchedules(
         @Query("month") month: YearMonth
-    ): Response<ApiResponse<GetUserScheduleResponse>>
+    ): Result<ApiResponse<GetUserScheduleResponse>>
 
     @GET("/api/user/calendar/schedules/{scheduleId}")
     suspend fun getPersonalSchedule(
         @Path("scheduleId") scheduleId: Long
-    ): Response<ApiResponse<ScheduleResponse>>
+    ): Result<ApiResponse<ScheduleResponse>>
 
     @POST("/api/user/calendar/schedules")
     suspend fun createPersonalSchedule(
         @Body request: CreatePersonalScheduleRequest
-    ): Response<ApiResponse<CreatePersonalScheduleResponse>>
+    ): Result<ApiResponse<CreatePersonalScheduleResponse>>
 
     @PUT("/api/user/calendar/schedules/{scheduleId}")
     suspend fun updatePersonalSchedule(
         @Path("scheduleId") scheduleId: Long,
         @Body request: UpdatePersonalScheduleRequest
-    ): Response<ApiResponse<UpdatePersonalScheduleResponse>>
+    ): Result<ApiResponse<UpdatePersonalScheduleResponse>>
 
     @DELETE("/api/user/calendar/schedules/{scheduleId}")
     suspend fun deletePersonalSchedule(
         @Path("scheduleId") scheduleId: Long,
         @Body request: DeletePersonalScheduleRequest
-    ): Response<ApiResponse<Unit>>
+    ): Result<ApiResponse<Unit>>
 }
