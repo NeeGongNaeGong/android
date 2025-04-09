@@ -1,13 +1,12 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
+import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.calendar.request.CreatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.response.CreatePersonalScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
-import com.ssafy.neegongnaegong.data.model.safeApiCall
-import com.ssafy.neegongnaegong.data.model.toFlow
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
@@ -18,27 +17,27 @@ class NetworkCalendarDataSourceImpl @Inject constructor(
 ) : NetworkCalendarDataSource {
     override suspend fun getUserSchedules(
         month: YearMonth
-    ): Flow<GetUserScheduleResponse> = safeApiCall {
+    ): Flow<GetUserScheduleResponse> = apiFlow {
         api.getUserSchedules(month)
-    }.toFlow()
+    }
 
     override suspend fun createPersonalSchedule(
         request: CreatePersonalScheduleRequest
-    ): Flow<CreatePersonalScheduleResponse> = safeApiCall {
+    ): Flow<CreatePersonalScheduleResponse> = apiFlow {
         api.createPersonalSchedule(request)
-    }.toFlow()
+    }
 
     override suspend fun updatePersonalSchedule(
         scheduleId: Long,
         request: UpdatePersonalScheduleRequest
-    ): Flow<UpdatePersonalScheduleResponse> = safeApiCall {
+    ): Flow<UpdatePersonalScheduleResponse> = apiFlow {
         api.updatePersonalSchedule(scheduleId, request)
-    }.toFlow()
+    }
 
     override suspend fun deletePersonalSchedule(
         scheduleId: Long,
         request: DeletePersonalScheduleRequest
-    ): Flow<Unit> = safeApiCall {
+    ): Flow<Unit> = apiFlow {
         api.deletePersonalSchedule(scheduleId, request)
-    }.toFlow()
+    }
 }

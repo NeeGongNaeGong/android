@@ -6,21 +6,20 @@ import kotlinx.coroutines.flow.flow
 import org.json.JSONObject
 import retrofit2.Response
 
-fun <T> ApiResult<T>.toFlow(): Flow<T> = flow {
-    when (this@toFlow) {
-        is ApiResult.Success -> emit(data)
-        is ApiResult.Error -> throw exception
+inline fun <reified T> apiFlow(crossinline call: suspend () -> Response<ApiResponse<T>>): Flow<T> = flow {
+    when (val result = safeApiCall { call() }) {
+        is ApiResult.Success -> emit(result.data)
+        is ApiResult.Error -> throw result.exception
     }
 }
 
 inline fun <reified T> safeApiCall(call: () -> Response<ApiResponse<T>>): ApiResult<T> {
-    return runCatching { call() }
-        .fold(
-            onSuccess = { it.toApiResult() },
-            onFailure = {
-                ApiResult.Error(it as? ApiException ?: ApiException.UnknownException(it.message))
-            }
-        )
+    return runCatching { call() }.fold(
+        onSuccess = { it.toApiResult() },
+        onFailure = {
+            ApiResult.Error(it as? ApiException ?: ApiException.UnknownException(it.message))
+        }
+    )
 }
 
 inline fun <reified T> Response<ApiResponse<T>>.toApiResult(): ApiResult<T> {
