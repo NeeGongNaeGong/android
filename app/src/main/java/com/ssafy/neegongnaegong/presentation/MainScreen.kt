@@ -7,16 +7,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
-import com.ssafy.neegongnaegong.presentation.navigation.BottomNavItem
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
+import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -29,39 +24,11 @@ fun MainScreen() {
         },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavigationGraph(navController = navController)
+            MainNavigationGraph(navController = navController)
         }
     }
 }
 
-@Composable
-fun NavigationGraph(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = BottomNavItem.StudiesScreen.route,
-    ) {
-        composable(BottomNavItem.StudiesScreen.route) {
-//            StudiesScreen()
-            StudiesRoute(
-                modifier = Modifier,
-                popBackStack = { },
-            )
-        }
-        composable(BottomNavItem.PersonalScreen.route) {
-            PersonalScreen()
-//            StudiesRoute(
-//                modifier = Modifier,
-//                popBackStack = { },
-//            )
-        }
-        composable(BottomNavItem.CalendarScreen.route) {
-            CalendarScreen()
-        }
-        composable(BottomNavItem.ProfileScreen.route) {
-            ProfileScreen()
-        }
-    }
-}
 
 // 각 화면에 대한 Composable 함수들
 @Composable

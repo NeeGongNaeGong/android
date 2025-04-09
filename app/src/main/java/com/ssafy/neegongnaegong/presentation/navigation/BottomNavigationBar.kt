@@ -21,13 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.neegongnaegong.presentation.ui.theme.DarkColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.BackGround
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
@@ -38,14 +39,6 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
-    val screens =
-        listOf(
-            BottomNavItem.StudiesScreen,
-            BottomNavItem.PersonalScreen,
-            BottomNavItem.CalendarScreen,
-            BottomNavItem.ProfileScreen,
-        )
-
     NavigationBar(
         modifier =
             modifier
@@ -62,10 +55,15 @@ fun BottomNavigationBar(
             },
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
 
-        screens.forEach { screen ->
-            val selected = currentRoute == screen.route
+
+        val currentDestination = navBackStackEntry?.destination
+
+        BottomNavItem.itemList.forEach { screen ->
+
+            val selected = currentDestination?.hierarchy?.any {
+                it.hasRoute(screen.route::class)
+            } == true
 
             NavigationBarItem(
                 interactionSource = NoRippleInteractionSource,
@@ -73,7 +71,7 @@ fun BottomNavigationBar(
                     Icon(
                         painter =
                             painterResource(
-                                id = if (currentRoute == screen.route) screen.iconSelected else screen.icon,
+                                id = if (selected) screen.iconSelected else screen.icon,
                             ),
                         contentDescription = stringResource(id = screen.title),
                     )
@@ -84,7 +82,7 @@ fun BottomNavigationBar(
                         style = if (selected) Typography.bodySmall.copy(fontSize = 12.sp) else Typography.labelSmall,
                     )
                 },
-                selected = currentRoute == screen.route,
+                selected = selected,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {

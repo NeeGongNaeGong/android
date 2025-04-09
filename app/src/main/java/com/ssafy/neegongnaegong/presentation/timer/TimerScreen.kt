@@ -14,12 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.presentation.timer.component.GuideText
-import com.ssafy.neegongnaegong.presentation.timer.component.MainCharacterImage
-import com.ssafy.neegongnaegong.presentation.timer.component.PauseButton
-import com.ssafy.neegongnaegong.presentation.timer.component.PauseDialog
-import com.ssafy.neegongnaegong.presentation.timer.component.PlayButton
-import com.ssafy.neegongnaegong.presentation.timer.component.TimerText
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.GuideText
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.MainCharacterImage
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.PauseButton
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.PauseDialog
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.PlayButton
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.TimerText
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -43,7 +43,6 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Spacer(modifier = Modifier.height(screenHeight * 0.1f))
 
         TimerText(elapsedTime = uiState.totalElapsedTime)

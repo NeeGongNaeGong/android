@@ -69,7 +69,8 @@ fun Calendar(
         )
         HorizontalPager(
             state = pagerState,
-            beyondBoundsPageCount = 1
+//            beyondBoundsPageCount = 1
+            beyondViewportPageCount = 1
         ) { page ->
             key(page) {
                 val displayedMonth by remember(page) {
