@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalSchedu
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.response.CreatePersonalScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResponse
+import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,12 @@ class NetworkCalendarDataSourceImpl @Inject constructor(
     ): Flow<GetUserScheduleResponse> = apiFlow {
         api.getUserSchedules(month)
     }
+
+    override suspend fun getPersonalSchedule(
+        scheduleId: Long
+    ): Flow<ScheduleResponse> = safeApiCall {
+        api.getPersonalSchedule(scheduleId)
+    }.toFlow()
 
     override suspend fun createPersonalSchedule(
         request: CreatePersonalScheduleRequest

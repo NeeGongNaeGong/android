@@ -30,8 +30,7 @@ inline fun <reified T> Response<ApiResponse<T>>.toApiResult(): ApiResult<T> {
 
     errorBody()?.let {
         val errorMessage = it.charStream().readLines().joinToString()
-        val json = JSONObject(errorMessage)
-        val message = runCatching { json.getString("message") }.fold(
+        val message = runCatching { JSONObject(errorMessage).getString("message") }.fold(
             onSuccess = { message -> message },
             onFailure = { "" }
         )

@@ -68,6 +68,7 @@ fun ScheduleCalendarPreview() {
                 content = "Meeting",
                 startDate = LocalDateTime.now(),
                 endDate = LocalDateTime.now().plusHours(1),
+                isAllDay = false,
             )
         ),
         Schedule(
@@ -77,7 +78,8 @@ fun ScheduleCalendarPreview() {
                 title = "Lunch",
                 content = "Lunch",
                 startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now().plusHours(1)
+                endDate = LocalDateTime.now().plusHours(1),
+                isAllDay = false,
             )
         ),
     )

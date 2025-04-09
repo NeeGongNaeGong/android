@@ -8,7 +8,6 @@ data class CreateRepeatRuleRequest(
     val repeatType: RepeatType,
     val repeatInterval: Int,
     val repeatDay: Int,
-    val startDate: LocalDate,
     val endDate: LocalDate? = null,
 ) {
     companion object {
@@ -16,7 +15,6 @@ data class CreateRepeatRuleRequest(
             repeatType = repeatRule.repeatType,
             repeatInterval = repeatRule.repeatInterval,
             repeatDay = repeatRule.repeatDay,
-            startDate = repeatRule.startDate,
             endDate = repeatRule.endDate,
         )
     }
