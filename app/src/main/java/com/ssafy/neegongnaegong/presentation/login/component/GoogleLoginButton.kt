@@ -1,12 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.login.component
 
-import android.content.Context
-import android.content.Intent
-import android.widget.Toast
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -30,31 +23,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.R
-import com.ssafy.neegongnaegong.presentation.util.GoogleSignInUtils
-import kotlinx.coroutines.CoroutineScope
+import com.ssafy.neegongnaegong.presentation.util.GoogleAuthUtils
+import kotlinx.coroutines.launch
 
 @Composable
 fun GoogleLoginButton(
-    context: Context,
-    scope: CoroutineScope,
-    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>,
-    login: () -> Unit
+    modifier: Modifier = Modifier,
+    onSuccess: (String) -> Unit,
+    onFailure: (Throwable) -> Unit,
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    // Google 로그인 버튼
+    fun onClick() {
+        scope.launch {
+            GoogleAuthUtils.signIn(context, onSuccess, onFailure)
+        }
+    }
+
     Button(
-        onClick = {
-            GoogleSignInUtils.doGoogleSignIn(
-                context = context,
-                scope = scope,
-                launcher = launcher,
-                login = {
-                    Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-                    login()
-                }
-            )
-
-        },
+        modifier = modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .padding(horizontal = 16.dp),
+        onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 6.dp,
@@ -65,10 +57,6 @@ fun GoogleLoginButton(
         shape = MaterialTheme.shapes.small.copy(
             all = androidx.compose.foundation.shape.CornerSize(4.dp)
         ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(horizontal = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -96,24 +84,8 @@ fun GoogleLoginButton(
 @Preview(showBackground = true, name = "Google Login Button Preview")
 @Composable
 fun GoogleLoginButtonPreview() {
-    val context = LocalContext.current
-
-    // 2) Preview에서 사용 가능한 가짜 CoroutineScope
-    val scope = rememberCoroutineScope()
-
-    // 3) 실제 ActivityResultLauncher 대신, null or 임시 객체
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { }
-
-    val loginCallback: () -> Unit = { }
-
-    // 이 상태로 컴포저블 호출
     GoogleLoginButton(
-        context = context,
-        scope = scope,
-        launcher = launcher,
-        login = loginCallback
+        onSuccess = {},
+        onFailure = {}
     )
-
 }
