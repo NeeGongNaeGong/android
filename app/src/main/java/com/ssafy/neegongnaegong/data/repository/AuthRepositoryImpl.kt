@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest
+import com.ssafy.neegongnaegong.domain.exception.AuthException
 import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
@@ -56,6 +57,20 @@ class AuthRepositoryImpl @Inject constructor(
             tokenManager.clearToken()
             localUserDataSource.clearUser()
             emit(true)
+        }
+    }
+
+    override suspend fun reissue(): Flow<Boolean> = withContext(ioDispatcher) {
+        val refreshToken = tokenManager.getToken(TokenType.ACCESS_TOKEN) ?: throw AuthException.InvalidTokenException()
+
+        networkAuthDataSource.reissue(refreshToken).onEach { response ->
+            with(response.createJwt) {
+                tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
+                tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
+            }
+            tokenManager.getToken(TokenType.ACCESS_TOKEN)
+        }.map {
+            true
         }
     }
 }

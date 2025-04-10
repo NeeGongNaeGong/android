@@ -7,4 +7,5 @@ interface AuthRepository {
     suspend fun login(email: String, fcmToken: String): Flow<User>
     suspend fun register(email: String, nickname: String, profileImage: String): Flow<Boolean>
     suspend fun logout(): Flow<Boolean>
+    suspend fun reissue(): Flow<Boolean>
 }

@@ -27,9 +27,9 @@ class ReissueAuthenticator @Inject constructor(
     }
 
     private suspend fun fetchNewAccessToken(): String? {
-        val refreshToken = tokenManager.getToken(TokenType.ACCESS_TOKEN) ?: return null
+        val existingRefreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return null
 
-        return authApi.reissue(refreshToken).getOrThrow().data.let {
+        return authApi.reissue(existingRefreshToken).getOrThrow().data.let {
             with(it.createJwt) {
                 tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
                 tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
