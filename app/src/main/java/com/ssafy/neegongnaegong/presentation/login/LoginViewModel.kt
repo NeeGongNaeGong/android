@@ -1,10 +1,9 @@
 package com.ssafy.neegongnaegong.presentation.login
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.auth.LoginUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
-import com.ssafy.neegongnaegong.presentation.util.AuthManager
+import com.ssafy.neegongnaegong.presentation.util.AuthDesintaionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -29,7 +28,7 @@ class LoginViewModel @Inject constructor(
 
     private fun login(tokenId: String) = viewModelScope.launch {
         loginUseCase(tokenId, "").safeCollect {
-            AuthManager.valid()
+            AuthDesintaionManager.valid()
         }
     }
 
@@ -38,8 +37,7 @@ class LoginViewModel @Inject constructor(
             collect { value -> block(value) }
         }.onFailure { exception ->
             exception.printStackTrace()
-            Log.d("LoginViewModel", "Error occurred during login: $exception")
-            AuthManager.valid()
+            AuthDesintaionManager.invalid()
             setEffect {
                 LoginContract.Effect.ShowErrorSnackBar(exception.message ?: "에러 발생")
             }
