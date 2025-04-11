@@ -61,11 +61,9 @@ class ConvertToResultCall<T> (private val delegate: Call<T>, private val retrofi
                         ).convert(error)
 
                         Response.success(
-                            code(),
                             Result.failure(ApiException.fromCode(code(), errorBody?.message))
                         )
                     } ?: Response.success(
-                        code(),
                         Result.failure(ApiException.UnknownException())
                     )
                 }
