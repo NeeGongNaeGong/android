@@ -10,7 +10,6 @@ data class RepeatRuleResponse(
     val repeatType: RepeatType,
     val repeatInterval: Int,
     val repeatDay: Int,
-    val startDate: LocalDate,
     val endDate: LocalDate?,
 ) {
     fun toDomain(): RepeatRule {
@@ -20,7 +19,6 @@ data class RepeatRuleResponse(
                 repeatType = repeatType,
                 repeatInterval = repeatInterval,
                 repeatDay = repeatDay,
-                startDate = startDate,
                 endDate = endDate
             )
         )

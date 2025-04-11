@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.request.CreatePersonalSchedu
 import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
+import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
@@ -28,22 +29,30 @@ class CalendarRepositoryImpl @Inject constructor(
         dataSource.getUserSchedules(month).map { it.schedules.map { it.toDomain() } }
     }
 
-    override suspend fun createPersonalSchedule(
-        schedule: ScheduleInfo
+    override suspend fun getScheduleDetail(
+        id: Long
     ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.createPersonalSchedule(CreatePersonalScheduleRequest.fromDomain(schedule))
+        dataSource.getPersonalSchedule(id).map { it.toDomain() }
+    }
+
+    override suspend fun createPersonalSchedule(
+        schedule: ScheduleInfo,
+        repeatRule: RepeatRuleInfo?
+    ): Flow<Schedule> = withContext(ioDispatcher) {
+        dataSource.createPersonalSchedule(CreatePersonalScheduleRequest.fromDomain(schedule, repeatRule))
             .map { it.toDomain() }
     }
 
     override suspend fun updatePersonalSchedule(
         id: Long,
         schedule: ScheduleInfo,
+        repeatRule: RepeatRuleInfo?,
         type: UpdateType,
         date: LocalDate
     ): Flow<Schedule> = withContext(ioDispatcher) {
         dataSource.updatePersonalSchedule(
             id,
-            UpdatePersonalScheduleRequest.fromDomain(type, date, schedule)
+            UpdatePersonalScheduleRequest.fromDomain(type, date, schedule, repeatRule)
         ).map { it.toDomain() }
     }
 

@@ -26,6 +26,7 @@ class CalendarContract {
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val isFailure: Boolean = false,
+        val isOnCreate: Boolean = false,
         val isCalendarDialogShow: Boolean = false,
         val selectedMonth: YearMonth = YearMonth.now(),
         val selectedDate: LocalDate = LocalDate.now(),
@@ -36,5 +37,6 @@ class CalendarContract {
         data class ShowErrorSnackBar(val message: String) : Effect()
         data class NavigateToCreateScheduleScreen(val date: LocalDate) : Effect()
         data class NavigateToScheduleDetailScreen(val schedule: Schedule) : Effect()
+        data class NavigateToScheduleEditScreen(val schedule: Schedule) : Effect()
     }
 }

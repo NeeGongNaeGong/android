@@ -28,6 +28,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -41,8 +42,9 @@ fun CalendarRoute(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
-    navigateToScheduleDetail: (Schedule) -> Unit,
     navigateToScheduleCreate: (LocalDate) -> Unit,
+    navigateToScheduleDetail: (Schedule) -> Unit,
+    navigateToScheduleEdit: (Schedule) -> Unit,
 ) {
     BackHandler {
         popBackStack()
@@ -59,15 +61,11 @@ fun CalendarRoute(
         onDialogDismissRequest = { viewModel.setEvent(CalendarContract.Event.OnDialogDismissed) },
         onScheduleClicked = { viewModel.setEvent(CalendarContract.Event.OnScheduleClicked(it)) },
         createSchedule = { date, title ->
-            viewModel.setEvent(
-                CalendarContract.Event.OnCreateScheduleClicked(
-                    date,
-                    title
-                )
-            )
+            viewModel.setEvent(CalendarContract.Event.OnCreateScheduleClicked(date, title))
         },
         navigateToScheduleDetail = navigateToScheduleDetail,
         navigateToScheduleCreate = navigateToScheduleCreate,
+        navigateToEditSchedule = navigateToScheduleEdit
     )
 }
 
@@ -83,6 +81,7 @@ fun CalendarContent(
     createSchedule: (LocalDate, String) -> Unit,
     navigateToScheduleDetail: (Schedule) -> Unit,
     navigateToScheduleCreate: (LocalDate) -> Unit,
+    navigateToEditSchedule: (Schedule) -> Unit,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val snackbarHostState = remember { SnackbarHostState() }
@@ -92,6 +91,10 @@ fun CalendarContent(
         effect.collectLatest { effect ->
             when (effect) {
                 is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(
+                    effect.schedule
+                )
+
+                is CalendarContract.Effect.NavigateToScheduleEditScreen -> navigateToEditSchedule(
                     effect.schedule
                 )
 
@@ -114,10 +117,13 @@ fun CalendarContent(
         modifier = modifier,
         selectedDate = uiState.selectedDate,
         schedules = uiState.schedules,
+        isOnCreate = uiState.isOnCreate,
         onMonthSelected = onMonthSelected,
         onDateSelected = onDateSelected,
         createSchedule = createSchedule,
     )
+
+    if (uiState.isLoading) LoadingDialog()
 
     if (uiState.isCalendarDialogShow) CalendarScheduleDialog(
         modifier = Modifier
@@ -130,6 +136,7 @@ fun CalendarContent(
         onDismissRequest = onDialogDismissRequest,
         date = uiState.selectedDate,
         schedules = uiState.schedules[uiState.selectedDate] ?: emptyList(),
+        isOnCreate = uiState.isOnCreate,
         onSubmit = createSchedule,
         onScheduleClick = onScheduleClicked,
     )
@@ -139,6 +146,7 @@ fun CalendarContent(
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
+    isOnCreate: Boolean,
     schedules: Map<LocalDate, List<Schedule>>,
     onMonthSelected: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
@@ -156,7 +164,8 @@ fun CalendarScreen(
         )
         ScheduleInput(
             selectedDate = selectedDate,
-            onSubmit = createSchedule
+            isLoading = isOnCreate,
+            onSubmit = createSchedule,
         )
     }
 }
@@ -165,7 +174,7 @@ fun CalendarScreen(
 @Composable
 private fun PreviewCalendarScreen() {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
+    val isOnCreate = true
     val schedules = listOf(
         Schedule(
             type = ScheduleType.PERSONAL,
@@ -175,6 +184,7 @@ private fun PreviewCalendarScreen() {
                 content = "Meeting",
                 startDate = LocalDateTime.now(),
                 endDate = LocalDateTime.now().plusHours(1),
+                isAllDay = false,
             ),
         ),
         Schedule(
@@ -184,7 +194,8 @@ private fun PreviewCalendarScreen() {
                 title = "Lunch",
                 content = "Lunch",
                 startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now().plusHours(1)
+                endDate = LocalDateTime.now().plusHours(1),
+                isAllDay = false,
             )
         ),
     )
@@ -193,6 +204,7 @@ private fun PreviewCalendarScreen() {
         Surface {
             CalendarScreen(
                 selectedDate = LocalDate.now(),
+                isOnCreate = isOnCreate,
                 schedules = mapOf(LocalDate.now() to schedules),
                 onMonthSelected = { },
                 onDateSelected = { },
@@ -211,6 +223,7 @@ private fun PreviewCalendarScreen() {
                 date = LocalDate.now(),
                 schedules = schedules,
                 onSubmit = { _, _ -> },
+                isOnCreate = isOnCreate,
                 onScheduleClick = {},
             )
         }

@@ -54,19 +54,23 @@ fun Calendar(
     LaunchedEffect(selectedDate) {
         if (selectedMonth != YearMonth.from(selectedDate)) {
             selectedMonth = YearMonth.from(selectedDate)
-            pagerState.animateScrollToPage(ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt())
+            pagerState.animateScrollToPage(
+                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
+            )
         }
-        onDateSelected(selectedDate)
     }
 
     Column(modifier = modifier) {
         CalendarHeader(
-            modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .fillMaxWidth(),
             selectedMonth = selectedMonth
         )
         HorizontalPager(
             state = pagerState,
-            beyondBoundsPageCount = 1
+//            beyondBoundsPageCount = 1
+            beyondViewportPageCount = 1
         ) { page ->
             key(page) {
                 val displayedMonth by remember(page) {
@@ -77,7 +81,10 @@ fun Calendar(
                     modifier = Modifier.fillMaxSize(),
                     selectedMonth = displayedMonth,
                     selectedDate = selectedDate,
-                    onDateSelected = { date -> selectedDate = date },
+                    onDateSelected = { date ->
+                        selectedDate = date
+                        onDateSelected(selectedDate)
+                    },
                     dateContent = dateContent
                 )
             }

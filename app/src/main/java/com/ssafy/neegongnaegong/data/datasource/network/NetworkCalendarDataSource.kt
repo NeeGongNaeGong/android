@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.request.DeletePersonalSchedu
 import com.ssafy.neegongnaegong.data.model.calendar.request.UpdatePersonalScheduleRequest
 import com.ssafy.neegongnaegong.data.model.calendar.response.CreatePersonalScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResponse
+import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
@@ -13,6 +14,10 @@ interface NetworkCalendarDataSource {
     suspend fun getUserSchedules(
         month: YearMonth
     ): Flow<GetUserScheduleResponse>
+
+    suspend fun getPersonalSchedule(
+        scheduleId: Long
+    ): Flow<ScheduleResponse>
 
     suspend fun createPersonalSchedule(
         request: CreatePersonalScheduleRequest

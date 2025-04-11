@@ -14,10 +14,9 @@ import javax.inject.Inject
 val Context.dataStore by preferencesDataStore(name = "app_preferences")
 
 class DataStoreManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val gson: Gson,
 ) : LocalStorageManager {
-    private val gson = Gson()
-
     override fun <T> saveData(key: String, value: T) {
         runBlocking {
             context.dataStore.edit { preferences ->

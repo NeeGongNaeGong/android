@@ -8,8 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.component.button.SuspendIconButton
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 
@@ -31,6 +30,7 @@ import java.time.LocalDate
 fun ScheduleInput(
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
+    isLoading: Boolean = false,
     onSubmit: (LocalDate, String) -> Unit = { _, _ -> },
 ) {
     var textState by remember { mutableStateOf("") }
@@ -53,35 +53,22 @@ fun ScheduleInput(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                disabledTextColor = MaterialTheme.colorScheme.onBackground,
-            )
+            colors = MaterialTheme.textFieldColors()
         )
         Spacer(modifier = Modifier.width(16.dp))
-        IconButton(
+        SuspendIconButton(
             modifier = Modifier.background(
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = CircleShape
             ),
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add Schedule",
+            isLoading = isLoading,
             onClick = {
                 onSubmit(selectedDate, textState)
                 textState = ""
-            },
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add Schedule",
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-        }
+            }
+        )
     }
 }
 

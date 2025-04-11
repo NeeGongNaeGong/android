@@ -3,10 +3,13 @@ package com.ssafy.neegongnaegong.presentation.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -55,5 +58,9 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     protected fun setEffect(builder: () -> Effect) {
         val effectValue = builder()
         viewModelScope.launch { _effect.send(effectValue) }
+    }
+
+    protected fun <T> Flow<T>.withLoading(setLoading: (Boolean) -> Unit = {}): Flow<T> {
+        return this.onStart { setLoading(true) }.onCompletion { setLoading(false) }
     }
 }
