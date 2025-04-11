@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
@@ -93,16 +95,13 @@ fun LoginScreen(
     ) {
 
         Spacer(modifier = Modifier.height(160.dp))
-        // 앱 로고 또는 이름
+
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            modifier = Modifier.aspectRatio(1f).fillMaxWidth(),
+            painter = painterResource(id = R.drawable.img_app_main_logo),
             contentDescription = "App Image",
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.ic_app_logo_332_81),
-            contentDescription = "App Logo",
-        )
         Spacer(modifier = Modifier.weight(1f))
 
         GoogleLoginButton(
