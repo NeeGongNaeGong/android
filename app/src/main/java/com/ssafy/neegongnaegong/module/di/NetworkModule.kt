@@ -8,12 +8,13 @@ import com.ssafy.neegongnaegong.data.remote.GitHubApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
-import com.ssafy.neegongnaegong.data.remote.adapter.LocalDateAdapter
-import com.ssafy.neegongnaegong.data.remote.adapter.LocalDateTimeAdapter
+import com.ssafy.neegongnaegong.data.remote.adapter.call.ConvertToResultAdapterFactory
+import com.ssafy.neegongnaegong.data.remote.adapter.json.LocalDateAdapter
+import com.ssafy.neegongnaegong.data.remote.adapter.json.LocalDateTimeAdapter
 import com.ssafy.neegongnaegong.data.remote.authenticator.ReissueAuthenticator
 import com.ssafy.neegongnaegong.data.remote.converter.ListQueryConverter
+import com.ssafy.neegongnaegong.data.remote.converter.NullOnEmptyConverter
 import com.ssafy.neegongnaegong.data.remote.interceptor.AuthInterceptor
-import com.ssafy.neegongnaegong.data.remote.interceptor.NetworkErrorInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,8 +52,10 @@ object NetworkModule {
         .Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(ListQueryConverter())
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .addConverterFactory(ListQueryConverter())
+        .addConverterFactory(NullOnEmptyConverter())
+        .addCallAdapterFactory(ConvertToResultAdapterFactory())
         .build()
 
     @Provides
@@ -65,17 +68,16 @@ object NetworkModule {
         .Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(ListQueryConverter())
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .addConverterFactory(ListQueryConverter())
+        .addConverterFactory(NullOnEmptyConverter())
+        .addCallAdapterFactory(ConvertToResultAdapterFactory())
         .build()
 
     @Provides
     @Singleton
     @AuthOkHttpClient
-    fun provideAuthOkHttpClient(
-        networkErrorInterceptor: NetworkErrorInterceptor,
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(networkErrorInterceptor)
+    fun provideAuthOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         })
@@ -88,10 +90,8 @@ object NetworkModule {
     @SecureOkHttpClient
     fun provideSecureOkHttpClient(
         authInterceptor: AuthInterceptor,
-        networkErrorInterceptor: NetworkErrorInterceptor,
         reissueAuthenticator: ReissueAuthenticator
     ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(networkErrorInterceptor)
         .addInterceptor(authInterceptor)
         .addInterceptor(HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)

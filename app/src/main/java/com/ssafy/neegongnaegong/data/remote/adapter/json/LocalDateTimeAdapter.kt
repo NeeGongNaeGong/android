@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.data.remote.adapter
+package com.ssafy.neegongnaegong.data.remote.adapter.json
 
 import com.google.gson.*
 import java.lang.reflect.Type

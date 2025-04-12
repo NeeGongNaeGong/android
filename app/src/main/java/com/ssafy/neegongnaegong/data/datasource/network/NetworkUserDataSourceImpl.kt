@@ -1,7 +1,6 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
-import com.ssafy.neegongnaegong.data.model.safeApiCall
-import com.ssafy.neegongnaegong.data.model.toFlow
+import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
 import com.ssafy.neegongnaegong.data.model.user.response.UserDetailResponse
 import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameResponse
@@ -12,15 +11,15 @@ import javax.inject.Inject
 class NetworkUserDataSourceImpl @Inject constructor(
     private val userApi: UserApi
 ) : NetworkUserDataSource {
-    override suspend fun getUser(id: Long): Flow<UserDetailResponse> = safeApiCall {
+    override suspend fun getUser(id: Long): Flow<UserDetailResponse> = apiFlow {
         userApi.getUser(id)
-    }.toFlow()
+    }
 
-    override suspend fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse> = safeApiCall {
+    override suspend fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse> = apiFlow {
         userApi.validateNickname(nickname)
-    }.toFlow()
+    }
 
-    override suspend fun updateUser(request: UpdateUserRequest): Flow<Unit> = safeApiCall {
+    override suspend fun updateUser(request: UpdateUserRequest): Flow<Unit> = apiFlow {
         userApi.updateUser(request)
-    }.toFlow()
+    }
 }
