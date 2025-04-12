@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-object AuthDesintaionManager {
+object AuthDestinationManager {
     private val _destination = MutableStateFlow<Any?>(null)
     val destination: StateFlow<Any?> = _destination.asStateFlow()
 

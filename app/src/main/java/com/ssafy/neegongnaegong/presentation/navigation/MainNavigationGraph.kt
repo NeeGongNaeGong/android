@@ -5,11 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.ssafy.neegongnaegong.presentation.util.AuthDesintaionManager
+import com.ssafy.neegongnaegong.presentation.util.AuthDestinationManager
 
 @Composable
 fun MainNavigationGraph(navController: NavHostController) {
-    val destination by AuthDesintaionManager.destination.collectAsStateWithLifecycle(null)
+    val destination by AuthDestinationManager.destination.collectAsStateWithLifecycle(null)
 
     destination?.let { startDestination ->
         NavHost(
