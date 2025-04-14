@@ -48,7 +48,7 @@ fun ScheduleDetailRoute(
     viewModel: ScheduleDetailViewModel = hiltViewModel(),
     scheduleId: Long,
     popBackStack: () -> Unit,
-    navigateToEditScheduleScreen: (Long) -> Unit
+    navigateToEditScheduleScreen: (Schedule) -> Unit
 ) {
     BackHandler {
         popBackStack()
@@ -66,7 +66,7 @@ fun ScheduleDetailRoute(
         uiState = uiState.value,
         onEditClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnEditClick) },
         onDeleteClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnDeleteClick(it)) },
-        navigateToEditScheduleScreen = { navigateToEditScheduleScreen(it.id) },
+        navigateToEditScheduleScreen = { navigateToEditScheduleScreen(it) },
     )
 }
 
