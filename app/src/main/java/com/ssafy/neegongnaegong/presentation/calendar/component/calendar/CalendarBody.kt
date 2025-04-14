@@ -61,7 +61,7 @@ fun CalendarBody(
                             isSelected = remember(selectedDate) {
                                 selectedDate.compareTo(date) == 0
                             },
-                            onSelect = onDateSelected,
+                            onSelected = onDateSelected,
                         ) {
                             dateContent(date)
                         }

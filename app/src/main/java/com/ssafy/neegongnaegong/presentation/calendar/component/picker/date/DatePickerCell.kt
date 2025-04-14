@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker
+package com.ssafy.neegongnaegong.presentation.calendar.component.picker.date
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,9 +22,30 @@ import java.time.LocalDate
 fun DatePickerCell(
     modifier: Modifier = Modifier,
     date: LocalDate,
+    isSelected: Boolean,
+    onSelected: (LocalDate) -> Unit = { },
+) {
+    DatePickerCell(
+        modifier = modifier,
+        date = date.dayOfMonth,
+        isSelected = isSelected,
+        isLeftEdge = true,
+        isRightEdge = true,
+        dateColor = when {
+            isSelected -> MaterialTheme.colorScheme.surface
+            else -> date.dayOfWeek.color
+        },
+        onSelected = { onSelected(date) },
+    )
+}
+
+@Composable
+fun DatePickerCell(
+    modifier: Modifier = Modifier,
+    date: LocalDate,
     startDate: LocalDate?,
     endDate: LocalDate?,
-    onSelect: (LocalDate) -> Unit = { },
+    onSelected: (LocalDate) -> Unit = { },
 ) {
     val isSelected = if (startDate == null || endDate == null) {
         false
@@ -42,7 +63,7 @@ fun DatePickerCell(
             isSelected -> MaterialTheme.colorScheme.surface
             else -> date.dayOfWeek.color
         },
-        onSelect = { onSelect(date) },
+        onSelected = { onSelected(date) },
     )
 }
 
@@ -54,10 +75,10 @@ fun DatePickerCell(
     isLeftEdge: Boolean = false,
     isRightEdge: Boolean = false,
     dateColor: Color = MaterialTheme.colorScheme.onBackground,
-    onSelect: () -> Unit = {},
+    onSelected: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier.clickable { onSelect() },
+        modifier = modifier.clickable { onSelected() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -106,6 +127,6 @@ private fun DatePickerCellPreview() {
         isSelected = true,
         isLeftEdge = true,
         isRightEdge = false,
-        onSelect = { },
+        onSelected = { },
     )
 }

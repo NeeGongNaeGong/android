@@ -30,7 +30,7 @@ fun CalendarCell(
     modifier: Modifier = Modifier,
     date: LocalDate,
     isSelected: Boolean = false,
-    onSelect: (LocalDate) -> Unit = { },
+    onSelected: (LocalDate) -> Unit = { },
     content: @Composable () -> Unit = { },
 ) {
     CalendarCell(
@@ -42,7 +42,7 @@ fun CalendarCell(
             date == LocalDate.now() -> MaterialTheme.colorScheme.surface
             else -> date.dayOfWeek.color
         },
-        onSelect = { onSelect(date) },
+        onSelect = { onSelected(date) },
         content = content,
     )
 }

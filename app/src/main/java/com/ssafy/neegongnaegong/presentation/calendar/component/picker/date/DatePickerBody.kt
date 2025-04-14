@@ -1,5 +1,6 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker
+package com.ssafy.neegongnaegong.presentation.calendar.component.picker.date
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,9 +24,9 @@ import java.time.YearMonth
 fun DatePickerBody(
     modifier: Modifier = Modifier,
     selectedMonth: YearMonth,
-    startDate: LocalDate?,
-    endDate: LocalDate?,
+    selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit,
+    cell: @Composable (LocalDate, Boolean, (LocalDate) -> Unit) -> Unit
 ) {
     val lastDay by remember { mutableIntStateOf(selectedMonth.lengthOfMonth()) }
     val firstDayOfWeek by remember { mutableIntStateOf(selectedMonth.atDay(1).dayOfWeek.value % 7) }
@@ -51,15 +52,13 @@ fun DatePickerBody(
                             selectedMonth.atDay(dayOffset)
                         }
 
-                        DatePickerCell(
+                        Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
-                            date = date,
-                            startDate = startDate,
-                            endDate = endDate,
-                            onSelect = onDateSelected,
-                        )
+                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f)
+                        ) {
+                            cell(date, date == selectedDate, onDateSelected)
+                        }
                     }
                 }
             }
@@ -74,10 +73,11 @@ private fun DatePickerBodyPreview() {
         Surface {
             DatePickerBody(
                 selectedMonth = YearMonth.now(),
-                startDate = LocalDate.now(),
-                endDate = LocalDate.now().plusDays(1),
+                selectedDate = LocalDate.now(),
                 onDateSelected = {}
-            )
+            ) { _, _, _ ->
+
+            }
         }
     }
 }

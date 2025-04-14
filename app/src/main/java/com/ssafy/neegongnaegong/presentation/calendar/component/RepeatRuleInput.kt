@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
-import com.ssafy.neegongnaegong.presentation.calendar.component.picker.DateRangePicker
+import com.ssafy.neegongnaegong.presentation.calendar.component.picker.date.DatePicker
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
@@ -211,13 +211,11 @@ fun RepeatRuleEndDateInput(
             )
         }
         AnimatedVisibility(visible = hasEndDate) {
-            DateRangePicker(
+            DatePicker(
                 modifier = Modifier.fillMaxWidth(),
-                initialDate = endDate,
+                initialDate = endDate ?: LocalDate.now(),
                 initialMonth = endDate?.let { YearMonth.from(it) } ?: YearMonth.now(),
                 onDateSelected = onEndDateChange,
-                startDate = endDate,
-                endDate = endDate,
             )
         }
     }
