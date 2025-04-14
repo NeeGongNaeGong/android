@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -42,7 +43,9 @@ fun BottomNavigationBar(
     NavigationBar(
         modifier =
             modifier
-                .fillMaxHeight(0.09f)
+                // ZFold 기준 fraction 줘서 앱 실행 시 Bottom Navigatio이 공간을 충분하게 가지지 못하고 짤리는 현상 있었음
+                // wrapContentHeight로 필요한 만큼 크기 가져가도록 수정
+                .wrapContentHeight()
                 .navigationBarsPadding()
                 .shadow(
                     elevation = 20.dp,
