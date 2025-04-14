@@ -6,7 +6,7 @@ import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class LoginContract {
     sealed class Event : UiEvent {
-        data class OnGoogleLoginSuccess(val tokenId: String) : Event()
+        data class OnGoogleLoginSuccess(val idToken: String) : Event()
         data class OnGoogleLoginFailure(val exception: Throwable) : Event()
     }
 

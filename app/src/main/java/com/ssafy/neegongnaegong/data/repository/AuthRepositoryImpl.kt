@@ -24,10 +24,10 @@ class AuthRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
     override suspend fun login(
-        email: String,
+        idToken: String,
         fcmToken: String,
     ): Flow<User> = withContext(ioDispatcher) {
-        networkAuthDataSource.login(LoginRequest(email = email, fcmToken = fcmToken))
+        networkAuthDataSource.login(LoginRequest(idToken = idToken, fcmToken = fcmToken))
             .onEach { user ->
                 tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken)
                 tokenManager.saveToken(TokenType.REFRESH_TOKEN, user.createJwt.refreshToken)
