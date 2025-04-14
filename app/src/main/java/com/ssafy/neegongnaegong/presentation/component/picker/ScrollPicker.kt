@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker
+package com.ssafy.neegongnaegong.presentation.component.picker
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker.date
+package com.ssafy.neegongnaegong.presentation.component.picker.date
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,15 +23,13 @@ import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
 @Composable
-fun DateRangePicker(
+fun DatePicker(
     modifier: Modifier = Modifier,
     initialDate: LocalDate = LocalDate.now(),
     initialMonth: YearMonth = YearMonth.now(),
     minMonth: YearMonth = YearMonth.of(1900, 1),
     maxMonth: YearMonth = YearMonth.of(2100, 12),
-    onDateSelected: (LocalDate) -> Unit = {},
-    startDate: LocalDate? = LocalDate.now(),
-    endDate: LocalDate? = LocalDate.now(),
+    onDateSelected: (LocalDate) -> Unit,
 ) {
     val pagerState = rememberPagerState(
         pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
@@ -78,12 +76,11 @@ fun DateRangePicker(
                     selectedMonth = displayedMonth,
                     selectedDate = selectedDate,
                     onDateSelected = { date -> selectedDate = date },
-                ) { date, _, onDateSelected ->
+                ) { date, isSelected, onDateSelected ->
                     DatePickerCell(
                         date = date,
-                        startDate = startDate,
-                        endDate = endDate,
-                        onSelected = onDateSelected
+                        isSelected = isSelected,
+                        onSelected = onDateSelected,
                     )
                 }
             }
@@ -94,5 +91,7 @@ fun DateRangePicker(
 @Preview
 @Composable
 private fun DateRangePickerPreview() {
-    DateRangePicker()
+    DatePicker(
+        onDateSelected = {}
+    )
 }

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker.date
+package com.ssafy.neegongnaegong.presentation.component.picker.date
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

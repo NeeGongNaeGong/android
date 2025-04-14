@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker.time
+package com.ssafy.neegongnaegong.presentation.component.picker.time
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -10,8 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.ssafy.neegongnaegong.presentation.calendar.component.picker.ScrollPicker
-import com.ssafy.neegongnaegong.presentation.calendar.component.picker.rememberPickerState
+import com.ssafy.neegongnaegong.presentation.component.picker.ScrollPicker
+import com.ssafy.neegongnaegong.presentation.component.picker.rememberPickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalTime
 

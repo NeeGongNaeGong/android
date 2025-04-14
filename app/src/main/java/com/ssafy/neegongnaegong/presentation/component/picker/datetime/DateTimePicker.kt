@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker.datetime
+package com.ssafy.neegongnaegong.presentation.component.picker.datetime
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
