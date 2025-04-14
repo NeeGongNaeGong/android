@@ -6,22 +6,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarHeader
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
+/**
+ * DatePicker
+ *
+ * @param modifier modifier
+ * @param initialDate 초기 선택 날짜
+ * @param initialMonth 초기 선택 월
+ * @param minMonth 최소 선택 가능 월
+ * @param maxMonth 최대 선택 가능 월
+ * @param onDateSelected 날짜 선택 시 호출되는 콜백
+ */
 @Composable
 fun DatePicker(
     modifier: Modifier = Modifier,
@@ -31,22 +40,32 @@ fun DatePicker(
     maxMonth: YearMonth = YearMonth.of(2100, 12),
     onDateSelected: (LocalDate) -> Unit,
 ) {
+    /**
+     * pageCount는 전체 월 수
+     * initialPage는 전체 중 초기 선택 월의 인덱스
+     */
     val pagerState = rememberPagerState(
         pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
         initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
     )
-    var currentPage by remember { mutableIntStateOf(pagerState.currentPage) }
     var selectedMonth by remember { mutableStateOf(initialMonth) }
     var selectedDate by remember { mutableStateOf(initialDate) }
 
+    /**
+     * pagerState.currentPage가 변경될 때마다
+     * selectedMonth 업데이트
+     */
     LaunchedEffect(pagerState.currentPage) {
         selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
-        currentPage = pagerState.currentPage
     }
 
+    /**
+     * selectedDate가 변경될 때마다
+     * 해당하는 달로 pagerState.currentPage 업데이트
+     * onDateSelected 호출
+     */
     LaunchedEffect(selectedDate) {
         if (selectedMonth != YearMonth.from(selectedDate)) {
-            selectedMonth = YearMonth.from(selectedDate)
             pagerState.animateScrollToPage(
                 ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
             )
@@ -54,34 +73,32 @@ fun DatePicker(
         onDateSelected(selectedDate)
     }
 
-    Column(modifier = modifier) {
-        CalendarHeader(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            selectedMonth = selectedMonth
-        )
-        HorizontalPager(
-            modifier = Modifier.wrapContentHeight(),
-            state = pagerState,
-            beyondViewportPageCount = 1
-        ) { page ->
-            key(page) {
-                val displayedMonth by remember(page) {
-                    mutableStateOf(minMonth.plusMonths(page.toLong()))
-                }
-
-                DatePickerBody(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedMonth = displayedMonth,
-                    selectedDate = selectedDate,
-                    onDateSelected = { date -> selectedDate = date },
-                ) { date, isSelected, onDateSelected ->
-                    DatePickerCell(
-                        date = date,
-                        isSelected = isSelected,
-                        onSelected = onDateSelected,
-                    )
+    Surface(modifier = modifier) {
+        Column {
+            DatePickerHeader(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+                selectedMonth = selectedMonth
+            )
+            HorizontalPager(
+                modifier = Modifier.wrapContentHeight(),
+                state = pagerState,
+                beyondViewportPageCount = 1
+            ) { page ->
+                key(page) {
+                    DatePickerBody(
+                        modifier = Modifier.fillMaxWidth(),
+                        selectedMonth = selectedMonth,
+                        selectedDate = selectedDate,
+                        onDateSelected = { date -> selectedDate = date },
+                    ) { date, isSelected, onDateSelected ->
+                        DatePickerCell(
+                            date = date,
+                            isSelected = isSelected,
+                            onSelected = onDateSelected,
+                        )
+                    }
                 }
             }
         }

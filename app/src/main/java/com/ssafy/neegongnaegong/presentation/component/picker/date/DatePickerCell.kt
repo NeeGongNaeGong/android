@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.color
+import com.ssafy.neegongnaegong.presentation.util.color
 import java.time.LocalDate
 
 @Composable

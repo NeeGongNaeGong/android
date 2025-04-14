@@ -31,7 +31,6 @@ fun CalendarBody(
     val firstDayOfWeek by remember { mutableIntStateOf(selectedMonth.atDay(1).dayOfWeek.value % 7) }
 
     Column(modifier = modifier) {
-        DayOfWeek()
         Spacer(Modifier.height(16.dp))
         Column(
             modifier = Modifier.fillMaxHeight()
