@@ -5,19 +5,22 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,8 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +45,7 @@ import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -169,12 +177,24 @@ fun PersonalScreen(
             }
 
             DropdownMenu(
+                modifier = Modifier
+                    .width(90.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
                 filterOptions.forEach { option ->
                     DropdownMenuItem(
-                        text = { Text(option) },
+                        text = {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = option,
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                        },
                         onClick = {
                             selectedFilter = option
                             expanded = false
@@ -214,3 +234,59 @@ fun PersonalScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PersonalScreenPreview() {
+    val dummyTags = listOf(
+        Tag(koName = "CS", enName = "cs"),
+        Tag(koName = "네트워크", enName = "network"),
+        Tag(koName = "운동", enName = "exercise")
+    )
+
+    val dummyRecords = listOf(
+        StudyRecord(
+            title = "청산별곡 정주행",
+            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
+            startTime = "2025-04-14T04:33:02.856Z",
+            endTime = "2025-04-14T06:33:02.856Z",
+            tags = listOf("CS", "네트워크")
+        ),
+        StudyRecord(
+            title = "영어 단어 암기",
+            content = "VOCA 2200 30단원까지 복습함",
+            startTime = "2025-04-14T06:33:02.856Z",
+            endTime = "2025-04-14T08:33:02.856Z",
+            tags = listOf("영어", "단어")
+        ),
+        StudyRecord(
+            title = "청산별곡 정주행",
+            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
+            startTime = "2025-04-14T04:33:02.856Z",
+            endTime = "2025-04-14T06:33:02.856Z",
+            tags = listOf("CS", "네트워크")
+        ),
+        StudyRecord(
+            title = "청산별곡 정주행",
+            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
+            startTime = "2025-04-14T04:33:02.856Z",
+            endTime = "2025-04-14T06:33:02.856Z",
+            tags = listOf("CS", "네트워크")
+        ),
+        StudyRecord(
+            title = "청산별곡 정주행",
+            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
+            startTime = "2025-04-14T04:33:02.856Z",
+            endTime = "2025-04-14T06:33:02.856Z",
+            tags = listOf("CS", "네트워크")
+        ),
+    )
+
+    PersonalScreen(
+        studyRecords = dummyRecords,
+        tags = dummyTags,
+        onTagPlusClicked = {},
+        onTagEraseClicked = {}
+    )
+}
+
