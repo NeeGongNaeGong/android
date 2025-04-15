@@ -57,7 +57,7 @@ fun DateTimePickerBody(
             Text(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100))
-                    .clickable(onClick = onTimeClicked)
+                    .clickable(onClick = onTimeClicked, enabled = enable)
                     .background(
                         color = if (isTimeFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                         shape = RoundedCornerShape(100)

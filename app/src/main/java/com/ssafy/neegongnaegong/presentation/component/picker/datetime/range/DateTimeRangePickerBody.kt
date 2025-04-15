@@ -37,7 +37,7 @@ fun DateTimeRangePickerBody(
     onIsAllDayChanged: (Boolean) -> Unit,
     enable: Boolean,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         ScheduleEditText(
             modifier = Modifier.weight(1f),
             text = "하루 종일",

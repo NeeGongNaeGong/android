@@ -17,7 +17,7 @@ fun rememberDateTimeRangePickerState(
     isAllDay: Boolean = false
 ): DateTimeRangePickerState {
     require(startDateTime <= endDateTime) {
-        "startDateTime must be before or equal to endDateTime"
+        "startDateTime($startDateTime) must be before or equal to endDateTime($endDateTime)"
     }
 
     return remember {
