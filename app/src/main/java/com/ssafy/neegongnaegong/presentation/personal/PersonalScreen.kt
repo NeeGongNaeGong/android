@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordItem
+import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagList
 
 
@@ -80,7 +81,11 @@ fun PersonalScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Text(text = selectedFilter, fontSize = 24.sp)
+                Text(
+                    text = selectedFilter,
+                    fontSize = 24.sp
+                )
+
                 Icon(
 
                     imageVector = Icons.Default.ArrowDropDown,
@@ -108,7 +113,6 @@ fun PersonalScreen(
 
         if (selectedFilter == "태그별") {
             Column {
-
                 TagList(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -118,26 +122,20 @@ fun PersonalScreen(
                     onTagEraseClicked = onTagEraseClicked
                 )
 
-                LazyColumn(
+                StudyRecordList(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(studyRecords) { record ->
-                        StudyRecordItem(record)
-                    }
-                }
+                    studyRecords = studyRecords
+                )
             }
-
         } else {
             Text("날짜", fontSize = 18.sp, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(studyRecords) { record ->
-                    StudyRecordItem(record)
-                }
-            }
+            StudyRecordList(
+                modifier = Modifier.fillMaxSize(),
+                studyRecords = studyRecords
+            )
         }
     }
 }
