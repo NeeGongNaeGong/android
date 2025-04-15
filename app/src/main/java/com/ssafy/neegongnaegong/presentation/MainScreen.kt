@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +36,7 @@ fun MainScreen() {
             if (showBottomNavigationBar) BottomNavigationBar(navController = navController)
         },
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding)) {
             MainNavigationGraph(navController = navController)
         }
     }
