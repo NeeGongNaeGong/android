@@ -4,12 +4,10 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +22,7 @@ import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
-import com.ssafy.neegongnaegong.presentation.timer.component.write.TagList
+import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
