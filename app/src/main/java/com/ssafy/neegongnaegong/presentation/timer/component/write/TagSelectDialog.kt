@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
@@ -126,8 +128,21 @@ fun TagSelectDialog(
                             },
                             label = { Text(tag.koName) },
                             leadingIcon = if (isSelected) {
-                                { Icon(Icons.Default.Check, contentDescription = null) }
-                            } else null
+                                {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                    )
+                                }
+                            } else null,
+                            colors = FilterChipDefaults.filterChipColors(
+                                containerColor = Color.Transparent,
+                                labelColor = Color.Black,
+                                iconColor = Color.Black,
+                                selectedContainerColor = LightColors.Blue,
+                                selectedLabelColor = Color.White,
+                            )
                         )
                     }
                 }
