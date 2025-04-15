@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -42,7 +43,7 @@ fun BottomNavigationBar(
     NavigationBar(
         modifier =
             modifier
-                .fillMaxHeight(0.09f)
+                .wrapContentHeight()
                 .navigationBarsPadding()
                 .shadow(
                     elevation = 20.dp,

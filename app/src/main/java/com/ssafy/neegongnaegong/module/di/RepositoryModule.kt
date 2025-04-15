@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.module.di
 
 import com.ssafy.neegongnaegong.data.repository.AuthRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.CalendarRepositoryImpl
+//import com.ssafy.neegongnaegong.data.repository.CalendarRepositoryStub
 import com.ssafy.neegongnaegong.data.repository.GitHubRepositoryImpl
 import com.ssafy.neegongnaegong.domain.repository.CalendarRepository
 import com.ssafy.neegongnaegong.data.repository.StudiesRepositoryImpl

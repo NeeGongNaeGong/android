@@ -20,8 +20,6 @@ class ReissueAuthenticator @Inject constructor(
         synchronized(this) {
             val newAccessToken = runBlocking { fetchNewAccessToken() } ?: throw AuthException.InvalidTokenException()
 
-            // TODO: 만약 새로 받아온 accessToken으로도 실패하면 어떻게 할지 고민
-
             return response.request.newBuilder()
                 .header("Authorization", "Bearer $newAccessToken")
                 .build()
@@ -31,16 +29,12 @@ class ReissueAuthenticator @Inject constructor(
     private suspend fun fetchNewAccessToken(): String? {
         val refreshToken = tokenManager.getToken(TokenType.ACCESS_TOKEN) ?: return null
 
-        return runCatching {
-            authApi.reissue(refreshToken)
-        }.fold(
-            onSuccess = { response ->
-                response.takeIf { it.isSuccessful }?.body()?.data?.createJwt?.also {
-                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, it.accessToken.removePrefix("Bearer "))
-                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, it.refreshToken.removePrefix("Bearer "))
-                }?.accessToken
-            },
-            onFailure = { null }
-        )
+        return authApi.reissue(refreshToken).getOrThrow().data.let {
+            with(it.createJwt) {
+                tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
+                tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
+            }
+            tokenManager.getToken(TokenType.ACCESS_TOKEN)
+        }
     }
 }
