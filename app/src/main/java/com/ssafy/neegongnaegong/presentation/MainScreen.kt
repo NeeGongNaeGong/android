@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
+import com.ssafy.neegongnaegong.presentation.personal.PersonalRoute
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -44,19 +45,7 @@ fun StudiesScreen() {
 
 @Composable
 fun PersonalScreen() {
-    val dummyRecords = listOf(
-        StudyRecord("청산별곡 정주행", "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ", "2025-04-14T04:33:02.856Z", "2025-04-14T06:33:02.856Z", listOf("CS", "네트워크")),
-        StudyRecord("영어 단어 영어 단어 영어 단어", "VOCA 2200 암기", "2025-04-14T06:33:02.856Z", "2025-04-14T08:33:02.856Z", listOf("CS", "운동")),
-        StudyRecord("청산별곡 정주행", "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ", "2025-04-14T04:33:02.856Z", "2025-04-14T06:33:02.856Z", listOf("CS", "네트워크")),
-        StudyRecord("청산별곡 정주행", "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ", "2025-04-14T04:33:02.856Z", "2025-04-14T06:33:02.856Z", listOf("CS", "네트워크")),
-        StudyRecord("청산별곡 정주행", "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ", "2025-04-14T04:33:02.856Z", "2025-04-14T06:33:02.856Z", listOf("CS", "네트워크")),
-        StudyRecord("청산별곡 정주행", "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ", "2025-04-14T04:33:02.856Z", "2025-04-14T06:33:02.856Z", listOf("CS", "네트워크")),
-        StudyRecord("청산별곡 정주행", "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ", "2025-04-14T04:33:02.856Z", "2025-04-14T06:33:02.856Z", listOf("CS", "네트워크")),
-        )
-    com.ssafy.neegongnaegong.presentation.personal.PersonalScreen(
-        modifier = Modifier.fillMaxSize(),
-        studyRecords = dummyRecords
-    )
+    PersonalRoute(modifier = Modifier.fillMaxSize())
 }
 
 @Composable

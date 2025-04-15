@@ -24,12 +24,13 @@ class WriteContract {
     data class State(
         val title: String = "",
         val content: String = "",
+        val startTime: Long = 0,
+        val endTime: Long = 0,
+        // tag
         val tags: List<Tag> = emptyList(),
         val selectedTags: List<Tag> = emptyList(),
         val unSelectedTags: List<Tag> = emptyList(),
         val isConfirmButtonEnabled: Boolean = false,
-        val startTime: Long = 0,
-        val endTime: Long = 0,
         val isDialogShow: Boolean = false,
     ) : UiState
 
