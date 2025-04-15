@@ -40,8 +40,9 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
 import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
-import com.ssafy.neegongnaegong.presentation.component.picker.datetime.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -73,7 +74,6 @@ fun ScheduleEditRoute(
         onContentChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnContentChanged(it)) },
         onStartDateChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnStartDateChanged(it)) },
         onEndDateChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnEndDateChanged(it)) },
-        onIsAllDayChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnIsAllDayChanged(it)) },
         onLocationChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnLocationChanged(it)) },
         onRepeatRuleChanged = { viewModel.setEvent(ScheduleEditContract.Event.OnRepeatRuleChanged(it)) },
         onSaveScheduleClicked = {
@@ -87,7 +87,6 @@ fun ScheduleEditRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleEditContent(
     modifier: Modifier = Modifier,
@@ -97,7 +96,6 @@ fun ScheduleEditContent(
     onContentChanged: (String) -> Unit,
     onStartDateChanged: (LocalDateTime) -> Unit,
     onEndDateChanged: (LocalDateTime) -> Unit,
-    onIsAllDayChanged: (Boolean) -> Unit,
     onLocationChanged: (String) -> Unit,
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
@@ -142,7 +140,6 @@ fun ScheduleEditContent(
             onRepeatRuleChanged = onRepeatRuleChanged,
             onStartDateChange = onStartDateChanged,
             onEndDateChange = onEndDateChanged,
-            onIsAllDayChange = onIsAllDayChanged,
             onLocationChange = onLocationChanged,
             onSaveScheduleClicked = onSaveScheduleClicked,
             onCancelClick = onCancelClick
@@ -168,11 +165,16 @@ fun ScheduleEditScreen(
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onStartDateChange: (LocalDateTime) -> Unit,
     onEndDateChange: (LocalDateTime) -> Unit,
-    onIsAllDayChange: (Boolean) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
     onCancelClick: () -> Unit,
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
+
+    val dateTimeRangePickerState = rememberDateTimeRangePickerState(
+        startDateTime = startDate,
+        endDateTime = endDate,
+        isAllDay = isAllDay
+    )
 
     Column(
         modifier = Modifier
@@ -191,12 +193,9 @@ fun ScheduleEditScreen(
                 placeHolder = "제목"
             )
             DateTimeRangePicker(
-                startDateTime = startDate,
-                endDateTime = endDate,
-                isAllDay = isAllDay,
+                state = dateTimeRangePickerState,
                 onStartDateTimeChange = onStartDateChange,
                 onEndDateTimeChange = onEndDateChange,
-                onIsAllDayToggle = onIsAllDayChange,
             )
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
@@ -279,7 +278,6 @@ private fun PreviewScheduleEditScreen() {
                 onRepeatRuleChanged = { },
                 onStartDateChange = { },
                 onEndDateChange = { },
-                onIsAllDayChange = { },
                 onSaveScheduleClicked = { },
                 onCancelClick = { }
             )

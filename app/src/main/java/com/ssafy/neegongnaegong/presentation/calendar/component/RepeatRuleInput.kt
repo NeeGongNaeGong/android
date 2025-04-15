@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
+import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -174,6 +174,7 @@ fun RepeatRuleEndDateInput(
     endDate: LocalDate?,
     onEndDateChange: (LocalDate?) -> Unit = {}
 ) {
+    val datePickerState = rememberDatePickerState(initialDate = endDate ?: LocalDate.now())
     var hasEndDate by remember { mutableStateOf(endDate != null) }
 
     LaunchedEffect(hasEndDate) {
@@ -213,8 +214,7 @@ fun RepeatRuleEndDateInput(
         AnimatedVisibility(visible = hasEndDate) {
             DatePicker(
                 modifier = Modifier.fillMaxWidth(),
-                initialDate = endDate ?: LocalDate.now(),
-                initialMonth = endDate?.let { YearMonth.from(it) } ?: YearMonth.now(),
+                state = datePickerState,
                 onDateSelected = onEndDateChange,
             )
         }

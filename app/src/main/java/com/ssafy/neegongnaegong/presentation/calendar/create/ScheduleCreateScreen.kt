@@ -39,8 +39,9 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
 import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
-import com.ssafy.neegongnaegong.presentation.component.picker.datetime.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -73,20 +74,9 @@ fun ScheduleCreateRoute(
         onContentChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnContentChanged(it)) },
         onStartDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnStartDateChanged(it)) },
         onEndDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnEndDateChanged(it)) },
-        onIsAllDayChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnIsAllDayChanged(it)) },
         onLocationChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnLocationChanged(it)) },
-        onRepeatRuleChanged = {
-            viewModel.setEvent(
-                ScheduleCreateContract.Event.OnRepeatRuleChanged(
-                    it
-                )
-            )
-        },
-        onSaveScheduleClicked = {
-            viewModel.setEvent(
-                ScheduleCreateContract.Event.OnCreateScheduleClicked
-            )
-        },
+        onRepeatRuleChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnRepeatRuleChanged(it)) },
+        onSaveScheduleClicked = { viewModel.setEvent(ScheduleCreateContract.Event.OnCreateScheduleClicked) },
         onCancelClick = { viewModel.setEvent(ScheduleCreateContract.Event.OnCancelClick) }
     )
 }
@@ -100,7 +90,6 @@ fun ScheduleCreateContent(
     onContentChanged: (String) -> Unit,
     onStartDateChanged: (LocalDateTime) -> Unit,
     onEndDateChanged: (LocalDateTime) -> Unit,
-    onIsAllDayChanged: (Boolean) -> Unit,
     onLocationChanged: (String) -> Unit,
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
@@ -142,7 +131,6 @@ fun ScheduleCreateContent(
             onRepeatRuleChanged = onRepeatRuleChanged,
             onStartDateChange = onStartDateChanged,
             onEndDateChange = onEndDateChanged,
-            onIsAllDayChange = onIsAllDayChanged,
             onLocationChange = onLocationChanged,
             onSaveScheduleClicked = onSaveScheduleClicked,
             onCancelClick = onCancelClick
@@ -168,11 +156,16 @@ fun ScheduleCreateScreen(
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onStartDateChange: (LocalDateTime) -> Unit,
     onEndDateChange: (LocalDateTime) -> Unit,
-    onIsAllDayChange: (Boolean) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
     onCancelClick: () -> Unit,
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
+
+    val dateTimeRangePickerState = rememberDateTimeRangePickerState(
+        startDateTime = startDate,
+        endDateTime = endDate,
+        isAllDay = isAllDay
+    )
 
     Column(
         modifier = Modifier
@@ -191,12 +184,9 @@ fun ScheduleCreateScreen(
                 placeHolder = "제목"
             )
             DateTimeRangePicker(
-                startDateTime = startDate,
-                endDateTime = endDate,
-                isAllDay = isAllDay,
+                state = dateTimeRangePickerState,
                 onStartDateTimeChange = onStartDateChange,
                 onEndDateTimeChange = onEndDateChange,
-                onIsAllDayToggle = onIsAllDayChange,
             )
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
@@ -279,7 +269,6 @@ private fun PreviewScheduleEditScreen() {
                 onRepeatRuleChanged = { },
                 onStartDateChange = { },
                 onEndDateChange = { },
-                onIsAllDayChange = { },
                 onSaveScheduleClicked = { },
                 onCancelClick = { }
             )

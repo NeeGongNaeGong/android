@@ -9,11 +9,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,52 +21,52 @@ import java.time.temporal.ChronoUnit
  * DatePicker
  *
  * @param modifier modifier
- * @param initialDate 초기 선택 날짜
- * @param initialMonth 초기 선택 월
- * @param minMonth 최소 선택 가능 월
- * @param maxMonth 최대 선택 가능 월
+ * @param state DatePickerState
+ * @param minMonth 최소 선택 가능 달
+ * @param maxMonth 최대 선택 가능 달
  * @param onDateSelected 날짜 선택 시 호출되는 콜백
  */
 @Composable
 fun DatePicker(
     modifier: Modifier = Modifier,
-    initialDate: LocalDate = LocalDate.now(),
-    initialMonth: YearMonth = YearMonth.now(),
+    state: DatePickerState,
     minMonth: YearMonth = YearMonth.of(1900, 1),
     maxMonth: YearMonth = YearMonth.of(2100, 12),
     onDateSelected: (LocalDate) -> Unit,
 ) {
     /**
-     * pageCount는 전체 월 수
-     * initialPage는 전체 중 초기 선택 월의 인덱스
+     * pageCount는 전체 달 수
+     * initialPage는 전체 중 초기 선택 달의 인덱스
      */
     val pagerState = rememberPagerState(
         pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
-        initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
+        initialPage = ChronoUnit.MONTHS.between(minMonth, state.month).toInt(),
     )
-    var selectedMonth by remember { mutableStateOf(initialMonth) }
-    var selectedDate by remember { mutableStateOf(initialDate) }
 
     /**
      * pagerState.currentPage가 변경될 때마다
-     * selectedMonth 업데이트
+     * updateMonth
      */
     LaunchedEffect(pagerState.currentPage) {
-        selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
+        state.updateMonth(minMonth.plusMonths(pagerState.currentPage.toLong()))
     }
 
     /**
-     * selectedDate가 변경될 때마다
-     * 해당하는 달로 pagerState.currentPage 업데이트
+     * state.date가 변경될 때마다
      * onDateSelected 호출
      */
-    LaunchedEffect(selectedDate) {
-        if (selectedMonth != YearMonth.from(selectedDate)) {
-            pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
-            )
-        }
-        onDateSelected(selectedDate)
+    LaunchedEffect(state.date) {
+        onDateSelected(state.date)
+    }
+
+    /**
+     * state.month가 변경될 때마다
+     * 해당하는 달로 pagerState.currentPage 업데이트
+     */
+    LaunchedEffect(state.month) {
+        pagerState.animateScrollToPage(
+            ChronoUnit.MONTHS.between(minMonth, state.month).toInt()
+        )
     }
 
     Surface(modifier = modifier) {
@@ -79,24 +75,25 @@ fun DatePicker(
                 modifier = Modifier
                     .padding(bottom = 10.dp)
                     .fillMaxWidth(),
-                selectedMonth = selectedMonth
+                selectedMonth = state.month
             )
             HorizontalPager(
                 modifier = Modifier.wrapContentHeight(),
                 state = pagerState,
                 beyondViewportPageCount = 1
             ) { page ->
+                val displayMonth = minMonth.plusMonths(page.toLong())
                 key(page) {
                     DatePickerBody(
                         modifier = Modifier.fillMaxWidth(),
-                        selectedMonth = selectedMonth,
-                        selectedDate = selectedDate,
-                        onDateSelected = { date -> selectedDate = date },
-                    ) { date, isSelected, onDateSelected ->
+                        selectedMonth = displayMonth,
+                    ) { date ->
+                        val isSelected = state.date == date
                         DatePickerCell(
+                            modifier = Modifier.fillMaxWidth(),
                             date = date,
                             isSelected = isSelected,
-                            onSelected = onDateSelected,
+                            onSelected = state::updateDate,
                         )
                     }
                 }
@@ -108,7 +105,10 @@ fun DatePicker(
 @Preview
 @Composable
 private fun DateRangePickerPreview() {
+    val state = rememberDatePickerState()
+
     DatePicker(
+        state = state,
         onDateSelected = {}
     )
 }

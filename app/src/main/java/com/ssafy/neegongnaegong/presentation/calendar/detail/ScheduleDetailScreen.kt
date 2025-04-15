@@ -34,8 +34,9 @@ import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
-import com.ssafy.neegongnaegong.presentation.component.picker.datetime.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -135,6 +136,12 @@ fun ScheduleDetailScreen(
     onEditClick: () -> Unit,
     onDeleteClick: (DeleteType) -> Unit,
 ) {
+    val dateTimeRangePickerState = rememberDateTimeRangePickerState(
+        startDateTime = startDate,
+        endDateTime = endDate,
+        isAllDay = isAllDay
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -153,12 +160,7 @@ fun ScheduleDetailScreen(
                 enabled = false
             )
             DateTimeRangePicker(
-                startDateTime = startDate,
-                endDateTime = endDate,
-                isAllDay = isAllDay,
-                onStartDateTimeChange = {},
-                onEndDateTimeChange = {},
-                onIsAllDayToggle = {},
+                state = dateTimeRangePickerState,
                 enable = false,
             )
             if (content != null) ScheduleEditText(
