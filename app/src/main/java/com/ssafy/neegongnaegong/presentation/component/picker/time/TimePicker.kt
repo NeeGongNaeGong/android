@@ -7,11 +7,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ssafy.neegongnaegong.presentation.component.picker.ScrollPicker
-import com.ssafy.neegongnaegong.presentation.component.picker.rememberPickerState
+import com.ssafy.neegongnaegong.presentation.component.picker.rememberScrollPickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalTime
 
@@ -21,13 +22,13 @@ fun TimePicker(
     selectedTime: LocalTime = LocalTime.now(),
     onTimeChange: (LocalTime) -> Unit = {},
 ) {
-    val amPmList = listOf("AM", "PM")
-    val hourList = (0 until 24).toList()
-    val minuteList = ((0 until 60)).toList()
+    val amPmList = remember { listOf("AM", "PM") }
+    val hourList = remember { (0 until 24).toList() }
+    val minuteList = remember { ((0 until 60)).toList() }
 
-    val amPmPickerState = rememberPickerState(if (selectedTime.hour < 12) "AM" else "PM")
-    val hourPickerState = rememberPickerState(selectedTime.hour)
-    val minutePickerState = rememberPickerState(selectedTime.minute)
+    val amPmPickerState = rememberScrollPickerState(if (selectedTime.hour < 12) "AM" else "PM")
+    val hourPickerState = rememberScrollPickerState(selectedTime.hour)
+    val minutePickerState = rememberScrollPickerState(selectedTime.minute)
 
     LaunchedEffect(
         hourPickerState.selectedItem,
@@ -42,12 +43,15 @@ fun TimePicker(
     }
 
     LaunchedEffect(amPmPickerState.selectedItem) {
-        hourPickerState.selectedItem = hourPickerState.selectedItem % 12 +
-                if (amPmPickerState.selectedItem == "AM") 0 else 12
+        hourPickerState.updateSelectedItem(
+            hourPickerState.selectedItem % 12 + if (amPmPickerState.selectedItem == "AM") 0 else 12
+        )
     }
 
     LaunchedEffect(hourPickerState.selectedItem) {
-        amPmPickerState.selectedItem = if (hourPickerState.selectedItem < 12) "AM" else "PM"
+        amPmPickerState.updateSelectedItem(
+            if (hourPickerState.selectedItem < 12) "AM" else "PM"
+        )
     }
 
     Row(
@@ -60,7 +64,7 @@ fun TimePicker(
             items = amPmList,
             state = amPmPickerState,
             visibleItemsCount = 3,
-            isInfinite = false,
+            isInfinite = false
         )
         ScrollPicker(
             modifier = Modifier.weight(1f),

@@ -82,8 +82,8 @@ fun DatePicker(
                 state = pagerState,
                 beyondViewportPageCount = 1
             ) { page ->
-                val displayMonth = minMonth.plusMonths(page.toLong())
                 key(page) {
+                    val displayMonth = minMonth.plusMonths(page.toLong())
                     DatePickerBody(
                         modifier = Modifier.fillMaxWidth(),
                         selectedMonth = displayMonth,
