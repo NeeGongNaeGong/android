@@ -28,7 +28,6 @@ class ScheduleCreateViewModel @Inject constructor(
             is ScheduleCreateContract.Event.OnContentChanged -> setSchedule(content = event.content)
             is ScheduleCreateContract.Event.OnStartDateChanged -> setSchedule(startDate = event.date)
             is ScheduleCreateContract.Event.OnEndDateChanged -> setSchedule(endDate = event.date)
-            is ScheduleCreateContract.Event.OnIsAllDayChanged -> setSchedule(isAllDay = event.isAllDay)
             is ScheduleCreateContract.Event.OnLocationChanged -> setSchedule(location = event.location)
             is ScheduleCreateContract.Event.OnRepeatRuleChanged -> setSchedule(repeatRule = event.repeatRule)
             is ScheduleCreateContract.Event.OnCancelClick -> setEffect { ScheduleCreateContract.Effect.NavigateBack }
@@ -45,9 +44,8 @@ class ScheduleCreateViewModel @Inject constructor(
     private fun setSchedule(
         title: String = uiState.value.schedule.title,
         content: String? = uiState.value.schedule.content,
-        startDate: LocalDateTime = uiState.value.schedule.startDate,
-        isAllDay: Boolean = uiState.value.schedule.isAllDay,
-        endDate: LocalDateTime = uiState.value.schedule.endDate,
+        startDate: LocalDateTime = uiState.value.schedule.startAt,
+        endDate: LocalDateTime = uiState.value.schedule.endAt,
         location: String? = uiState.value.schedule.location,
         repeatRule: RepeatRuleInfo? = uiState.value.repeatRule,
     ) {
@@ -56,17 +54,10 @@ class ScheduleCreateViewModel @Inject constructor(
                 schedule = ScheduleInfo(
                     title = title,
                     content = content,
-                    startDate = if (isAllDay) LocalDateTime.of(
-                        startDate.toLocalDate(),
-                        LocalTime.MIN
-                    )
-                    else if (startDate.isAfter(endDate)) endDate
-                    else startDate,
-                    endDate = if (isAllDay) LocalDateTime.of(endDate.toLocalDate(), LocalTime.MAX)
-                    else if (startDate.isAfter(endDate)) startDate
-                    else endDate,
+                    startAt = startDate,
+                    endAt = endDate,
                     location = location,
-                    isAllDay = isAllDay,
+                    isAllDay = startDate.toLocalTime() == LocalTime.MIN && endDate.toLocalTime() == LocalTime.MAX,
                 ),
                 repeatRule = repeatRule
             )

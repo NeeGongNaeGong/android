@@ -22,8 +22,8 @@ data class CreatePersonalScheduleResponse(
             info = ScheduleInfo(
                 title = title,
                 content = content,
-                startDate = startDate,
-                endDate = endDate,
+                startAt = startDate,
+                endAt = endDate,
                 isAllDay = endDate.second == 59, // TODO: 추후 수정
                 location = location,
                 repeatRule = repeatRule?.toDomain(),

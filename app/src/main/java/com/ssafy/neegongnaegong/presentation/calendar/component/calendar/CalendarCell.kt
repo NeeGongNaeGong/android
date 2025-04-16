@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.color
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -30,7 +31,7 @@ fun CalendarCell(
     modifier: Modifier = Modifier,
     date: LocalDate,
     isSelected: Boolean = false,
-    onSelect: (LocalDate) -> Unit = { },
+    onSelected: (LocalDate) -> Unit = { },
     content: @Composable () -> Unit = { },
 ) {
     CalendarCell(
@@ -42,7 +43,7 @@ fun CalendarCell(
             date == LocalDate.now() -> MaterialTheme.colorScheme.surface
             else -> date.dayOfWeek.color
         },
-        onSelect = { onSelect(date) },
+        onSelect = { onSelected(date) },
         content = content,
     )
 }

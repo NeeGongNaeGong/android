@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,7 +19,7 @@ fun CalendarHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
 
 @Composable
 fun CalendarHeader(modifier: Modifier = Modifier, text: String) {
-    Box(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Text(
             modifier = modifier.fillMaxWidth(),
             text = text,
@@ -27,5 +27,6 @@ fun CalendarHeader(modifier: Modifier = Modifier, text: String) {
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground
         )
+        DayOfWeek()
     }
 }

@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.ssafy.neegongnaegong.presentation.util.color
+import com.ssafy.neegongnaegong.presentation.util.dayOfWeekOrder
 import java.time.format.TextStyle
 import java.util.Locale
 

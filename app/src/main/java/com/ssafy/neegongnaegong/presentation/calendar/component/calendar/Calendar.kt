@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +24,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Calendar(
     modifier: Modifier = Modifier,
@@ -69,14 +67,10 @@ fun Calendar(
         )
         HorizontalPager(
             state = pagerState,
-//            beyondBoundsPageCount = 1
             beyondViewportPageCount = 1
         ) { page ->
             key(page) {
-                val displayedMonth by remember(page) {
-                    mutableStateOf(minMonth.plusMonths(page.toLong()))
-                }
-
+                val displayedMonth = minMonth.plusMonths(page.toLong())
                 CalendarBody(
                     modifier = Modifier.fillMaxSize(),
                     selectedMonth = displayedMonth,

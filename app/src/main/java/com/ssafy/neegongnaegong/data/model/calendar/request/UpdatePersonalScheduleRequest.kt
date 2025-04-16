@@ -11,8 +11,8 @@ data class UpdatePersonalScheduleRequest(
     val date: LocalDate,
     val title: String,
     val content: String?,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startAt: LocalDateTime,
+    val endAt: LocalDateTime,
     val location: String? = null,
     val repeatRule: UpdateRepeatRuleRequest? = null,
 ) {
@@ -23,8 +23,8 @@ data class UpdatePersonalScheduleRequest(
                 date = date,
                 title = schedule.title,
                 content = schedule.content,
-                startDate = schedule.startDate,
-                endDate = schedule.endDate,
+                startAt = schedule.startAt,
+                endAt = schedule.endAt,
                 location = schedule.location,
                 repeatRule = repeatRule?.let { UpdateRepeatRuleRequest.fromDomain(it) }
             )

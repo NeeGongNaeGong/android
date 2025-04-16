@@ -8,7 +8,7 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, fcmToken: String): Flow<User> {
-        return authRepository.login(email, fcmToken)
+    suspend operator fun invoke(idToken: String, fcmToken: String): Flow<User> {
+        return authRepository.login(idToken, fcmToken)
     }
 }

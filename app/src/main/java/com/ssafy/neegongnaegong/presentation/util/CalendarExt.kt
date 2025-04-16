@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
+package com.ssafy.neegongnaegong.presentation.util
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
