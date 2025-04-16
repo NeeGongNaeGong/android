@@ -62,7 +62,7 @@ class CalendarViewModel @Inject constructor(
         }.safeCollect { result ->
             val schedules = mutableMapOf<LocalDate, MutableList<Schedule>>().apply {
                 result.forEach { schedule ->
-                    val date = schedule.info.startDate.toLocalDate()
+                    val date = schedule.info.startAt.toLocalDate()
                     put(
                         date,
                         getOrDefault(date, emptyList()).toMutableList().apply { add(schedule) }
@@ -81,8 +81,8 @@ class CalendarViewModel @Inject constructor(
                 ScheduleInfo(
                     title = title,
                     content = "",
-                    startDate = LocalDateTime.of(date, LocalTime.MIN),
-                    endDate = LocalDateTime.of(date, LocalTime.MAX),
+                    startAt = LocalDateTime.of(date, LocalTime.MIN),
+                    endAt = LocalDateTime.of(date, LocalTime.MAX),
                     isAllDay = true,
                     location = null,
                     repeatRule = null

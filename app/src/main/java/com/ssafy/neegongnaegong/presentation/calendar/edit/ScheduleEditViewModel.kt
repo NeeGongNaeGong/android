@@ -43,7 +43,7 @@ class ScheduleEditViewModel @Inject constructor(
             setState {
                 copy(
                     id = schedule.id,
-                    date = schedule.info.startDate.toLocalDate(),
+                    date = schedule.info.startAt.toLocalDate(),
                     schedule = schedule.info,
                     repeatRule = schedule.info.repeatRule?.info,
                 )
@@ -54,8 +54,8 @@ class ScheduleEditViewModel @Inject constructor(
     private fun setSchedule(
         title: String = uiState.value.schedule.title,
         content: String? = uiState.value.schedule.content,
-        startDate: LocalDateTime = uiState.value.schedule.startDate,
-        endDate: LocalDateTime = uiState.value.schedule.endDate,
+        startDate: LocalDateTime = uiState.value.schedule.startAt,
+        endDate: LocalDateTime = uiState.value.schedule.endAt,
         location: String? = uiState.value.schedule.location,
         repeatRule: RepeatRuleInfo? = uiState.value.repeatRule,
     ) {
@@ -64,8 +64,8 @@ class ScheduleEditViewModel @Inject constructor(
                 schedule = ScheduleInfo(
                     title = title,
                     content = content,
-                    startDate = startDate,
-                    endDate = endDate,
+                    startAt = startDate,
+                    endAt = endDate,
                     location = location,
                     isAllDay = startDate.toLocalTime() == LocalTime.MIN && endDate.toLocalTime() == LocalTime.MAX,
                 ),
