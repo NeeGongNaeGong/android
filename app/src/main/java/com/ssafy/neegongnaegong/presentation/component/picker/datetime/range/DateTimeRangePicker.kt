@@ -38,7 +38,7 @@ fun DateTimeRangePicker(
         when (state.focus) {
             DateTimeRangePickerState.Focus.StartDate -> dateRangePickerState.focusOnStart()
             DateTimeRangePickerState.Focus.EndDate -> dateRangePickerState.focusOnEnd()
-            else -> dateRangePickerState.clearFocus()
+            else -> {}
         }
     }
 
@@ -51,11 +51,11 @@ fun DateTimeRangePicker(
     }
 
     LaunchedEffect(dateRangePickerState.startDate) {
-        state.setStartDate(dateRangePickerState.startDate)
+        state.updateStartDate(dateRangePickerState.startDate)
     }
 
     LaunchedEffect(dateRangePickerState.endDate) {
-        state.setEndDate(dateRangePickerState.endDate)
+        state.updateEndDate(dateRangePickerState.endDate)
     }
 
     Column(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
@@ -72,7 +72,7 @@ fun DateTimeRangePicker(
             onStartTimeClicked = state::focusOnStartTime,
             onEndDateClicked = state::focusOnEndDate,
             onEndTimeClicked = state::focusOnEndTime,
-            onIsAllDayChanged = state::setIsAllDay,
+            onIsAllDayChanged = state::updateIsAllDay,
             enable = enable
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -84,8 +84,8 @@ fun DateTimeRangePicker(
                         DateRangePicker(
                             initialMonth = YearMonth.from(state.startDateTime),
                             state = dateRangePickerState,
-                            onStartDateSelected = state::setStartDate,
-                            onEndDateSelected = state::setEndDate,
+                            onStartDateSelected = state::updateStartDate,
+                            onEndDateSelected = state::updateEndDate,
                         )
                     }
 
@@ -93,7 +93,7 @@ fun DateTimeRangePicker(
                         TimePicker(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             selectedTime = state.startDateTime.toLocalTime(),
-                            onTimeChange = state::setStartTime
+                            onTimeChange = state::updateStartTime
                         )
                     }
 
@@ -101,7 +101,7 @@ fun DateTimeRangePicker(
                         TimePicker(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             selectedTime = state.endDateTime.toLocalTime(),
-                            onTimeChange = state::setEndTime
+                            onTimeChange = state::updateEndTime
                         )
                     }
                 }
@@ -166,7 +166,7 @@ private fun DateTimeRangePickerPreview_Is_All_Day() {
         startDateTime = LocalDateTime.now(),
         endDateTime = LocalDateTime.now().plusDays(1)
     ).apply {
-        setIsAllDay(true)
+        updateIsAllDay(true)
     }
 
     NeeGongNaeGongTheme(dynamicColor = false) {

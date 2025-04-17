@@ -21,51 +21,40 @@ fun rememberDateTimePickerState(
 class DateTimePickerState internal constructor(
     initialDateTime: LocalDateTime,
 ) {
+    var dateTime by mutableStateOf(initialDateTime)
+        private set
+    var focus by mutableStateOf(Focus.None)
+        private set
+
+    val isFocused: Boolean
+        get() = this.focus != Focus.None
+    val isDateFocused: Boolean
+        get() = this.focus == Focus.Date
+    val isTimeFocused: Boolean
+        get() = this.focus == Focus.Time
+
+    fun updateDate(date: LocalDate) = updateDateTime(dateTime.with(date))
+    fun updateTime(time: LocalTime) = updateDateTime(dateTime.with(time))
+
+    fun updateDateTime(dateTime: LocalDateTime) {
+        this.dateTime = dateTime
+    }
+
+    fun clearFocus() = updateFocus(Focus.None)
+    fun focusOnDate() = updateFocus(Focus.Date)
+    fun focusOnTime() = updateFocus(Focus.Time)
+
+    private fun updateFocus(focus: Focus) {
+        this.focus = if (this.focus == focus) {
+            Focus.None
+        } else {
+            focus
+        }
+    }
+
     enum class Focus {
         None,
         Date,
         Time
-    }
-
-    private var _dateTime by mutableStateOf(initialDateTime)
-    val dateTime: LocalDateTime get() = _dateTime
-
-    private var _focus by mutableStateOf(Focus.None)
-    val focus: Focus get() = _focus
-
-    val isFocused: Boolean
-        get() = focus != Focus.None
-    val isDateFocused: Boolean
-        get() = focus == Focus.Date
-    val isTimeFocused: Boolean
-        get() = focus == Focus.Time
-
-    fun setDate(date: LocalDate) {
-        setDateTime(dateTime.with(date))
-    }
-
-    fun setTime(time: LocalTime) {
-        setDateTime(dateTime.with(time))
-    }
-
-    fun setDateTime(dateTime: LocalDateTime) {
-        _dateTime = dateTime
-    }
-
-    fun focusOnDate() {
-        setFocus(Focus.Date)
-    }
-
-    fun focusOnTime() {
-        setFocus(Focus.Time)
-    }
-
-    fun clearFocus() {
-        setFocus(Focus.None)
-    }
-
-    fun setFocus(focus: Focus) {
-        if (this.focus == focus) _focus = Focus.None
-        else _focus = focus
     }
 }

@@ -118,13 +118,7 @@ fun DateRangePicker(
                         date = date,
                         startDate = state.startDate,
                         endDate = state.endDate,
-                        onSelected = {
-                            when(state.focus) {
-                                DateRangePickerState.Focus.None -> {}
-                                DateRangePickerState.Focus.Start -> state.setStartDate(it)
-                                DateRangePickerState.Focus.End -> state.setEndDate(it)
-                            }
-                        }
+                        onSelected = state::updateDate
                     )
                 }
             }
@@ -135,7 +129,11 @@ fun DateRangePicker(
 @Preview
 @Composable
 private fun DateRangePickerPreview() {
-    val state = rememberDateRangePickerState()
+    val state = rememberDateRangePickerState().apply {
+        val now = LocalDate.now()
+        updateDate(now)
+        updateDate(now.plusDays(1))
+    }
     Surface {
         DateRangePicker(state = state)
     }

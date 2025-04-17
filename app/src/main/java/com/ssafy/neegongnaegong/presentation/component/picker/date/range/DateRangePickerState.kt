@@ -8,57 +8,110 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import java.time.LocalDate
 
+/**
+ * startDate는 endDate 이후의 날짜 일수 없습니다.
+ *
+ * @param startDate 시작 날짜
+ * @param endDate 종료 날짜
+ * @return DateRangePickerState
+ */
 @Composable
 fun rememberDateRangePickerState(
     startDate: LocalDate = LocalDate.now(),
     endDate: LocalDate = startDate,
+    autoFocus: Boolean = true,
 ): DateRangePickerState {
     require(startDate <= endDate) {
         "startDate must be before or equal to endDate"
     }
 
-    return remember { DateRangePickerState(startDate, endDate) }
+    return remember { DateRangePickerState(startDate, endDate, autoFocus) }
 }
 
+/**
+ * DateRangePicker의 상태를 관리합니다.
+ *
+ * @param startDate 시작 날짜
+ * @param endDate 종료 날짜
+ */
 @Stable
 class DateRangePickerState internal constructor(
     startDate: LocalDate,
     endDate: LocalDate,
+    private val autoFocus: Boolean,
 ) {
+    /**
+     * 시작 날짜
+     */
+    var startDate by mutableStateOf(startDate)
+        private set
+
+    /**
+     * 종료 날짜
+     */
+    var endDate by mutableStateOf(endDate)
+        private set
+
+    /**
+     * 현재 Focus 상태
+     */
+    var focus by mutableStateOf(Focus.Start)
+        private set
+
+    /**
+     * `focus`를 `Start`로 변경합니다.
+     */
+    fun focusOnStart() {
+        focus = Focus.Start
+    }
+
+    /**
+     * `focus`를 `End`로 변경합니다.
+     */
+    fun focusOnEnd() {
+        focus = Focus.End
+    }
+
+    /**
+     * `focus`에 따라 `StartDate`를 업데이트 할지, `EndDate`를 업데이트 할지 결정합니다.
+     *
+     * @param date 업데이트 할 날짜
+     */
+    fun updateDate(date: LocalDate) {
+        when (focus) {
+            Focus.Start -> updateStartDate(date)
+            Focus.End -> updateEndDate(date)
+        }
+    }
+
+    /**
+     * `startDate`를 업데이트 합니다.
+     * 만약 `endDate`가 `startDate`보다 작다면 `endDate`도 업데이트 합니다.
+     * 만약 `autoFocus`가 true라면 `focus`를 `End`로 변경합니다.
+     *
+     * @param date 업데이트 할 날짜
+     */
+    fun updateStartDate(date: LocalDate) {
+        startDate = date
+        if (endDate < date) endDate = date
+        if (autoFocus) focusOnEnd()
+    }
+
+    /**
+     * `endDate`를 업데이트 합니다.
+     * 만약 `startDate`가 `endDate`보다 크다면 `startDate`도 업데이트 합니다.
+     * 만약 `autoFocus`가 true라면 `focus`를 `Start`로 변경합니다.
+     *
+     * @param date 업데이트 할 날짜
+     */
+    fun updateEndDate(date: LocalDate) {
+        endDate = date
+        if (startDate > date) startDate = date
+        if (autoFocus) focusOnStart()
+    }
+
     enum class Focus {
-        None,
         Start,
         End
-    }
-
-    private var _startDate by mutableStateOf(startDate)
-    val startDate: LocalDate get() = _startDate
-
-    private var _endDate by mutableStateOf(endDate)
-    val endDate: LocalDate get() = _endDate
-
-    private var _focus by mutableStateOf(Focus.None)
-    val focus: Focus get() = _focus
-
-    fun focusOnStart() {
-        _focus = Focus.Start
-    }
-
-    fun focusOnEnd() {
-        _focus = Focus.End
-    }
-
-    fun clearFocus() {
-        _focus = Focus.None
-    }
-
-    fun setStartDate(date: LocalDate) {
-        _startDate = date
-        if (_endDate < date) _endDate = date
-    }
-
-    fun setEndDate(date: LocalDate) {
-        _endDate = date
-        if (_startDate > date) _startDate = date
     }
 }
