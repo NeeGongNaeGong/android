@@ -108,4 +108,7 @@ dependencies {
 
     // splash screen
     implementation(libs.androidx.core.splashscreen)
+
+    // fcm
+    implementation(libs.firebase.messaging.ktx)
 }
