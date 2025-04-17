@@ -10,6 +10,12 @@ import kotlinx.serialization.Serializable
 
 object AppNavigation {
     /**
+     * 로그인 화면 화면 경로
+     */
+    @Serializable
+    data object Login
+
+    /**
      * Bottom Tab으로 쓸 각 탭과 탭의 경로를 설정
      */
     @Serializable
