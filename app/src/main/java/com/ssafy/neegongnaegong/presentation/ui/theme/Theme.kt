@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.ui.theme
 
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 
 
 private val LightColorScheme = lightColorScheme(
@@ -36,6 +38,20 @@ private val DarkColorScheme = darkColorScheme(
     primaryContainer = DarkColors.DarkGray1,
     secondaryContainer = DarkColors.DarkGray4,
 )
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    backgroundColor = 0xFFFFFFFF
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0xFF000000
+)
+annotation class NeeGongNaeGongPreviews
 
 @Composable
 fun NeeGongNaeGongTheme(
