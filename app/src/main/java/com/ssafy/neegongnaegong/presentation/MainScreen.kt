@@ -36,6 +36,9 @@ fun MainScreen() {
             if (showBottomNavigationBar) BottomNavigationBar(navController = navController)
         },
     ) { innerPadding ->
+        // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
+        // 시스템적으로 패딩을 계산할 때 여기에 사용된 Padding을 중복 사용하지 않도록 함
+        // 다른 화면의 Scaffold에서 사용된 값은 빼고서 계산해줌
         Box(modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding)) {
             MainNavigationGraph(navController = navController)
         }

@@ -49,6 +49,9 @@ object AppNavigation {
             // Study Tab의 Main 화면의 경로
             @Serializable
             data object Main : Studies
+
+            @Serializable
+            data object MakeVote : Studies
         }
 
         @Serializable
