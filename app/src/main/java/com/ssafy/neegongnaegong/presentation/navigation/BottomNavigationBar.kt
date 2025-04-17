@@ -43,8 +43,6 @@ fun BottomNavigationBar(
     NavigationBar(
         modifier =
             modifier
-                // ZFold 기준 fraction 줘서 앱 실행 시 Bottom Navigatio이 공간을 충분하게 가지지 못하고 짤리는 현상 있었음
-                // wrapContentHeight로 필요한 만큼 크기 가져가도록 수정
                 .wrapContentHeight()
                 .navigationBarsPadding()
                 .shadow(

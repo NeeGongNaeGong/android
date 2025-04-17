@@ -24,10 +24,10 @@ class AuthRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
     override suspend fun login(
-        email: String,
+        idToken: String,
         fcmToken: String,
     ): Flow<User> = withContext(ioDispatcher) {
-        networkAuthDataSource.login(LoginRequest(email = email, fcmToken = fcmToken))
+        networkAuthDataSource.login(LoginRequest(idToken = idToken, fcmToken = fcmToken))
             .onEach { user ->
                 tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken)
                 tokenManager.saveToken(TokenType.REFRESH_TOKEN, user.createJwt.refreshToken)
@@ -56,6 +56,20 @@ class AuthRepositoryImpl @Inject constructor(
             tokenManager.clearToken()
             localUserDataSource.clearUser()
             emit(true)
+        }
+    }
+
+    override suspend fun reissue(): Flow<Boolean> = withContext(ioDispatcher) {
+        flow {
+            val refreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return@flow emit(false)
+
+            networkAuthDataSource.reissue(refreshToken).collect { response ->
+                with(response.createJwt) {
+                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
+                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
+                }
+                emit(true)
+            }
         }
     }
 }
