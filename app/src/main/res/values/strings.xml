@@ -10,5 +10,10 @@
     <string name="txt_dialog_content">휴대폰을 다시 덮으면 공부를 계속 할 수 있어요.</string>
     <string name="txt_dialog_pause">일시 정지</string>
     <string name="txt_dialog_close">종료</string>
+    <!-- MyPage Screen -->
+    <string name="notification">알림</string>
+    <string name="notice">공지 사항</string>
+    <string name="privacy_policy">개인 정보 처리 방침</string>
+    <string name="sign_out">회원 탈퇴</string>
 
 </resources>
