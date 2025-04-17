@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,10 @@ fun MyPageScreen(
     notificationCount: Long,
     onPhotoButtonClick: () -> Unit,
     onEditUserNameButtonClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    onNoticeClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onSignOutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -94,7 +99,11 @@ fun MyPageScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        onNotificationClick()
+                    },
                 text = stringResource(R.string.notification),
                 style = Typography.bodyLarge,
                 textAlign = TextAlign.Start
@@ -130,7 +139,11 @@ fun MyPageScreen(
             thickness = 1.dp, color = Color(0xFFD9D9D9)
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onNoticeClick()
+                },
             text = stringResource(R.string.notice),
             style = Typography.bodyLarge,
             textAlign = TextAlign.Start
@@ -140,7 +153,11 @@ fun MyPageScreen(
             thickness = 1.dp, color = Color(0xFFD9D9D9)
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onPrivacyPolicyClick()
+                },
             text = stringResource(R.string.privacy_policy),
             style = Typography.bodyLarge,
             textAlign = TextAlign.Start
@@ -150,7 +167,11 @@ fun MyPageScreen(
             thickness = 1.dp, color = Color(0xFFD9D9D9)
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onSignOutClick()
+                },
             text = stringResource(R.string.sign_out),
             style = Typography.bodyLarge,
             textAlign = TextAlign.Start
@@ -174,6 +195,10 @@ private fun MyPageScreenPreview() {
             onPhotoButtonClick = {},
             onEditUserNameButtonClick = {},
             notificationCount = 1,
+            onNotificationClick = {},
+            onNoticeClick = {},
+            onSignOutClick = {},
+            onPrivacyPolicyClick = {}
         )
     }
 }
