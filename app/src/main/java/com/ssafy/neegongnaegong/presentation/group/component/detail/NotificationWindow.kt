@@ -71,7 +71,7 @@ fun NotificationWindow(
             // 상대적 시간
             Text(
                 text = relativeTime,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.secondaryContainer,
                 fontSize = 14.sp,
             )
         }
