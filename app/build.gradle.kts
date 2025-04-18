@@ -108,4 +108,7 @@ dependencies {
 
     // splash screen
     implementation(libs.androidx.core.splashscreen)
+
+    // landscapist(image loader, glide)
+    implementation(libs.landscapist.glide)
 }
