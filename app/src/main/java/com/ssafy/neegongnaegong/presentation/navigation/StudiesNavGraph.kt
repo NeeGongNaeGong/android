@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
+import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
 
 /**
  * startDestination은 여기 Graph에서 최초로 띄울 화면의 경로
@@ -25,6 +26,13 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             StudiesRoute(
                 modifier = Modifier,
                 popBackStack = { },
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.MakeVote> {
+
+            VoteRoute(
+                popBackStack = { navController.popBackStack() }
             )
         }
     }
