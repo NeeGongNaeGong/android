@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,9 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,24 +50,20 @@ fun StudiesDrawer(
             modifier
                 .fillMaxHeight()
                 .fillMaxWidth(0.75f)
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(vertical = 12.dp),
+                .background(MaterialTheme.colorScheme.surface),
     ) {
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(180.dp)
-                    .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .padding(horizontal = 0.dp)
                     .background(
                         color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(12.dp),
                     ),
         ) {
             GlideImage(
-                imageModel = headerImageUrl ?: R.drawable.img_main_character,
-                contentScale = ContentScale.Crop,
+                imageModel = { headerImageUrl ?: R.drawable.img_main_character },
                 modifier = Modifier.fillMaxSize(),
                 loading = {
                     Box(modifier = Modifier.fillMaxSize()) {
@@ -79,8 +72,7 @@ fun StudiesDrawer(
                 },
                 failure = {
                     GlideImage(
-                        imageModel = R.drawable.img_main_character,
-                        contentScale = ContentScale.Crop,
+                        imageModel = { R.drawable.img_main_character },
                         modifier = Modifier.fillMaxSize(),
                     )
                 },
@@ -93,25 +85,25 @@ fun StudiesDrawer(
                         .background(Color.Black.copy(alpha = 0.4f)),
             )
         }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // 취업 스터디 섹션
-        DrawerMenuItem(
-            title = "취업 스터디",
-            subtitle = "취업을 향해서!",
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        HorizontalDivider(
+        // 그룹 정보 부분
+        Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            thickness = 1.dp,
-        )
+                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
+        ) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(
+                    modifier = Modifier.padding(bottom = 10.dp),
+                    text = "취업 스터디",
+                    style = Typography.bodyLarge,
+                )
+                Text(
+                    text = "취업을 향해서...",
+                    style = Typography.labelMedium,
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -228,7 +220,8 @@ fun CircleIcon(
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = CircleShape,
-                ).clickable {
+                )
+                .clickable {
                     onClick()
                 },
         contentAlignment = Alignment.Center,
