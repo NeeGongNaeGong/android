@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
+package com.ssafy.neegongnaegong.presentation.component.picker.date
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,18 +7,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import java.time.YearMonth
 
 @Composable
-fun CalendarHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
-    CalendarHeader(
+fun DatePickerHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
+    DatePickerHeader(
         modifier = modifier,
         text = "${selectedMonth.year}년 ${selectedMonth.monthValue}월",
     )
 }
 
 @Composable
-fun CalendarHeader(modifier: Modifier = Modifier, text: String) {
+fun DatePickerHeader(modifier: Modifier = Modifier, text: String) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             modifier = modifier.fillMaxWidth(),
@@ -29,4 +30,10 @@ fun CalendarHeader(modifier: Modifier = Modifier, text: String) {
         )
         DayOfWeek()
     }
+}
+
+@Preview
+@Composable
+private fun DatePickerHeaderPreview() {
+    
 }

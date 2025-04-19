@@ -40,8 +40,8 @@ fun ScheduleInfo(
     ScheduleInfo(
         modifier = modifier,
         showPrefix = showPrefix,
-        startTime = schedule.info.startDate,
-        endTime = schedule.info.endDate,
+        startTime = schedule.info.startAt,
+        endTime = schedule.info.endAt,
         isAllDay = schedule.info.isAllDay,
         title = schedule.info.title,
         color = Color.Transparent,

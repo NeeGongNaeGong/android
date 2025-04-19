@@ -5,8 +5,8 @@ import java.time.LocalDateTime
 data class ScheduleInfo(
     val title: String,
     val content: String?,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startAt: LocalDateTime,
+    val endAt: LocalDateTime,
     val isAllDay: Boolean,
     val location: String? = null,
     val repeatRule: RepeatRule? = null,
@@ -15,8 +15,8 @@ data class ScheduleInfo(
         fun empty() = ScheduleInfo(
             title = "",
             content = null,
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now(),
+            startAt = LocalDateTime.now(),
+            endAt = LocalDateTime.now(),
             isAllDay = false,
             location = null,
             repeatRule = null

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
+package com.ssafy.neegongnaegong.presentation.component.picker.date
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
