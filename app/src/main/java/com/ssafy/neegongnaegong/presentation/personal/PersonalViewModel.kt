@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.WriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,50 +18,50 @@ class PersonalViewModel @Inject constructor() :
             StudyRecord(
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-06-14T04:33:02.856Z",
-                "2025-06-14T06:33:02.856Z",
+                "2025-04-19T04:33:02.856Z",
+                "2025-04-19T06:33:02.856Z",
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
                 "영어 단어 영어 단어 영어 단어",
                 "VOCA 2200 암기",
-                "2025-06-14T06:33:02.856Z",
-                "2025-06-14T08:33:02.856Z",
+                "2025-04-19T06:33:02.856Z",
+                "2025-04-19T08:33:02.856Z",
                 listOf("CS", "운동")
             ),
             StudyRecord(
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-06-14T04:33:02.856Z",
-                "2025-06-14T06:33:02.856Z",
+                "2025-04-19T04:33:02.856Z",
+                "2025-04-19T06:33:02.856Z",
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-05-14T04:33:02.856Z",
-                "2025-05-14T06:33:02.856Z",
+                "2025-04-18T04:33:02.856Z",
+                "2025-04-18T06:33:02.856Z",
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-05-14T04:33:02.856Z",
-                "2025-05-14T06:33:02.856Z",
+                "2025-04-18T04:33:02.856Z",
+                "2025-04-18T06:33:02.856Z",
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-05-14T04:33:02.856Z",
-                "2025-05-14T06:33:02.856Z",
+                "2025-04-17T04:33:02.856Z",
+                "2025-04-17T06:33:02.856Z",
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-14T04:33:02.856Z",
-                "2025-04-14T06:33:02.856Z",
+                "2025-04-17T04:33:02.856Z",
+                "2025-04-17T06:33:02.856Z",
                 listOf("CS", "네트워크")
             ),
         )
@@ -70,8 +71,24 @@ class PersonalViewModel @Inject constructor() :
     override fun handleEvent(event: PersonalContract.Event) {
         when (event) {
             // dropdown
-            is PersonalContract.Event.OnDateScreenSelected -> {}
-            is PersonalContract.Event.OnTagScreenSelected -> {}
+            is PersonalContract.Event.OnDateScreenSelected -> {
+                setState {
+                    copy(
+                        isTagScreen = false,
+                        isDateScreen = true
+                    )
+                }
+                filteringTodayRecord()
+            }
+
+            is PersonalContract.Event.OnTagScreenSelected -> {
+                setState {
+                    copy(
+                        isTagScreen = true,
+                        isDateScreen = false
+                    )
+                }
+            }
             // tag
             is PersonalContract.Event.OnTagEraseClicked -> {
                 deleteTag(event.tag)
@@ -112,6 +129,39 @@ class PersonalViewModel @Inject constructor() :
             is PersonalContract.Event.OnDialogCancelClicked -> {
                 setState { copy(isDialogShow = false) }
             }
+
+            // calendar
+            is PersonalContract.Event.OnDateSelected -> {
+                filteringRecordByDate(event.date)
+            }
+        }
+    }
+
+    // calendar
+    private fun filteringRecordByDate(date: String) {
+        val filtered = uiState.value.studyRecords.filter {
+            it.startTime.substring(0, 10) == date
+        }
+        setState {
+            copy(
+                selectedDate = date,
+                selectedRecordsByDate = filtered,
+            )
+        }
+    }
+
+    private fun filteringTodayRecord() {
+        val today = LocalDate.now().toString()
+
+        val filtered = uiState.value.studyRecords.filter {
+            it.startTime.substring(0, 10) == today
+        }
+
+        setState {
+            copy(
+                selectedDate = today,
+                selectedRecordsByDate = filtered,
+            )
         }
     }
 

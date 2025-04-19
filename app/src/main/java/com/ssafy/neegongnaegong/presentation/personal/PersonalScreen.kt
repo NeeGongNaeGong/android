@@ -40,14 +40,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.write.Tag
-import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.component.TagList
+import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
+import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
+import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
-
-// 태그 배경색 투명, 글자색만 바꾸기
 
 @Composable
 fun PersonalRoute(
@@ -64,6 +64,8 @@ fun PersonalRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
+        onTagScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnTagScreenSelected) },
+        onDateScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnDateScreenSelected) },
         studyRecords = uiState.value.studyRecords,
         onTagPlusClicked = { viewModel.setEvent(PersonalContract.Event.OnTagPlusClicked) },
         onTagEraseClicked = { viewModel.setEvent(PersonalContract.Event.OnTagEraseClicked(it)) },
@@ -72,6 +74,7 @@ fun PersonalRoute(
         onSearchQueryChanged = { viewModel.setEvent(PersonalContract.Event.OnSearchTextChanged(it)) },
         onTagSelected = { viewModel.setEvent(PersonalContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(PersonalContract.Event.OnTagDeselected(it)) },
+        onDateSelected = { viewModel.setEvent(PersonalContract.Event.OnDateSelected(it)) }
     )
 
 }
@@ -81,6 +84,9 @@ fun PersonalContent(
     modifier: Modifier = Modifier,
     effect: Flow<PersonalContract.Effect>,
     uiState: PersonalContract.State,
+    // dropdown
+    onTagScreenSelected: () -> Unit,
+    onDateScreenSelected: () -> Unit,
     // study
     studyRecords: List<StudyRecord>,
     // tag
@@ -91,6 +97,7 @@ fun PersonalContent(
     onSearchQueryChanged: (String) -> Unit,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
+    onDateSelected: (String) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -121,10 +128,18 @@ fun PersonalContent(
     PersonalScreen(
         modifier = modifier,
         studyRecords = uiState.studyRecords,
-        //tag
+        // dropdown
+        isTagScreen = uiState.isTagScreen,
+        isDateScreen = uiState.isDateScreen,
+        onTagScreenSelected = onTagScreenSelected,
+        onDateScreenSelected = onDateScreenSelected,
+        // tag
         tags = uiState.tags,
         onTagPlusClicked = onTagPlusClicked,
         onTagEraseClicked = onTagEraseClicked,
+        // calendar
+        onDateSelected = onDateSelected,
+        selectedRecordsByDate = uiState.selectedRecordsByDate
     )
 }
 
@@ -133,12 +148,20 @@ fun PersonalContent(
 fun PersonalScreen(
     modifier: Modifier = Modifier,
     studyRecords: List<StudyRecord>,
-    //tag
+    // dropdown,
+    isTagScreen: Boolean,
+    isDateScreen: Boolean,
+    onTagScreenSelected: () -> Unit,
+    onDateScreenSelected: () -> Unit,
+    // tag
     tags: List<Tag>,
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
+    // calendar
+    onDateSelected: (String) -> Unit,
+    selectedRecordsByDate: List<StudyRecord>,
 ) {
-    var selectedFilter by remember { mutableStateOf("태그별") }
+    val datePickerState = rememberDatePickerState()
 
     val filterOptions = listOf("태그별", "날짜별")
 
@@ -164,7 +187,7 @@ fun PersonalScreen(
             ) {
 
                 Text(
-                    text = selectedFilter,
+                    text = if (isTagScreen) "태그별" else "날짜별",
                     fontSize = 24.sp
                 )
 
@@ -195,7 +218,11 @@ fun PersonalScreen(
                             )
                         },
                         onClick = {
-                            selectedFilter = option
+                            if (option == "태그별") {
+                                onTagScreenSelected()
+                            } else {
+                                onDateScreenSelected()
+                            }
                             expanded = false
                         }
                     )
@@ -205,7 +232,7 @@ fun PersonalScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (selectedFilter == "태그별") {
+        if (isTagScreen) {
             Column(modifier = Modifier.fillMaxSize()) {
                 TagList(
                     modifier = Modifier
@@ -222,13 +249,18 @@ fun PersonalScreen(
                 )
             }
         } else {
-            Text("날짜", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-
+            DatePicker(
+                modifier = Modifier.fillMaxWidth(),
+                state = datePickerState,
+                onDateSelected = { date ->
+                    onDateSelected(date.toString())
+                }
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
             StudyRecordList(
                 modifier = Modifier.fillMaxSize(),
-                studyRecords = studyRecords
+                studyRecords = selectedRecordsByDate
             )
         }
     }
@@ -285,7 +317,13 @@ fun PersonalScreenPreview() {
         studyRecords = dummyRecords,
         tags = dummyTags,
         onTagPlusClicked = {},
-        onTagEraseClicked = {}
+        onTagEraseClicked = {},
+        onDateSelected = {},
+        selectedRecordsByDate = dummyRecords,
+        onDateScreenSelected = {},
+        onTagScreenSelected = {},
+        isTagScreen = true,
+        isDateScreen = false
     )
 }
 

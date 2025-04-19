@@ -11,7 +11,6 @@ class PersonalContract {
         // DropDown
         data object OnTagScreenSelected : Event()
         data object OnDateScreenSelected : Event()
-
         // Tag
         data class OnTagEraseClicked(val tag: Tag) : Event()
         data class OnTagSelected(val tag: Tag) : Event()
@@ -22,21 +21,26 @@ class PersonalContract {
         data object OnDialogConfirmClicked : Event()
         data object OnDialogCancelClicked : Event()
         // Record
+        // Date
+        data class OnDateSelected(val date: String) : Event()
 
     }
 
     data class State(
         // Drop menu
-        val isTag: Boolean = true,
-        val isDate: Boolean = false,
+        val isTagScreen: Boolean = true,
+        val isDateScreen: Boolean = false,
         // tag
         val tags: List<Tag> = emptyList(),
         val selectedTags: List<Tag> = emptyList(),
         val unSelectedTags: List<Tag> = emptyList(),
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
-        // stduy
+        // study
         val studyRecords: List<StudyRecord> = emptyList(),
+        // calendar
+        val selectedDate: String = "",
+        val selectedRecordsByDate: List<StudyRecord> = emptyList(),
     ) : UiState
 
     sealed class Effect : UiEffect {
