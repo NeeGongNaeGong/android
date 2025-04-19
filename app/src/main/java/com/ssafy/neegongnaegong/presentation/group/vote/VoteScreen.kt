@@ -53,10 +53,9 @@ import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDial
 import com.ssafy.neegongnaegong.presentation.group.vote.util.TimeFormatter
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun VoteRoute(
     popBackStack: () -> Boolean,
@@ -84,6 +83,7 @@ fun VoteRoute(
                             duration = SnackbarDuration.Short
                         )
                     }
+
                     VoteContract.Effect.NavigateToBackStack -> {
                         popBackStack()
                     }
@@ -564,8 +564,8 @@ fun PreviewVoteScreen() {
             voteItemList = listOf("", "", ""),
             "",
             "",
-            isDateDialogVisible = TODO(),
-            isTimeDialogVisible = TODO()
+            isDateDialogVisible = false,
+            isTimeDialogVisible = false
         ),
         {},
         {},
@@ -575,8 +575,8 @@ fun PreviewVoteScreen() {
         {},
         {},
         { idx, title -> },
-        onClickDateButton = TODO(),
-        onClickTimeButton = TODO(),
+        onClickDateButton = {},
+        onClickTimeButton = {},
     )
 }
 
@@ -604,12 +604,11 @@ fun PreviewEndOption() {
     EndOption(
         false,
         false,
-
-        onClickEndDateOption = TODO(),
-        onClickAlarmBeforeClosingOption = TODO(),
-        onClickDatePicker = TODO(),
-        onClickTimePicker = TODO(),
-        date = TODO(),
-        time = TODO()
+        onClickEndDateOption = {},
+        onClickAlarmBeforeClosingOption = {},
+        onClickDatePicker = {},
+        onClickTimePicker = {},
+        date = "",
+        time = ""
     )
 }
