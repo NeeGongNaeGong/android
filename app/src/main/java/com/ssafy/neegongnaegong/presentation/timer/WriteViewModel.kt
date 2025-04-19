@@ -19,11 +19,11 @@ class WriteViewModel @Inject constructor() :
         when (event) {
             // 글 작성
             is WriteContract.Event.OnTitleChanged -> {
-                setState { copy(title = event.title) }
+                setState { copy(studyRecord = studyRecord.copy(title = event.title)) }
             }
 
             is WriteContract.Event.OnContentChanged -> {
-                setState { copy(content = event.content) }
+                setState { copy(studyRecord = studyRecord.copy(content = event.content)) }
             }
 
             // 취소, 확인
@@ -75,10 +75,24 @@ class WriteViewModel @Inject constructor() :
             is WriteContract.Event.OnDialogCancelClicked -> {
                 setState { copy(isDialogShow = false) }
             }
+
+            // edit mode
+            is WriteContract.Event.OnEditMode -> {
+                setState {
+                    copy(
+                        isEditMode = true,
+                        studyRecord = event.studyRecord
+                    )
+                }
+            }
         }
     }
 
-    private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
+
+    // tag
+
+    private fun moveFromTagsToSelectedTags() =
+        setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
 
     private fun clearDialogTags() =
         setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
@@ -163,7 +177,8 @@ class WriteViewModel @Inject constructor() :
         val selected = uiState.value.tags
         val selectedInDialog = uiState.value.selectedTags
 
-        val availableTags = TagData.tags.filterNot { selected.contains(it) || selectedInDialog.contains(it) }
+        val availableTags =
+            TagData.tags.filterNot { selected.contains(it) || selectedInDialog.contains(it) }
 
         val startsWithList = availableTags.filter { tag ->
             tag.koName.startsWith(query) || tag.enName.lowercase().startsWith(query.lowercase())

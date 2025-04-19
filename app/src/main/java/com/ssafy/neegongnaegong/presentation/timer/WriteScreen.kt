@@ -18,35 +18,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
-import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.toDateString
+import com.ssafy.neegongnaegong.presentation.util.toTimeString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-
-
-// 컴포넌트 분리
-// 다이얼로그
-// 시간 전달
-// 화면 이동
-// Route에 뷰모델 담는 이유
-// 디테일한 색을 다크,화이트로 바꾸는 방식 찾기
 
 @Composable
 fun WriteScreenRoute(
     modifier: Modifier = Modifier,
     viewModel: WriteViewModel = hiltViewModel(),
     popBackStack: () -> Unit = {},
+    isEditScreen: Boolean = false,
+    studyRecord: StudyRecord? = null,
 ) {
 
     BackHandler { popBackStack() }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    if (isEditScreen) {
+        studyRecord?.let {
+            viewModel.setEvent(WriteContract.Event.OnEditMode(it))
+        }
+    }
 
     WriteContent(
         modifier = modifier,
@@ -115,7 +118,7 @@ fun WriteContent(
                 }
 
                 is WriteContract.Effect.ShowTagLimitExceededToast -> {
-                    Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -123,14 +126,9 @@ fun WriteContent(
 
     WriteScreen(
         modifier = modifier,
-        title = uiState.title,
-        content = uiState.content,
-        startTime = uiState.startTime,
-        endTime = uiState.endTime,
         tags = uiState.tags,
-        onTitleChanged = {
-            onTitleChanged(it)
-        },
+        studyRecord = uiState.studyRecord,
+        onTitleChanged = onTitleChanged,
         onContentChanged = onContentChanged,
         onTagPlusClicked = onTagPlusClicked,
         onTagEraseClicked = onTagEraseClicked,
@@ -146,17 +144,14 @@ fun WriteContent(
 @Composable
 fun WriteScreen(
     modifier: Modifier = Modifier,
-    title: String = "",
-    content: String = "",
-    startTime: Long = 0,
-    endTime: Long = 0,
-    tags: List<Tag> = emptyList(),
-    onTitleChanged: (String) -> Unit = {},
-    onContentChanged: (String) -> Unit = {},
-    onTagPlusClicked: () -> Unit = {},
-    onTagEraseClicked: (Tag) -> Unit = {},
-    onCancelClicked: () -> Unit = {},
-    onConfirmClicked: () -> Unit = {},
+    studyRecord: StudyRecord,
+    tags: List<Tag>,
+    onTitleChanged: (String) -> Unit,
+    onContentChanged: (String) -> Unit,
+    onTagPlusClicked: () -> Unit,
+    onTagEraseClicked: (Tag) -> Unit,
+    onCancelClicked: () -> Unit,
+    onConfirmClicked: () -> Unit,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
@@ -168,11 +163,14 @@ fun WriteScreen(
     ) {
         Column {
 
-            DateTimeHeader(dateText = "2025년 02월 03일", timeText = "오후 3시 ~ 오후 4시 30분")
+            DateTimeHeader(
+                dateText = studyRecord.startTime.toDateString(),
+                timeText = "${studyRecord.startTime.toTimeString()} ~ ${studyRecord.endTime.toTimeString()}"
+            )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
-                title = title,
+                title = studyRecord.title,
                 onTitleChanged = onTitleChanged
             )
 
@@ -180,7 +178,7 @@ fun WriteScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight * 0.5f),
-                content = content,
+                content = studyRecord.content,
                 onContentChanged = onContentChanged,
             )
 
@@ -205,12 +203,24 @@ fun WriteScreen(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
-
+            WriteScreen(
+                studyRecord = StudyRecord(),
+                tags = listOf(
+                    Tag(koName = "공부", enName = "Study"),
+                    Tag(koName = "운동", enName = "Exercise")
+                ),
+                onTitleChanged = {},
+                onContentChanged = {},
+                onTagPlusClicked = {},
+                onTagEraseClicked = {},
+                onCancelClicked = {},
+                onConfirmClicked = {}
+            )
         }
     }
 }

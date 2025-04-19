@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
+import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -9,8 +10,10 @@ class WriteContract {
     sealed class Event : UiEvent {
         data object OnCancelClicked : Event()
         data object OnConfirmClicked : Event()
+        // record
         data class OnTitleChanged(val title: String) : Event()
         data class OnContentChanged(val content: String) : Event()
+        // tag
         data class OnTagEraseClicked(val tag: Tag) : Event()
         data class OnTagSelected(val tag: Tag) : Event()
         data class OnTagDeselected(val tag: Tag) : Event()
@@ -19,13 +22,14 @@ class WriteContract {
         data object OnDialogClose : Event()
         data object OnDialogConfirmClicked : Event()
         data object OnDialogCancelClicked : Event()
+        // edit mode
+        data class OnEditMode(val studyRecord: StudyRecord) : Event()
     }
 
     data class State(
-        val title: String = "",
-        val content: String = "",
-        val startTime: Long = 0,
-        val endTime: Long = 0,
+        // study record
+        val isEditMode: Boolean = false,
+        val studyRecord: StudyRecord = StudyRecord(),
         // tag
         val tags: List<Tag> = emptyList(),
         val selectedTags: List<Tag> = emptyList(),
