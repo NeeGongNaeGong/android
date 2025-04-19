@@ -27,7 +27,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login(idToken: String) = viewModelScope.launch {
-        loginUseCase(idToken, "").safeCollect {
+        loginUseCase(idToken).safeCollect {
             AuthDestinationManager.valid()
         }
     }

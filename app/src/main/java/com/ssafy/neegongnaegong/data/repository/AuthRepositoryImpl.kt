@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.repository
 
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.local.TokenManager
@@ -14,8 +15,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class AuthRepositoryImpl @Inject constructor(
     private val tokenManager: TokenManager,
@@ -23,10 +27,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val networkAuthDataSource: NetworkAuthDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : AuthRepository {
-    override suspend fun login(
-        idToken: String,
-        fcmToken: String,
-    ): Flow<User> = withContext(ioDispatcher) {
+    override suspend fun login(idToken: String): Flow<User> = withContext(ioDispatcher) {
+        val fcmToken = getFCMToken()
         networkAuthDataSource.login(LoginRequest(idToken = idToken, fcmToken = fcmToken))
             .onEach { user ->
                 tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken)
@@ -61,14 +63,33 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun reissue(): Flow<Boolean> = withContext(ioDispatcher) {
         flow {
-            val refreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return@flow emit(false)
+            val refreshToken =
+                tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return@flow emit(false)
 
             networkAuthDataSource.reissue(refreshToken).collect { response ->
                 with(response.createJwt) {
-                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
-                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
+                    tokenManager.saveToken(
+                        TokenType.ACCESS_TOKEN,
+                        accessToken.removePrefix("Bearer ")
+                    )
+                    tokenManager.saveToken(
+                        TokenType.REFRESH_TOKEN,
+                        refreshToken.removePrefix("Bearer ")
+                    )
                 }
                 emit(true)
+            }
+        }
+    }
+
+
+    private suspend fun getFCMToken(): String = suspendCancellableCoroutine { continuation ->
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                continuation.resume(token)
+            } else {
+                continuation.resumeWithException(task.exception ?: Exception("Unknown error"))
             }
         }
     }

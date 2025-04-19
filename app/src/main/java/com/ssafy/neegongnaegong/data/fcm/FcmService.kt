@@ -15,7 +15,6 @@ import com.google.firebase.messaging.RemoteMessage
 import com.ssafy.neegongnaegong.R
 
 class FcmService : FirebaseMessagingService() {
-
     companion object {
         private const val CHANNEL_ID = "default_channel_id"
         private const val CHANNEL_NAME = "기본 알림 채널"
