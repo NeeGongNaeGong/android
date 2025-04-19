@@ -63,7 +63,6 @@ fun VoteRoute(
     modifier: Modifier = Modifier,
     viewModel: VoteViewModel = hiltViewModel()
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
@@ -131,7 +130,6 @@ fun VoteRoute(
                     )
                 )
             },
-//            onEndDateChanged = {}
         )
     }
 }
@@ -170,7 +168,6 @@ fun VoteTopBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VoteContent(
     modifier: Modifier = Modifier,
@@ -192,9 +189,6 @@ fun VoteContent(
     onChangeDate: (Long) -> Unit,
     onChangeTime: (Int, Int) -> Unit
 ) {
-
-
-
     LoadDialog(
         uiState.isDateDialogVisible,
         uiState.isTimeDialogVisible,
@@ -205,10 +199,6 @@ fun VoteContent(
         onChangeDate,
         onChangeTime
     )
-
-
-
-
 
     VoteScreen(
         modifier, uiState,
