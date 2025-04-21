@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.mypage
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,7 +35,6 @@ import coil3.compose.AsyncImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun MyPageScreen(
@@ -57,16 +59,23 @@ fun MyPageScreen(
             AsyncImage(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(134.dp),
+                    .size(134.dp)
+                    .background(Color.Gray),
                 model = imageUrl,
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_placeholder),
             )
 
             IconButton(
                 modifier = Modifier
                     .background(Color.White, CircleShape)
-                    .padding(5.dp)
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = CircleShape
+                    )
+                    .padding(10.dp)
                     .size(20.dp)
                     .align(alignment = Alignment.BottomEnd),
                 onClick = onPhotoButtonClick
@@ -80,7 +89,7 @@ fun MyPageScreen(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = userName,
-                style = Typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge,
             )
             IconButton(
                 onClick = onEditUserNameButtonClick
@@ -105,7 +114,7 @@ fun MyPageScreen(
                         onNotificationClick()
                     },
                 text = stringResource(R.string.notification),
-                style = Typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start
             )
 
@@ -128,7 +137,7 @@ fun MyPageScreen(
                         modifier = Modifier,
                         text = "$notificationCount",
                         color = Color.White,
-                        style = Typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
@@ -136,7 +145,7 @@ fun MyPageScreen(
 
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 20.dp),
-            thickness = 1.dp, color = Color(0xFFD9D9D9)
+            thickness = 1.dp, color = MaterialTheme.colorScheme.onBackground
         )
         Text(
             modifier = Modifier
@@ -145,12 +154,12 @@ fun MyPageScreen(
                     onNoticeClick()
                 },
             text = stringResource(R.string.notice),
-            style = Typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start
         )
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 20.dp),
-            thickness = 1.dp, color = Color(0xFFD9D9D9)
+            thickness = 1.dp, color = MaterialTheme.colorScheme.onBackground
         )
         Text(
             modifier = Modifier
@@ -159,12 +168,12 @@ fun MyPageScreen(
                     onPrivacyPolicyClick()
                 },
             text = stringResource(R.string.privacy_policy),
-            style = Typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start
         )
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 20.dp),
-            thickness = 1.dp, color = Color(0xFFD9D9D9)
+            thickness = 1.dp, color = MaterialTheme.colorScheme.onBackground
         )
         Text(
             modifier = Modifier
@@ -173,12 +182,12 @@ fun MyPageScreen(
                     onSignOutClick()
                 },
             text = stringResource(R.string.sign_out),
-            style = Typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Start
         )
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 20.dp),
-            thickness = 1.dp, color = Color(0xFFD9D9D9)
+            thickness = 1.dp, color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.weight(1f))
     }
