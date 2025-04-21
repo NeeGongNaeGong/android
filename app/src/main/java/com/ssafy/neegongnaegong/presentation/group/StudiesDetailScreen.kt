@@ -24,7 +24,7 @@ import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
 import com.ssafy.neegongnaegong.presentation.group.component.detail.MedalType
-import com.ssafy.neegongnaegong.presentation.group.component.detail.NotificationData
+import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawer

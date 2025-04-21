@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.getRelativeTimeString
 
@@ -113,12 +114,3 @@ fun PreviewStudiesVotingWindow() {
         )
     }
 }
-
-/**
- * 알림 데이터 모델
- */
-data class NotificationData(
-    val id: Long,
-    val title: String,
-    val dateTime: String,
-)
