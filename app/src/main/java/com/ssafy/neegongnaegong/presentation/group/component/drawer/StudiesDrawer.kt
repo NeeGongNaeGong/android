@@ -220,8 +220,7 @@ fun CircleIcon(
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = CircleShape,
-                )
-                .clickable {
+                ).clickable {
                     onClick()
                 },
         contentAlignment = Alignment.Center,
