@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
@@ -30,15 +31,6 @@ import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawe
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.launch
-
-data class ProfileData(
-    val id: Long,
-    val medalType: MedalType = MedalType.NONE,
-    val imageUrl: String,
-    val name: String,
-    val progress: Float,
-    val ringColors: List<Color> = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-)
 
 data class StudyNotice(
     val title: String,

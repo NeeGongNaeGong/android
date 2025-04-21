@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.group.ProfileData
+import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
 import com.ssafy.neegongnaegong.presentation.group.component.detail.ProfileCircleRing
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
