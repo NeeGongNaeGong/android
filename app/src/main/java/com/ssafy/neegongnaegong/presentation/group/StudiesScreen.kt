@@ -108,7 +108,6 @@ fun StudiesScreen(
             modifier = Modifier,
         ) {
             TopAppBar(
-                modifier = Modifier.padding(10.dp),
                 title = {
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp),

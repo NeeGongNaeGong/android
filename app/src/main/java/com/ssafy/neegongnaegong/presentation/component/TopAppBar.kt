@@ -43,6 +43,7 @@ fun TopAppBar(
         modifier =
             Modifier
                 .fillMaxWidth()
+                .padding(vertical = 10.dp)
                 .pointerInput(Unit) {}
                 .then(modifier),
         contentAlignment = Alignment.Center,
@@ -86,7 +87,6 @@ fun TopAppBar(
 fun PreviewTopAppBar() {
     NeeGongNaeGongTheme {
         TopAppBar(
-            modifier = Modifier.padding(vertical = 10.dp),
             title = {
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),

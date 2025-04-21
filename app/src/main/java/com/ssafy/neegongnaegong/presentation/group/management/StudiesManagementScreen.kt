@@ -123,7 +123,6 @@ fun StudiesManagementScreen(
     ) {
         Column {
             TopAppBar(
-                modifier = Modifier.padding(vertical = 10.dp),
                 title = {
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp),

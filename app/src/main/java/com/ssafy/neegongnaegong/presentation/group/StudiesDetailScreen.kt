@@ -115,7 +115,6 @@ fun StudiesDetailScreen(
         ) {
             // 커스텀 앱바
             TopAppBar(
-                modifier = Modifier.padding(vertical = 10.dp),
                 title = {
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp),
