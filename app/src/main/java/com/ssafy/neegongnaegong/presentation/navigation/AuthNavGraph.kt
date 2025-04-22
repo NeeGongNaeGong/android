@@ -11,7 +11,12 @@ fun NavGraphBuilder.authNavGraph(navController: NavController) {
         startDestination = AppNavigation.Screen.Auth.Login
     ){
         composable<AppNavigation.Screen.Auth.Login> {
-            LoginRoute()
+            LoginRoute{
+                navController.navigate(AppNavigation.Tab.Studies){
+                    // 로그인 등 회원가입 페이지 싹 다 밀어버리고 Studies 탭으로 이동
+                    popUpTo(AppNavigation.Tab.Auth){inclusive = true}
+                }
+            }
         }
     }
 }

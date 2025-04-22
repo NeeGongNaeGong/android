@@ -9,11 +9,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ssafy.neegongnaegong.presentation.splash.SplashViewModel
-import com.ssafy.neegongnaegong.presentation.util.AuthDestinationManager
 
 @Composable
 fun MainNavigationGraph(navController: NavHostController, viewModel: SplashViewModel = hiltViewModel()) {
-    val destination by AuthDestinationManager.destination.collectAsStateWithLifecycle(null)
     val state by viewModel.state.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
