@@ -21,7 +21,7 @@ import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
-fun MainScreen(isLoginSuccess: Boolean = false) {
+fun MainScreen() {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -42,7 +42,7 @@ fun MainScreen(isLoginSuccess: Boolean = false) {
         Box(modifier = Modifier
             .padding(innerPadding)
             .consumeWindowInsets(innerPadding)) {
-            MainNavigationGraph(isLoginSuccess, navController = navController)
+            MainNavigationGraph(navController = navController)
         }
     }
 }
@@ -93,6 +93,6 @@ fun ProfileScreen() {
 @Composable
 fun PreviewMainScreen() {
     NeeGongNaeGongTheme {
-        MainScreen(true)
+        MainScreen()
     }
 }
