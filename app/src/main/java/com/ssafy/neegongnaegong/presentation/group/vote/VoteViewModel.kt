@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.vote
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.group.vote.util.TimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ constructor(
             isEndDateEnabled = false,
             isAlarmBeforeClosingEnabled = false,
             voteTitle = "",
-            voteItemList = listOf("", "", ""),
+            voteItemList = persistentListOf("", "", ""),
             date = TimeFormatter.convertLocalDateTimeToStringDate(LocalDateTime.now()),
             time = TimeFormatter.convertLocalDateTimeToStringTime(LocalDateTime.now()),
             isDateDialogVisible = false,
@@ -33,7 +34,7 @@ constructor(
                 if (uiState.value.voteItemList.size == 10) {
                     setEffect { VoteContract.Effect.ShowToast("항목은 최대 10개까지만 가능합니다!") }
                 } else {
-                    setState { copy(voteItemList = voteItemList.toMutableList().apply { add("") }) }
+                    setState { copy(voteItemList = voteItemList.add("")) }
                 }
             }
 
@@ -65,9 +66,9 @@ constructor(
             is VoteContract.Event.OnVoteItemChanged -> {
                 val (index, title) = event
                 setState {
-                    copy(voteItemList = voteItemList.toMutableList().apply {
-                        this[index] = title
-                    })
+                    copy(
+                        voteItemList = voteItemList.set(index, title)
+                    )
                 }
             }
 

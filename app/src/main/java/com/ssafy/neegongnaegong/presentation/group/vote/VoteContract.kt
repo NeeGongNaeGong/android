@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.vote
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import kotlinx.collections.immutable.PersistentList
 
 class VoteContract {
     sealed class Event : UiEvent {
@@ -30,7 +31,7 @@ class VoteContract {
         val isEndDateEnabled: Boolean,
         val isAlarmBeforeClosingEnabled: Boolean,
         val voteTitle: String,
-        val voteItemList: List<String>,
+        val voteItemList: PersistentList<String>,
         val date: String,
         val time: String,
 

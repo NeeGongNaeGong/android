@@ -53,6 +53,7 @@ import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDial
 import com.ssafy.neegongnaegong.presentation.group.vote.util.TimeFormatter
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -561,7 +562,7 @@ fun PreviewVoteScreen() {
             isEndDateEnabled = false,
             isAlarmBeforeClosingEnabled = false,
             voteTitle = "",
-            voteItemList = listOf("", "", ""),
+            voteItemList = persistentListOf("", "", ""),
             "",
             "",
             isDateDialogVisible = false,
