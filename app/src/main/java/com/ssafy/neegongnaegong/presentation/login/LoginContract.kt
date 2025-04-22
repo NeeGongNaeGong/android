@@ -16,7 +16,7 @@ class LoginContract {
         val isFailure: Boolean = false,
     ) : UiState
 
-    sealed class Effect : UiEffect {
-        data class ShowErrorSnackBar(val message: String) : Effect()
+    sealed interface Effect : UiEffect {
+        data class ShowErrorSnackBar(val message: String) : Effect
     }
 }
