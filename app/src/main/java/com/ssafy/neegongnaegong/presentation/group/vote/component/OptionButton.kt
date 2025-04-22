@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OptionButton(
     isSelected: Boolean,

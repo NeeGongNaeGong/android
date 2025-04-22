@@ -50,7 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.group.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDialog
-import com.ssafy.neegongnaegong.presentation.group.vote.util.TimeFormatter
+import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.collections.immutable.persistentListOf

@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.group.vote
 
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
-import com.ssafy.neegongnaegong.presentation.group.vote.util.TimeFormatter
+import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
