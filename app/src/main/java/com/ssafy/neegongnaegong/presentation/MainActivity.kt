@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NeeGongNaeGongTheme(dynamicColor = false) {
-                MainScreen()
+                MainScreen(viewModel.isLoginSuccess)
             }
         }
     }

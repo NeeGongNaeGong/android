@@ -8,19 +8,17 @@ import androidx.navigation.compose.NavHost
 import com.ssafy.neegongnaegong.presentation.util.AuthDestinationManager
 
 @Composable
-fun MainNavigationGraph(navController: NavHostController) {
+fun MainNavigationGraph(isLoginSuccess: Boolean = false, navController: NavHostController) {
     val destination by AuthDestinationManager.destination.collectAsStateWithLifecycle(null)
 
-    destination?.let { startDestination ->
-        NavHost(
-            navController = navController,
-            startDestination = startDestination,
-        ) {
-            loginNavGraph(navController)
-            studiesNavGraph(navController)
-            personalNavGraph(navController)
-            calendarNavGraph(navController)
-            profileNavGraph(navController)
-        }
+    NavHost(
+        navController = navController,
+        startDestination = if (isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Login,
+    ) {
+        loginNavGraph(navController)
+        studiesNavGraph(navController)
+        personalNavGraph(navController)
+        calendarNavGraph(navController)
+        profileNavGraph(navController)
     }
 }
