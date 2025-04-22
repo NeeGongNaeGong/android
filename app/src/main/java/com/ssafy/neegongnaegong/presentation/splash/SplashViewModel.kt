@@ -33,16 +33,32 @@ class SplashViewModel @Inject constructor(
                             isLoading =  true,
                         )
                     }
-                }.collect {
-                    if (it) AuthDestinationManager.valid()
-                    else AuthDestinationManager.invalid()
-                    state.update { legacyState->
-                        // 결과에 따라 상태를 업데이트 하는 예시
-                        legacyState.copy(
-                            isLoading =  false,
-                            isLoginSuccess = true
-                        )
+                }.collect { success ->
+                    if (success) {
+                        state.update { legacyState->
+                            // 결과에 따라 상태를 업데이트 하는 예시
+                            legacyState.copy(
+                                isLoading =  false,
+                                isLoginSuccess = true
+                            )
+                        }
                     }
+                    else {
+                        state.update { legacyState->
+                            // 결과에 따라 상태를 업데이트 하는 예시
+                            legacyState.copy(
+                                isLoading =  false,
+                                isLoginSuccess = false
+                            )
+                        }
+                    }
+//                    state.update { legacyState->
+//                        // 결과에 따라 상태를 업데이트 하는 예시
+//                        legacyState.copy(
+//                            isLoading =  false,
+//                            isLoginSuccess = true
+//                        )
+//                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

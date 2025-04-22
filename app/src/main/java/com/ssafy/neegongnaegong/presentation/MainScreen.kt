@@ -28,7 +28,7 @@ fun MainScreen() {
     val currentDestination = navBackStackEntry?.destination
 
     val showBottomNavigationBar = currentDestination?.hierarchy?.any {
-        it.hasRoute(AppNavigation.Login::class)
+        it.hasRoute(AppNavigation.Tab.Auth::class)
     } == false
 
     Scaffold(

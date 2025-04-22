@@ -29,14 +29,14 @@ fun MainNavigationGraph(navController: NavHostController, viewModel: SplashViewM
             LaunchedEffect(state.isLoading) {
                 if (!state.isLoading) {
                     navController.navigate(
-                        if (state.isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Login
+                        if (state.isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Tab.Auth
                     ) {
                         popUpTo("splash") { inclusive = true }
                     }
                 }
             }
         }
-        loginNavGraph(navController)
+        authNavGraph(navController)
         studiesNavGraph(navController)
         personalNavGraph(navController)
         calendarNavGraph(navController)

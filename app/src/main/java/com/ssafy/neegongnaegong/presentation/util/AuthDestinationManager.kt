@@ -10,7 +10,7 @@ object AuthDestinationManager {
     val destination: StateFlow<Any?> = _destination.asStateFlow()
 
     fun invalid() {
-        _destination.value = AppNavigation.Login
+        _destination.value = AppNavigation.Tab.Auth
     }
 
     fun valid() {
