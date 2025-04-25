@@ -9,4 +9,5 @@ interface UserRepository {
     suspend fun validateNickname(nickname: String): Flow<Boolean>
     suspend fun updateNickname(nickname: String): Flow<Unit>
     suspend fun updateProfileImage(profileImage: String): Flow<Unit>
+    suspend fun updateFcmToken(fcmToken: String)
 }

@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
+import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
 import com.ssafy.neegongnaegong.data.model.user.response.UserDetailResponse
 import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameResponse
@@ -8,6 +9,7 @@ import com.ssafy.neegongnaegong.domain.model.pagable.PageableData
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -28,4 +30,7 @@ interface UserApi {
 
     @POST("/api/users")
     suspend fun updateUser(@Body request: UpdateUserRequest): Result<ApiResponse<Unit>>
+
+    @PUT("/token/fcm/refresh")
+    suspend fun updateFcmToken(@Body request: UpdateFcmTokenRequest): Result<ApiResponse<Unit>>
 }

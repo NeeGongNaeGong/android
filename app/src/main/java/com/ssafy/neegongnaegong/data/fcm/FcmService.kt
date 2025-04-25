@@ -13,17 +13,24 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.domain.repository.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FcmService : FirebaseMessagingService() {
-    companion object {
-        private const val CHANNEL_ID = "default_channel_id"
-        private const val CHANNEL_NAME = "기본 알림 채널"
-    }
+    lateinit var userRepository: UserRepository
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        // TODO : 서버에 토큰 전송
-        Log.d("FcmService", "New token: $token")
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                userRepository.updateFcmToken(token)
+            } catch (e: Exception) {
+                // TODO : 만약 실패하면 어떻게 다시 update 시킬 것인지 고민해보기
+                Log.e("FcmService", "FCM 토큰 업데이트 실패", e)
+            }
+        }
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -42,7 +49,11 @@ class FcmService : FirebaseMessagingService() {
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 Log.w("FcmService", "알림 권한이 없어 알림을 표시하지 않음.")
                 return
             }
@@ -59,5 +70,10 @@ class FcmService : FirebaseMessagingService() {
         )
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "com.ssafy.NeeGongNaeGong"
+        private const val CHANNEL_NAME = "NeeGongNaeGong"
     }
 }
