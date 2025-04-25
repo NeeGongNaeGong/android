@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,27 +22,26 @@ fun ProfilesSection(
     profiles: List<ProfileData>,
     onProfileClick: (Long) -> Unit,
 ) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
     ) {
-        Column(
-            modifier = Modifier.padding(vertical = 12.dp),
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(profiles) { profile ->
-                    ProfileCircleRing(
-                        imageUrl = profile.imageUrl,
-                        name = profile.name,
-                        progress = profile.progress,
-                        ringColors = profile.ringColors,
-                        animationDuration = 600, // 빠른 애니메이션
-                        medalType = profile.medalType,
-                        onClick = { onProfileClick(profile.id) },
-                    )
-                }
+            items(profiles) { profile ->
+                ProfileCircleRing(
+                    imageUrl = profile.imageUrl,
+                    name = profile.name,
+                    progress = profile.progress,
+                    ringColors = profile.ringColors,
+                    animationDuration = 600, // 빠른 애니메이션
+                    medalType = profile.medalType,
+                    onClick = { onProfileClick(profile.id) },
+                )
             }
         }
     }

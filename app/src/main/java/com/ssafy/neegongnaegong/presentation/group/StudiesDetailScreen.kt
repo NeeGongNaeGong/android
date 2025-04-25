@@ -30,6 +30,7 @@ import com.ssafy.neegongnaegong.presentation.group.component.detail.section.Prof
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawer
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
+import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 import kotlinx.coroutines.launch
 
 data class StudyNotice(
@@ -51,6 +52,7 @@ private const val TAG = "StudiesDetailScreen"
 @Composable
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
+    onOpenDrawer: () -> Unit = {},
     popBackStack: () -> Unit = {},
 ) {
     BackHandler {
@@ -63,38 +65,18 @@ fun StudiesDetailRoute(
 }
 
 @Composable
-fun StudiesContent(modifier: Modifier = Modifier) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+fun StudiesContent(
+    modifier: Modifier = Modifier,
+    onOpenDrawer: () -> Unit = {},
+) {
+    StudiesDetailScreen(
+        modifier = modifier,
+        onOpenDrawer = onOpenDrawer,
+        onProfileClick = {},
+        profiles = listOf(),
+        popBackStack = {},
+    )
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            StudiesDrawer(
-                modifier = modifier,
-                headerImageUrl = null,
-                onGroupManagementClick = {},
-                onMemberManagementClick = {},
-                onScheduleManagementClick = {},
-                onStudyCreateClick = {},
-                onStudySearchClick = {},
-                onMyStudyClick = {},
-                onStudyItemClick = {},
-            )
-        },
-    ) {
-        StudiesDetailScreen(
-            modifier = modifier,
-            onOpenDrawer = {
-                scope.launch {
-                    drawerState.open()
-                }
-            },
-            onProfileClick = {},
-            profiles = listOf(),
-            popBackStack = {},
-        )
-    }
 }
 
 @Composable
@@ -124,7 +106,7 @@ fun StudiesDetailScreen(
                 },
                 navigationType = TopAppBarNavigationType.Menu,
                 onNavigationClick = {
-                    onOpenDrawer()
+                    StudiesDrawerController.open()
                 },
             )
 
