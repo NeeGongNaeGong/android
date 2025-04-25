@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.component.detail
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,7 @@ import com.ssafy.neegongnaegong.presentation.util.getRelativeTimeString
 @Composable
 fun NotificationWindow(
     modifier: Modifier = Modifier,
-    icon: Int,
+    @DrawableRes icon: Int,
     notification: NotificationData,
     onNotificationClick: () -> Unit = {},
 ) {
