@@ -16,6 +16,7 @@ class PersonalViewModel @Inject constructor() :
     override fun createInitialState(): PersonalContract.State {
         val dummyRecords = listOf(
             StudyRecord(
+                0,
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
                 "2025-04-19T04:33:02.856Z",
@@ -23,6 +24,7 @@ class PersonalViewModel @Inject constructor() :
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
+                1,
                 "영어 단어 영어 단어 영어 단어",
                 "VOCA 2200 암기",
                 "2025-04-19T06:33:02.856Z",
@@ -30,6 +32,7 @@ class PersonalViewModel @Inject constructor() :
                 listOf("CS", "운동")
             ),
             StudyRecord(
+                2,
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
                 "2025-04-19T04:33:02.856Z",
@@ -37,6 +40,7 @@ class PersonalViewModel @Inject constructor() :
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
+                3,
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
                 "2025-04-18T04:33:02.856Z",
@@ -44,6 +48,7 @@ class PersonalViewModel @Inject constructor() :
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
+                4,
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
                 "2025-04-18T04:33:02.856Z",
@@ -51,6 +56,7 @@ class PersonalViewModel @Inject constructor() :
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
+                5,
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
                 "2025-04-17T04:33:02.856Z",
@@ -58,6 +64,7 @@ class PersonalViewModel @Inject constructor() :
                 listOf("CS", "네트워크")
             ),
             StudyRecord(
+                6,
                 "청산별곡 정주행",
                 "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
                 "2025-04-17T04:33:02.856Z",

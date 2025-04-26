@@ -47,7 +47,7 @@ fun StudyRecordWriteRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
-        onCancelClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnCancelClicked) },
+        onCancelClicked = { popBackStack() },
         onConfirmClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnConfirmClicked) },
         onTitleChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTitleChanged(it)) },
         onContentChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnContentChanged(it)) },
@@ -98,7 +98,7 @@ fun StudyRecordWriteContent(
         effect.collectLatest { effect ->
             when (effect) {
                 is StudyRecordWriteContract.Effect.NavigateToHome -> {
-
+                    onCancelClicked()
                 }
 
                 is StudyRecordWriteContract.Effect.ShowErrorToast -> {
@@ -127,7 +127,6 @@ fun StudyRecordWriteContent(
         onCancelClicked = onCancelClicked,
         onConfirmClicked = onConfirmClicked,
     )
-
 
 }
 

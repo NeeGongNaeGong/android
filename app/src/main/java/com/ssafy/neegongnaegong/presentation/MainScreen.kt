@@ -57,7 +57,12 @@ fun StudiesScreen() {
 
 @Composable
 fun PersonalScreen() {
-    PersonalRoute(modifier = Modifier.fillMaxSize())
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = "개인 화면",
+            style = MaterialTheme.typography.headlineMedium,
+        )
+    }
 }
 
 @Composable

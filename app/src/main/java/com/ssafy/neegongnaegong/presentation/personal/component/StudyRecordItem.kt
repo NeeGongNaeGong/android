@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.personal.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,13 +27,17 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
 
 @Composable
-fun StudyRecordItem(record: StudyRecord) {
+fun StudyRecordItem(
+    record: StudyRecord,
+    onClick: (Long) -> Unit = {},
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(4.dp, RoundedCornerShape(8.dp))
             .background(Color.White, RoundedCornerShape(8.dp))
             .padding(16.dp)
+            .clickable { onClick(record.id) }
     ) {
         Column {
             // 제목 + 시간

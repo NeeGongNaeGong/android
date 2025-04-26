@@ -27,7 +27,7 @@ class StudyRecordEditViewModel @Inject constructor() :
 
             // 취소, 확인
             is StudyRecordEditContract.Event.OnCancelClicked -> {
-
+                setEffect { StudyRecordEditContract.Effect.NavigateToHome }
             }
 
             is StudyRecordEditContract.Event.OnConfirmClicked -> {
@@ -83,7 +83,7 @@ class StudyRecordEditViewModel @Inject constructor() :
     // edit
 
     fun loadStudyRecord(studyRecordId: Long){
-        
+
     }
 
     // tag

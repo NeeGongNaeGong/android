@@ -53,7 +53,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun PersonalRoute(
     modifier: Modifier = Modifier,
     viewModel: PersonalViewModel = hiltViewModel(),
-    popBackStack: () -> Unit = {},
+    popBackStack: () -> Unit,
+    navigateToEditScreen: (Long) -> Unit
 ) {
 
     BackHandler { popBackStack() }
@@ -74,7 +75,8 @@ fun PersonalRoute(
         onSearchQueryChanged = { viewModel.setEvent(PersonalContract.Event.OnSearchTextChanged(it)) },
         onTagSelected = { viewModel.setEvent(PersonalContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(PersonalContract.Event.OnTagDeselected(it)) },
-        onDateSelected = { viewModel.setEvent(PersonalContract.Event.OnDateSelected(it)) }
+        onDateSelected = { viewModel.setEvent(PersonalContract.Event.OnDateSelected(it)) },
+        navigateToEditScreen = navigateToEditScreen
     )
 
 }
@@ -98,6 +100,7 @@ fun PersonalContent(
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
     onDateSelected: (String) -> Unit,
+    navigateToEditScreen: (Long) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -139,7 +142,9 @@ fun PersonalContent(
         onTagEraseClicked = onTagEraseClicked,
         // calendar
         onDateSelected = onDateSelected,
-        selectedRecordsByDate = uiState.selectedRecordsByDate
+        selectedRecordsByDate = uiState.selectedRecordsByDate,
+        // navigate
+        navigateToEditScreen = navigateToEditScreen
     )
 }
 
@@ -160,6 +165,8 @@ fun PersonalScreen(
     // calendar
     onDateSelected: (String) -> Unit,
     selectedRecordsByDate: List<StudyRecord>,
+    // navigate
+    navigateToEditScreen: (Long) -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
 
@@ -245,7 +252,8 @@ fun PersonalScreen(
 
                 StudyRecordList(
                     modifier = Modifier.weight(1f),
-                    studyRecords = studyRecords
+                    studyRecords = studyRecords,
+                    onClick = navigateToEditScreen
                 )
             }
         } else {
@@ -260,7 +268,8 @@ fun PersonalScreen(
 
             StudyRecordList(
                 modifier = Modifier.fillMaxSize(),
-                studyRecords = selectedRecordsByDate
+                studyRecords = selectedRecordsByDate,
+                onClick = navigateToEditScreen
             )
         }
     }
@@ -323,7 +332,8 @@ fun PersonalScreenPreview() {
         onDateScreenSelected = {},
         onTagScreenSelected = {},
         isTagScreen = true,
-        isDateScreen = false
+        isDateScreen = false,
+        navigateToEditScreen = {},
     )
 }
 

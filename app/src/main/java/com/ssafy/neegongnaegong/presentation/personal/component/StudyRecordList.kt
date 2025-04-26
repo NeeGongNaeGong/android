@@ -18,6 +18,7 @@ import com.ssafy.neegongnaegong.presentation.util.toDateString
 fun StudyRecordList(
     modifier: Modifier = Modifier,
     studyRecords: List<StudyRecord>,
+    onClick: (Long) -> Unit,
 ) {
 
     val groupedRecords = studyRecords
@@ -41,7 +42,10 @@ fun StudyRecordList(
             }
 
             items(recordsForDate) { record ->
-                StudyRecordItem(record)
+                StudyRecordItem(
+                    record = record,
+                    onClick = onClick
+                )
             }
         }
     }
@@ -102,5 +106,8 @@ fun StudyRecordListPreview() {
         ),
     )
 
-    StudyRecordList(studyRecords = dummyRecords)
+    StudyRecordList(
+        studyRecords = dummyRecords,
+        onClick = {}
+    )
 }
