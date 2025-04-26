@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
@@ -20,7 +21,7 @@ fun ContentTextField(
         modifier = modifier,
         value = content,
         onValueChange = onContentChanged,
-        textStyle = Typography.labelLarge.copy(
+        textStyle = NeeGongNaeGongTheme.typography.labelLarge.copy(
             fontSize = 18.sp,
             fontFeatureSettings = "tnum",
         ),

@@ -27,6 +27,7 @@ import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
@@ -74,7 +75,7 @@ fun PauseDialog(
                     ) {
                         Text(
                             stringResource(R.string.txt_dialog_pause),
-                            style = Typography.labelLarge,
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Peach
                         )
@@ -96,7 +97,7 @@ fun PauseDialog(
                     ) {
                         Text(
                             stringResource(R.string.txt_dialog_close),
-                            style = Typography.labelLarge,
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Blue
                         )

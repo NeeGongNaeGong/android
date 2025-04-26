@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
@@ -20,7 +21,7 @@ fun TitleTextField(
         modifier = modifier,
         value = title,
         onValueChange = onTitleChanged,
-        textStyle = Typography.bodySmall.copy(
+        textStyle = NeeGongNaeGongTheme.typography.bodySmall.copy(
             fontSize = 30.sp,
             color = LightColors.Black,
             fontFeatureSettings = "tnum",

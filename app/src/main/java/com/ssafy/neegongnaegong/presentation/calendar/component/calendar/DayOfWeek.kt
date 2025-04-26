@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -22,7 +23,7 @@ fun DayOfWeek(
                     .fillMaxWidth()
                     .weight(1f),
                 text = dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN),
-                style = MaterialTheme.typography.labelMedium,
+                style = NeeGongNaeGongTheme.typography.labelMedium,
                 color = dayOfWeek.color,
                 textAlign = TextAlign.Center
             )

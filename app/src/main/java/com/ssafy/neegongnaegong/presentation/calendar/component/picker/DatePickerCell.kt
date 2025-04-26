@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.color
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 
 @Composable
@@ -67,7 +68,7 @@ fun DatePickerCell(
                 .background(if (isSelected && !isLeftEdge) MaterialTheme.colorScheme.primary else Color.Transparent)
                 .padding(4.dp),
             text = "",
-            style = MaterialTheme.typography.labelMedium,
+            style = NeeGongNaeGongTheme.typography.labelMedium,
         )
         Text(
             modifier = Modifier
@@ -82,7 +83,7 @@ fun DatePickerCell(
                 )
                 .padding(vertical = 4.dp, horizontal = 8.dp),
             text = date.toString(),
-            style = MaterialTheme.typography.labelMedium,
+            style = NeeGongNaeGongTheme.typography.labelMedium,
             color = dateColor,
             textAlign = TextAlign.Center,
         )
@@ -92,7 +93,7 @@ fun DatePickerCell(
                 .background(if (isSelected && !isRightEdge) MaterialTheme.colorScheme.primary else Color.Transparent)
                 .padding(4.dp),
             text = "",
-            style = MaterialTheme.typography.labelMedium,
+            style = NeeGongNaeGongTheme.typography.labelMedium,
         )
     }
 }

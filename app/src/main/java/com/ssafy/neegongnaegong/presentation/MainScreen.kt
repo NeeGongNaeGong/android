@@ -52,7 +52,7 @@ fun StudiesScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "스터디 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }
@@ -62,7 +62,7 @@ fun PersonalScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "개인 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }
@@ -72,7 +72,7 @@ fun CalendarScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "캘린더 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }
@@ -82,7 +82,7 @@ fun ProfileScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "마이페이지 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }

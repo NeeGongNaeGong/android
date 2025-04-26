@@ -236,7 +236,7 @@ fun ScheduleCreateScreen(
             ) {
                 Text(
                     "취소",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -246,7 +246,7 @@ fun ScheduleCreateScreen(
             ) {
                 Text(
                     "확인",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }

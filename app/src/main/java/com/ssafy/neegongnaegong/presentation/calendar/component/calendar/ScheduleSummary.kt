@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.getTextHeightDp
 import java.time.LocalDateTime
 
@@ -42,14 +43,14 @@ fun ScheduleSummary(
             Box(
                 modifier = Modifier
                     .width(3.dp)
-                    .height(getTextHeightDp("", MaterialTheme.typography.labelSmall))
+                    .height(getTextHeightDp("", NeeGongNaeGongTheme.typography.labelSmall))
                     .background(color, shape = RoundedCornerShape(100)),
             )
             Spacer(modifier = Modifier.width(2.dp))
         }
         Text(
             text = title,
-            style = MaterialTheme.typography.labelSmall,
+            style = NeeGongNaeGongTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onBackground
         )
     }

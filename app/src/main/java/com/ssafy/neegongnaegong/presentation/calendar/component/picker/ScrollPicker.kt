@@ -107,7 +107,7 @@ fun <T> ScrollPicker(
                 text = "",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
+                style = NeeGongNaeGongTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }
@@ -119,7 +119,7 @@ fun <T> ScrollPicker(
                 text = text(getItem(index)),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
+                style = NeeGongNaeGongTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }
@@ -131,7 +131,7 @@ fun <T> ScrollPicker(
                 text = "",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
+                style = NeeGongNaeGongTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }

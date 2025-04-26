@@ -52,6 +52,7 @@ import com.ssafy.neegongnaegong.presentation.group.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDialog
 import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.collectLatest
@@ -146,7 +147,7 @@ fun VoteTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                style = Typography.titleSmall,
+                style = NeeGongNaeGongTheme.typography.titleSmall,
                 text = "투표 만들기"
             )
         },
@@ -425,7 +426,7 @@ fun EndOption(
                     overflow = TextOverflow.Ellipsis,
                     softWrap = false,
                     color = LightColors.Black,
-                    style = Typography.labelMedium,
+                    style = NeeGongNaeGongTheme.typography.labelMedium,
                     text = date
                 )
             }
@@ -444,7 +445,7 @@ fun EndOption(
                     overflow = TextOverflow.Ellipsis,
                     softWrap = false,
                     color = LightColors.Black,
-                    style = Typography.labelMedium,
+                    style = NeeGongNaeGongTheme.typography.labelMedium,
                     text = time
                 )
             }

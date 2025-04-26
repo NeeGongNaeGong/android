@@ -62,8 +62,8 @@ fun ScheduleInfo(
 ) {
     val isOverNight = startTime.toLocalDate() != endTime.toLocalDate()
 
-    val prefixWidth = getTextWidthDp("00:00", MaterialTheme.typography.bodySmall)
-    val prefixHeight = getTextHeightDp("", MaterialTheme.typography.bodyMedium)
+    val prefixWidth = getTextWidthDp("00:00", NeeGongNaeGongTheme.typography.bodySmall)
+    val prefixHeight = getTextHeightDp("", NeeGongNaeGongTheme.typography.bodyMedium)
 
     Column(modifier = modifier
         .clickable { onClick() }
@@ -90,7 +90,7 @@ fun ScheduleInfo(
                                 startTime.minute
                             ),
                             color = MaterialTheme.colorScheme.onBackground,
-                            style = MaterialTheme.typography.bodySmall
+                            style = NeeGongNaeGongTheme.typography.bodySmall
                         )
                     }
 
@@ -99,7 +99,7 @@ fun ScheduleInfo(
             Box(
                 modifier = Modifier
                     .width(3.dp)
-                    .height(getTextHeightDp("", MaterialTheme.typography.bodyMedium))
+                    .height(getTextHeightDp("", NeeGongNaeGongTheme.typography.bodyMedium))
                     .background(color, shape = RoundedCornerShape(100)),
             )
             Spacer(Modifier.width(5.dp))
@@ -107,7 +107,7 @@ fun ScheduleInfo(
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )
@@ -128,7 +128,7 @@ fun ScheduleInfo(
                         endTime.minute
                     ),
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelSmall
+                    style = NeeGongNaeGongTheme.typography.labelSmall
                 )
             }
         }

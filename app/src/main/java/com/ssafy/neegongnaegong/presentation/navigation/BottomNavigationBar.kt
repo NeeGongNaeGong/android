@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.presentation.navigation
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -80,7 +79,7 @@ fun BottomNavigationBar(
                 label = {
                     Text(
                         text = stringResource(id = screen.title),
-                        style = if (selected) Typography.bodySmall.copy(fontSize = 12.sp) else Typography.labelSmall,
+                        style = if (selected) NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp) else NeeGongNaeGongTheme.typography.labelSmall,
                     )
                 },
                 selected = selected,

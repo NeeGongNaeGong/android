@@ -138,7 +138,7 @@ fun RepeatRuleTypeRadioButton(
                         .padding(end = 8.dp)
                         .bottomBorder(1.dp, MaterialTheme.colorScheme.onBackground),
                     text = "1",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground)
+                    style = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground)
                 )
                 BasicTextField(
                     modifier = Modifier
@@ -153,7 +153,7 @@ fun RepeatRuleTypeRadioButton(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
+                    textStyle = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
                 )
             }
         }
@@ -162,7 +162,7 @@ fun RepeatRuleTypeRadioButton(
                 .weight(1f)
                 .padding(end = 16.dp),
             text = type?.toDisplayString() ?: "반복 안 함",
-            style = MaterialTheme.typography.bodyMedium,
+            style = NeeGongNaeGongTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
     }
@@ -190,7 +190,7 @@ fun RepeatRuleEndDateInput(
                 text = endDate?.let {
                     DateTimeFormatter.ofPattern("yyyy년 M월 d일(E)까지", Locale.KOREAN).format(it)
                 } ?: "종료 날짜",
-                style = MaterialTheme.typography.bodyMedium,
+                style = NeeGongNaeGongTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Switch(

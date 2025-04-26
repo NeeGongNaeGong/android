@@ -39,6 +39,7 @@ import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -84,7 +85,7 @@ fun TagSelectDialog(
                     placeholder = {
                         Text(
                             text = "검색어를 입력해주세요",
-                            style = Typography.labelLarge
+                            style = NeeGongNaeGongTheme.typography.labelLarge
                         )
                     },
                     singleLine = true,
@@ -105,7 +106,7 @@ fun TagSelectDialog(
                         unfocusedIndicatorColor = Color.LightGray,
                         disabledIndicatorColor = Color.LightGray,
                     ),
-                    textStyle = Typography.labelLarge.copy(fontSize = 18.sp)
+                    textStyle = NeeGongNaeGongTheme.typography.labelLarge.copy(fontSize = 18.sp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -149,7 +150,7 @@ fun TagSelectDialog(
                     ) {
                         Text(
                             text = "취소",
-                            style = Typography.labelLarge,
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Peach
                         )
@@ -168,7 +169,7 @@ fun TagSelectDialog(
                     ) {
                         Text(
                             text = "확인",
-                            style = Typography.labelLarge,
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
                             color = Blue
                         )
