@@ -7,9 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun ContentTextField(
@@ -29,7 +27,7 @@ fun ContentTextField(
             Text(
                 text = "내용을 입력하세요",
                 fontSize = 18.sp,
-                color = LightColors.Gray4,
+                color = NeeGongNaeGongTheme.colorScheme.gray4,
                 letterSpacing = 0.2.sp,
             )
         },
@@ -38,9 +36,9 @@ fun ContentTextField(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
-            focusedIndicatorColor = Color.Gray,
-            unfocusedIndicatorColor = Color.Gray,
-            disabledIndicatorColor = Color.LightGray
+            focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
+            unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
+            disabledIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3
         )
     )
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
@@ -36,18 +37,20 @@ fun OptionButton(
             RadioButton(
                 selected = isSelected,
                 onClick = onClick,
-
-                )
+            )
             Text(
                 style = NeeGongNaeGongTheme.typography.labelMedium,
-                text = optionTitle
+                text = optionTitle,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText
             )
         }
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewOptionButton() {
-    OptionButton(false, "종료 시간") {}
+    NeeGongNaeGongTheme {
+        OptionButton(false, "종료 시간") {}
+    }
 }

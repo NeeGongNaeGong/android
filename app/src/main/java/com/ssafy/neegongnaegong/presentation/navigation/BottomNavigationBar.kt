@@ -27,10 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ssafy.neegongnaegong.presentation.ui.theme.DarkColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -48,11 +45,7 @@ fun BottomNavigationBar(
                     elevation = 20.dp,
                     shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
                 ),
-        containerColor =
-            when {
-                isSystemInDarkTheme() -> DarkColors.DarkBackGround
-                else -> LightColors.BackGround
-            },
+        containerColor = NeeGongNaeGongTheme.colorScheme.background
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 

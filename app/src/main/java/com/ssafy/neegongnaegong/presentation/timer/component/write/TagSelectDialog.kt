@@ -32,15 +32,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.domain.model.write.Tag
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -152,13 +150,13 @@ fun TagSelectDialog(
                             text = "취소",
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Peach
+                            color = NeeGongNaeGongTheme.colorScheme.peach
                         )
                     }
 
                     VerticalDivider(
                         thickness = 0.5.dp,
-                        color = Color.Gray,
+                        color = NeeGongNaeGongTheme.colorScheme.gray4,
                         modifier = Modifier
                             .height(50.dp)
                     )

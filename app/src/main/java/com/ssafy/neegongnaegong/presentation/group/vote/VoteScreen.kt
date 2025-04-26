@@ -33,6 +33,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -44,16 +45,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.group.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDialog
-import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
+import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.collectLatest
 
@@ -162,11 +161,17 @@ fun VoteTopBar(
         actions = {
             TextButton(onClick = { popBackStack() }) {
                 Text(
-                    color = LightColors.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     text = "완료"
                 )
             }
-        }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = NeeGongNaeGongTheme.colorScheme.background,
+            titleContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+            navigationIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+            actionIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+        )
     )
 }
 
@@ -235,7 +240,7 @@ fun VoteScreen(
     LazyColumn(
         modifier
             .fillMaxSize()
-            .background(LightColors.White)
+            .background(NeeGongNaeGongTheme.colorScheme.background)
             .padding(horizontal = 13.dp)
     ) {
         item {
@@ -288,7 +293,7 @@ fun MainOption(
     Column(
         Modifier
             .fillMaxWidth()
-            .background(LightColors.Gray2)
+            .background(NeeGongNaeGongTheme.colorScheme.gray2)
             .padding(13.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -322,14 +327,16 @@ fun VoteList(
     val textFieldModifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(15.dp))
-        .background(LightColors.White)
+        .background(NeeGongNaeGongTheme.colorScheme.background)
 
     val textFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = Color.White,
-        unfocusedContainerColor = Color.White,
+        focusedContainerColor = NeeGongNaeGongTheme.colorScheme.background,
+        unfocusedContainerColor = NeeGongNaeGongTheme.colorScheme.background,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent,
+        unfocusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+        focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
     )
 
     TextField(
@@ -357,13 +364,13 @@ fun VoteList(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(LightColors.White)
+            .background(NeeGongNaeGongTheme.colorScheme.background)
     ) {
         Icon(
             Icons.Rounded.Add,
             modifier = Modifier.size(48.dp),
             contentDescription = "항목 추가",
-            tint = LightColors.Gray4
+            tint = NeeGongNaeGongTheme.colorScheme.gray4
         )
     }
 }
@@ -380,7 +387,7 @@ fun VoteOption(
     Column(
         Modifier
             .fillMaxWidth()
-            .background(LightColors.Gray2)
+            .background(NeeGongNaeGongTheme.colorScheme.gray2)
     ) {
         OptionButton(isMultipleSelectionEnabled, "복수선택") { onClickMultipleSelectionOption() }
         OptionButton(isAnonymousVotingEnabled, "익명투표") { onClickAnonymousVotingOption() }
@@ -402,7 +409,7 @@ fun EndOption(
     Column(
         Modifier
             .fillMaxWidth()
-            .background(LightColors.Gray2)
+            .background(NeeGongNaeGongTheme.colorScheme.gray2)
             .padding(13.dp)
     ) {
         OptionButton(isEndDateEnabled, "종료 시간") { onClickEndDateOption() }
@@ -417,7 +424,7 @@ fun EndOption(
             TextButton(
                 modifier = Modifier
                     .clip(RoundedCornerShape(15.dp))
-                    .background(LightColors.White)
+                    .background(NeeGongNaeGongTheme.colorScheme.background)
                     .padding(vertical = 2.dp, horizontal = 5.dp),
                 onClick = onClickDatePicker
             ) {
@@ -425,7 +432,7 @@ fun EndOption(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     softWrap = false,
-                    color = LightColors.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     style = NeeGongNaeGongTheme.typography.labelMedium,
                     text = date
                 )
@@ -436,7 +443,7 @@ fun EndOption(
             TextButton(
                 modifier = Modifier
                     .clip(RoundedCornerShape(15.dp))
-                    .background(LightColors.White)
+                    .background(NeeGongNaeGongTheme.colorScheme.background)
                     .padding(vertical = 2.dp, horizontal = 5.dp),
                 onClick = onClickTimePicker
             ) {
@@ -444,7 +451,7 @@ fun EndOption(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     softWrap = false,
-                    color = LightColors.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     style = NeeGongNaeGongTheme.typography.labelMedium,
                     text = time
                 )
@@ -544,73 +551,81 @@ fun LoadDialog(
 }
 
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewTopAppBar() {
-    VoteTopBar(popBackStack = { true }, {})
+    NeeGongNaeGongTheme {
+        VoteTopBar(popBackStack = { true }, {})
+    }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewVoteScreen() {
-    VoteScreen(
-        Modifier
-            .fillMaxSize(),
-        VoteContract.State(
-            isMultipleSelectionEnabled = false,
-            isAnonymousVotingEnabled = false,
-            allowAddingSelection = false,
-            isEndDateEnabled = false,
-            isAlarmBeforeClosingEnabled = false,
-            voteTitle = "",
-            voteItemList = persistentListOf("", "", ""),
-            "",
-            "",
-            isDateDialogVisible = false,
-            isTimeDialogVisible = false
-        ),
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        { idx, title -> },
-        onClickDateButton = {},
-        onClickTimeButton = {},
-    )
+    NeeGongNaeGongTheme {
+        VoteScreen(
+            Modifier
+                .fillMaxSize(),
+            VoteContract.State(
+                isMultipleSelectionEnabled = false,
+                isAnonymousVotingEnabled = false,
+                allowAddingSelection = false,
+                isEndDateEnabled = false,
+                isAlarmBeforeClosingEnabled = false,
+                voteTitle = "",
+                voteItemList = persistentListOf("", "", ""),
+                "",
+                "",
+                isDateDialogVisible = false,
+                isTimeDialogVisible = false
+            ),
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            { idx, title -> },
+            onClickDateButton = {},
+            onClickTimeButton = {},
+        )
+    }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewMainOption() {
-    MainOption(
-        "uiState.voteTitle",
-        listOf(),
-        false,
-        false,
-        false,
-        { },
-        { },
-        {},
-        { },
-        { },
-        { idx, title -> },
-    )
+    NeeGongNaeGongTheme {
+        MainOption(
+            "uiState.voteTitle",
+            listOf(),
+            false,
+            false,
+            false,
+            { },
+            { },
+            {},
+            { },
+            { },
+            { idx, title -> },
+        )
+    }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewEndOption() {
-    EndOption(
-        false,
-        false,
-        onClickEndDateOption = {},
-        onClickAlarmBeforeClosingOption = {},
-        onClickDatePicker = {},
-        onClickTimePicker = {},
-        date = "",
-        time = ""
-    )
+    NeeGongNaeGongTheme {
+        EndOption(
+            false,
+            false,
+            onClickEndDateOption = {},
+            onClickAlarmBeforeClosingOption = {},
+            onClickDatePicker = {},
+            onClickTimePicker = {},
+            date = "1",
+            time = "1"
+        )
+    }
 }

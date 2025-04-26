@@ -19,16 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.R
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun PauseDialog(
@@ -77,7 +75,7 @@ fun PauseDialog(
                             stringResource(R.string.txt_dialog_pause),
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Peach
+                            color = NeeGongNaeGongTheme.colorScheme.peach
                         )
                     }
 
