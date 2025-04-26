@@ -26,8 +26,7 @@ import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextFi
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
-import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteContent
-import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteContract
+import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteScreen
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toDateString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
@@ -46,6 +45,8 @@ fun StudyRecordEditRoute(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
+    viewModel.loadStudyRecord(studyRecordId)
+
 
     StudyRecordEditContent(
         modifier = modifier,
@@ -59,7 +60,13 @@ fun StudyRecordEditRoute(
         onTagEraseClicked = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagEraseClicked(it)) },
         onDialogClosed = { viewModel.setEvent(StudyRecordEditContract.Event.OnDialogClose) },
         onDialogConfirmed = { viewModel.setEvent(StudyRecordEditContract.Event.OnDialogConfirmClicked) },
-        onSearchQueryChanged = { viewModel.setEvent(StudyRecordEditContract.Event.OnSearchTextChanged(it)) },
+        onSearchQueryChanged = {
+            viewModel.setEvent(
+                StudyRecordEditContract.Event.OnSearchTextChanged(
+                    it
+                )
+            )
+        },
         onTagSelected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagDeselected(it)) },
     )
@@ -119,6 +126,18 @@ fun StudyRecordEditContent(
             }
         }
     }
+
+    StudyRecordWriteScreen(
+        modifier = modifier,
+        tags = uiState.tags,
+        studyRecord = uiState.studyRecord,
+        onTitleChanged = onTitleChanged,
+        onContentChanged = onContentChanged,
+        onTagPlusClicked = onTagPlusClicked,
+        onTagEraseClicked = onTagEraseClicked,
+        onCancelClicked = onCancelClicked,
+        onConfirmClicked = onConfirmClicked,
+    )
 
 }
 

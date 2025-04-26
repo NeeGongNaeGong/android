@@ -80,6 +80,11 @@ class StudyRecordEditViewModel @Inject constructor() :
             }
         }
     }
+    // edit
+
+    fun loadStudyRecord(studyRecordId: Long){
+        
+    }
 
     // tag
 

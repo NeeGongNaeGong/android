@@ -43,7 +43,6 @@ fun StudyRecordWriteRoute(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-
     StudyRecordWriteContent(
         modifier = modifier,
         effect = viewModel.effect,
