@@ -1,46 +1,17 @@
 package com.ssafy.neegongnaegong.presentation.ui.theme
 
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 
-
-private val LightColorScheme = lightColorScheme(
-    primary = LightColors.Blue,
-    secondary = LightColors.MintBlue,
-    background = LightColors.BackGround,
-    surface = LightColors.White,
-    onPrimary = LightColors.White,
-    onSecondary = LightColors.Black,
-    onBackground = LightColors.Black,
-    onSurface = LightColors.Black,
-    primaryContainer = LightColors.Gray1,
-    secondaryContainer = LightColors.Gray4,
-)
-
-private val DarkColorScheme = darkColorScheme(
-    primary = DarkColors.DarkBlue,
-    secondary = DarkColors.DarkMintBlue,
-    background = DarkColors.DarkBackGround,
-    surface = DarkColors.DarkBlack,
-    onPrimary = DarkColors.DarkWhite,
-    onSecondary = DarkColors.DarkGray4,
-    onBackground = DarkColors.DarkWhite,
-    onSurface = DarkColors.DarkWhite,
-    primaryContainer = DarkColors.DarkGray1,
-    secondaryContainer = DarkColors.DarkGray4,
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,8 +22,7 @@ fun NeeGongNaeGongTheme(
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) DarkColorScheme else LightColorScheme
         }
 
         darkTheme -> DarkColorScheme
@@ -62,16 +32,17 @@ fun NeeGongNaeGongTheme(
 
     CompositionLocalProvider(
         LocalRippleConfiguration provides null,
-        LocalTypography provides NeeGongNaeGongTheme.typography
+        LocalTypography provides NeeGongNaeGongTheme.typography,
+        LocalColors provides colorScheme
     ) {
         MaterialTheme(
-            colorScheme = colorScheme,
             content = content
         )
     }
 }
 
 val LocalTypography = staticCompositionLocalOf { Typography() }
+val LocalColors = staticCompositionLocalOf { LightColorScheme }
 
 object NeeGongNaeGongTheme {
 
@@ -79,4 +50,23 @@ object NeeGongNaeGongTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalTypography.current
+
+    val colorScheme: NeeGongNaeGongColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColors.current
 }
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    backgroundColor = 0xFFFFFFFF
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0xFF000000
+)
+annotation class NeeGongNaeGongPreviews
