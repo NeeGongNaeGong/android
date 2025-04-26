@@ -79,16 +79,6 @@ class StudyRecordWriteViewModel @Inject constructor() :
             is StudyRecordWriteContract.Event.OnDialogCancelClicked -> {
                 setState { copy(isDialogShow = false) }
             }
-
-            // edit mode
-            is StudyRecordWriteContract.Event.OnEditMode -> {
-                setState {
-                    copy(
-                        isEditMode = true,
-                        studyRecord = event.studyRecord
-                    )
-                }
-            }
         }
     }
 

@@ -37,19 +37,12 @@ fun StudyRecordWriteRoute(
     modifier: Modifier = Modifier,
     viewModel: StudyRecordWriteViewModel = hiltViewModel(),
     popBackStack: () -> Unit = {},
-    isEditScreen: Boolean = false,
-    studyRecord: StudyRecord? = null,
 ) {
 
     BackHandler { popBackStack() }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    if (isEditScreen) {
-        studyRecord?.let {
-            viewModel.setEvent(StudyRecordWriteContract.Event.OnEditMode(it))
-        }
-    }
 
     StudyRecordWriteContent(
         modifier = modifier,

@@ -23,8 +23,6 @@ class StudyRecordWriteContract {
         data object OnDialogClose : Event()
         data object OnDialogConfirmClicked : Event()
         data object OnDialogCancelClicked : Event()
-        // edit mode
-        data class OnEditMode(val studyRecord: StudyRecord) : Event()
     }
 
     data class State(
