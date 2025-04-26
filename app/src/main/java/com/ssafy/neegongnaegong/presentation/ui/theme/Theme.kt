@@ -43,6 +43,7 @@ fun NeeGongNaeGongTheme(
 
 val LocalTypography = staticCompositionLocalOf { Typography() }
 val LocalColors = staticCompositionLocalOf { LightColorScheme }
+val LocalSpacing = staticCompositionLocalOf { Spacing() }
 
 object NeeGongNaeGongTheme {
 
@@ -55,6 +56,11 @@ object NeeGongNaeGongTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalColors.current
+
+    val paddingScheme: Spacing
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalSpacing.current
 }
 
 @Preview(
