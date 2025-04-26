@@ -144,6 +144,7 @@ fun PersonalContent(
         // calendar
         onDateSelected = onDateSelected,
         selectedRecordsByDate = uiState.selectedRecordsByDate,
+        selectedDate = uiState.selectedDate,
         // navigate
         navigateToEditScreen = navigateToEditScreen
     )
@@ -166,6 +167,7 @@ fun PersonalScreen(
     // calendar
     onDateSelected: (String) -> Unit,
     selectedRecordsByDate: List<StudyRecord>,
+    selectedDate: String,
     // navigate
     navigateToEditScreen: (Long) -> Unit
 ) {
@@ -267,11 +269,28 @@ fun PersonalScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            StudyRecordList(
-                modifier = Modifier.fillMaxSize(),
-                studyRecords = selectedRecordsByDate,
-                onClick = navigateToEditScreen
-            )
+            if (selectedRecordsByDate.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "$selectedDate 에는 공부한 기록이 없습니다.",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
+            } else {
+                StudyRecordList(
+                    modifier = Modifier.fillMaxSize(),
+                    studyRecords = selectedRecordsByDate,
+                    onClick = navigateToEditScreen
+                )
+            }
         }
     }
 }
@@ -291,6 +310,7 @@ fun PersonalScreenPreview() {
         isTagScreen = true,
         isDateScreen = false,
         navigateToEditScreen = {},
+        selectedDate = "2024-01-01"
     )
 }
 
