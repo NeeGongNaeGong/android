@@ -1,6 +1,5 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker
+package com.ssafy.neegongnaegong.presentation.component.picker
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -37,29 +35,34 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 
 @Composable
-fun <T> rememberPickerState(initialValue: T) = remember { PickerState(initialValue) }
-
-class PickerState<T>(initialValue: T) {
-    var selectedItem by mutableStateOf<T>(initialValue)
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
 fun <T> ScrollPicker(
     modifier: Modifier = Modifier,
+    state: ScrollPickerState<T>,
     items: List<T>,
-    state: PickerState<T> = rememberPickerState(items.first()),
     visibleItemsCount: Int = 3,
     isInfinite: Boolean = true,
     text: (T) -> String = { it.toString() }
 ) {
-    val visibleItemsMiddle = visibleItemsCount / 2
-    val listScrollCount = if (isInfinite) Integer.MAX_VALUE else items.size
-    val listScrollMiddle = listScrollCount / 2
-    val listStartIndex = if (isInfinite) {
-        listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + items.indexOf(state.selectedItem)
-    } else {
-        items.indexOf(state.selectedItem)
+    val visibleItemsMiddle = remember(visibleItemsCount) {
+        visibleItemsCount / 2
+    }
+
+    val listScrollCount = remember(isInfinite, items.size) {
+        if (isInfinite) Int.MAX_VALUE else items.size
+    }
+
+    val listScrollMiddle = remember(listScrollCount) {
+        listScrollCount / 2
+    }
+
+    val listStartIndex = remember(isInfinite, listScrollMiddle, visibleItemsMiddle, items, state.selectedItem) {
+        if (isInfinite) {
+            listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + items.indexOf(
+                state.selectedItem
+            )
+        } else {
+            items.indexOf(state.selectedItem)
+        }
     }
 
     fun getItem(index: Int) = items[index % items.size]
@@ -84,11 +87,11 @@ fun <T> ScrollPicker(
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
-            .map { index -> index + visibleItemsMiddle - if(isInfinite) 0 else visibleItemsCount / 2 }
-            .filter { if(isInfinite) true else it in items.indices }
+            .map { index -> index + visibleItemsMiddle - if (isInfinite) 0 else visibleItemsCount / 2 }
+            .filter { if (isInfinite) true else it in items.indices }
             .map { getItem(it) }
             .distinctUntilChanged()
-            .collect { item -> state.selectedItem = item }
+            .collect(state::updateSelectedItem)
     }
 
     LazyColumn(
@@ -148,13 +151,34 @@ private fun Modifier.fadingEdge(brush: Brush) = this
 
 @Preview
 @Composable
-private fun NumberPickerPreview() {
+private fun NumberPickerPreview_Not_Infinite() {
+    val items = listOf(1, 2, 3, 4, 5)
+    val state = rememberScrollPickerState(initialValue = items[0])
+
     NeeGongNaeGongTheme {
         Surface {
             ScrollPicker(
                 modifier = Modifier.fillMaxWidth(),
-                items = listOf(1, 2, 3, 4, 5),
+                state = state,
+                items = items,
                 isInfinite = false
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun NumberPickerPreview_Infinite() {
+    val items = listOf(1, 2, 3, 4, 5)
+    val state = rememberScrollPickerState(initialValue = items[3])
+
+    NeeGongNaeGongTheme {
+        Surface {
+            ScrollPicker(
+                modifier = Modifier.fillMaxWidth(),
+                state = state,
+                items = items,
             )
         }
     }
