@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
@@ -278,57 +279,13 @@ fun PersonalScreen(
 @Preview(showBackground = true)
 @Composable
 fun PersonalScreenPreview() {
-    val dummyTags = listOf(
-        Tag(koName = "CS", enName = "cs"),
-        Tag(koName = "네트워크", enName = "network"),
-        Tag(koName = "운동", enName = "exercise")
-    )
-
-    val dummyRecords = listOf(
-        StudyRecord(
-            title = "청산별곡 정주행",
-            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
-            startTime = "2025-04-14T04:33:02.856Z",
-            endTime = "2025-04-14T06:33:02.856Z",
-            tags = listOf("CS", "네트워크")
-        ),
-        StudyRecord(
-            title = "영어 단어 암기",
-            content = "VOCA 2200 30단원까지 복습함",
-            startTime = "2025-04-14T06:33:02.856Z",
-            endTime = "2025-04-14T08:33:02.856Z",
-            tags = listOf("영어", "단어")
-        ),
-        StudyRecord(
-            title = "청산별곡 정주행",
-            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
-            startTime = "2025-04-14T04:33:02.856Z",
-            endTime = "2025-04-14T06:33:02.856Z",
-            tags = listOf("CS", "네트워크")
-        ),
-        StudyRecord(
-            title = "청산별곡 정주행",
-            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
-            startTime = "2025-04-14T04:33:02.856Z",
-            endTime = "2025-04-14T06:33:02.856Z",
-            tags = listOf("CS", "네트워크")
-        ),
-        StudyRecord(
-            title = "청산별곡 정주행",
-            content = "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵...",
-            startTime = "2025-04-14T04:33:02.856Z",
-            endTime = "2025-04-14T06:33:02.856Z",
-            tags = listOf("CS", "네트워크")
-        ),
-    )
-
     PersonalScreen(
-        studyRecords = dummyRecords,
-        tags = dummyTags,
+        studyRecords = PersonalPreviewDataProvider().getStudyRecords(),
+        tags = PersonalPreviewDataProvider().getTags(),
         onTagPlusClicked = {},
         onTagEraseClicked = {},
         onDateSelected = {},
-        selectedRecordsByDate = dummyRecords,
+        selectedRecordsByDate = PersonalPreviewDataProvider().getStudyRecords(),
         onDateScreenSelected = {},
         onTagScreenSelected = {},
         isTagScreen = true,

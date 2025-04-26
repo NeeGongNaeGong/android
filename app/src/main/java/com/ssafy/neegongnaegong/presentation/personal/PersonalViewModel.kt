@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.personal
 
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteViewModel.Companion.MAX_TAG_LIMIT
@@ -14,65 +15,7 @@ class PersonalViewModel @Inject constructor() :
     BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
 
     override fun createInitialState(): PersonalContract.State {
-        val dummyRecords = listOf(
-            StudyRecord(
-                0,
-                "청산별곡 정주행",
-                "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-19T04:33:02.856Z",
-                "2025-04-19T06:33:02.856Z",
-                listOf("CS", "네트워크")
-            ),
-            StudyRecord(
-                1,
-                "영어 단어 영어 단어 영어 단어",
-                "VOCA 2200 암기",
-                "2025-04-19T06:33:02.856Z",
-                "2025-04-19T08:33:02.856Z",
-                listOf("CS", "운동")
-            ),
-            StudyRecord(
-                2,
-                "청산별곡 정주행",
-                "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-19T04:33:02.856Z",
-                "2025-04-19T06:33:02.856Z",
-                listOf("CS", "네트워크")
-            ),
-            StudyRecord(
-                3,
-                "청산별곡 정주행",
-                "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-18T04:33:02.856Z",
-                "2025-04-18T06:33:02.856Z",
-                listOf("CS", "네트워크")
-            ),
-            StudyRecord(
-                4,
-                "청산별곡 정주행",
-                "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-18T04:33:02.856Z",
-                "2025-04-18T06:33:02.856Z",
-                listOf("CS", "네트워크")
-            ),
-            StudyRecord(
-                5,
-                "청산별곡 정주행",
-                "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-17T04:33:02.856Z",
-                "2025-04-17T06:33:02.856Z",
-                listOf("CS", "네트워크")
-            ),
-            StudyRecord(
-                6,
-                "청산별곡 정주행",
-                "오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵오늘 공부한 내용은 얄리얄리 얄라셩 얄라리 얄라 준식식 빵빵빵 ",
-                "2025-04-17T04:33:02.856Z",
-                "2025-04-17T06:33:02.856Z",
-                listOf("CS", "네트워크")
-            ),
-        )
-        return PersonalContract.State(studyRecords = dummyRecords)
+        return PersonalContract.State(studyRecords = PersonalPreviewDataProvider().getStudyRecords())
     }
 
     override fun handleEvent(event: PersonalContract.Event) {

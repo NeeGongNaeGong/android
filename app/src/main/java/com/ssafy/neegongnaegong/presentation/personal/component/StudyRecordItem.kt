@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
 
@@ -101,14 +102,6 @@ fun StudyRecordItem(
 @Preview(showBackground = true)
 @Composable
 fun StudyRecordItemPreview() {
-    val dummyRecord = StudyRecord(
-        title = "수학 공부",
-        content = "미적분 복습",
-        startTime = "2025-04-14T18:33:02.856Z",
-        endTime = "2025-04-14T20:33:02.856Z",
-        tags = listOf("CS", "네트워크", "Kotlin")
-    )
-
-    StudyRecordItem(record = dummyRecord)
+    StudyRecordItem(record = PersonalPreviewDataProvider().getStudyRecord())
 }
 
