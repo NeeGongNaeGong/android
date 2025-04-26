@@ -11,6 +11,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 
 
@@ -58,11 +60,23 @@ fun NeeGongNaeGongTheme(
     }
 
 
-    CompositionLocalProvider (LocalRippleConfiguration provides null) {
+    CompositionLocalProvider(
+        LocalRippleConfiguration provides null,
+        LocalTypography provides NeeGongNaeGongTheme.typography
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography,
             content = content
         )
     }
+}
+
+val LocalTypography = staticCompositionLocalOf { Typography() }
+
+object NeeGongNaeGongTheme {
+
+    val typography: Typography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTypography.current
 }

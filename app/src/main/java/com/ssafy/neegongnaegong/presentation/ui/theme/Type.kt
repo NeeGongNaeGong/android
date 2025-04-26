@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.ui.theme
 
-import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -9,61 +8,74 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.R
 
+val fontFamily = FontFamily(
+    Font(R.font.pretendard_bold, FontWeight.Bold),
+    Font(R.font.pretendard_semibold, FontWeight.SemiBold),
+    Font(R.font.pretendard_regular, FontWeight.Normal),
+)
 val letterSpacing = (-0.06).em
-val Typography =
-    Typography(
-        titleLarge =
+
+data class Typography(
+    val titleLarge: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Bold,
             fontSize = 28.sp,
             letterSpacing = letterSpacing,
         ),
-        titleMedium =
+    val titleMedium: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             letterSpacing = letterSpacing,
         ),
-        titleSmall =
+    val titleSmall: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             letterSpacing = letterSpacing,
         ),
-        bodyLarge =
+    val bodyLarge: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_semibold)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 20.sp,
             letterSpacing = letterSpacing,
         ),
-        bodyMedium =
+    val bodyMedium: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_semibold)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             letterSpacing = letterSpacing,
         ),
-        bodySmall =
+    val bodySmall: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_semibold)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             letterSpacing = letterSpacing,
         ),
-        labelLarge =
+    val labelLarge: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             letterSpacing = letterSpacing,
         ),
-        labelMedium =
+    val labelMedium: TextStyle = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        letterSpacing = letterSpacing,
+    ),
+    val labelSmall: TextStyle =
         TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
-            fontSize = 14.sp,
-            letterSpacing = letterSpacing,
-        ),
-        labelSmall =
-        TextStyle(
-            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
             letterSpacing = letterSpacing,
         ),
-    )
+)
