@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer
+package com.ssafy.neegongnaegong.presentation.timer.write
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -33,9 +33,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun WriteScreenRoute(
+fun StudyRecordWriteRoute(
     modifier: Modifier = Modifier,
-    viewModel: WriteViewModel = hiltViewModel(),
+    viewModel: StudyRecordWriteViewModel = hiltViewModel(),
     popBackStack: () -> Unit = {},
     isEditScreen: Boolean = false,
     studyRecord: StudyRecord? = null,
@@ -47,35 +47,35 @@ fun WriteScreenRoute(
 
     if (isEditScreen) {
         studyRecord?.let {
-            viewModel.setEvent(WriteContract.Event.OnEditMode(it))
+            viewModel.setEvent(StudyRecordWriteContract.Event.OnEditMode(it))
         }
     }
 
-    WriteContent(
+    StudyRecordWriteContent(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
-        onCancelClicked = { viewModel.setEvent(WriteContract.Event.OnCancelClicked) },
-        onConfirmClicked = { viewModel.setEvent(WriteContract.Event.OnConfirmClicked) },
-        onTitleChanged = { viewModel.setEvent(WriteContract.Event.OnTitleChanged(it)) },
-        onContentChanged = { viewModel.setEvent(WriteContract.Event.OnContentChanged(it)) },
-        onTagPlusClicked = { viewModel.setEvent(WriteContract.Event.OnTagPlusClicked) },
-        onTagEraseClicked = { viewModel.setEvent(WriteContract.Event.OnTagEraseClicked(it)) },
-        onDialogClosed = { viewModel.setEvent(WriteContract.Event.OnDialogClose) },
-        onDialogConfirmed = { viewModel.setEvent(WriteContract.Event.OnDialogConfirmClicked) },
-        onSearchQueryChanged = { viewModel.setEvent(WriteContract.Event.OnSearchTextChanged(it)) },
-        onTagSelected = { viewModel.setEvent(WriteContract.Event.OnTagSelected(it)) },
-        onTagDeselected = { viewModel.setEvent(WriteContract.Event.OnTagDeselected(it)) },
+        onCancelClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnCancelClicked) },
+        onConfirmClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnConfirmClicked) },
+        onTitleChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTitleChanged(it)) },
+        onContentChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnContentChanged(it)) },
+        onTagPlusClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagPlusClicked) },
+        onTagEraseClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagEraseClicked(it)) },
+        onDialogClosed = { viewModel.setEvent(StudyRecordWriteContract.Event.OnDialogClose) },
+        onDialogConfirmed = { viewModel.setEvent(StudyRecordWriteContract.Event.OnDialogConfirmClicked) },
+        onSearchQueryChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnSearchTextChanged(it)) },
+        onTagSelected = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagSelected(it)) },
+        onTagDeselected = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagDeselected(it)) },
     )
 
 }
 
 
 @Composable
-fun WriteContent(
+fun StudyRecordWriteContent(
     modifier: Modifier = Modifier,
-    effect: Flow<WriteContract.Effect>,
-    uiState: WriteContract.State,
+    effect: Flow<StudyRecordWriteContract.Effect>,
+    uiState: StudyRecordWriteContract.State,
     onCancelClicked: () -> Unit,
     onConfirmClicked: () -> Unit,
     onTitleChanged: (String) -> Unit,
@@ -105,26 +105,26 @@ fun WriteContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is WriteContract.Effect.NavigateToHome -> {
+                is StudyRecordWriteContract.Effect.NavigateToHome -> {
 
                 }
 
-                is WriteContract.Effect.ShowErrorToast -> {
+                is StudyRecordWriteContract.Effect.ShowErrorToast -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is WriteContract.Effect.ShowSuccessToast -> {
+                is StudyRecordWriteContract.Effect.ShowSuccessToast -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is WriteContract.Effect.ShowTagLimitExceededToast -> {
+                is StudyRecordWriteContract.Effect.ShowTagLimitExceededToast -> {
                     Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    WriteScreen(
+    StudyRecordWriteScreen(
         modifier = modifier,
         tags = uiState.tags,
         studyRecord = uiState.studyRecord,
@@ -142,7 +142,7 @@ fun WriteContent(
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
 
 @Composable
-fun WriteScreen(
+fun StudyRecordWriteScreen(
     modifier: Modifier = Modifier,
     studyRecord: StudyRecord,
     tags: List<Tag>,
@@ -208,7 +208,7 @@ fun WriteScreen(
 private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
-            WriteScreen(
+            StudyRecordWriteScreen(
                 studyRecord = StudyRecord(),
                 tags = listOf(
                     Tag(koName = "공부", enName = "Study"),

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer
+package com.ssafy.neegongnaegong.presentation.timer.write
 
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.write.Tag
@@ -8,67 +8,67 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class WriteViewModel @Inject constructor() :
-    BaseViewModel<WriteContract.Event, WriteContract.State, WriteContract.Effect>() {
+class StudyRecordWriteViewModel @Inject constructor() :
+    BaseViewModel<StudyRecordWriteContract.Event, StudyRecordWriteContract.State, StudyRecordWriteContract.Effect>() {
 
-    override fun createInitialState(): WriteContract.State {
-        return WriteContract.State()
+    override fun createInitialState(): StudyRecordWriteContract.State {
+        return StudyRecordWriteContract.State()
     }
 
-    override fun handleEvent(event: WriteContract.Event) {
+    override fun handleEvent(event: StudyRecordWriteContract.Event) {
         when (event) {
             // 글 작성
-            is WriteContract.Event.OnTitleChanged -> {
+            is StudyRecordWriteContract.Event.OnTitleChanged -> {
                 setState { copy(studyRecord = studyRecord.copy(title = event.title)) }
             }
 
-            is WriteContract.Event.OnContentChanged -> {
+            is StudyRecordWriteContract.Event.OnContentChanged -> {
                 setState { copy(studyRecord = studyRecord.copy(content = event.content)) }
             }
 
             // 취소, 확인
-            is WriteContract.Event.OnCancelClicked -> {
+            is StudyRecordWriteContract.Event.OnCancelClicked -> {
 
             }
 
-            is WriteContract.Event.OnConfirmClicked -> {
+            is StudyRecordWriteContract.Event.OnConfirmClicked -> {
 
             }
 
             // 태그 추가,삭제
-            is WriteContract.Event.OnTagEraseClicked -> {
+            is StudyRecordWriteContract.Event.OnTagEraseClicked -> {
                 deleteTag(event.tag)
             }
 
-            is WriteContract.Event.OnTagSelected -> {
+            is StudyRecordWriteContract.Event.OnTagSelected -> {
                 selectTag(event.tag)
             }
 
-            is WriteContract.Event.OnTagDeselected -> {
+            is StudyRecordWriteContract.Event.OnTagDeselected -> {
                 deselectTag(event.tag)
             }
 
-            is WriteContract.Event.OnSearchTextChanged -> {
+            is StudyRecordWriteContract.Event.OnSearchTextChanged -> {
                 updateDialogTags(event.query)
             }
 
-            is WriteContract.Event.OnSearchTextChangedWithKmp -> {
+            is StudyRecordWriteContract.Event.OnSearchTextChangedWithKmp -> {
                 updateDialogTagsWithKmp(event.query)
             }
 
-            is WriteContract.Event.OnTagPlusClicked -> {
+            is StudyRecordWriteContract.Event.OnTagPlusClicked -> {
                 moveFromTagsToSelectedTags()
                 setState { copy(isDialogShow = true) }
             }
 
-            is WriteContract.Event.OnDialogClose -> {
+            is StudyRecordWriteContract.Event.OnDialogClose -> {
                 clearDialogTags()
                 setState { copy(isDialogShow = false) }
             }
 
-            is WriteContract.Event.OnDialogConfirmClicked -> {
+            is StudyRecordWriteContract.Event.OnDialogConfirmClicked -> {
                 if (checkTagSize()) {
-                    setEffect { WriteContract.Effect.ShowTagLimitExceededToast }
+                    setEffect { StudyRecordWriteContract.Effect.ShowTagLimitExceededToast }
                 } else {
                     moveFromSelectedTagsToTags()
                     clearDialogTags()
@@ -76,12 +76,12 @@ class WriteViewModel @Inject constructor() :
                 }
             }
 
-            is WriteContract.Event.OnDialogCancelClicked -> {
+            is StudyRecordWriteContract.Event.OnDialogCancelClicked -> {
                 setState { copy(isDialogShow = false) }
             }
 
             // edit mode
-            is WriteContract.Event.OnEditMode -> {
+            is StudyRecordWriteContract.Event.OnEditMode -> {
                 setState {
                     copy(
                         isEditMode = true,

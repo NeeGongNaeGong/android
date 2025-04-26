@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer
+package com.ssafy.neegongnaegong.presentation.timer.write
 
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.write.Tag
@@ -6,7 +6,7 @@ import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 
-class WriteContract {
+class StudyRecordWriteContract {
     sealed class Event : UiEvent {
         data object OnCancelClicked : Event()
         data object OnConfirmClicked : Event()
