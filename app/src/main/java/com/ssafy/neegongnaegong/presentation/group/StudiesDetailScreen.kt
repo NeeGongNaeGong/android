@@ -31,7 +31,6 @@ private const val TAG = "StudiesDetailScreen"
 @Composable
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
-    onOpenDrawer: () -> Unit = {},
     popBackStack: () -> Unit = {},
 ) {
     BackHandler {
@@ -44,26 +43,19 @@ fun StudiesDetailRoute(
 }
 
 @Composable
-fun StudiesContent(
-    modifier: Modifier = Modifier,
-    onOpenDrawer: () -> Unit = {},
-) {
+fun StudiesContent(modifier: Modifier = Modifier) {
     StudiesDetailScreen(
         modifier = modifier,
-        onOpenDrawer = onOpenDrawer,
         onProfileClick = {},
         profiles = listOf(),
-        popBackStack = {},
     )
 }
 
 @Composable
 fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
-    onOpenDrawer: () -> Unit = {},
     onProfileClick: (Long) -> Unit = {},
     profiles: List<ProfileData> = emptyList(),
-    popBackStack: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
@@ -113,9 +105,6 @@ fun StudiesDetailScreen(
                 onAnnouncementClick = {},
                 onVotingClick = {},
             )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 하단 여백 추가 (네비게이션 바 높이만큼)
             Spacer(modifier = Modifier.height(16.dp))
         }
 
