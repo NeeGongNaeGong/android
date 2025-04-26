@@ -18,6 +18,7 @@ class WriteContract {
         data class OnTagSelected(val tag: Tag) : Event()
         data class OnTagDeselected(val tag: Tag) : Event()
         data class OnSearchTextChanged(val query: String) : Event()
+        data class OnSearchTextChangedWithKmp(val query: String) : Event()
         data object OnTagPlusClicked : Event()
         data object OnDialogClose : Event()
         data object OnDialogConfirmClicked : Event()

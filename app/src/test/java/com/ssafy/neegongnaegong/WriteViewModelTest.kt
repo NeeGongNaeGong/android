@@ -33,14 +33,14 @@ class WriteViewModelTest {
         val viewModel = WriteViewModel()
 
         val time = measureTimeMillis {
-            repeat(1000) {
+            repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("aaaaa")
+                    WriteContract.Event.OnSearchTextChanged("aaa")
                 )
             }
         }
 
-        println("updateDialogTags 1000회 수행 시간: ${time}ms")
+        println("updateDialogTags (기본 contains) 1000회 수행 시간: ${time}ms")
     }
 
     @Test
@@ -48,14 +48,14 @@ class WriteViewModelTest {
         val viewModel = WriteViewModel()
 
         val time = measureTimeMillis {
-            repeat(1000) {
+            repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("aaaaa")
+                    WriteContract.Event.OnSearchTextChangedWithKmp("aaa")
                 )
             }
         }
 
-        println("updateDialogTags with kmp 1000회 수행 시간: ${time}ms")
+        println("updateDialogTags (KMP) 1000회 수행 시간: ${time}ms")
     }
 
 

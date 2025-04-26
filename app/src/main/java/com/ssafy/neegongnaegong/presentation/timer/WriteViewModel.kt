@@ -49,6 +49,10 @@ class WriteViewModel @Inject constructor() :
             }
 
             is WriteContract.Event.OnSearchTextChanged -> {
+                updateDialogTags(event.query)
+            }
+
+            is WriteContract.Event.OnSearchTextChangedWithKmp -> {
                 updateDialogTagsWithKmp(event.query)
             }
 
