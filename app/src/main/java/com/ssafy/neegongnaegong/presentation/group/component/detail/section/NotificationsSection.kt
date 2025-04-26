@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,28 +21,23 @@ fun NotificationsSection(
     onAnnouncementClick: () -> Unit,
     onVotingClick: () -> Unit,
 ) {
-    Surface(
-        modifier = modifier,
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            NotificationWindow(
-                modifier = Modifier.weight(1f).padding(2.dp),
-                icon = R.drawable.ic_studies_detail_announcement,
-                notification = announcements,
-                onNotificationClick = onAnnouncementClick,
-            )
-            NotificationWindow(
-                modifier = Modifier.weight(1f).padding(2.dp),
-                icon = R.drawable.ic_studies_detail_voting,
-                notification = voting,
-                onNotificationClick = onVotingClick,
-            )
-        }
+        NotificationWindow(
+            modifier = Modifier.weight(1f).padding(2.dp),
+            icon = R.drawable.ic_studies_detail_announcement,
+            notification = announcements,
+            onNotificationClick = onAnnouncementClick,
+        )
+        NotificationWindow(
+            modifier = Modifier.weight(1f).padding(2.dp),
+            icon = R.drawable.ic_studies_detail_voting,
+            notification = voting,
+            onNotificationClick = onVotingClick,
+        )
     }
-
 }
 
 @Composable
