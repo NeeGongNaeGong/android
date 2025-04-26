@@ -86,12 +86,11 @@ fun StudyRecordItem(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 record.tags.forEach { tag ->
                     Text(
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
                         text = "#$tag",
                         fontSize = 12.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .background(Color.Gray, RoundedCornerShape(4.dp))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                        color = Color.Black,
                     )
                 }
             }
