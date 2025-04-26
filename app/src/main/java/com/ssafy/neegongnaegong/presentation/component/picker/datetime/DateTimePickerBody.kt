@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker
+package com.ssafy.neegongnaegong.presentation.component.picker.datetime
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,21 +17,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
-fun DateTimePicker(
+fun DateTimePickerBody(
     modifier: Modifier = Modifier,
     dateTime: LocalDateTime,
-    isDateFocused: Boolean = false,
-    onDateClicked: () -> Unit = {},
-    isTimeFocused: Boolean = false,
-    onTimeClicked: () -> Unit = {},
-    isTimeVisible: Boolean = true,
-    enable: Boolean = true,
+    isDateFocused: Boolean,
+    isTimeFocused: Boolean,
+    onDateClicked: () -> Unit,
+    onTimeClicked: () -> Unit,
+    isTimeVisible: Boolean,
+    enable: Boolean,
 ) {
     Column(
         modifier = modifier,
@@ -41,7 +39,10 @@ fun DateTimePicker(
         Text(
             modifier = Modifier
                 .clip(RoundedCornerShape(100))
-                .clickable(onClick = onDateClicked, enabled = enable)
+                .clickable(
+                    onClick = onDateClicked,
+                    enabled = enable
+                )
                 .background(
                     color = if (isDateFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                     shape = RoundedCornerShape(100)
@@ -56,7 +57,7 @@ fun DateTimePicker(
             Text(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100))
-                    .clickable(onClick = onTimeClicked)
+                    .clickable(onClick = onTimeClicked, enabled = enable)
                     .background(
                         color = if (isTimeFocused) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
                         shape = RoundedCornerShape(100)
@@ -72,10 +73,14 @@ fun DateTimePicker(
 
 @Preview
 @Composable
-private fun PreviewDateTimePicker() {
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            DateTimePicker(dateTime = LocalDateTime.now(), isDateFocused = true)
-        }
-    }
+private fun DateTimePickerBodyPreview() {
+    DateTimePickerBody(
+        dateTime = LocalDateTime.now(),
+        onDateClicked = {},
+        onTimeClicked = {},
+        isDateFocused = false,
+        isTimeFocused = false,
+        isTimeVisible = true,
+        enable = true,
+    )
 }

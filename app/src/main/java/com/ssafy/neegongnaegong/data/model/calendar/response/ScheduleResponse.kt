@@ -10,8 +10,8 @@ data class ScheduleResponse(
     val id: Long,
     val title: String,
     val content: String?,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startAt: LocalDateTime,
+    val endAt: LocalDateTime,
     val location: String?,
     val repeatRule: RepeatRuleResponse? = null,
 ) {
@@ -22,9 +22,9 @@ data class ScheduleResponse(
             info = ScheduleInfo(
                 title = title,
                 content = content,
-                startDate = startDate,
-                endDate = endDate,
-                isAllDay = endDate.second == 59, // TODO: 추후 수정
+                startAt = startAt,
+                endAt = endAt,
+                isAllDay = endAt.second == 59, // TODO: 추후 수정
                 location = location,
                 repeatRule = repeatRule?.toDomain()
             ),

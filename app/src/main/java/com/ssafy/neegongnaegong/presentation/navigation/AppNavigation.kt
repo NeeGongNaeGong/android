@@ -1,6 +1,8 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /*
  추가 하는 방법
@@ -68,10 +70,20 @@ object AppNavigation {
 
         @Serializable
         sealed interface Calendar : Screen {
-            // 여기에 Calendar 탭에 있는 각 화면들 경로 등록하면 됩니당
-            // Study Tab의 Main 화면의 경로
             @Serializable
             data object Main : Calendar
+
+            @Serializable
+            data class Create(val date: String) : Calendar {
+                constructor(date: LocalDate) : this(DateTimeFormatter.ISO_LOCAL_DATE.format(date))
+                fun date(): LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+            }
+
+            @Serializable
+            data class Detail(val scheduleId: Long) : Calendar
+
+            @Serializable
+            data class Edit(val scheduleId: Long) : Calendar
         }
 
         @Serializable

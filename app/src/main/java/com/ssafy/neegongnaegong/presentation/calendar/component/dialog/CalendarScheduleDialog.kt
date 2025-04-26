@@ -44,7 +44,7 @@ fun CalendarScheduleDialog(
                             .fillMaxWidth(),
                         schedule = schedule,
                         showPrefix = index == 0
-                                || schedule.info.startDate.toLocalTime() != schedules[index - 1].info.startDate.toLocalTime()
+                                || schedule.info.startAt.toLocalTime() != schedules[index - 1].info.startAt.toLocalTime()
                                 || !(schedule.info.isAllDay && schedules[index - 1].info.isAllDay),
                         onClick = onScheduleClick
                     )

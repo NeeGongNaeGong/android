@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 data class CreatePersonalScheduleRequest(
     val title: String,
     val content: String?,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startAt: LocalDateTime,
+    val endAt: LocalDateTime,
     val location: String? = null,
     val repeatRule: CreateRepeatRuleRequest? = null,
 ) {
@@ -17,8 +17,8 @@ data class CreatePersonalScheduleRequest(
             CreatePersonalScheduleRequest(
                 title = schedule.title,
                 content = schedule.content,
-                startDate = schedule.startDate,
-                endDate = schedule.endDate,
+                startAt = schedule.startAt,
+                endAt = schedule.endAt,
                 location = schedule.location,
                 repeatRule = if (repeatRule != null) CreateRepeatRuleRequest.fromDomain(repeatRule) else null
             )
