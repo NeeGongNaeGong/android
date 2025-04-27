@@ -37,8 +37,8 @@ fun StudyRecordItem(
             .fillMaxWidth()
             .shadow(4.dp, RoundedCornerShape(8.dp))
             .background(Color.White, RoundedCornerShape(8.dp))
+            .clickable(onClick = { onClick(record.id) })
             .padding(16.dp)
-            .clickable { onClick(record.id) }
     ) {
         Column {
             // 제목 + 시간
@@ -84,11 +84,9 @@ fun StudyRecordItem(
             Spacer(modifier = Modifier.height(12.dp))
 
             // 태그
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 record.tags.forEach { tag ->
                     Text(
-                        modifier = Modifier
-                            .padding(horizontal = 6.dp, vertical = 2.dp),
                         text = "#$tag",
                         fontSize = 12.sp,
                         color = Color.Black,
