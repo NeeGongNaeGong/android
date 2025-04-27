@@ -34,7 +34,7 @@ fun StudyRecordList(
         groupedRecords.forEach { (date, recordsForDate) ->
             item {
                 Text(
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    modifier = Modifier.padding(vertical = 4.dp),
                     text = date,
                     style = Typography.bodySmall.copy(
                         fontSize = 18.sp

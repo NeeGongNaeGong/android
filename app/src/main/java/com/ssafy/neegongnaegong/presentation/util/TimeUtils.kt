@@ -56,4 +56,23 @@ fun String.toTimeString(): String {
     }
 }
 
+/**
+ * IOS 8601 시간을 00시 00분 으로 리턴해줍니다.
+ * 형식에 맞지 않는 문자열은 "잘못된 시간 형식" 을 리턴합니다.
+ * @return
+ */
+fun String.toHourMinuteString(): String {
+    return try {
+        val instant = Instant.parse(this)
+        val localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime()
+        val hour = localTime.hour
+        val minute = localTime.minute
+
+        val hour12 = if (hour % 12 == 0) 12 else hour % 12
+
+        "${hour12}시 ${minute}분"
+    } catch (e: Exception) {
+        "잘못된 시간 형식"
+    }
+}
 

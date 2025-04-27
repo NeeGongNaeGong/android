@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
+import com.ssafy.neegongnaegong.presentation.util.toHourMinuteString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
 
 @Composable
@@ -58,7 +59,7 @@ fun StudyRecordItem(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 val start = record.startTime.toTimeString()
-                val end = record.endTime.toTimeString()
+                val end = record.endTime.toHourMinuteString()
 
                 Text(
                     text = "$start ~ $end",
