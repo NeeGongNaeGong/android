@@ -37,7 +37,7 @@ fun StudyRecordList(
                     modifier = Modifier.padding(vertical = 8.dp),
                     text = date,
                     style = Typography.bodySmall.copy(
-                        fontSize = 20.sp
+                        fontSize = 18.sp
                     ),
                 )
             }
