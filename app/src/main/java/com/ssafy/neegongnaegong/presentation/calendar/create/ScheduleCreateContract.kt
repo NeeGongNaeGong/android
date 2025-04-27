@@ -15,7 +15,6 @@ class ScheduleCreateContract {
         data class OnContentChanged(val content: String?) : Event()
         data class OnStartDateChanged(val date: LocalDateTime) : Event()
         data class OnEndDateChanged(val date: LocalDateTime) : Event()
-        data class OnIsAllDayChanged(val isAllDay: Boolean) : Event()
         data class OnLocationChanged(val location: String?) : Event()
         data class OnRepeatRuleChanged(val repeatRule: RepeatRuleInfo?) : Event()
         data object OnCreateScheduleClicked : Event()

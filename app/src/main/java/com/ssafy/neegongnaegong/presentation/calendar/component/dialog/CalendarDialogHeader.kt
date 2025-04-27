@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.color
+import com.ssafy.neegongnaegong.presentation.util.color
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.format.TextStyle

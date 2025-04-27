@@ -3,12 +3,13 @@ package com.ssafy.neegongnaegong.presentation.calendar.create
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,7 +17,6 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
@@ -39,8 +40,9 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
 import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
-import com.ssafy.neegongnaegong.presentation.calendar.component.picker.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -73,20 +75,11 @@ fun ScheduleCreateRoute(
         onContentChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnContentChanged(it)) },
         onStartDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnStartDateChanged(it)) },
         onEndDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnEndDateChanged(it)) },
-        onIsAllDayChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnIsAllDayChanged(it)) },
         onLocationChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnLocationChanged(it)) },
         onRepeatRuleChanged = {
-            viewModel.setEvent(
-                ScheduleCreateContract.Event.OnRepeatRuleChanged(
-                    it
-                )
-            )
+            viewModel.setEvent(ScheduleCreateContract.Event.OnRepeatRuleChanged(it))
         },
-        onSaveScheduleClicked = {
-            viewModel.setEvent(
-                ScheduleCreateContract.Event.OnCreateScheduleClicked
-            )
-        },
+        onSaveScheduleClicked = { viewModel.setEvent(ScheduleCreateContract.Event.OnCreateScheduleClicked) },
         onCancelClick = { viewModel.setEvent(ScheduleCreateContract.Event.OnCancelClick) }
     )
 }
@@ -100,7 +93,6 @@ fun ScheduleCreateContent(
     onContentChanged: (String) -> Unit,
     onStartDateChanged: (LocalDateTime) -> Unit,
     onEndDateChanged: (LocalDateTime) -> Unit,
-    onIsAllDayChanged: (Boolean) -> Unit,
     onLocationChanged: (String) -> Unit,
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
@@ -125,29 +117,24 @@ fun ScheduleCreateContent(
         }
     }
 
-    Scaffold(
-        topBar = { CalendarTopAppBar() }
-    ) { innerPadding ->
-        ScheduleCreateScreen(
-            modifier = modifier.padding(innerPadding),
-            title = uiState.schedule.title,
-            content = uiState.schedule.content,
-            startDate = uiState.schedule.startDate,
-            endDate = uiState.schedule.endDate,
-            isAllDay = uiState.schedule.isAllDay,
-            location = uiState.schedule.location,
-            repeatRule = uiState.repeatRule,
-            onTitleChange = onTitleChanged,
-            onContentChange = onContentChanged,
-            onRepeatRuleChanged = onRepeatRuleChanged,
-            onStartDateChange = onStartDateChanged,
-            onEndDateChange = onEndDateChanged,
-            onIsAllDayChange = onIsAllDayChanged,
-            onLocationChange = onLocationChanged,
-            onSaveScheduleClicked = onSaveScheduleClicked,
-            onCancelClick = onCancelClick
-        )
-    }
+    ScheduleCreateScreen(
+        modifier = modifier,
+        title = uiState.schedule.title,
+        content = uiState.schedule.content,
+        startDate = uiState.schedule.startAt,
+        endDate = uiState.schedule.endAt,
+        isAllDay = uiState.schedule.isAllDay,
+        location = uiState.schedule.location,
+        repeatRule = uiState.repeatRule,
+        onTitleChange = onTitleChanged,
+        onContentChange = onContentChanged,
+        onRepeatRuleChanged = onRepeatRuleChanged,
+        onStartDateChange = onStartDateChanged,
+        onEndDateChange = onEndDateChanged,
+        onLocationChange = onLocationChanged,
+        onSaveScheduleClicked = onSaveScheduleClicked,
+        onCancelClick = onCancelClick
+    )
 
     if (uiState.isOnCreate) LoadingDialog()
 }
@@ -168,17 +155,26 @@ fun ScheduleCreateScreen(
     onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
     onStartDateChange: (LocalDateTime) -> Unit,
     onEndDateChange: (LocalDateTime) -> Unit,
-    onIsAllDayChange: (Boolean) -> Unit,
     onSaveScheduleClicked: (UpdateType) -> Unit,
     onCancelClick: () -> Unit,
 ) {
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
+
+    val dateTimeRangePickerState = rememberDateTimeRangePickerState(
+        startDateTime = startDate,
+        endDateTime = endDate,
+        isAllDay = isAllDay
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier)
     ) {
+        Box(modifier = Modifier.background(Color.Red)) {
+            CalendarTopAppBar()
+        }
+
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -191,12 +187,9 @@ fun ScheduleCreateScreen(
                 placeHolder = "제목"
             )
             DateTimeRangePicker(
-                startDateTime = startDate,
-                endDateTime = endDate,
-                isAllDay = isAllDay,
+                state = dateTimeRangePickerState,
                 onStartDateTimeChange = onStartDateChange,
                 onEndDateTimeChange = onEndDateChange,
-                onIsAllDayToggle = onIsAllDayChange,
             )
             ScheduleEditText(
                 modifier = Modifier.fillMaxWidth(),
@@ -279,7 +272,6 @@ private fun PreviewScheduleEditScreen() {
                 onRepeatRuleChanged = { },
                 onStartDateChange = { },
                 onEndDateChange = { },
-                onIsAllDayChange = { },
                 onSaveScheduleClicked = { },
                 onCancelClick = { }
             )

@@ -66,8 +66,8 @@ fun ScheduleSummaryPreview() {
             info = ScheduleInfo(
                 title = "Meeting",
                 content = "Meeting",
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now().plusHours(1),
+                startAt = LocalDateTime.now(),
+                endAt = LocalDateTime.now().plusHours(1),
                 isAllDay = false,
             )
         ),
@@ -77,8 +77,8 @@ fun ScheduleSummaryPreview() {
             info = ScheduleInfo(
                 title = "Lunch",
                 content = "Lunch",
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now().plusHours(1),
+                startAt = LocalDateTime.now(),
+                endAt = LocalDateTime.now().plusHours(1),
                 isAllDay = false,
             )
         ),

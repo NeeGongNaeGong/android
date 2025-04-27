@@ -1,9 +1,11 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component.picker
+package com.ssafy.neegongnaegong.presentation.component.picker.date.range
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -15,25 +17,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.color
-import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.color
+import com.ssafy.neegongnaegong.presentation.util.getTextHeightDp
 import java.time.LocalDate
 
 @Composable
-fun DatePickerCell(
+fun DateRangePickerCell(
     modifier: Modifier = Modifier,
     date: LocalDate,
-    startDate: LocalDate?,
-    endDate: LocalDate?,
-    onSelect: (LocalDate) -> Unit = { },
+    startDate: LocalDate,
+    endDate: LocalDate,
+    onSelected: (LocalDate) -> Unit = { },
 ) {
-    val isSelected = if (startDate == null || endDate == null) {
-        false
-    } else {
+    val isSelected =
         date.isAfter(startDate) && date.isBefore(endDate) || date == startDate || date == endDate
-    }
 
-    DatePickerCell(
+    DateRangePickerCell(
         modifier = modifier,
         date = date.dayOfMonth,
         isSelected = isSelected,
@@ -43,32 +42,31 @@ fun DatePickerCell(
             isSelected -> MaterialTheme.colorScheme.surface
             else -> date.dayOfWeek.color
         },
-        onSelect = { onSelect(date) },
+        onSelected = { onSelected(date) },
     )
 }
 
 @Composable
-fun DatePickerCell(
+fun DateRangePickerCell(
     modifier: Modifier = Modifier,
     date: Int,
     isSelected: Boolean = false,
     isLeftEdge: Boolean = false,
     isRightEdge: Boolean = false,
     dateColor: Color = MaterialTheme.colorScheme.onBackground,
-    onSelect: () -> Unit = {},
+    onSelected: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier.clickable { onSelect() },
+        modifier = modifier.clickable { onSelected() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
-        Text(
-            modifier = Modifier
+        val height = getTextHeightDp("", Nee.typography.labelMedium) + 8.dp
+        Box(
+            Modifier
                 .weight(1f)
-                .background(if (isSelected && !isLeftEdge) MaterialTheme.colorScheme.primary else Color.Transparent)
-                .padding(4.dp),
-            text = "",
-            style = NeeGongNaeGongTheme.typography.labelMedium,
+                .background(if (!isLeftEdge && isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                .height(height)
         )
         Text(
             modifier = Modifier
@@ -87,26 +85,29 @@ fun DatePickerCell(
             color = dateColor,
             textAlign = TextAlign.Center,
         )
-        Text(
-            modifier = Modifier
+        Box(
+            Modifier
                 .weight(1f)
-                .background(if (isSelected && !isRightEdge) MaterialTheme.colorScheme.primary else Color.Transparent)
-                .padding(4.dp),
-            text = "",
-            style = NeeGongNaeGongTheme.typography.labelMedium,
+                .background(if (!isRightEdge && isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                .height(height)
         )
     }
 }
 
 @Preview
 @Composable
-private fun DatePickerCellPreview() {
-    DatePickerCell(
-        date = 1,
-        dateColor = Color.Black,
-        isSelected = true,
-        isLeftEdge = true,
-        isRightEdge = false,
-        onSelect = { },
-    )
+private fun DateRangePickerCellPreview() {
+    Row {
+        repeat(7) {
+            val date = it + 1
+            DateRangePickerCell(
+                modifier = Modifier.weight(1f),
+                date = date,
+                isLeftEdge = date == 2,
+                isRightEdge = date == 4,
+                isSelected = date in 2..4,
+                dateColor = Color.Unspecified
+            )
+        }
+    }
 }

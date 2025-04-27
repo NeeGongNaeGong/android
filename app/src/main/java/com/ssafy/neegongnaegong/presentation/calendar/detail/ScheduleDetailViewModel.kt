@@ -45,7 +45,7 @@ class ScheduleDetailViewModel @Inject constructor(
             deletePersonalSchedulesUseCase(
                 schedule.id,
                 type,
-                schedule.info.startDate.toLocalDate()
+                schedule.info.startAt.toLocalDate()
             ).withLoading {
                 setState { copy(isOnDelete = it) }
             }.safeCollect {
