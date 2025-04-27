@@ -50,7 +50,7 @@ fun DateTimePickerBody(
                 .padding(4.dp),
             text = DateTimeFormatter.ofPattern("M월 d일 (E)", Locale.KOREAN).format(dateTime),
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium
+            style = NeeGongNaeGongTheme.typography.bodyMedium
         )
         AnimatedVisibility(isTimeVisible) {
             Spacer(modifier = Modifier.height(8.dp))
@@ -65,7 +65,7 @@ fun DateTimePickerBody(
                     .padding(4.dp),
                 text = DateTimeFormatter.ofPattern("a h:mm", Locale.KOREAN).format(dateTime),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodyMedium,
+                style = NeeGongNaeGongTheme.typography.bodyMedium,
             )
         }
     }

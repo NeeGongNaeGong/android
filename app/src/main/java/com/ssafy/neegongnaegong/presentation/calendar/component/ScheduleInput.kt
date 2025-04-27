@@ -42,14 +42,14 @@ fun ScheduleInput(
             singleLine = true,
             value = textState,
             onValueChange = { textState = it },
-            textStyle = MaterialTheme.typography.bodySmall,
+            textStyle = NeeGongNaeGongTheme.typography.bodySmall,
             placeholder = {
                 Text(
                     text = "%02d월 %02d일 일정 추가".format(
                         selectedDate.monthValue,
                         selectedDate.dayOfMonth
                     ),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = NeeGongNaeGongTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             },

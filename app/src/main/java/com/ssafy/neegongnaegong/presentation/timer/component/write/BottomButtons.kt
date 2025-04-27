@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
@@ -39,7 +40,7 @@ fun BottomButtons(
         ) {
             Text(
                 text = "취소",
-                style = Typography.titleLarge.copy(
+                style = NeeGongNaeGongTheme.typography.titleLarge.copy(
                     fontSize = 16.sp
                 )
             )
@@ -59,7 +60,7 @@ fun BottomButtons(
         ) {
             Text(
                 text = "확인",
-                style = Typography.titleLarge.copy(
+                style = NeeGongNaeGongTheme.typography.titleLarge.copy(
                     fontSize = 16.sp
                 )
             )

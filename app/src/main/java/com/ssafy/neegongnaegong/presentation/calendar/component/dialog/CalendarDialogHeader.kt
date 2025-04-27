@@ -27,14 +27,14 @@ fun CalendarDialogHeader(modifier: Modifier = Modifier, date: LocalDate) {
         Text(
             modifier = Modifier.alignByBaseline(),
             text = "${date.dayOfMonth}", color = date.dayOfWeek.color,
-            style = MaterialTheme.typography.titleLarge
+            style = NeeGongNaeGongTheme.typography.titleLarge
         )
         Spacer(Modifier.width(8.dp))
         Text(
             modifier = Modifier.alignByBaseline(),
             text = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN),
             color = date.dayOfWeek.color,
-            style = MaterialTheme.typography.titleSmall,
+            style = NeeGongNaeGongTheme.typography.titleSmall,
         )
     }
 }

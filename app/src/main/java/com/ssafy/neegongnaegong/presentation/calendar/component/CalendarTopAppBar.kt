@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,7 +19,7 @@ fun CalendarTopAppBar(title: String = "") {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
     TopAppBar(
-        title = { Text(title, style = MaterialTheme.typography.titleMedium) },
+        title = { Text(title, style = NeeGongNaeGongTheme.typography.titleMedium) },
         navigationIcon = {
             IconButton(onClick = { backDispatcher?.onBackPressed() }) {
                 Icon(
