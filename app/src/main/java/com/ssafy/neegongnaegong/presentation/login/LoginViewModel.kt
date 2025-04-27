@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.presentation.login
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.auth.LoginUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
-import com.ssafy.neegongnaegong.presentation.util.AuthDestinationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -28,7 +27,8 @@ class LoginViewModel @Inject constructor(
 
     private fun login(idToken: String) = viewModelScope.launch {
         loginUseCase(idToken, "").safeCollect {
-            AuthDestinationManager.valid()
+            // 로그인 성공했으면 MainScreen으로 Navigate하는 이벤트 emit
+            setEffect { LoginContract.Effect.NavigateToMainScreen }
         }
     }
 
@@ -37,7 +37,6 @@ class LoginViewModel @Inject constructor(
             collect { value -> block(value) }
         }.onFailure { exception ->
             exception.printStackTrace()
-            AuthDestinationManager.invalid()
             setEffect {
                 LoginContract.Effect.ShowErrorSnackBar(exception.message ?: "에러 발생")
             }
