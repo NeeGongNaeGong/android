@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.presentation.personal
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -122,6 +121,7 @@ fun PersonalContent(
         tags = uiState.tags,
         onTagPlusClicked = onTagPlusClicked,
         onTagEraseClicked = onTagEraseClicked,
+        selectedRecordsByTag = uiState.selectedRecordsByTag,
         // calendar
         onDateSelected = onDateSelected,
         selectedRecordsByDate = uiState.selectedRecordsByDate,
@@ -136,6 +136,7 @@ fun PersonalScreen(
     modifier: Modifier = Modifier,
     studyRecords: List<StudyRecord>,
     tags: List<Tag>,
+    selectedRecordsByTag: List<StudyRecord>,
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
     onDateSelected: (String) -> Unit,
@@ -189,7 +190,7 @@ fun PersonalScreen(
             when (page) {
                 0 -> PersonalByTagScreen(
                     tags = tags,
-                    studyRecords = studyRecords,
+                    studyRecords = if (tags.isEmpty()) studyRecords else selectedRecordsByTag,
                     onTagPlusClicked = onTagPlusClicked,
                     onTagEraseClicked = onTagEraseClicked,
                     navigateToEditScreen = navigateToEditScreen
@@ -219,7 +220,8 @@ fun PersonalScreenPreview() {
         onDateSelected = {},
         selectedRecordsByDate = PersonalPreviewDataProvider().getStudyRecords(),
         navigateToEditScreen = {},
-        selectedDate = "2024-01-01"
+        selectedDate = "2024-01-01",
+        selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords()
     )
 }
 

@@ -72,6 +72,7 @@ class PersonalViewModel @Inject constructor() :
                 } else {
                     moveFromSelectedTagsToTags()
                     clearDialogTags()
+                    updateSelectedRecordsByTag()
                     setState { copy(isDialogShow = false) }
                 }
             }
@@ -117,6 +118,16 @@ class PersonalViewModel @Inject constructor() :
 
 
     //tag
+
+    private fun updateSelectedRecordsByTag() {
+        val filteredRecords = uiState.value.studyRecords.filter { record ->
+            uiState.value.tags.any { tag -> record.tags.contains(tag.koName) }
+        }
+
+        setState {
+            copy(selectedRecordsByTag = filteredRecords)
+        }
+    }
 
     private fun checkTagSize(): Boolean {
         val tags = uiState.value.tags
