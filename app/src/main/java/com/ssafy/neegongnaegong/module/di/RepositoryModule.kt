@@ -19,23 +19,34 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
-    @Singleton
-    @Binds
-    fun bindGitHubRepository(gitHubRepositoryImpl: GitHubRepositoryImpl): GitHubRepository
 
-    @Singleton
     @Binds
-    fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
+    @Singleton
+    fun bindGitHubRepository(
+        gitHubRepositoryImpl: GitHubRepositoryImpl
+    ): GitHubRepository
 
-    @Singleton
     @Binds
-    fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
+    @Singleton
+    fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 
-    @Singleton
     @Binds
-    fun bindStudiesRepository(studiesRepositoryImpl: StudiesRepositoryImpl): StudiesRepository
+    @Singleton
+    fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 
-    @Singleton
     @Binds
-    fun bindCalendarRepository(calendarRepositoryImpl: CalendarRepositoryImpl): CalendarRepository
+    @Singleton
+    fun bindStudiesRepository(
+        studiesRepositoryImpl: StudiesRepositoryImpl
+    ): StudiesRepository
+
+    @Binds
+    @Singleton
+    fun bindCalendarRepository(
+        calendarRepositoryImpl: CalendarRepositoryImpl
+    ): CalendarRepository
 }
