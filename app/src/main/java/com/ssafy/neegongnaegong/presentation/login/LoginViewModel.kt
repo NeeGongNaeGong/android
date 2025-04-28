@@ -16,11 +16,7 @@ class LoginViewModel @Inject constructor(
     override fun handleEvent(event: LoginContract.Event) {
         when (event) {
             is LoginContract.Event.OnGoogleLoginSuccess -> login(event.idToken)
-            is LoginContract.Event.OnGoogleLoginFailure -> {
-                setEffect {
-                    LoginContract.Effect.ShowErrorSnackBar(event.exception.message ?: "에러 발생")
-                }
-            }
+            is LoginContract.Event.OnGoogleLoginFailure -> showErrorMessage(event.exception.message ?: "에러 발생")
         }
     }
 

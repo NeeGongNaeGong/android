@@ -76,7 +76,7 @@ class ScheduleEditViewModel @Inject constructor(
     private fun saveSchedule(type: UpdateType) = viewModelScope.launch {
         with(uiState.value) {
             if (id == null) {
-                setEffect { ScheduleEditContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
+                showErrorMessage("데이터가 회손되었습니다.")
             } else {
                 updatePersonalSchedulesUseCase(
                     id = id,

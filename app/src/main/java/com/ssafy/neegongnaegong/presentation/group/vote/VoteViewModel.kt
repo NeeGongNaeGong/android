@@ -32,7 +32,7 @@ constructor(
         when (event) {
             VoteContract.Event.OnClickAddVoteItemButton -> {
                 if (uiState.value.voteItemList.size == 10) {
-                    setEffect { VoteContract.Effect.ShowToast("항목은 최대 10개까지만 가능합니다!") }
+                    showWarningMessage("항목은 최대 10개까지만 가능합니다!")
                 } else {
                     setState { copy(voteItemList = voteItemList.add("")) }
                 }

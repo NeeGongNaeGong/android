@@ -9,13 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,8 +24,6 @@ import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.login.component.GoogleLoginButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @Composable
 fun LoginRoute(
@@ -59,20 +53,9 @@ fun LoginContent(
     onGoogleLoginSuccess: (String) -> Unit,
     onGoogleLoginFailure: (Throwable) -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is LoginContract.Effect.ShowErrorSnackBar -> scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = "확인",
-                        duration = SnackbarDuration.Short
-                    )
-                }
-
                 LoginContract.Effect.NavigateToMainScreen -> navigateToMain()
             }
         }

@@ -19,19 +19,19 @@ class SnackbarManager @Inject constructor() {
     private val _message = MutableSharedFlow<Message>()
     val message: SharedFlow<Message> = _message
 
-    suspend fun showToast(message: String, type: Type = Type.None) {
+    suspend fun showMessage(message: String, type: Type = Type.None) {
         _message.emit(Message(message, type))
     }
 
-    suspend fun showSuccessToast(message: String) {
-        showToast(message, Type.Success)
+    suspend fun showSuccessMessage(message: String) {
+        showMessage(message, Type.Success)
     }
 
-    suspend fun showWarningToast(message: String) {
-        showToast(message, Type.Warning)
+    suspend fun showWarningMessage(message: String) {
+        showMessage(message, Type.Warning)
     }
 
-    suspend fun showErrorToast(message: String) {
-        showToast(message, Type.Error)
+    suspend fun showErrorMessage(message: String) {
+        showMessage(message, Type.Error)
     }
 }

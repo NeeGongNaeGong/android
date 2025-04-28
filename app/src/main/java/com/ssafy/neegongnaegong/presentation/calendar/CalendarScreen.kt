@@ -101,14 +101,6 @@ fun CalendarContent(
                 is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
                     effect.date
                 )
-
-                is CalendarContract.Effect.ShowErrorSnackBar -> scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = "확인",
-                        duration = SnackbarDuration.Short
-                    )
-                }
             }
         }
     }

@@ -34,7 +34,6 @@ class CalendarContract {
     ) : UiState
 
     sealed class Effect : UiEffect {
-        data class ShowErrorSnackBar(val message: String) : Effect()
         data class NavigateToCreateScheduleScreen(val date: LocalDate) : Effect()
         data class NavigateToScheduleDetailScreen(val schedule: Schedule) : Effect()
         data class NavigateToScheduleEditScreen(val schedule: Schedule) : Effect()

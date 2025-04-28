@@ -97,6 +97,22 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         }
     }
 
+    protected fun showMessage(message: String) = viewModelScope.launch {
+        snackbarManager.showMessage(message)
+    }
+
+    protected fun showSuccessMessage(message: String) = viewModelScope.launch {
+        snackbarManager.showSuccessMessage(message)
+    }
+
+    protected fun showWarningMessage(message: String) = viewModelScope.launch {
+        snackbarManager.showWarningMessage(message)
+    }
+
+    protected fun showErrorMessage(message: String) = viewModelScope.launch {
+        snackbarManager.showErrorMessage(message)
+    }
+
     /**
      * safeCollect 중 발생한 예외를 처리하는 함수
      * 공통 에러를 처리하고, 추가적인 에러 처리는 handleErrorContext에 전달
@@ -111,16 +127,16 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     private fun _handleException(e: Throwable, errorContext: ErrorContext) {
         when (e) {
             is AuthException.InvalidTokenException -> viewModelScope.launch {
-                snackbarManager.showErrorToast(e.message)
+                showErrorMessage(e.message)
                 authManager.invalid()
             }
 
             is ApiException.ServerException -> viewModelScope.launch {
-                snackbarManager.showErrorToast(e.message)
+                showErrorMessage(e.message)
             }
 
             is ApiException.NetworkException -> viewModelScope.launch {
-                snackbarManager.showErrorToast(e.message)
+                showErrorMessage(e.message)
             }
         }
         handleException(e, errorContext)
