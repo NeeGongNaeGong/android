@@ -1,13 +1,13 @@
 package com.ssafy.neegongnaegong.presentation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,9 +40,10 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomNavigationBar = currentDestination?.hierarchy?.any {
-        it.hasRoute(AppNavigation.Tab.Auth::class)
-    } == false
+    val showBottomNavigationBar =
+        currentDestination?.hierarchy?.any {
+            it.hasRoute(AppNavigation.Tab.Auth::class)
+        } == false
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -108,7 +109,6 @@ fun MainScreen() {
         }
     }
 }
-
 
 // 각 화면에 대한 Composable 함수들
 @Composable
