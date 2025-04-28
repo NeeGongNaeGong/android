@@ -61,7 +61,7 @@ fun DateRangePickerCell(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
-        val height = getTextHeightDp("", MaterialTheme.typography.labelMedium) + 8.dp
+        val height = getTextHeightDp("", Nee.typography.labelMedium) + 8.dp
         Box(
             Modifier
                 .weight(1f)
@@ -81,7 +81,7 @@ fun DateRangePickerCell(
                 )
                 .padding(vertical = 4.dp, horizontal = 8.dp),
             text = date.toString(),
-            style = MaterialTheme.typography.labelMedium,
+            style = NeeGongNaeGongTheme.typography.labelMedium,
             color = dateColor,
             textAlign = TextAlign.Center,
         )

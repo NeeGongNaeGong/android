@@ -231,7 +231,7 @@ fun ScheduleEditScreen(
             ) {
                 Text(
                     "취소",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -241,7 +241,7 @@ fun ScheduleEditScreen(
             ) {
                 Text(
                     "확인",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }

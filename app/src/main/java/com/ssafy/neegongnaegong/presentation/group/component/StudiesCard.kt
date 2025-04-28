@@ -93,7 +93,7 @@ fun StudiesCard(
                     Text(
                         text = category,
                         style =
-                            Typography.bodyMedium.copy(
+                            NeeGongNaeGongTheme.typography.bodyMedium.copy(
                                 color = Color(0xFFE53935),
                             ),
                     )
@@ -103,7 +103,7 @@ fun StudiesCard(
                     // 그룹 제목
                     Text(
                         text = title,
-                        style = Typography.titleMedium.copy(fontSize = 16.sp), // 제목 크기 약간 축소
+                        style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 16.sp), // 제목 크기 약간 축소
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
@@ -112,12 +112,12 @@ fun StudiesCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = goalTime,
-                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
+                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = memberInfo,
-                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
+                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
                         )
                     }
 
@@ -127,12 +127,12 @@ fun StudiesCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = leader,
-                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
+                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = startInfo,
-                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
+                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
                         )
                     }
                 }
@@ -173,7 +173,7 @@ fun StudiesCard(
             ) {
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 10.sp),
+                    style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 10.sp),
                     modifier =
                         Modifier
                             .weight(1f)

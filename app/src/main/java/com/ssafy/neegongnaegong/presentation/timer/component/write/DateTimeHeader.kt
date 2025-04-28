@@ -10,8 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun DateTimeHeader(
@@ -27,13 +26,13 @@ fun DateTimeHeader(
     ) {
         Text(
             text = dateText,
-            style = Typography.titleMedium,
-            color = LightColors.Black,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
             fontSize = 20.sp,
         )
         Text(
             text = timeText,
-            style = Typography.bodySmall,
+            style = NeeGongNaeGongTheme.typography.bodySmall,
             fontSize = 14.sp,
         )
     }

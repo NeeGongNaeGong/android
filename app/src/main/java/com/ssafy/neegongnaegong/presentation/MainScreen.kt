@@ -1,8 +1,6 @@
 package com.ssafy.neegongnaegong.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -42,10 +40,9 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomNavigationBar =
-        currentDestination?.hierarchy?.any {
-            it.hasRoute(AppNavigation.Login::class)
-        } == false
+    val showBottomNavigationBar = currentDestination?.hierarchy?.any {
+        it.hasRoute(AppNavigation.Tab.Auth::class)
+    } == false
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -112,13 +109,14 @@ fun MainScreen() {
     }
 }
 
+
 // 각 화면에 대한 Composable 함수들
 @Composable
 fun StudiesScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "스터디 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }
@@ -128,7 +126,7 @@ fun PersonalScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "개인 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }
@@ -138,7 +136,7 @@ fun CalendarScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "캘린더 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }
@@ -148,7 +146,7 @@ fun ProfileScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = "마이페이지 화면",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NeeGongNaeGongTheme.typography.titleMedium,
         )
     }
 }

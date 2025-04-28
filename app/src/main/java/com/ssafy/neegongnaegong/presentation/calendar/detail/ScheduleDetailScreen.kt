@@ -190,7 +190,7 @@ fun ScheduleDetailScreen(
             ) {
                 Text(
                     "삭제",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -200,7 +200,7 @@ fun ScheduleDetailScreen(
             ) {
                 Text(
                     "수정",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
