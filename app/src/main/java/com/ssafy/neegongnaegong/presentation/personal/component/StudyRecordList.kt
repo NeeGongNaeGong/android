@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.toDateString
 
@@ -36,7 +37,7 @@ fun StudyRecordList(
                 Text(
                     modifier = Modifier.padding(vertical = 4.dp),
                     text = date,
-                    style = Typography.bodySmall.copy(
+                    style = NeeGongNaeGongTheme.typography.bodySmall.copy(
                         fontSize = 18.sp
                     ),
                 )

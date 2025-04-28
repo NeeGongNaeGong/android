@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.toHourMinuteString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
@@ -51,7 +52,7 @@ fun StudyRecordItem(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = record.title,
-                    style = Typography.titleMedium.copy(fontSize = 20.sp),
+                    style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 20.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -63,7 +64,7 @@ fun StudyRecordItem(
 
                 Text(
                     text = "$start ~ $end",
-                    style = Typography.bodySmall.copy(
+                    style =  NeeGongNaeGongTheme.typography.bodySmall.copy(
                         fontSize = 10.sp,
                         color = Color.Gray
                     )
@@ -76,7 +77,7 @@ fun StudyRecordItem(
             // 내용
             Text(
                 text = record.content,
-                style = Typography.bodySmall.copy(fontSize = 12.sp),
+                style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp),
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )

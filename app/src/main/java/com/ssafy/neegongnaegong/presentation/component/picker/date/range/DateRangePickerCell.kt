@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.color
 import com.ssafy.neegongnaegong.presentation.util.getTextHeightDp
 import java.time.LocalDate
@@ -61,7 +62,7 @@ fun DateRangePickerCell(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
-        val height = getTextHeightDp("", Nee.typography.labelMedium) + 8.dp
+        val height = getTextHeightDp("", NeeGongNaeGongTheme.typography.labelMedium) + 8.dp
         Box(
             Modifier
                 .weight(1f)
