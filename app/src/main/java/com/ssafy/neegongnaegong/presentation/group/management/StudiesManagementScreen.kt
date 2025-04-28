@@ -63,7 +63,6 @@ import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 private const val TAG = "StudiesManagementScreen"
 
@@ -127,7 +126,7 @@ fun StudiesManagementScreen(
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp),
                         text = stringResource(R.string.studies_management_title),
-                        style = Typography.titleMedium,
+                        style = NeeGongNaeGongTheme.typography.titleMedium,
                     )
                 },
                 onNavigationClick = popBackStack,
@@ -145,7 +144,7 @@ fun StudiesManagementScreen(
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = stringResource(R.string.studies_management_study_name),
-                    style = Typography.titleSmall,
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
                 )
 
                 OutlinedTextField(
@@ -166,7 +165,7 @@ fun StudiesManagementScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.studies_management_public_private),
-                        style = Typography.titleSmall,
+                        style = NeeGongNaeGongTheme.typography.titleSmall,
                     )
                     Switch(
                         checked = isPublic,
@@ -181,7 +180,7 @@ fun StudiesManagementScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.studies_management_max_members),
-                        style = Typography.titleSmall,
+                        style = NeeGongNaeGongTheme.typography.titleSmall,
                     )
 
                     Box {
@@ -202,7 +201,7 @@ fun StudiesManagementScreen(
                             ) {
                                 Text(
                                     text = "$selectedMembers 명",
-                                    style = Typography.bodyLarge,
+                                    style = NeeGongNaeGongTheme.typography.bodyLarge,
                                 )
 
                                 Icon(
@@ -240,7 +239,7 @@ fun StudiesManagementScreen(
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = stringResource(R.string.studies_management_select_category),
-                    style = Typography.titleSmall,
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
                 )
 
                 FlowRow(
@@ -263,7 +262,7 @@ fun StudiesManagementScreen(
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = stringResource(R.string.studies_management_select_tags),
-                    style = Typography.titleSmall,
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
                 )
 
                 FlowRow(
@@ -289,7 +288,8 @@ fun StudiesManagementScreen(
                                 .background(Color.LightGray.copy(alpha = 0.5f))
                                 .clickable {
                                     // TODO: 태그 추가 다이얼로그 표시
-                                }.padding(horizontal = 12.dp, vertical = 6.dp),
+                                }
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -306,7 +306,7 @@ fun StudiesManagementScreen(
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = stringResource(R.string.studies_management_description),
-                    style = Typography.titleSmall,
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
                 )
 
                 OutlinedTextField(
@@ -319,7 +319,7 @@ fun StudiesManagementScreen(
                     placeholder = { Text("스터디 설명을 입력하세요") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     maxLines = 3,
-                    textStyle = Typography.bodySmall,
+                    textStyle = NeeGongNaeGongTheme.typography.bodySmall,
                 )
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
@@ -327,7 +327,7 @@ fun StudiesManagementScreen(
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = stringResource(R.string.studies_management_add_photo),
-                    style = Typography.titleSmall,
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
                 )
 
                 Row(
@@ -387,7 +387,8 @@ fun StudiesManagementScreen(
                                         .background(
                                             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
                                             shape = CircleShape,
-                                        ).clickable { selectedImageUri = null },
+                                        )
+                                        .clickable { selectedImageUri = null },
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Icon(
@@ -443,7 +444,7 @@ fun StudiesManagementScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.studies_management_create),
-                        style = Typography.labelMedium,
+                        style = NeeGongNaeGongTheme.typography.labelMedium,
                     )
                 }
 
@@ -469,7 +470,8 @@ fun TagChip(
                     } else {
                         Color.LightGray.copy(alpha = 0.5f)
                     },
-                ).clickable(onClick = onClick)
+                )
+                .clickable(onClick = onClick)
                 .padding(horizontal = 12.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -481,7 +483,7 @@ fun TagChip(
                 } else {
                     MaterialTheme.colorScheme.onSurface
                 },
-            style = MaterialTheme.typography.bodyMedium,
+            style = NeeGongNaeGongTheme.typography.bodyMedium,
         )
     }
 }

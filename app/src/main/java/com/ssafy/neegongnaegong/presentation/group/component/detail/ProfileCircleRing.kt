@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.delay
 
@@ -195,7 +196,7 @@ fun ProfileCircleRing(
         Spacer(Modifier.height(5.dp))
         Text(
             text = name,
-            style = Typography.labelSmall,
+            style = NeeGongNaeGongTheme.typography.labelSmall,
         )
     }
 }

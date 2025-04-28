@@ -59,13 +59,13 @@ fun DrawerMenuItem(
         Column {
             Text(
                 text = title,
-                style = Typography.bodyLarge,
+                style = NeeGongNaeGongTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
             if (subtitle != null) {
                 Text(
                     text = subtitle,
-                    style = Typography.bodySmall,
+                    style = NeeGongNaeGongTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }

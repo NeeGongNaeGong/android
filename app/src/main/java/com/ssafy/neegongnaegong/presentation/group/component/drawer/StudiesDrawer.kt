@@ -96,11 +96,11 @@ fun StudiesDrawer(
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
                     text = "취업 스터디",
-                    style = Typography.bodyLarge,
+                    style = NeeGongNaeGongTheme.typography.bodyLarge,
                 )
                 Text(
                     text = "취업을 향해서...",
-                    style = Typography.labelMedium,
+                    style = NeeGongNaeGongTheme.typography.labelMedium,
                 )
             }
         }
@@ -152,13 +152,13 @@ fun StudiesDrawer(
         ) {
             Text(
                 text = stringResource(R.string.studies_drw_my_studies),
-                style = Typography.titleMedium,
+                style = NeeGongNaeGongTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
             )
             Text(
                 text = stringResource(R.string.studies_drw_see_more),
-                style = Typography.bodySmall,
+                style = NeeGongNaeGongTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.clickable { onMyStudyClick() },
             )

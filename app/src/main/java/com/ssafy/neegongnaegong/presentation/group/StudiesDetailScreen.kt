@@ -68,7 +68,7 @@ fun StudiesDetailScreen(
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
                     text = "수학 스터디",
-                    style = Typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                 )
             },
             navigationType = TopAppBarNavigationType.Menu,

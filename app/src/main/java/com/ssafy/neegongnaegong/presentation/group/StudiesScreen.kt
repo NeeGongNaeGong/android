@@ -112,7 +112,7 @@ fun StudiesScreen(
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp),
                         text = "스터디 목록",
-                        style = Typography.bodyMedium,
+                        style = NeeGongNaeGongTheme.typography.bodyMedium,
                     )
                 },
                 navigationType = TopAppBarNavigationType.None,

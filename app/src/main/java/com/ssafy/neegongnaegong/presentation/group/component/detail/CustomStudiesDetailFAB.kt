@@ -132,7 +132,7 @@ fun CustomStudiesSubFAB(
             Text(
                 text = textLabel,
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = Typography.labelMedium,
+                style = NeeGongNaeGongTheme.typography.labelMedium,
                 modifier =
                     modifier
                         .background(
