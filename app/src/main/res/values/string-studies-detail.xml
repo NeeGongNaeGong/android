@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="studies_detail_fab_calender">그룹 캘린더</string>
-    <string name="studies_detail_fab_voting">투표 만들기</string>
-    <string name="studies_detail_fab_announcement">공지 만들기</string>
-</resources>

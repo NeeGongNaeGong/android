@@ -5,9 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ssafy.neegongnaegong.presentation.group.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
-import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
 
 /**
@@ -28,31 +26,13 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             StudiesRoute(
                 modifier = Modifier,
                 popBackStack = { },
-                navigateToStudiesDetail = {
-                    navController.navigate(AppNavigation.Screen.Studies.StudiesDetail)
-                },
-                navigateToStudiesManagement = {
-                    navController.navigate(AppNavigation.Screen.Studies.Management)
-                },
-            )
-        }
-
-        composable<AppNavigation.Screen.Studies.StudiesDetail> {
-            StudiesDetailRoute(
-                modifier = Modifier,
-                popBackStack = navController::popBackStack,
-            )
-        }
-        composable<AppNavigation.Screen.Studies.Management> {
-            StudiesManagementRoute(
-                modifier = Modifier,
-                popBackStack = navController::popBackStack,
             )
         }
 
         composable<AppNavigation.Screen.Studies.MakeVote> {
+
             VoteRoute(
-                popBackStack = { navController.popBackStack() },
+                popBackStack = { navController.popBackStack() }
             )
         }
     }

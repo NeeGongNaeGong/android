@@ -62,12 +62,6 @@ object AppNavigation {
             data object Main : Studies
 
             @Serializable
-            data object StudiesDetail : Studies
-
-            @Serializable
-            data object Management : Studies
-
-            @Serializable
             data object MakeVote : Studies
         }
 
@@ -102,9 +96,7 @@ object AppNavigation {
             // 여기에 Profile 탭에 있는 각 화면들 경로 등록하면 됩니당
             // Study Tab의 Main 화면의 경로
             @Serializable
-            data class Main(
-                val userId: Int = -1,
-            ) : Profile
+            data class Main(val userId: Int = -1) : Profile
         }
     }
 }
