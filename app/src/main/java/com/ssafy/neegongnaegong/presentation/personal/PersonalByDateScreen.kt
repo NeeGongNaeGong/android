@@ -14,7 +14,7 @@ import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePickerState
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
-import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordList
+import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable

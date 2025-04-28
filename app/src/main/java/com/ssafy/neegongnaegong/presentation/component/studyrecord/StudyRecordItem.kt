@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.personal.component
+package com.ssafy.neegongnaegong.presentation.component.studyrecord
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.toHourMinuteString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
 
