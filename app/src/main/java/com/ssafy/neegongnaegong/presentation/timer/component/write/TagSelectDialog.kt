@@ -33,14 +33,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
 import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -137,11 +141,12 @@ fun TagSelectDialog(
                                 }
                             } else null,
                             colors = FilterChipDefaults.filterChipColors(
-                                containerColor = Color.Transparent,
                                 labelColor = Color.Black,
                                 iconColor = Color.Black,
-                                selectedContainerColor = LightColors.Blue,
+                                selectedContainerColor = Blue,
                                 selectedLabelColor = Color.White,
+                                // 컬러 Transparent로 하면 마우스 갖다 덌을때 색 영역이 다르게 표시됨
+                                containerColor = Color.White
                             )
                         )
                     }
@@ -192,4 +197,22 @@ fun TagSelectDialog(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TagSelectDialogPreview() {
+    NeeGongNaeGongTheme(dynamicColor = false) {
+        TagSelectDialog(
+            modifier = Modifier,
+            selectedTags = PersonalPreviewDataProvider().getTags(),
+            unSelectedTags = emptyList(),
+            onCancel = {},
+            onConfirm = {},
+            onSearchQueryChanged = {},
+            onTagSelected = {},
+            onTagDeselected = {}
+        )
+    }
+
 }
