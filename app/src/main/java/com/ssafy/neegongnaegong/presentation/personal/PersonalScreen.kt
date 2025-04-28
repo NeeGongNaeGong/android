@@ -2,37 +2,25 @@ package com.ssafy.neegongnaegong.presentation.personal
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,13 +29,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.write.Tag
-import com.ssafy.neegongnaegong.presentation.component.TagList
-import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
-import com.ssafy.neegongnaegong.presentation.personal.component.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -132,11 +118,6 @@ fun PersonalContent(
     PersonalScreen(
         modifier = modifier,
         studyRecords = uiState.studyRecords,
-        // dropdown
-        isTagScreen = uiState.isTagScreen,
-        isDateScreen = uiState.isDateScreen,
-        onTagScreenSelected = onTagScreenSelected,
-        onDateScreenSelected = onDateScreenSelected,
         // tag
         tags = uiState.tags,
         onTagPlusClicked = onTagPlusClicked,
@@ -150,118 +131,81 @@ fun PersonalContent(
     )
 }
 
-
 @Composable
 fun PersonalScreen(
     modifier: Modifier = Modifier,
     studyRecords: List<StudyRecord>,
-    // dropdown,
-    isTagScreen: Boolean,
-    isDateScreen: Boolean,
-    onTagScreenSelected: () -> Unit,
-    onDateScreenSelected: () -> Unit,
-    // tag
     tags: List<Tag>,
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
-    // calendar
     onDateSelected: (String) -> Unit,
     selectedRecordsByDate: List<StudyRecord>,
     selectedDate: String,
-    // navigate
     navigateToEditScreen: (Long) -> Unit
 ) {
+    val tabTitles = listOf("태그별", "날짜별")
+    val pagerState = rememberPagerState(pageCount = { tabTitles.size })
+    val coroutineScope = rememberCoroutineScope()
     val datePickerState = rememberDatePickerState()
-
-    val filterOptions = listOf("태그별", "날짜별")
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
-
-        var expanded by remember { mutableStateOf(false) }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentSize(Alignment.TopCenter)
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = Color(0xFFFAFAFA)
         ) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .clickable { expanded = true }
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text(
-                    text = if (isTagScreen) "태그별" else "날짜별",
-                    fontSize = 24.sp
-                )
-
-                Icon(
-
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "드롭다운 열기"
-                )
-            }
-
-            DropdownMenu(
-                modifier = Modifier
-                    .width(90.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                filterOptions.forEach { option ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = option,
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        },
-                        onClick = {
-                            if (option == "태그별") {
-                                onTagScreenSelected()
-                            } else {
-                                onDateScreenSelected()
-                            }
-                            expanded = false
+            tabTitles.forEachIndexed { index, title ->
+                val isSelected = pagerState.currentPage == index
+                Tab(
+                    selected = isSelected,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
                         }
-                    )
-                }
+                    },
+                    text = {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontSize = 18.sp,
+                                color = if (isSelected) Color.Black else Color.Gray
+                            )
+                        )
+                    }
+                )
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (isTagScreen) {
-            PersonalByTagScreen(
-                tags = tags,
-                studyRecords = studyRecords,
-                onTagPlusClicked = onTagPlusClicked,
-                onTagEraseClicked = onTagEraseClicked,
-                navigateToEditScreen = navigateToEditScreen
-            )
-        } else {
-            PersonalByDateScreen(
-                datePickerState = datePickerState,
-                onDateSelected = onDateSelected,
-                selectedRecordsByDate = selectedRecordsByDate,
-                selectedDate = selectedDate,
-                navigateToEditScreen = navigateToEditScreen
-            )
+        HorizontalPager(
+            pageSize = PageSize.Fill,
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            when (page) {
+                0 -> PersonalByTagScreen(
+                    tags = tags,
+                    studyRecords = studyRecords,
+                    onTagPlusClicked = onTagPlusClicked,
+                    onTagEraseClicked = onTagEraseClicked,
+                    navigateToEditScreen = navigateToEditScreen
+                )
+
+                1 -> PersonalByDateScreen(
+                    datePickerState = datePickerState,
+                    onDateSelected = onDateSelected,
+                    selectedRecordsByDate = selectedRecordsByDate,
+                    selectedDate = selectedDate,
+                    navigateToEditScreen = navigateToEditScreen
+                )
+            }
         }
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -274,10 +218,6 @@ fun PersonalScreenPreview() {
         onTagEraseClicked = {},
         onDateSelected = {},
         selectedRecordsByDate = PersonalPreviewDataProvider().getStudyRecords(),
-        onDateScreenSelected = {},
-        onTagScreenSelected = {},
-        isTagScreen = true,
-        isDateScreen = false,
         navigateToEditScreen = {},
         selectedDate = "2024-01-01"
     )
