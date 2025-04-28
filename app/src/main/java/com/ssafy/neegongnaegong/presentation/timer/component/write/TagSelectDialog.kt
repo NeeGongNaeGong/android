@@ -33,7 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,11 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.write.Tag
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Blue
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors.Peach
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -90,7 +86,7 @@ fun TagSelectDialog(
                     placeholder = {
                         Text(
                             text = "검색어를 입력해주세요",
-                            style = Typography.labelLarge
+                            style = NeeGongNaeGongTheme.typography.labelLarge
                         )
                     },
                     singleLine = true,
@@ -111,7 +107,7 @@ fun TagSelectDialog(
                         unfocusedIndicatorColor = Color.LightGray,
                         disabledIndicatorColor = Color.LightGray,
                     ),
-                    textStyle = Typography.labelLarge.copy(fontSize = 18.sp)
+                    textStyle = NeeGongNaeGongTheme.typography.labelLarge.copy(fontSize = 18.sp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -143,7 +139,7 @@ fun TagSelectDialog(
                             colors = FilterChipDefaults.filterChipColors(
                                 labelColor = Color.Black,
                                 iconColor = Color.Black,
-                                selectedContainerColor = Blue,
+                                selectedContainerColor =NeeGongNaeGongTheme.colorScheme.blue,
                                 selectedLabelColor = Color.White,
                                 // 컬러 Transparent로 하면 마우스 갖다 덌을때 색 영역이 다르게 표시됨
                                 containerColor = Color.White
@@ -169,15 +165,15 @@ fun TagSelectDialog(
                     ) {
                         Text(
                             text = "취소",
-                            style = Typography.labelLarge,
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Peach
+                            color = NeeGongNaeGongTheme.colorScheme.peach
                         )
                     }
 
                     VerticalDivider(
                         thickness = 0.5.dp,
-                        color = Color.Gray,
+                        color = NeeGongNaeGongTheme.colorScheme.gray4,
                         modifier = Modifier
                             .height(50.dp)
                     )
@@ -188,9 +184,9 @@ fun TagSelectDialog(
                     ) {
                         Text(
                             text = "확인",
-                            style = Typography.labelLarge,
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Blue
+                            color = NeeGongNaeGongTheme.colorScheme.blue
                         )
                     }
                 }

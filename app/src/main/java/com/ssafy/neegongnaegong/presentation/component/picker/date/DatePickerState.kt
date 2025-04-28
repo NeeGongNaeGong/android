@@ -22,7 +22,7 @@ class DatePickerState(
 ) {
     var date by mutableStateOf(initialDate)
         private set
-    var month by mutableStateOf(YearMonth.from(initialDate))
+    var month: YearMonth by mutableStateOf(YearMonth.from(initialDate))
         private set
 
     fun updateDate(newDate: LocalDate) {

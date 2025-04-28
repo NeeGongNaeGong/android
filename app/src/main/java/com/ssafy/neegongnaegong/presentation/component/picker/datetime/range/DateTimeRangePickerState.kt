@@ -31,53 +31,39 @@ class DateTimeRangePickerState(
     endDateTime: LocalDateTime,
     isAllDay: Boolean
 ) {
-    private var _startDateTime by mutableStateOf(startDateTime)
-    val startDateTime: LocalDateTime get() = _startDateTime
+    var startDateTime by mutableStateOf(startDateTime)
+        private set
+    var endDateTime by mutableStateOf(endDateTime)
+        private set
+    var focus by mutableStateOf(Focus.None)
+        private set
+    var isAllDay by mutableStateOf(isAllDay)
+        private set
 
-    private var _endDateTime by mutableStateOf(endDateTime)
-    val endDateTime: LocalDateTime get() = _endDateTime
+    fun updateStartDate(date: LocalDate) = updateStartDateTime(startDateTime.with(date))
+    fun updateStartTime(time: LocalTime) = updateStartDateTime(startDateTime.with(time))
+    fun updateEndDate(date: LocalDate) = updateEndDateTime(this.endDateTime.with(date))
+    fun updateEndTime(time: LocalTime) = updateEndDateTime(this.endDateTime.with(time))
 
-    private var _focus by mutableStateOf(Focus.None)
-    val focus: Focus get() = _focus
-
-    fun setStartDate(date: LocalDate) {
-        setStartDateTime(startDateTime.with(date))
-    }
-
-    fun setStartTime(time: LocalTime) {
-        setStartDateTime(startDateTime.with(time))
-    }
-
-    fun setStartDateTime(dateTime: LocalDateTime) {
-        _startDateTime = dateTime
-        if (dateTime.isAfter(endDateTime)) {
-            _endDateTime = dateTime
+    fun updateStartDateTime(dateTime: LocalDateTime) {
+        startDateTime = dateTime
+        if (dateTime.isAfter(this.endDateTime)) {
+            endDateTime = dateTime
         }
     }
 
-    fun setEndDate(date: LocalDate) {
-        setEndDateTime(endDateTime.with(date))
-    }
-
-    fun setEndTime(time: LocalTime) {
-        setEndDateTime(endDateTime.with(time))
-    }
-
-    fun setEndDateTime(dateTime: LocalDateTime) {
-        _endDateTime = dateTime
+    fun updateEndDateTime(dateTime: LocalDateTime) {
+        endDateTime = dateTime
         if (dateTime.isBefore(startDateTime)) {
-            _startDateTime = dateTime
+            startDateTime = dateTime
         }
     }
 
-    private var _isAllDay by mutableStateOf(isAllDay)
-    val isAllDay: Boolean get() = _isAllDay
-
-    fun setIsAllDay(isAllDay: Boolean) {
-        _isAllDay = isAllDay
+    fun updateIsAllDay(isAllDay: Boolean) {
+        this.isAllDay = isAllDay
         if (isAllDay) {
-            setStartTime(LocalTime.MIN)
-            setEndTime(LocalTime.MAX)
+            updateStartTime(LocalTime.MIN)
+            updateEndTime(LocalTime.MAX)
         }
     }
 
@@ -92,25 +78,19 @@ class DateTimeRangePickerState(
     val isEndTimeFocused: Boolean
         get() = focus == Focus.EndTime
 
-    fun clearFocus() {
-        _focus = Focus.None
+    private fun updateFocus(focus: Focus) {
+        this.focus = if (this.focus == focus) {
+            Focus.None
+        } else {
+            focus
+        }
     }
 
-    fun focusOnStartDate() {
-        _focus = Focus.StartDate
-    }
-
-    fun focusOnStartTime() {
-        _focus = Focus.StartTime
-    }
-
-    fun focusOnEndDate() {
-        _focus = Focus.EndDate
-    }
-
-    fun focusOnEndTime() {
-        _focus = Focus.EndTime
-    }
+    fun clearFocus() = updateFocus(Focus.None)
+    fun focusOnStartDate() = updateFocus(Focus.StartDate)
+    fun focusOnStartTime() = updateFocus(Focus.StartTime)
+    fun focusOnEndDate() = updateFocus(Focus.EndDate)
+    fun focusOnEndTime() = updateFocus(Focus.EndTime)
 
     enum class Focus {
         None,

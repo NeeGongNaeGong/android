@@ -39,8 +39,8 @@ fun DateTimePicker(
             dateTime = state.dateTime,
             isDateFocused = state.isDateFocused,
             isTimeFocused = state.isTimeFocused,
-            onDateClicked = { state.setFocus(DateTimePickerState.Focus.Date) },
-            onTimeClicked = { state.setFocus(DateTimePickerState.Focus.Time) },
+            onDateClicked = state::focusOnDate,
+            onTimeClicked = state::focusOnTime,
             isTimeVisible = isTimeVisible,
             enable = enable
         )
@@ -53,7 +53,7 @@ fun DateTimePicker(
                     DateTimePickerState.Focus.Date -> {
                         DatePicker(
                             state = datePickerState,
-                            onDateSelected = state::setDate,
+                            onDateSelected = state::updateDate,
                         )
                     }
 
@@ -61,7 +61,7 @@ fun DateTimePicker(
                         TimePicker(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             selectedTime = state.dateTime.toLocalTime(),
-                            onTimeChange = state::setTime
+                            onTimeChange = state::updateTime
                         )
                     }
                 }

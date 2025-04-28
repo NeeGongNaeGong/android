@@ -29,11 +29,14 @@ import com.ssafy.neegongnaegong.presentation.login.component.GoogleLoginButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun LoginRoute(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
+    navigateToMain: () -> Unit,
+
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,6 +44,7 @@ fun LoginRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState,
+        navigateToMain = navigateToMain,
         onGoogleLoginSuccess = { viewModel.setEvent(LoginContract.Event.OnGoogleLoginSuccess(it)) },
         onGoogleLoginFailure = { viewModel.setEvent(LoginContract.Event.OnGoogleLoginFailure(it)) }
     )
@@ -51,6 +55,7 @@ fun LoginContent(
     modifier: Modifier = Modifier,
     effect: Flow<LoginContract.Effect>,
     uiState: LoginContract.State,
+    navigateToMain: () -> Unit,
     onGoogleLoginSuccess: (String) -> Unit,
     onGoogleLoginFailure: (Throwable) -> Unit
 ) {
@@ -67,6 +72,8 @@ fun LoginContent(
                         duration = SnackbarDuration.Short
                     )
                 }
+
+                LoginContract.Effect.NavigateToMainScreen -> navigateToMain()
             }
         }
     }
@@ -97,7 +104,9 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(160.dp))
 
         Image(
-            modifier = Modifier.aspectRatio(1f).fillMaxWidth(),
+            modifier = Modifier
+                .aspectRatio(1f)
+                .fillMaxWidth(),
             painter = painterResource(id = R.drawable.img_app_main_logo),
             contentDescription = "App Image",
         )
