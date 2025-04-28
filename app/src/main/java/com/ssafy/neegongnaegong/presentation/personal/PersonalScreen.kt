@@ -243,57 +243,26 @@ fun PersonalScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         if (isTagScreen) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                TagList(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(vertical = 16.dp),
-                    tags = tags,
-                    onTagPlusClicked = onTagPlusClicked,
-                    onTagEraseClicked = onTagEraseClicked
-                )
-
-                StudyRecordList(
-                    modifier = Modifier.weight(1f),
-                    studyRecords = studyRecords,
-                    onClick = navigateToEditScreen
-                )
-            }
-        } else {
-            DatePicker(
-                modifier = Modifier.fillMaxWidth(),
-                state = datePickerState,
-                onDateSelected = { date ->
-                    onDateSelected(date.toString())
-                }
+            PersonalByTagScreen(
+                tags = tags,
+                studyRecords = studyRecords,
+                onTagPlusClicked = onTagPlusClicked,
+                onTagEraseClicked = onTagEraseClicked,
+                navigateToEditScreen = navigateToEditScreen
             )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (selectedRecordsByDate.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "$selectedDate 에는 공부한 기록이 없습니다.",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    )
-                }
-            } else {
-                StudyRecordList(
-                    modifier = Modifier.fillMaxSize(),
-                    studyRecords = selectedRecordsByDate,
-                    onClick = navigateToEditScreen
-                )
-            }
+        } else {
+            PersonalByDateScreen(
+                datePickerState = datePickerState,
+                onDateSelected = onDateSelected,
+                selectedRecordsByDate = selectedRecordsByDate,
+                selectedDate = selectedDate,
+                navigateToEditScreen = navigateToEditScreen
+            )
         }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
