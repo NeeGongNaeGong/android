@@ -39,7 +39,7 @@ class StudiesViewModel
                     setState { copy(studiesState = StudiesContract.StudiesState.Success(groups)) }
                 }.onFailure {
                     setState { copy(studiesState = StudiesContract.StudiesState.Error("그룹 정보를 불러오지 못했습니다.")) }
-                    setEffect { StudiesContract.Effect.ShowToast("그룹 정보를 불러오지 못했습니다.") }
+                    showErrorMessage("그룹 정보를 불러오지 못했습니다.")
                 }
             }
         }

@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.presentation.navigation
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,10 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ssafy.neegongnaegong.presentation.ui.theme.DarkColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -49,11 +45,7 @@ fun BottomNavigationBar(
                     elevation = 20.dp,
                     shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
                 ),
-        containerColor =
-            when {
-                isSystemInDarkTheme() -> DarkColors.DarkBackGround
-                else -> LightColors.BackGround
-            },
+        containerColor = NeeGongNaeGongTheme.colorScheme.background
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -80,7 +72,7 @@ fun BottomNavigationBar(
                 label = {
                     Text(
                         text = stringResource(id = screen.title),
-                        style = if (selected) Typography.bodySmall.copy(fontSize = 12.sp) else Typography.labelSmall,
+                        style = if (selected) NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp) else NeeGongNaeGongTheme.typography.labelSmall,
                     )
                 },
                 selected = selected,

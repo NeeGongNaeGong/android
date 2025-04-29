@@ -61,9 +61,6 @@ fun StudiesContent(
 
                 is StudiesContract.Effect.NavigateToGroupDetail -> {
                 }
-
-                is StudiesContract.Effect.ShowToast -> {
-                }
             }
         }
     }

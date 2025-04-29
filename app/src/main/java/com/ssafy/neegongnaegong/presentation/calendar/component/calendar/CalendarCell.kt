@@ -85,7 +85,7 @@ fun CalendarCell(
             ) {
                 Text(
                     text = date.toString(),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = NeeGongNaeGongTheme.typography.labelMedium,
                     color = dateColor,
                     textAlign = TextAlign.Center
                 )

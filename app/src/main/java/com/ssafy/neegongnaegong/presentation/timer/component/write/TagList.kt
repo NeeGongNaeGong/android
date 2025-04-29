@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.write.Tag
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -41,7 +41,7 @@ fun TagList(
         tags.forEach { tag ->
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = LightColors.Blue
+                color = NeeGongNaeGongTheme.colorScheme.blue
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -70,7 +70,7 @@ fun TagList(
                 .size(32.dp)
                 .clickable { onTagPlusClicked() },
             shape = RoundedCornerShape(4.dp),
-            color = LightColors.Blue,
+            color = NeeGongNaeGongTheme.colorScheme.blue,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

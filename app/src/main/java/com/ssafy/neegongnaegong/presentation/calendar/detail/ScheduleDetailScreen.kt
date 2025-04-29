@@ -13,16 +13,12 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,7 +34,6 @@ import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rem
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @Composable
@@ -79,20 +74,11 @@ fun ScheduleDetailContent(
     navigateToEditScheduleScreen: (Schedule) -> Unit
 ) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
                 ScheduleDetailContract.Effect.NavigateBack -> backDispatcher?.onBackPressed()
-                is ScheduleDetailContract.Effect.ShowErrorSnackBar -> scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = "확인",
-                        duration = SnackbarDuration.Short
-                    )
-                }
 
                 is ScheduleDetailContract.Effect.NavigateToEditScheduleScreen -> {
                     navigateToEditScheduleScreen(effect.schedule)
@@ -190,7 +176,7 @@ fun ScheduleDetailScreen(
             ) {
                 Text(
                     "삭제",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -200,7 +186,7 @@ fun ScheduleDetailScreen(
             ) {
                 Text(
                     "수정",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }

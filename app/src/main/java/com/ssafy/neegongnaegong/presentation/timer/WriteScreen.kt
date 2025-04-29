@@ -1,21 +1,17 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -87,8 +83,6 @@ fun WriteContent(
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
 ) {
-    val context = LocalContext.current
-
     if (uiState.isDialogShow) {
         TagSelectDialog(
             selectedTags = uiState.selectedTags,
@@ -106,18 +100,6 @@ fun WriteContent(
             when (effect) {
                 is WriteContract.Effect.NavigateToHome -> {
 
-                }
-
-                is WriteContract.Effect.ShowErrorToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is WriteContract.Effect.ShowSuccessToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is WriteContract.Effect.ShowTagLimitExceededToast -> {
-                    Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.",Toast.LENGTH_SHORT).show()
                 }
             }
         }

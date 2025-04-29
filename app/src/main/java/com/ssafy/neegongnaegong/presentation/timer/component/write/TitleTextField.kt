@@ -7,8 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.presentation.ui.theme.LightColors
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun TitleTextField(
@@ -20,15 +19,15 @@ fun TitleTextField(
         modifier = modifier,
         value = title,
         onValueChange = onTitleChanged,
-        textStyle = Typography.bodySmall.copy(
+        textStyle = NeeGongNaeGongTheme.typography.bodySmall.copy(
             fontSize = 30.sp,
-            color = LightColors.Black,
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
             fontFeatureSettings = "tnum",
         ),
         placeholder = {
             Text(
                 text = "제목을 입력하세요",
-                color = LightColors.Gray4,
+                color = NeeGongNaeGongTheme.colorScheme.gray4,
                 fontSize = 30.sp,
                 letterSpacing = 0.5.sp,
             )
@@ -38,7 +37,7 @@ fun TitleTextField(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
-            focusedIndicatorColor = Color.Gray,
+            focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
             unfocusedIndicatorColor = Color.Gray,
             disabledIndicatorColor = Color.LightGray
         ),

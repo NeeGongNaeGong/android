@@ -15,7 +15,6 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,7 +42,6 @@ import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rem
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @Composable
@@ -107,14 +105,6 @@ fun ScheduleEditContent(
             when (effect) {
                 ScheduleEditContract.Effect.NavigateBack -> {
                     backDispatcher?.onBackPressed()
-                }
-
-                is ScheduleEditContract.Effect.ShowErrorSnackBar -> scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = "확인",
-                        duration = SnackbarDuration.Short
-                    )
                 }
             }
         }
@@ -231,7 +221,7 @@ fun ScheduleEditScreen(
             ) {
                 Text(
                     "취소",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -241,7 +231,7 @@ fun ScheduleEditScreen(
             ) {
                 Text(
                     "확인",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }

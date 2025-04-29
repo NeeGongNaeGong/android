@@ -64,7 +64,7 @@ class WriteViewModel @Inject constructor() :
 
             is WriteContract.Event.OnDialogConfirmClicked -> {
                 if (checkTagSize()) {
-                    setEffect { WriteContract.Effect.ShowTagLimitExceededToast }
+                    showWarningMessage("태그는 최대 5개만 선택할 수 있습니다.")
                 } else {
                     moveFromSelectedTagsToTags()
                     clearDialogTags()

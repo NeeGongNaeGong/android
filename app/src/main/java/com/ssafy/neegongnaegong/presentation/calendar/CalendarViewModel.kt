@@ -9,7 +9,6 @@ import com.ssafy.neegongnaegong.domain.usecase.calendar.DeletePersonalSchedulesU
 import com.ssafy.neegongnaegong.domain.usecase.calendar.GetUserSchedulesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -106,18 +105,6 @@ class CalendarViewModel @Inject constructor(
                 selectedDate = date,
                 isCalendarDialogShow = uiState.value.schedules[date]?.isNotEmpty() ?: false
             )
-        }
-    }
-
-    private suspend fun <T> Flow<T>.safeCollect(block: suspend (T) -> Unit = {}) {
-        runCatching {
-            collect { value -> block(value) }
-        }.onFailure { error ->
-            error.printStackTrace()
-            setState { copy(isFailure = true) }
-            setEffect {
-                CalendarContract.Effect.ShowErrorSnackBar(error.message ?: "에러 발생")
-            }
         }
     }
 }

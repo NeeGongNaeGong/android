@@ -9,13 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,12 +24,13 @@ import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.login.component.GoogleLoginButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginRoute(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
+    navigateToMain: () -> Unit,
+
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,6 +38,7 @@ fun LoginRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState,
+        navigateToMain = navigateToMain,
         onGoogleLoginSuccess = { viewModel.setEvent(LoginContract.Event.OnGoogleLoginSuccess(it)) },
         onGoogleLoginFailure = { viewModel.setEvent(LoginContract.Event.OnGoogleLoginFailure(it)) }
     )
@@ -51,22 +49,14 @@ fun LoginContent(
     modifier: Modifier = Modifier,
     effect: Flow<LoginContract.Effect>,
     uiState: LoginContract.State,
+    navigateToMain: () -> Unit,
     onGoogleLoginSuccess: (String) -> Unit,
     onGoogleLoginFailure: (Throwable) -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is LoginContract.Effect.ShowErrorSnackBar -> scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = "확인",
-                        duration = SnackbarDuration.Short
-                    )
-                }
+                LoginContract.Effect.NavigateToMainScreen -> navigateToMain()
             }
         }
     }
@@ -97,7 +87,9 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(160.dp))
 
         Image(
-            modifier = Modifier.aspectRatio(1f).fillMaxWidth(),
+            modifier = Modifier
+                .aspectRatio(1f)
+                .fillMaxWidth(),
             painter = painterResource(id = R.drawable.img_app_main_logo),
             contentDescription = "App Image",
         )

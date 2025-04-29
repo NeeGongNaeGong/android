@@ -6,6 +6,7 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCollectionsImmutable = "0.3.8"
 kotlinxSerializationJson = "1.8.0"
 kotlinxCoroutinesTest = "1.7.3"
 lifecycleRuntimeKtx = "2.8.7"
@@ -77,6 +78,9 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 # test
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+
+# immutable collections
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

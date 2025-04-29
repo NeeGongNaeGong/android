@@ -35,8 +35,5 @@ class WriteContract {
 
     sealed class Effect : UiEffect {
         data object NavigateToHome : Effect()
-        data class ShowSuccessToast(val message: String) : Effect()
-        data class ShowErrorToast(val message: String) : Effect()
-        data object ShowTagLimitExceededToast : Effect()
     }
 }

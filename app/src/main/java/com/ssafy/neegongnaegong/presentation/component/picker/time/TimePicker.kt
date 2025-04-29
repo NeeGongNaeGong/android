@@ -74,7 +74,7 @@ fun TimePicker(
         )
         Text(
             ":",
-            style = MaterialTheme.typography.bodyMedium,
+            style = NeeGongNaeGongTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
         ScrollPicker(

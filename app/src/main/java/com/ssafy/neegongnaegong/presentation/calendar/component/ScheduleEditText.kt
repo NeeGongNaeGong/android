@@ -39,13 +39,13 @@ fun ScheduleEditText(
         enabled = enabled,
         value = text,
         onValueChange = onTextChange,
-        textStyle = MaterialTheme.typography.bodyMedium,
+        textStyle = NeeGongNaeGongTheme.typography.bodyMedium,
         shape = RectangleShape,
         placeholder = {
             placeHolder?.let {
                 Text(
                     text = placeHolder,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = NeeGongNaeGongTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             }
