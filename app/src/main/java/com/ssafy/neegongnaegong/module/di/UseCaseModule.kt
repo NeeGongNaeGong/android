@@ -30,27 +30,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UseCaseModule {
-
     // Auth UseCases
     @Provides
     @Singleton
-    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase =
-        LoginUseCase(authRepository)
+    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase = LoginUseCase(authRepository)
 
     @Provides
     @Singleton
-    fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase =
-        LogoutUseCase(authRepository)
+    fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase = LogoutUseCase(authRepository)
 
     @Provides
     @Singleton
-    fun provideReissueUseCase(authRepository: AuthRepository): ReissueUseCase =
-        ReissueUseCase(authRepository)
+    fun provideReissueUseCase(authRepository: AuthRepository): ReissueUseCase = ReissueUseCase(authRepository)
 
     @Provides
     @Singleton
-    fun provideRegisterUseCase(authRepository: AuthRepository): RegisterUseCase =
-        RegisterUseCase(authRepository)
+    fun provideRegisterUseCase(authRepository: AuthRepository): RegisterUseCase = RegisterUseCase(authRepository)
 
     // Calendar UseCases
     @Provides
@@ -81,18 +76,15 @@ object UseCaseModule {
     // User UseCases
     @Provides
     @Singleton
-    fun provideGetCurrentUserUseCase(userRepository: UserRepository): GetCurrentUserUseCase =
-        GetCurrentUserUseCase(userRepository)
+    fun provideGetCurrentUserUseCase(userRepository: UserRepository): GetCurrentUserUseCase = GetCurrentUserUseCase(userRepository)
 
     @Provides
     @Singleton
-    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase =
-        GetUserUseCase(userRepository)
+    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase = GetUserUseCase(userRepository)
 
     @Provides
     @Singleton
-    fun provideUpdateNicknameUseCase(userRepository: UserRepository): UpdateNicknameUseCase =
-        UpdateNicknameUseCase(userRepository)
+    fun provideUpdateNicknameUseCase(userRepository: UserRepository): UpdateNicknameUseCase = UpdateNicknameUseCase(userRepository)
 
     @Provides
     @Singleton
@@ -101,18 +93,15 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideValidateNicknameUseCase(userRepository: UserRepository): ValidateNicknameUseCase =
-        ValidateNicknameUseCase(userRepository)
+    fun provideValidateNicknameUseCase(userRepository: UserRepository): ValidateNicknameUseCase = ValidateNicknameUseCase(userRepository)
 
     // Study UseCase
     @Provides
     @Singleton
-    fun provideGetStudiesUseCase(studiesRepository: StudiesRepository): GetStudiesUseCase =
-        GetStudiesUseCase(studiesRepository)
+    fun provideGetStudiesUseCase(studiesRepository: StudiesRepository): GetStudiesUseCase = GetStudiesUseCase(studiesRepository)
 
     // GitHub UseCase
     @Provides
     @Singleton
-    fun provideGetUserReposUseCase(gitHubRepository: GitHubRepository): GetUserReposUseCase =
-        GetUserReposUseCase(gitHubRepository)
+    fun provideGetUserReposUseCase(gitHubRepository: GitHubRepository): GetUserReposUseCase = GetUserReposUseCase(gitHubRepository)
 }
