@@ -81,6 +81,8 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
 
     /**
      * 안전하게 Flow를 collect하는 함수
+     * 실패시 [_handleException]로 공통 에러 로직 처리 후
+     * [handleException]로 커스템 에러 로직 처리
      *
      * @param errorContext ErrorContext
      * @param block collect 시 실행할 블록
@@ -97,20 +99,70 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         }
     }
 
-    protected fun showMessage(message: String) = viewModelScope.launch {
-        snackbarManager.showMessage(message)
+    /**
+     * 일반 메시지를 snackbar로 표시합니다.
+     *
+     * ViewModel 내에서 간편하게 호출할 수 있도록 [SnackbarManager.showMessage]를 viewModelScope 내에서 실행합니다.
+     * 메시지의 타입과 action 버튼을 설정할 수 있습니다.
+     *
+     * @param message 사용자에게 보여줄 문자열
+     * @param type 메시지의 타입. 기본값은 [SnackbarManager.Type.None]입니다.
+     * @param action snackbar의 action 버튼(label 및 callback)을 정의한 객체 (선택적)
+     */
+    protected fun showMessage(
+        message: String,
+        type: SnackbarManager.Type = SnackbarManager.Type.None,
+        action: SnackbarManager.Action? = null
+    ) = viewModelScope.launch {
+        snackbarManager.showMessage(message, type, action)
     }
 
-    protected fun showSuccessMessage(message: String) = viewModelScope.launch {
-        snackbarManager.showSuccessMessage(message)
+    /**
+     * 성공(Success) 메시지를 snackbar로 표시합니다.
+     *
+     * ViewModel 내에서 간편하게 호출할 수 있도록 [SnackbarManager.showSuccessMessage]를 viewModelScope 내에서 실행합니다.
+     * 메시지의 성공 타입과 action 버튼을 설정할 수 있습니다.
+     *
+     * @param message 사용자에게 보여줄 문자열
+     * @param action snackbar의 action 버튼(label 및 callback)을 정의한 객체 (선택적)
+     */
+    protected fun showSuccessMessage(
+        message: String,
+        action: SnackbarManager.Action? = null
+    ) = viewModelScope.launch {
+        snackbarManager.showSuccessMessage(message, action)
     }
 
-    protected fun showWarningMessage(message: String) = viewModelScope.launch {
-        snackbarManager.showWarningMessage(message)
+    /**
+     * 경고(Warning) 메시지를 snackbar로 표시합니다.
+     *
+     * ViewModel 내에서 간편하게 호출할 수 있도록 [SnackbarManager.showWarningMessage]를 viewModelScope 내에서 실행합니다.
+     * 메시지의 경고 타입과 action 버튼을 설정할 수 있습니다.
+     *
+     * @param message 사용자에게 보여줄 문자열
+     * @param action snackbar의 action 버튼(label 및 callback)을 정의한 객체 (선택적)
+     */
+    protected fun showWarningMessage(
+        message: String,
+        action: SnackbarManager.Action? = null
+    ) = viewModelScope.launch {
+        snackbarManager.showWarningMessage(message, action)
     }
 
-    protected fun showErrorMessage(message: String) = viewModelScope.launch {
-        snackbarManager.showErrorMessage(message)
+    /**
+     * 에러(Error) 메시지를 snackbar로 표시합니다.
+     *
+     * ViewModel 내에서 간편하게 호출할 수 있도록 [SnackbarManager.showErrorMessage]를 viewModelScope 내에서 실행합니다.
+     * 메시지의 에러 타입과 action 버튼을 설정할 수 있습니다.
+     *
+     * @param message 사용자에게 보여줄 문자열
+     * @param action snackbar의 action 버튼(label 및 callback)을 정의한 객체 (선택적)
+     */
+    protected fun showErrorMessage(
+        message: String,
+        action: SnackbarManager.Action? = null
+    ) = viewModelScope.launch {
+        snackbarManager.showErrorMessage(message, action)
     }
 
     /**
