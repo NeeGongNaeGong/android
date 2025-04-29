@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.repository
 
+import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val localUserDataSource: LocalUserDataSource,
+    private val localFcmDataSource: LocalFcmDataSource,
     private val networkUserDataSource: NetworkUserDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : UserRepository {
@@ -41,8 +43,17 @@ class UserRepositoryImpl @Inject constructor(
         networkUserDataSource.updateUser(UpdateUserRequest(nickname = user.nickname, profileImg = profileImage)).map { Unit }
     }
 
-    override suspend fun updateFcmToken(fcmToken: String): Unit = withContext(ioDispatcher) {
-        val request = UpdateFcmTokenRequest(fcmToken = fcmToken)
-        networkUserDataSource.updateFcmToken(request)
+    override suspend fun updateFcmToken(fcmToken: String?): Unit = withContext(ioDispatcher) {
+        val request = UpdateFcmTokenRequest(fcmToken = fcmToken ?: localFcmDataSource.getFcmToken())
+        try {
+            networkUserDataSource.updateFcmToken(request)
+            localFcmDataSource.setUpdateFcmTokenState(true)
+        } catch (e: Exception) {
+            localFcmDataSource.setUpdateFcmTokenState(false)
+        }
+    }
+
+    override suspend fun checkUpdateFcmTokenState(): Boolean = withContext(ioDispatcher) {
+        localFcmDataSource.getUpdateFcmTokenState()
     }
 }

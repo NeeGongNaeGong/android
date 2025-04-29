@@ -17,19 +17,16 @@ import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class FcmService : FirebaseMessagingService() {
+    @Inject
     lateinit var userRepository: UserRepository
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                userRepository.updateFcmToken(token)
-            } catch (e: Exception) {
-                // TODO : 만약 실패하면 어떻게 다시 update 시킬 것인지 고민해보기
-                Log.e("FcmService", "FCM 토큰 업데이트 실패", e)
-            }
+            userRepository.updateFcmToken(token)
         }
     }
 
