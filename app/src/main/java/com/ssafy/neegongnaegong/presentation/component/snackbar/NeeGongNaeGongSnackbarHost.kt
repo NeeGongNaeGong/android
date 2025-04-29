@@ -21,7 +21,10 @@ fun NeeGongNaeGongSnackbarHost() {
                 message = message,
                 type = type,
                 actionLabel = action?.label,
-                actionCallback = action?.callback ?: {}
+                actionCallback = {
+                    action?.callback?.invoke()
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                }
             )
             snackbarHostState.showSnackbar(visuals)
         }

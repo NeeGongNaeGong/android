@@ -32,16 +32,27 @@ object SnackbarManager {
 
     /**
      * action button을 정의
+     * callback을 비워도 label만 설정하면 버튼 선택시 snackbar가 dismiss됩니다.
+     * 자세한 내용은 [NeeGongNaeGongSnackbarHost][com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost] 참고
      *
      * @param label text button의 문자열
      * @param callback callback
      */
     data class Action(
         val label: String,
-        val callback: () -> Unit,
-    )
+        val callback: () -> Unit = {},
+    ) {
+        companion object {
+            private const val OK = "확인"
+            private const val RETRY = "재시도"
+
+            fun retry(callback: () -> Unit) = Action(RETRY, callback)
+            fun ok() = Action(OK)
+        }
+    }
 
     private val _message = MutableSharedFlow<Message>()
+
     /**
      * 현재 보여질 snackbar 메시지를 외부에 전달하는 Flow
      *
