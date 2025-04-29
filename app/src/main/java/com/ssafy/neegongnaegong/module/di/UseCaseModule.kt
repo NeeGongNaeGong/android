@@ -24,95 +24,95 @@ import com.ssafy.neegongnaegong.domain.usecase.user.ValidateNicknameUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object UseCaseModule {
 
     // Auth UseCases
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase =
         LoginUseCase(authRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase =
         LogoutUseCase(authRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideReissueUseCase(authRepository: AuthRepository): ReissueUseCase =
         ReissueUseCase(authRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideRegisterUseCase(authRepository: AuthRepository): RegisterUseCase =
         RegisterUseCase(authRepository)
 
     // Calendar UseCases
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideCreatePersonalSchedulesUseCase(calendarRepository: CalendarRepository): CreatePersonalSchedulesUseCase =
         CreatePersonalSchedulesUseCase(calendarRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideDeletePersonalSchedulesUseCase(calendarRepository: CalendarRepository): DeletePersonalSchedulesUseCase =
         DeletePersonalSchedulesUseCase(calendarRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideGetScheduleDetailUseCase(calendarRepository: CalendarRepository): GetScheduleDetailUseCase =
         GetScheduleDetailUseCase(calendarRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideGetUserSchedulesUseCase(calendarRepository: CalendarRepository): GetUserSchedulesUseCase =
         GetUserSchedulesUseCase(calendarRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideUpdatePersonalSchedulesUseCase(calendarRepository: CalendarRepository): UpdatePersonalSchedulesUseCase =
         UpdatePersonalSchedulesUseCase(calendarRepository)
 
     // User UseCases
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideGetCurrentUserUseCase(userRepository: UserRepository): GetCurrentUserUseCase =
         GetCurrentUserUseCase(userRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase =
         GetUserUseCase(userRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideUpdateNicknameUseCase(userRepository: UserRepository): UpdateNicknameUseCase =
         UpdateNicknameUseCase(userRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideUpdateProfileImageUseCase(userRepository: UserRepository): UpdateProfileImageUseCase =
         UpdateProfileImageUseCase(userRepository)
 
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideValidateNicknameUseCase(userRepository: UserRepository): ValidateNicknameUseCase =
         ValidateNicknameUseCase(userRepository)
 
     // Study UseCase
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideGetStudiesUseCase(studiesRepository: StudiesRepository): GetStudiesUseCase =
         GetStudiesUseCase(studiesRepository)
 
     // GitHub UseCase
     @Provides
-    @ViewModelScoped
+    @Singleton
     fun provideGetUserReposUseCase(gitHubRepository: GitHubRepository): GetUserReposUseCase =
         GetUserReposUseCase(gitHubRepository)
 }
