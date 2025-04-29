@@ -38,9 +38,6 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     @Inject
     lateinit var authManager: AuthManager
 
-    @Inject
-    lateinit var snackbarManager: SnackbarManager
-
     init {
         subscribeEvents()
     }
@@ -114,7 +111,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         type: SnackbarManager.Type = SnackbarManager.Type.None,
         action: SnackbarManager.Action? = null
     ) = viewModelScope.launch {
-        snackbarManager.showMessage(message, type, action)
+        SnackbarManager.showMessage(message, type, action)
     }
 
     /**
@@ -130,7 +127,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         message: String,
         action: SnackbarManager.Action? = null
     ) = viewModelScope.launch {
-        snackbarManager.showSuccessMessage(message, action)
+        SnackbarManager.showSuccessMessage(message, action)
     }
 
     /**
@@ -146,7 +143,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         message: String,
         action: SnackbarManager.Action? = null
     ) = viewModelScope.launch {
-        snackbarManager.showWarningMessage(message, action)
+        SnackbarManager.showWarningMessage(message, action)
     }
 
     /**
@@ -162,7 +159,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         message: String,
         action: SnackbarManager.Action? = null
     ) = viewModelScope.launch {
-        snackbarManager.showErrorMessage(message, action)
+        SnackbarManager.showErrorMessage(message, action)
     }
 
     /**
