@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.presentation.component.snackbar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -22,7 +21,7 @@ fun NeeGongNaeGongSnackbar(
     message: String,
     backgroundColor: Color,
     prefix: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {},
+    action: @Composable () -> Unit = {},
 ) {
     Card(
         modifier = Modifier
@@ -43,7 +42,7 @@ fun NeeGongNaeGongSnackbar(
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 style = NeeGongNaeGongTheme.typography.bodySmall
             )
-            actions()
+            action()
         }
     }
 }
@@ -73,7 +72,7 @@ fun NeeGongNaeGongSnackbarPreview_Prefix_Actions() {
                     style = NeeGongNaeGongTheme.typography.titleSmall
                 )
             },
-            actions = {
+            action = {
                 Text(
                     "확인",
                     color = NeeGongNaeGongTheme.colorScheme.blue,

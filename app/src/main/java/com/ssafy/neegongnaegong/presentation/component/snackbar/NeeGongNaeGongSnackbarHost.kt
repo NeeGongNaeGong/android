@@ -6,21 +6,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.ssafy.neegongnaegong.presentation.base.SnackbarViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
 @Composable
 fun NeeGongNaeGongSnackbarHost() {
-    val snackbarViewModel: SnackbarViewModel = hiltViewModel()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        snackbarViewModel.message.collect {
-            val (message, type) = it
-            val visuals = NeeGongNaeGongSnackbarVisuals(message, type)
+        SnackbarManager.message.collect {
+            val (message, type, action) = it
+            val visuals = NeeGongNaeGongSnackbarVisuals(
+                message = message,
+                type = type,
+                actionLabel = action?.label,
+                actionCallback = action?.callback ?: {}
+            )
             snackbarHostState.showSnackbar(visuals)
         }
     }
@@ -41,7 +43,7 @@ fun NeeGongNaeGongSnackbarWithVisuals(
     modifier: Modifier = Modifier,
     visuals: NeeGongNaeGongSnackbarVisuals
 ) {
-    val (message, type) = visuals
+    val (message, type, actionLabel, actionCallback) = visuals
 
     val backgroundColor = when (type) {
         SnackbarManager.Type.None -> NeeGongNaeGongTheme.colorScheme.gray1
@@ -61,7 +63,8 @@ fun NeeGongNaeGongSnackbarWithVisuals(
         modifier = modifier,
         message = message,
         backgroundColor = backgroundColor,
-        prefix = { EmojiText(prefixEmoji) }
+        prefix = { prefixEmoji?.let { EmojiText(it) } },
+        action = { actionLabel?.let { SnackBarTextButton(it, actionCallback) } }
     )
 }
 
@@ -73,7 +76,8 @@ fun NeeGongNaeGongSnackbarWithVisualsPreview_None() {
         NeeGongNaeGongSnackbarWithVisuals(
             visuals = NeeGongNaeGongSnackbarVisuals(
                 message = "일반 메시지",
-                type = SnackbarManager.Type.None
+                type = SnackbarManager.Type.None,
+                actionLabel = "확인"
             )
         )
     }
@@ -86,7 +90,8 @@ fun NeeGongNaeGongSnackbarWithVisualsPreview_Success() {
         NeeGongNaeGongSnackbarWithVisuals(
             visuals = NeeGongNaeGongSnackbarVisuals(
                 message = "성공 메시지",
-                type = SnackbarManager.Type.Success
+                type = SnackbarManager.Type.Success,
+                actionLabel = "확인"
             )
         )
     }
@@ -99,7 +104,8 @@ fun NeeGongNaeGongSnackbarWithVisualsPreview_Warning() {
         NeeGongNaeGongSnackbarWithVisuals(
             visuals = NeeGongNaeGongSnackbarVisuals(
                 message = "경고 메시지",
-                type = SnackbarManager.Type.Warning
+                type = SnackbarManager.Type.Warning,
+                actionLabel = "확인"
             )
         )
     }
@@ -112,7 +118,8 @@ fun NeeGongNaeGongSnackbarWithVisualsPreview_Error() {
         NeeGongNaeGongSnackbarWithVisuals(
             visuals = NeeGongNaeGongSnackbarVisuals(
                 message = "에러 메시지",
-                type = SnackbarManager.Type.Error
+                type = SnackbarManager.Type.Error,
+                actionLabel = "재시도"
             )
         )
     }

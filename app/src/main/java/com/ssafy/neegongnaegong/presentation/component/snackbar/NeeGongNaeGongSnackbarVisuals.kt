@@ -8,6 +8,7 @@ data class NeeGongNaeGongSnackbarVisuals(
     override val message: String,
     val type: SnackbarManager.Type,
     override val actionLabel: String? = null,
+    val actionCallback: () -> Unit = {},
     override val duration: SnackbarDuration = SnackbarDuration.Short,
     override val withDismissAction: Boolean = false
 ) : SnackbarVisuals
