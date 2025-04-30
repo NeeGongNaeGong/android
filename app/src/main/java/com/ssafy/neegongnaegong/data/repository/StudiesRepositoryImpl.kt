@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.data.repository
 
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
-import com.ssafy.neegongnaegong.domain.model.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import javax.inject.Inject
 
