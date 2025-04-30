@@ -14,7 +14,8 @@ data class NeeGongNaeGongColors(
     val gray3: Color,
     val gray2: Color,
     val gray1: Color,
-    val background: Color
+    val background: Color,
+    val chartLegend: Color
 )
 
 val LightColorScheme = NeeGongNaeGongColors(
@@ -29,7 +30,8 @@ val LightColorScheme = NeeGongNaeGongColors(
     gray2 = Color(0xFFF4F4F4),
     gray1 = Color(0xFFF9F9F9),
     secondaryText = Color(0xFF949494),
-    background = Color(0xFFFAFAFA)
+    background = Color(0xFFFAFAFA),
+    chartLegend = Color(0x612E2626)
 )
 
 val DarkColorScheme = NeeGongNaeGongColors(
@@ -44,5 +46,6 @@ val DarkColorScheme = NeeGongNaeGongColors(
     gray2 = Color(0xFF333333),
     gray1 = Color(0xFF222222),
     secondaryText = Color(0xFFAAAAAA),
-    background = Color(0xFF121212)
+    background = Color(0xFF121212),
+    chartLegend = Color(0x612E2626)
 )
