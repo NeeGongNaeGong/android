@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="studies_drw_group_management">그룹 관리</string>
+    <string name="studies_drw_member_management">멤버 관리</string>
+    <string name="studies_drw_schedule_management">일정 관리</string>
+    <string name="studies_drw_my_studies">내 스터디</string>
+    <string name="studies_drw_see_more">더보기 ></string>
+    <string name="studies_drw_studies_create">스터디 생성</string>
+    <string name="studies_drw_studies_search">스터디 검색</string>
+</resources>

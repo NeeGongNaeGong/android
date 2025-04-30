@@ -31,6 +31,8 @@ lifecycleRuntimeComposeAndroid = "2.8.7"
 datastorePreferences = "1.1.4"
 # navigation
 navigationCompose = "2.8.9"
+# landscapist(image loader, glide)
+landscapistGlide = "2.4.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +79,8 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 # test
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+# landscapist(image loader, glide)
+landscapist-glide = { module = "com.github.skydoves:landscapist-glide", version.ref = "landscapistGlide" }
 
 # immutable collections
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
