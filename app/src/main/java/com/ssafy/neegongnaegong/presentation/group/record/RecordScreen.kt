@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -45,15 +47,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import kotlinx.coroutines.delay
 
 
 @Composable
@@ -118,25 +116,26 @@ fun RecordTopBar(
 fun RecordContent(
     modifier: Modifier = Modifier,
 ) {
-    var boxHeight by remember { mutableStateOf(0.dp) }
+    var chartHeight by remember { mutableStateOf(0.dp) }
 
     Row(
-        modifier = modifier.padding(horizontal = 15.dp)
+        modifier = modifier.padding(horizontal = 15.dp),
+        horizontalArrangement = Arrangement.Center
     ) {
         PieChartScreen(
-            onHeightChange = { newHeight -> boxHeight = newHeight },
             modifier = Modifier
-                .weight(1f)
+                .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
                 .aspectRatio(1F)
         )
         Spacer(modifier = Modifier.width(10.dp))
         ChartLegendScreen(
             modifier = Modifier
                 .wrapContentWidth()
-                .height(if (boxHeight > 0.dp) boxHeight else Dp.Unspecified)
+                .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
                 .verticalScroll(
                     rememberScrollState()
-                )
+                ),
+            onHeightChange = { newHeight -> chartHeight = newHeight },
         )
 
     }
@@ -145,7 +144,6 @@ fun RecordContent(
 
 @Composable
 fun PieChartScreen(
-    onHeightChange: (Dp) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 // 1) 애니메이션 시작 플래그
@@ -176,19 +174,14 @@ fun PieChartScreen(
         )
     )
 
-    val density = LocalDensity.current
+
 
     LaunchedEffect(Unit) {
         startAnimation = true
     }
 
     Canvas(
-        modifier = modifier
-            .onSizeChanged { size -> // 2. 크기 변경 시 높이 측정
-                if (size.height > 0) { // 초기 0 값 무시
-                    onHeightChange(with(density) { size.height.toDp() })
-                }
-            },
+        modifier = modifier,
     ) {
         var startAngle = -90f
 
@@ -223,7 +216,7 @@ fun PieChartScreen(
 }
 
 @Composable
-fun ChartLegendScreen(modifier: Modifier = Modifier) {
+fun ChartLegendScreen(onHeightChange: (Dp) -> Unit, modifier: Modifier = Modifier) {
 
     val legendItems: List<Triple<String, String, Color>> =
         listOf(
@@ -234,42 +227,69 @@ fun ChartLegendScreen(modifier: Modifier = Modifier) {
             Triple("데이터 베이스", "1H", Color.Magenta),
         )
 
+    val density = LocalDensity.current
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        legendItems.forEach { item ->
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
+        legendItems.forEachIndexed { index, item ->
+            Column(
+                modifier = if (index == 0) {
                     Modifier
-                        .size(12.dp)
-                        .clip(CircleShape)
-                        .background(item.third)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    modifier = Modifier.basicMarquee(
-                        iterations = Int.MAX_VALUE,
+                        .wrapContentSize()//.background(Color.Blue)
+                        .onSizeChanged { size -> // 2. 크기 변경 시 높이 측정
+                            if (size.height > 0) { // 초기 0 값 무시
+                                onHeightChange(with(density) {
+                                    size.height.toDp() * 4 + if (legendItems.size > 1) {
+                                        (-15).dp
+                                    } else {
+                                        0.dp
+                                    }
+                                })
+                            }
+                        }
+                } else {
+                    Modifier.wrapContentSize()
+                }
 
-                        ),
-                    style = NeeGongNaeGongTheme.typography.labelSmall,
-                    color = NeeGongNaeGongTheme.colorScheme.chartLegendColor,
-                    text = item.first, maxLines = 1,
-                    overflow = TextOverflow.Ellipsis, fontSize = 14.sp
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        Modifier
+                            .size(12.dp)
+                            .clip(CircleShape)
+                            .background(item.third)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Column {
+                        Text(
+                            modifier = Modifier.basicMarquee(
+                                iterations = Int.MAX_VALUE,
+
+                                ),
+                            style = NeeGongNaeGongTheme.typography.labelMedium,
+                            color = NeeGongNaeGongTheme.colorScheme.chartLegend,
+                            text = item.first, maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+                Spacer(Modifier.height(5.dp))
+                Text(
+                    modifier = Modifier.offset(x = (20).dp),
+                    text = item.second,
+                    maxLines = 1,
+                    style = NeeGongNaeGongTheme.typography.bodyLarge,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 16.sp,
+                    color = NeeGongNaeGongTheme.colorScheme.blue,
                 )
+                if (index != legendItems.lastIndex) {
+                    Spacer(Modifier.height(15.dp))
+                }
             }
-            Spacer(Modifier.height(5.dp))
-            Text(
-                text = item.second,
-                maxLines = 1,
-                style = NeeGongNaeGongTheme.typography.bodyLarge,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 16.sp,
-                color = NeeGongNaeGongTheme.colorScheme.blue,
-                modifier = Modifier.padding(start = 20.dp, bottom = 8.dp)
-            )
-            Spacer(Modifier.height(15.dp))
+
         }
 
     }
@@ -300,7 +320,6 @@ fun PreviewRecordContent() {
 fun PreviewPieChart() {
     NeeGongNaeGongTheme {
         PieChartScreen(
-            {},
             Modifier
                 .fillMaxSize(),
         )
@@ -311,6 +330,6 @@ fun PreviewPieChart() {
 @Composable
 fun PreviewChartLegend() {
     NeeGongNaeGongTheme {
-        ChartLegendScreen()
+        ChartLegendScreen({})
     }
 }
