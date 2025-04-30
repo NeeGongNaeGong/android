@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -66,8 +67,14 @@ fun RecordRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         topBar = {
-            RecordTopBar(
-                popBackStack,
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "박준식 이번주 공부내용",
+                        style = NeeGongNaeGongTheme.typography.titleSmall,
+                    )
+                },
+                onNavigationClick = { popBackStack() }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
