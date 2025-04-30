@@ -77,6 +77,7 @@ fun RecordRoute(
                 onNavigationClick = { popBackStack() }
             )
         },
+        containerColor = NeeGongNaeGongTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
 
