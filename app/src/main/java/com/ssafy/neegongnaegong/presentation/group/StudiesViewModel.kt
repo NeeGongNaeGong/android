@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.group
 
 import androidx.lifecycle.viewModelScope
-import com.ssafy.neegongnaegong.domain.model.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
