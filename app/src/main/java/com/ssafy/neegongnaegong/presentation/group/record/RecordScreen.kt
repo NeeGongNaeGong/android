@@ -64,27 +64,20 @@ fun RecordRoute(
 //    viewModel: RecordViewModel = hiltViewModel()
 ) {
 //    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "박준식 이번주 공부내용",
-                        style = NeeGongNaeGongTheme.typography.titleSmall,
-                    )
-                },
-                onNavigationClick = { popBackStack() }
-            )
-        },
-        containerColor = NeeGongNaeGongTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
+    Column {
+        TopAppBar(
+            title = {
+                Text(
+                    text = "박준식 이번주 공부내용",
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
+                )
+            },
+            onNavigationClick = { popBackStack() }
+        )
 
         RecordContent(
             modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+                .weight(1F)
         )
     }
 }
