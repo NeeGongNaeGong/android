@@ -25,7 +25,6 @@ fun NeeGongNaeGongSnackbar(
 ) {
     Card(
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
             .then(modifier),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
