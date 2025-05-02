@@ -1,0 +1,38 @@
+package com.ssafy.neegongnaegong.module.di.usecase
+
+import com.ssafy.neegongnaegong.domain.repository.UserRepository
+import com.ssafy.neegongnaegong.domain.usecase.user.GetCurrentUserUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.GetUserUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.UpdateProfileImageUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.ValidateNicknameUseCase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object UserUseCaseModule {
+    @Provides
+    @Singleton
+    fun provideGetCurrentUserUseCase(userRepository: UserRepository): GetCurrentUserUseCase = GetCurrentUserUseCase(userRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase = GetUserUseCase(userRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateNicknameUseCase(userRepository: UserRepository): UpdateNicknameUseCase = UpdateNicknameUseCase(userRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateProfileImageUseCase(userRepository: UserRepository): UpdateProfileImageUseCase =
+        UpdateProfileImageUseCase(userRepository)
+
+    @Provides
+    @Singleton
+    fun provideValidateNicknameUseCase(userRepository: UserRepository): ValidateNicknameUseCase = ValidateNicknameUseCase(userRepository)
+}
