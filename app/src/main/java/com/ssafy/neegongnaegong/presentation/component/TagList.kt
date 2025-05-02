@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.component.write
+package com.ssafy.neegongnaegong.presentation.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.write.Tag
@@ -84,4 +85,23 @@ fun TagList(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TagListPreview() {
+    val dummyTags = listOf(
+        Tag(koName = "운동", enName = "exercise"),
+        Tag(koName = "공부", enName = "study"),
+        Tag(koName = "자기계발", enName = "self_improvement"),
+        Tag(koName = "운동2", enName = "self_improvement"),
+        Tag(koName = "운동3", enName = "self_improvement")
+    )
+
+    TagList(
+        modifier = Modifier.padding(16.dp),
+        tags = dummyTags,
+        onTagPlusClicked = {},
+        onTagEraseClicked = {}
+    )
 }

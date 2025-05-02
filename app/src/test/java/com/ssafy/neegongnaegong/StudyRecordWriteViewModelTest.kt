@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong
 
-import com.ssafy.neegongnaegong.presentation.timer.WriteContract
-import com.ssafy.neegongnaegong.presentation.timer.WriteViewModel
+import com.ssafy.neegongnaegong.presentation.timer.write.WriteContract
+import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
-class WriteViewModelTest {
+class StudyRecordWriteViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -30,32 +30,32 @@ class WriteViewModelTest {
 
     @Test
     fun updateDialogTagsWithoutKmpPerformanceTest() {
-        val viewModel = WriteViewModel()
+        val viewModel = StudyRecordWriteViewModel()
 
         val time = measureTimeMillis {
-            repeat(1000) {
+            repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("aaaaa")
+                    WriteContract.Event.OnSearchTextChanged("aaa")
                 )
             }
         }
 
-        println("updateDialogTags 1000회 수행 시간: ${time}ms")
+        println("updateDialogTags (기본 contains) 1000회 수행 시간: ${time}ms")
     }
 
     @Test
     fun updateDialogTagsWithKmpPerformanceTest() {
-        val viewModel = WriteViewModel()
+        val viewModel = StudyRecordWriteViewModel()
 
         val time = measureTimeMillis {
-            repeat(1000) {
+            repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("aaaaa")
+                    WriteContract.Event.OnSearchTextChangedWithKmp("aaa")
                 )
             }
         }
 
-        println("updateDialogTags with kmp 1000회 수행 시간: ${time}ms")
+        println("updateDialogTags (KMP) 1000회 수행 시간: ${time}ms")
     }
 
 

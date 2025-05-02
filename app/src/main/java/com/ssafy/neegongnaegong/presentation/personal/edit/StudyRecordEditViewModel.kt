@@ -1,70 +1,73 @@
-package com.ssafy.neegongnaegong.presentation.timer
+package com.ssafy.neegongnaegong.presentation.personal.edit
 
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
 @HiltViewModel
-class WriteViewModel @Inject constructor() :
-    BaseViewModel<WriteContract.Event, WriteContract.State, WriteContract.Effect>() {
-
-    override fun createInitialState(): WriteContract.State {
-        return WriteContract.State()
+class StudyRecordEditViewModel @Inject constructor() :
+    BaseViewModel<StudyRecordEditContract.Event, StudyRecordEditContract.State, StudyRecordEditContract.Effect>() {
+    override fun createInitialState(): StudyRecordEditContract.State {
+        return StudyRecordEditContract.State()
     }
 
-    override fun handleEvent(event: WriteContract.Event) {
+    override fun handleEvent(event: StudyRecordEditContract.Event) {
         when (event) {
-            // 글 작성
-            is WriteContract.Event.OnTitleChanged -> {
-                setState { copy(title = event.title) }
+            // 글 수정
+            is StudyRecordEditContract.Event.OnTitleChanged -> {
+                setState { copy(studyRecord = studyRecord.copy(title = event.title)) }
             }
 
-            is WriteContract.Event.OnContentChanged -> {
-                setState { copy(content = event.content) }
+            is StudyRecordEditContract.Event.OnContentChanged -> {
+                setState { copy(studyRecord = studyRecord.copy(content = event.content)) }
             }
 
             // 취소, 확인
-            is WriteContract.Event.OnCancelClicked -> {
-
+            is StudyRecordEditContract.Event.OnCancelClicked -> {
+                setEffect { StudyRecordEditContract.Effect.NavigateToHome }
             }
 
-            is WriteContract.Event.OnConfirmClicked -> {
+            is StudyRecordEditContract.Event.OnConfirmClicked -> {
 
             }
 
             // 태그 추가,삭제
-            is WriteContract.Event.OnTagEraseClicked -> {
+            is StudyRecordEditContract.Event.OnTagEraseClicked -> {
                 deleteTag(event.tag)
             }
 
-            is WriteContract.Event.OnTagSelected -> {
+            is StudyRecordEditContract.Event.OnTagSelected -> {
                 selectTag(event.tag)
             }
 
-            is WriteContract.Event.OnTagDeselected -> {
+            is StudyRecordEditContract.Event.OnTagDeselected -> {
                 deselectTag(event.tag)
             }
 
-            is WriteContract.Event.OnSearchTextChanged -> {
+            is StudyRecordEditContract.Event.OnSearchTextChanged -> {
+                updateDialogTags(event.query)
+            }
+
+            is StudyRecordEditContract.Event.OnSearchTextChangedWithKmp -> {
                 updateDialogTagsWithKmp(event.query)
             }
 
-            is WriteContract.Event.OnTagPlusClicked -> {
+            is StudyRecordEditContract.Event.OnTagPlusClicked -> {
                 moveFromTagsToSelectedTags()
                 setState { copy(isDialogShow = true) }
             }
 
-            is WriteContract.Event.OnDialogClose -> {
+            is StudyRecordEditContract.Event.OnDialogClose -> {
                 clearDialogTags()
                 setState { copy(isDialogShow = false) }
             }
 
-            is WriteContract.Event.OnDialogConfirmClicked -> {
+            is StudyRecordEditContract.Event.OnDialogConfirmClicked -> {
                 if (checkTagSize()) {
-                    setEffect { WriteContract.Effect.ShowTagLimitExceededToast }
+                    setEffect { StudyRecordEditContract.Effect.ShowTagLimitExceededToast }
                 } else {
                     moveFromSelectedTagsToTags()
                     clearDialogTags()
@@ -72,13 +75,21 @@ class WriteViewModel @Inject constructor() :
                 }
             }
 
-            is WriteContract.Event.OnDialogCancelClicked -> {
+            is StudyRecordEditContract.Event.OnDialogCancelClicked -> {
                 setState { copy(isDialogShow = false) }
             }
         }
     }
+    // edit
 
-    private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
+    fun loadStudyRecord(studyRecordId: Long){
+
+    }
+
+    // tag
+
+    private fun moveFromTagsToSelectedTags() =
+        setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
 
     private fun clearDialogTags() =
         setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
@@ -163,7 +174,8 @@ class WriteViewModel @Inject constructor() :
         val selected = uiState.value.tags
         val selectedInDialog = uiState.value.selectedTags
 
-        val availableTags = TagData.tags.filterNot { selected.contains(it) || selectedInDialog.contains(it) }
+        val availableTags =
+            TagData.tags.filterNot { selected.contains(it) || selectedInDialog.contains(it) }
 
         val startsWithList = availableTags.filter { tag ->
             tag.koName.startsWith(query) || tag.enName.lowercase().startsWith(query.lowercase())
@@ -217,8 +229,4 @@ class WriteViewModel @Inject constructor() :
     }
 
 
-    companion object {
-        const val MAX_TAG_LIMIT = 5
-    }
 }
-
