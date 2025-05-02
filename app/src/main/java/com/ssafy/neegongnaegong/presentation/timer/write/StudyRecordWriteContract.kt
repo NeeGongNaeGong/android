@@ -27,7 +27,7 @@ class StudyRecordWriteContract {
 
     data class State(
         // study record
-        val studyRecord: StudyRecord = StudyRecord(),
+        val studyRecord: StudyRecord = StudyRecord.default(),
         // tag
         val tags: List<Tag> = emptyList(),
         val selectedTags: List<Tag> = emptyList(),

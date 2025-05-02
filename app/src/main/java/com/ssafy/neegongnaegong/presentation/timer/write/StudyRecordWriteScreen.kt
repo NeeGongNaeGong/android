@@ -201,7 +201,7 @@ private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
             StudyRecordWriteScreen(
-                studyRecord = StudyRecord(),
+                studyRecord = StudyRecord.default(),
                 tags = PersonalPreviewDataProvider().getTags(),
                 onTitleChanged = {},
                 onContentChanged = {},
