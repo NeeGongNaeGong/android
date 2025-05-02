@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.component.snackbar
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -36,7 +38,10 @@ fun NeeGongNaeGongSnackbar(
         ) {
             prefix()
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .clipToBounds()
+                    .basicMarquee()
+                    .weight(1f),
                 text = message,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 style = NeeGongNaeGongTheme.typography.bodySmall
@@ -59,10 +64,10 @@ fun NeeGongNaeGongSnackbarPreview() {
 
 @NeeGongNaeGongPreviews
 @Composable
-fun NeeGongNaeGongSnackbarPreview_Prefix_Actions() {
+fun NeeGongNaeGongSnackbarPreview_Prefix_Actions_Marquee() {
     NeeGongNaeGongTheme {
         NeeGongNaeGongSnackbar(
-            message = "메시지",
+            message = "메시지".repeat(100),
             backgroundColor = NeeGongNaeGongTheme.colorScheme.gray1,
             prefix = {
                 Text(

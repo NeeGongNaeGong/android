@@ -58,4 +58,3 @@ class MultipleSnackbarState(private val durationMillis: Long) {
         _snackbars.clear()
     }
 }
-
