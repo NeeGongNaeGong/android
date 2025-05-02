@@ -7,11 +7,9 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import com.ssafy.neegongnaegong.domain.repository.CalendarRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
-import javax.inject.Inject
 
-class UpdatePersonalSchedulesUseCase @Inject constructor(
-    private val calendarRepository: CalendarRepository
-) {
+class UpdatePersonalSchedulesUseCase(private val calendarRepository: CalendarRepository) {
+
     suspend operator fun invoke(
         id: Long,
         schedule: ScheduleInfo,
