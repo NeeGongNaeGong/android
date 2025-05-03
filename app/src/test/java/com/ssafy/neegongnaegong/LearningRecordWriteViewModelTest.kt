@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
-class StudyRecordWriteViewModelTest {
+class LearningRecordWriteViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 

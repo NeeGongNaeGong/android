@@ -14,7 +14,7 @@ class PersonalViewModel @Inject constructor() :
     BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
 
     override fun createInitialState(): PersonalContract.State {
-        return PersonalContract.State(studyRecords = PersonalPreviewDataProvider().getStudyRecords())
+        return PersonalContract.State(learningRecords = PersonalPreviewDataProvider().getStudyRecords())
     }
 
     override fun handleEvent(event: PersonalContract.Event) {
@@ -89,7 +89,7 @@ class PersonalViewModel @Inject constructor() :
 
     // calendar
     private fun filteringRecordByDate(date: String) {
-        val filtered = uiState.value.studyRecords.filter {
+        val filtered = uiState.value.learningRecords.filter {
             it.startTime.substring(0, 10) == date
         }
         setState {
@@ -103,7 +103,7 @@ class PersonalViewModel @Inject constructor() :
     private fun filteringTodayRecord() {
         val today = LocalDate.now().toString()
 
-        val filtered = uiState.value.studyRecords.filter {
+        val filtered = uiState.value.learningRecords.filter {
             it.startTime.substring(0, 10) == today
         }
 
@@ -119,7 +119,7 @@ class PersonalViewModel @Inject constructor() :
     //tag
 
     private fun updateSelectedRecordsByTag() {
-        val filteredRecords = uiState.value.studyRecords.filter { record ->
+        val filteredRecords = uiState.value.learningRecords.filter { record ->
             uiState.value.tags.any { tag -> record.tags.contains(tag.koName) }
         }
 

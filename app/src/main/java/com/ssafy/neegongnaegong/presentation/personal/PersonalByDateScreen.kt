@@ -10,7 +10,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePickerState
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
@@ -22,7 +22,7 @@ fun PersonalByDateScreen(
     modifier: Modifier = Modifier,
     datePickerState: DatePickerState,
     selectedDate: String,
-    selectedRecordsByDate: List<StudyRecord>,
+    selectedRecordsByDate: List<LearningRecord>,
     onDateSelected: (String) -> Unit,
     navigateToEditScreen: (Long) -> Unit
 ) {
@@ -55,7 +55,7 @@ fun PersonalByDateScreen(
         } else {
             StudyRecordList(
                 modifier = Modifier.fillMaxSize(),
-                studyRecords = selectedRecordsByDate,
+                learningRecords = selectedRecordsByDate,
                 onClick = navigateToEditScreen
             )
         }

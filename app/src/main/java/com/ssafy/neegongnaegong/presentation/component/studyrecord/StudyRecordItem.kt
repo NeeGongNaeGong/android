@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toHourMinuteString
@@ -30,7 +30,7 @@ import com.ssafy.neegongnaegong.presentation.util.toTimeString
 
 @Composable
 fun StudyRecordItem(
-    record: StudyRecord,
+    record: LearningRecord,
     onClick: (Long) -> Unit = {},
 ) {
     Box(

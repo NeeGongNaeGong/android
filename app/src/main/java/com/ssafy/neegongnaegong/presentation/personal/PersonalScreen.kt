@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
@@ -53,7 +53,7 @@ fun PersonalRoute(
         uiState = uiState.value,
         onTagScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnTagScreenSelected) },
         onDateScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnDateScreenSelected) },
-        studyRecords = uiState.value.studyRecords,
+        learningRecords = uiState.value.learningRecords,
         onTagPlusClicked = { viewModel.setEvent(PersonalContract.Event.OnTagPlusClicked) },
         onTagEraseClicked = { viewModel.setEvent(PersonalContract.Event.OnTagEraseClicked(it)) },
         onDialogClosed = { viewModel.setEvent(PersonalContract.Event.OnDialogClose) },
@@ -76,7 +76,7 @@ fun PersonalContent(
     onTagScreenSelected: () -> Unit,
     onDateScreenSelected: () -> Unit,
     // study
-    studyRecords: List<StudyRecord>,
+    learningRecords: List<LearningRecord>,
     // tag
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
@@ -116,7 +116,7 @@ fun PersonalContent(
 
     PersonalScreen(
         modifier = modifier,
-        studyRecords = uiState.studyRecords,
+        learningRecords = uiState.learningRecords,
         // tag
         tags = uiState.tags,
         onTagPlusClicked = onTagPlusClicked,
@@ -134,13 +134,13 @@ fun PersonalContent(
 @Composable
 fun PersonalScreen(
     modifier: Modifier = Modifier,
-    studyRecords: List<StudyRecord>,
+    learningRecords: List<LearningRecord>,
     tags: List<Tag>,
-    selectedRecordsByTag: List<StudyRecord>,
+    selectedRecordsByTag: List<LearningRecord>,
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
     onDateSelected: (String) -> Unit,
-    selectedRecordsByDate: List<StudyRecord>,
+    selectedRecordsByDate: List<LearningRecord>,
     selectedDate: String,
     navigateToEditScreen: (Long) -> Unit
 ) {
@@ -190,7 +190,7 @@ fun PersonalScreen(
             when (page) {
                 0 -> PersonalByTagScreen(
                     tags = tags,
-                    studyRecords = if (tags.isEmpty()) studyRecords else selectedRecordsByTag,
+                    learningRecords = if (tags.isEmpty()) learningRecords else selectedRecordsByTag,
                     onTagPlusClicked = onTagPlusClicked,
                     onTagEraseClicked = onTagEraseClicked,
                     navigateToEditScreen = navigateToEditScreen
@@ -213,7 +213,7 @@ fun PersonalScreen(
 @Composable
 fun PersonalScreenPreview() {
     PersonalScreen(
-        studyRecords = PersonalPreviewDataProvider().getStudyRecords(),
+        learningRecords = PersonalPreviewDataProvider().getStudyRecords(),
         tags = PersonalPreviewDataProvider().getTags(),
         onTagPlusClicked = {},
         onTagEraseClicked = {},

@@ -1,9 +1,9 @@
-package com.ssafy.neegongnaegong.domain.model.personal
+package com.ssafy.neegongnaegong.domain.model.learning
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StudyRecord(
+data class LearningRecord(
     val id: Long,
     val title: String,
     val content: String,
@@ -12,7 +12,7 @@ data class StudyRecord(
     val tags: List<String>
 ) {
     companion object {
-        fun default(): StudyRecord = StudyRecord(
+        fun default(): LearningRecord = LearningRecord(
             id = 0,
             title = "",
             content = "",

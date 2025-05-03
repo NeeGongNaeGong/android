@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.personal.edit
 
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -29,7 +29,7 @@ class StudyRecordEditContract {
 
     data class State(
         // study record
-        val studyRecord: StudyRecord = StudyRecord.default(),
+        val learningRecord: LearningRecord = LearningRecord.default(),
         // tag
         val tags: List<Tag> = emptyList(),
         val selectedTags: List<Tag> = emptyList(),

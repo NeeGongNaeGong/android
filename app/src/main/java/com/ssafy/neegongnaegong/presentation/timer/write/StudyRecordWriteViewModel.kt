@@ -19,11 +19,11 @@ class StudyRecordWriteViewModel @Inject constructor() :
         when (event) {
             // 글 작성
             is StudyRecordWriteContract.Event.OnTitleChanged -> {
-                setState { copy(studyRecord = studyRecord.copy(title = event.title)) }
+                setState { copy(learningRecord = learningRecord.copy(title = event.title)) }
             }
 
             is StudyRecordWriteContract.Event.OnContentChanged -> {
-                setState { copy(studyRecord = studyRecord.copy(content = event.content)) }
+                setState { copy(learningRecord = learningRecord.copy(content = event.content)) }
             }
 
             // 취소, 확인

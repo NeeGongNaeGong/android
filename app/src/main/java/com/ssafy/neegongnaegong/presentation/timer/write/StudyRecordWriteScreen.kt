@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.component.TagList
@@ -120,7 +120,7 @@ fun StudyRecordWriteContent(
     StudyRecordWriteScreen(
         modifier = modifier,
         tags = uiState.tags,
-        studyRecord = uiState.studyRecord,
+        learningRecord = uiState.learningRecord,
         onTitleChanged = onTitleChanged,
         onContentChanged = onContentChanged,
         onTagPlusClicked = onTagPlusClicked,
@@ -136,7 +136,7 @@ fun StudyRecordWriteContent(
 @Composable
 fun StudyRecordWriteScreen(
     modifier: Modifier = Modifier,
-    studyRecord: StudyRecord,
+    learningRecord: LearningRecord,
     tags: List<Tag>,
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
@@ -156,13 +156,13 @@ fun StudyRecordWriteScreen(
         Column {
 
             DateTimeHeader(
-                dateText = studyRecord.startTime.toDateString(),
-                timeText = "${studyRecord.startTime.toTimeString()} ~ ${studyRecord.endTime.toTimeString()}"
+                dateText = learningRecord.startTime.toDateString(),
+                timeText = "${learningRecord.startTime.toTimeString()} ~ ${learningRecord.endTime.toTimeString()}"
             )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
-                title = studyRecord.title,
+                title = learningRecord.title,
                 onTitleChanged = onTitleChanged
             )
 
@@ -170,7 +170,7 @@ fun StudyRecordWriteScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight * 0.5f),
-                content = studyRecord.content,
+                content = learningRecord.content,
                 onContentChanged = onContentChanged,
             )
 
@@ -201,7 +201,7 @@ private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
             StudyRecordWriteScreen(
-                studyRecord = StudyRecord.default(),
+                learningRecord = LearningRecord.default(),
                 tags = PersonalPreviewDataProvider().getTags(),
                 onTitleChanged = {},
                 onContentChanged = {},

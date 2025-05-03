@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.personal
 
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -36,12 +36,12 @@ class PersonalContract {
         val unSelectedTags: List<Tag> = emptyList(),
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
-        val selectedRecordsByTag: List<StudyRecord> = emptyList(),
+        val selectedRecordsByTag: List<LearningRecord> = emptyList(),
         // study
-        val studyRecords: List<StudyRecord> = emptyList(),
+        val learningRecords: List<LearningRecord> = emptyList(),
         // calendar
         val selectedDate: String = "",
-        val selectedRecordsByDate: List<StudyRecord> = emptyList(),
+        val selectedRecordsByDate: List<LearningRecord> = emptyList(),
     ) : UiState
 
     sealed class Effect : UiEffect {
