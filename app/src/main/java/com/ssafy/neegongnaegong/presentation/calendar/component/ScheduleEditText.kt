@@ -5,15 +5,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -46,18 +45,18 @@ fun ScheduleEditText(
                 Text(
                     text = placeHolder,
                     style = NeeGongNaeGongTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.6f)
                 )
             }
         },
-        colors = MaterialTheme.textFieldColors()
+        colors = NeeGongNaeGongTheme.textFieldColors()
     )
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun ScheduleEditTextPreview() {
-    NeeGongNaeGongTheme(dynamicColor = false) {
+    NeeGongNaeGongTheme {
         ScheduleEditText(
             modifier = Modifier.fillMaxWidth(),
             text = "Preview Text",

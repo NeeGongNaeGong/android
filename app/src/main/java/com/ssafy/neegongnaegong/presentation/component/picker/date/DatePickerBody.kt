@@ -4,15 +4,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
@@ -68,7 +68,8 @@ fun DatePickerBody(
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f)
+                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
+                            contentAlignment = Alignment.Center
                         ) {
                             cell(date)
                         }
@@ -79,20 +80,18 @@ fun DatePickerBody(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DatePickerBodyPreview() {
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            DatePickerBody(
-                selectedMonth = YearMonth.now(),
-            ) { date ->
-                DatePickerCell(
-                    date = date,
-                    isSelected = date == LocalDate.now(),
-                    onSelected = {},
-                )
-            }
+    NeeGongNaeGongTheme {
+        DatePickerBody(
+            selectedMonth = YearMonth.now(),
+        ) { date ->
+            DatePickerCell(
+                date = date,
+                isSelected = date == LocalDate.now(),
+                onSelected = {},
+            )
         }
     }
 }

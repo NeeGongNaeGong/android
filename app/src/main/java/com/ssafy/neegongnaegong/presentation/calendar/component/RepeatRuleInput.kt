@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
+import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,13 +31,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -136,15 +134,15 @@ fun RepeatRuleTypeRadioButton(
                     modifier = Modifier
                         .width(IntrinsicSize.Min)
                         .padding(end = 8.dp)
-                        .bottomBorder(1.dp, MaterialTheme.colorScheme.onBackground),
+                        .bottomBorder(1.dp, NeeGongNaeGongTheme.colorScheme.primaryText),
                     text = "1",
-                    style = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground)
+                    style = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = NeeGongNaeGongTheme.colorScheme.primaryText)
                 )
                 BasicTextField(
                     modifier = Modifier
                         .width(IntrinsicSize.Min)
                         .padding(end = 8.dp)
-                        .bottomBorder(1.dp, MaterialTheme.colorScheme.onBackground),
+                        .bottomBorder(1.dp, NeeGongNaeGongTheme.colorScheme.primaryText),
                     value = string,
                     onValueChange = {
                         string = it
@@ -153,7 +151,7 @@ fun RepeatRuleTypeRadioButton(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
-                    textStyle = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
+                    textStyle = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = NeeGongNaeGongTheme.colorScheme.primaryText),
                 )
             }
         }
@@ -163,7 +161,7 @@ fun RepeatRuleTypeRadioButton(
                 .padding(end = 16.dp),
             text = type?.toDisplayString() ?: "반복 안 함",
             style = NeeGongNaeGongTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground
+            color = NeeGongNaeGongTheme.colorScheme.primaryText
         )
     }
 }
@@ -192,7 +190,7 @@ fun RepeatRuleEndDateInput(
                     DateTimeFormatter.ofPattern("yyyy년 M월 d일(E)까지", Locale.KOREAN).format(it)
                 } ?: "종료 날짜",
                 style = NeeGongNaeGongTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                color = NeeGongNaeGongTheme.colorScheme.primaryText
             )
             Switch(
                 modifier = Modifier
@@ -200,15 +198,7 @@ fun RepeatRuleEndDateInput(
                     .padding(end = 16.dp),
                 checked = hasEndDate,
                 onCheckedChange = { hasEndDate = it },
-                colors = SwitchDefaults.colors().copy(
-                    checkedThumbColor = MaterialTheme.colorScheme.primary,
-                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                    checkedBorderColor = MaterialTheme.colorScheme.primary,
-                    checkedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    uncheckedThumbColor = MaterialTheme.colorScheme.onBackground,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                    uncheckedBorderColor = MaterialTheme.colorScheme.onBackground
-                )
+                colors = NeeGongNaeGongTheme.switchColors()
             )
         }
         AnimatedVisibility(visible = hasEndDate) {
@@ -232,28 +222,48 @@ fun RepeatRuleRadioButton(
         RadioButton(
             modifier = Modifier.padding(start = 2.dp),
             selected = selected,
-            onClick = onClick
+            onClick = onClick,
+            colors = RadioButtonColors(
+                selectedColor = NeeGongNaeGongTheme.colorScheme.blue,
+                unselectedColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                disabledSelectedColor = NeeGongNaeGongTheme.colorScheme.blue,
+                disabledUnselectedColor = NeeGongNaeGongTheme.colorScheme.primaryText
+            )
         )
         Spacer(modifier = Modifier.width(8.dp))
         content()
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun RepeatRuleRadioButtonPreview(modifier: Modifier = Modifier) {
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            RepeatRuleInput(
-                repeatRule = RepeatRuleInfo(
-                    repeatType = RepeatType.DAILY,
-                    repeatInterval = 1,
-                    repeatDay = 1,
-                    endDate = null,
-                ),
-                onRepeatRuleChange = {}
-            )
-        }
+    NeeGongNaeGongTheme {
+        RepeatRuleInput(
+            repeatRule = RepeatRuleInfo(
+                repeatType = RepeatType.DAILY,
+                repeatInterval = 1,
+                repeatDay = 1,
+                endDate = null,
+            ),
+            onRepeatRuleChange = {}
+        )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun RepeatRuleRadioButtonPreview_EndDate(modifier: Modifier = Modifier) {
+    NeeGongNaeGongTheme {
+        RepeatRuleInput(
+            repeatRule = RepeatRuleInfo(
+                repeatType = RepeatType.DAILY,
+                repeatInterval = 1,
+                repeatDay = 1,
+                endDate = LocalDate.now(),
+            ),
+            onRepeatRuleChange = {}
+        )
     }
 }
 

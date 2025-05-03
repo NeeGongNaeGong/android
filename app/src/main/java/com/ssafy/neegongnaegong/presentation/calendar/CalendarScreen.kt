@@ -4,12 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +20,7 @@ import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.Schedul
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -146,7 +145,7 @@ fun CalendarScreen(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun PreviewCalendarScreen() {
     val calendarState = rememberCalendarState()
@@ -176,27 +175,25 @@ private fun PreviewCalendarScreen() {
         ),
     )
 
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            CalendarScreen(
-                calendarState = calendarState,
-                isOnCreate = isOnCreate,
-                schedules = mapOf(LocalDate.now() to schedules),
-                onMonthSelected = { },
-                onDateSelected = { },
-                createSchedule = { _, _ -> }
-            )
+    NeeGongNaeGongTheme {
+        CalendarScreen(
+            calendarState = calendarState,
+            isOnCreate = isOnCreate,
+            schedules = mapOf(LocalDate.now() to schedules),
+            onMonthSelected = { },
+            onDateSelected = { },
+            createSchedule = { _, _ -> }
+        )
 
-            CalendarScheduleDialog(
-                state = calendarState,
-                onDateSelected = {},
-                onMonthChanged = {},
-                onDismissRequest = {},
-                schedules = schedules,
-                onSubmit = { _, _ -> },
-                isOnCreate = isOnCreate,
-                onScheduleClick = {},
-            )
-        }
+        CalendarScheduleDialog(
+            state = calendarState,
+            onDateSelected = {},
+            onMonthChanged = {},
+            onDismissRequest = {},
+            schedules = schedules,
+            onSubmit = { _, _ -> },
+            isOnCreate = isOnCreate,
+            onScheduleClick = {},
+        )
     }
 }

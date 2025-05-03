@@ -2,21 +2,18 @@ package com.ssafy.neegongnaegong.presentation.component.picker.datetime.range
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.component.picker.date.range.DateRangePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.date.range.rememberDateRangePickerState
 import com.ssafy.neegongnaegong.presentation.component.picker.time.TimePicker
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -58,7 +55,7 @@ fun DateTimeRangePicker(
         state.updateEndDate(dateRangePickerState.endDate)
     }
 
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
+    Column(modifier = modifier) {
         DateTimeRangePickerBody(
             modifier = modifier,
             startDateTime = state.startDateTime,
@@ -110,7 +107,7 @@ fun DateTimeRangePicker(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateTimeRangePickerPreview_Focus_None() {
     val state = rememberDateTimeRangePickerState(
@@ -118,14 +115,12 @@ private fun DateTimeRangePickerPreview_Focus_None() {
         endDateTime = LocalDateTime.now().plusDays(1)
     )
 
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
-        }
+    NeeGongNaeGongTheme {
+        DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateTimeRangePickerPreview_Focus_Date() {
     val state = rememberDateTimeRangePickerState(
@@ -135,14 +130,12 @@ private fun DateTimeRangePickerPreview_Focus_Date() {
         focusOnStartDate()
     }
 
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
-        }
+    NeeGongNaeGongTheme {
+        DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateTimeRangePickerPreview_Focus_Time() {
     val state = rememberDateTimeRangePickerState(
@@ -152,14 +145,12 @@ private fun DateTimeRangePickerPreview_Focus_Time() {
         focusOnStartTime()
     }
 
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
-        }
+    NeeGongNaeGongTheme {
+        DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateTimeRangePickerPreview_Is_All_Day() {
     val state = rememberDateTimeRangePickerState(
@@ -169,9 +160,7 @@ private fun DateTimeRangePickerPreview_Is_All_Day() {
         updateIsAllDay(true)
     }
 
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
-        }
+    NeeGongNaeGongTheme {
+        DateTimeRangePicker(state = state, onStartDateTimeChange = {}, onEndDateTimeChange = {})
     }
 }

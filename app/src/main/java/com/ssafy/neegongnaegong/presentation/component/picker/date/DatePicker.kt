@@ -10,8 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
@@ -99,13 +100,15 @@ fun DatePicker(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateRangePickerPreview() {
     val state = rememberDatePickerState()
 
-    DatePicker(
-        state = state,
-        onDateSelected = {}
-    )
+    NeeGongNaeGongTheme {
+        DatePicker(
+            state = state,
+            onDateSelected = {}
+        )
+    }
 }

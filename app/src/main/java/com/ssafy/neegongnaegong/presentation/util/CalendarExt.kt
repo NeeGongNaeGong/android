@@ -1,8 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.util
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.DayOfWeek
 
 val dayOfWeekOrder = listOf(
@@ -18,7 +17,7 @@ val dayOfWeekOrder = listOf(
 val DayOfWeek.color
     @Composable
     get() = when (this) {
-        DayOfWeek.SUNDAY -> Color.Red
-        DayOfWeek.SATURDAY -> Color.Blue
-        else -> MaterialTheme.colorScheme.onBackground
+        DayOfWeek.SUNDAY -> NeeGongNaeGongTheme.colorScheme.peach
+        DayOfWeek.SATURDAY -> NeeGongNaeGongTheme.colorScheme.blue
+        else -> NeeGongNaeGongTheme.colorScheme.primaryText
     }

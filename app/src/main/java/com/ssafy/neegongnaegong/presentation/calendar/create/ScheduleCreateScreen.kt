@@ -3,9 +3,7 @@ package com.ssafy.neegongnaegong.presentation.calendar.create
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +15,6 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,8 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
@@ -40,6 +35,7 @@ import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -158,9 +154,7 @@ fun ScheduleCreateScreen(
             .fillMaxSize()
             .then(modifier)
     ) {
-        Box(modifier = Modifier.background(Color.Red)) {
-            CalendarTopAppBar()
-        }
+        CalendarTopAppBar()
 
         Column(
             modifier = Modifier
@@ -234,34 +228,32 @@ fun ScheduleCreateScreen(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun PreviewScheduleEditScreen() {
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            ScheduleCreateScreen(
-                modifier = Modifier.fillMaxSize(),
-                title = "New Schedule",
-                content = null,
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
-                location = null,
-                repeatRule = RepeatRuleInfo(
-                    repeatType = RepeatType.MONTHLY,
-                    repeatInterval = 1,
-                    repeatDay = 3,
-                    endDate = null
-                ),
-                onTitleChange = { },
-                onContentChange = { },
-                onLocationChange = { },
-                onRepeatRuleChanged = { },
-                onStartDateChange = { },
-                onEndDateChange = { },
-                onSaveScheduleClicked = { },
-                onCancelClick = { }
-            )
-        }
+    NeeGongNaeGongTheme {
+        ScheduleCreateScreen(
+            modifier = Modifier.fillMaxSize(),
+            title = "New Schedule",
+            content = null,
+            startDate = LocalDateTime.now(),
+            endDate = LocalDateTime.now().plusHours(1),
+            isAllDay = false,
+            location = null,
+            repeatRule = RepeatRuleInfo(
+                repeatType = RepeatType.MONTHLY,
+                repeatInterval = 1,
+                repeatDay = 3,
+                endDate = null
+            ),
+            onTitleChange = { },
+            onContentChange = { },
+            onLocationChange = { },
+            onRepeatRuleChanged = { },
+            onStartDateChange = { },
+            onEndDateChange = { },
+            onSaveScheduleClicked = { },
+            onCancelClick = { }
+        )
     }
 }

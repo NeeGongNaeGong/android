@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
@@ -95,7 +94,7 @@ fun CalendarPreview() {
     NeeGongNaeGongTheme {
         Calendar(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(NeeGongNaeGongTheme.colorScheme.background)
                 .fillMaxWidth(),
             state = state,
             onDateSelected = {},

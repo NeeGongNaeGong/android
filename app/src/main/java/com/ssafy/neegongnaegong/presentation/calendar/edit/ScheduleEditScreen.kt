@@ -14,9 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
@@ -39,6 +36,7 @@ import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -97,8 +95,6 @@ fun ScheduleEditContent(
     onCancelClick: () -> Unit,
 ) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
@@ -222,7 +218,7 @@ fun ScheduleEditScreen(
                 Text(
                     "취소",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText
                 )
             }
             TextButton(
@@ -232,41 +228,39 @@ fun ScheduleEditScreen(
                 Text(
                     "확인",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText
                 )
             }
         }
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun PreviewScheduleEditScreen() {
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            ScheduleEditScreen(
-                modifier = Modifier.fillMaxSize(),
-                title = "New Schedule",
-                content = null,
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
-                location = null,
-                repeatRule = RepeatRuleInfo(
-                    repeatType = RepeatType.MONTHLY,
-                    repeatInterval = 1,
-                    repeatDay = 3,
-                    endDate = null
-                ),
-                onTitleChange = { },
-                onContentChange = { },
-                onLocationChange = { },
-                onRepeatRuleChanged = { },
-                onStartDateChange = { },
-                onEndDateChange = { },
-                onSaveScheduleClicked = { },
-                onCancelClick = { }
-            )
-        }
+    NeeGongNaeGongTheme {
+        ScheduleEditScreen(
+            modifier = Modifier.fillMaxSize(),
+            title = "New Schedule",
+            content = null,
+            startDate = LocalDateTime.now(),
+            endDate = LocalDateTime.now().plusHours(1),
+            isAllDay = false,
+            location = null,
+            repeatRule = RepeatRuleInfo(
+                repeatType = RepeatType.MONTHLY,
+                repeatInterval = 1,
+                repeatDay = 3,
+                endDate = null
+            ),
+            onTitleChange = { },
+            onContentChange = { },
+            onLocationChange = { },
+            onRepeatRuleChanged = { },
+            onStartDateChange = { },
+            onEndDateChange = { },
+            onSaveScheduleClicked = { },
+            onCancelClick = { }
+        )
     }
 }

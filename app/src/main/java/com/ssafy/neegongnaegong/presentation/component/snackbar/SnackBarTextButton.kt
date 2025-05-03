@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -19,4 +20,12 @@ internal fun SnackBarTextButton(
         color = NeeGongNaeGongTheme.colorScheme.blue,
         style = NeeGongNaeGongTheme.typography.bodySmall
     )
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun SnackBarTextButtonPreview() {
+    NeeGongNaeGongTheme {
+        SnackBarTextButton("확인", {})
+    }
 }
