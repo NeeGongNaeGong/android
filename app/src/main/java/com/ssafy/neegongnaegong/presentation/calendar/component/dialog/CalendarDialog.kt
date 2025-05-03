@@ -12,13 +12,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 
 @Composable
 fun CalendarDialog(
     modifier: Modifier = Modifier,
-    date: LocalDate,
+    state: CalendarState,
     onDismissRequest: () -> Unit,
     content: @Composable (LocalDate) -> Unit = {},
 ) {
@@ -27,13 +29,13 @@ fun CalendarDialog(
         properties = DialogProperties(dismissOnClickOutside = true)
     ) {
         Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            CalendarDialogHeader(modifier = Modifier, date = date)
+            CalendarDialogHeader(modifier = Modifier, date = state.date)
             HorizontalDivider()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                content(date)
+                content(state.date)
             }
         }
     }
@@ -42,11 +44,12 @@ fun CalendarDialog(
 @Preview
 @Composable
 fun CalendarDialogPreview(modifier: Modifier = Modifier) {
+    val calendarState = rememberCalendarState()
     NeeGongNaeGongTheme(dynamicColor = false) {
         Surface {
             CalendarDialog(
                 modifier = modifier,
-                date = LocalDate.now(),
+                state = calendarState,
                 onDismissRequest = { },
             )
         }

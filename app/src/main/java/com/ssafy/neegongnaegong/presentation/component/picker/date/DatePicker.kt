@@ -68,7 +68,7 @@ fun DatePicker(
         )
     }
 
-    Column {
+    Column(modifier = modifier) {
         DatePickerHeader(
             modifier = Modifier
                 .padding(bottom = 10.dp)

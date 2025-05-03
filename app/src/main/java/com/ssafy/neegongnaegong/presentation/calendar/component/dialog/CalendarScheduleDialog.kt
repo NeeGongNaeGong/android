@@ -12,15 +12,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfo
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 
 @Composable
 fun CalendarScheduleDialog(
     modifier: Modifier = Modifier,
+    state: CalendarState,
     onDismissRequest: () -> Unit = {},
-    date: LocalDate,
     schedules: List<Schedule> = emptyList(),
     isOnCreate: Boolean = false,
     onSubmit: (LocalDate, String) -> Unit = { _, _ -> },
@@ -28,7 +30,7 @@ fun CalendarScheduleDialog(
 ) {
     CalendarDialog(
         modifier = modifier,
-        date = date,
+        state =  state,
         onDismissRequest = onDismissRequest,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -51,7 +53,7 @@ fun CalendarScheduleDialog(
                 }
             }
             ScheduleInput(
-                selectedDate = date,
+                selectedDate = state.date,
                 onSubmit = onSubmit,
                 isLoading = isOnCreate,
             )
@@ -62,9 +64,10 @@ fun CalendarScheduleDialog(
 @Preview
 @Composable
 fun CalendarScheduleDialogPreview() {
+    val calendarState = rememberCalendarState()
     NeeGongNaeGongTheme(dynamicColor = false) {
         Surface {
-            CalendarScheduleDialog(date = LocalDate.now())
+            CalendarScheduleDialog(state = calendarState)
         }
     }
 }

@@ -10,12 +10,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,35 +22,45 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun Calendar(
     modifier: Modifier = Modifier,
-    initialDate: LocalDate = LocalDate.now(),
-    initialMonth: YearMonth = YearMonth.now(),
-    minMonth: YearMonth = YearMonth.of(1900, 1),
-    maxMonth: YearMonth = YearMonth.of(2100, 12),
-    onMonthChanged: (YearMonth) -> Unit = {},
-    onDateSelected: (LocalDate) -> Unit = {},
+    state: CalendarState,
+    onMonthChanged: (YearMonth) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
     dateContent: @Composable (LocalDate) -> Unit = {},
 ) {
+    /**
+     * pageCount는 전체 달 수
+     * initialPage는 전체 중 초기 선택 달의 인덱스
+     */
     val pagerState = rememberPagerState(
-        pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
-        initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
+        pageCount = { ChronoUnit.MONTHS.between(state.minMonth, state.maxMonth).toInt() + 1 },
+        initialPage = ChronoUnit.MONTHS.between(state.minMonth, state.month).toInt(),
     )
-    var currentPage by remember { mutableIntStateOf(pagerState.currentPage) }
-    var selectedMonth by remember { mutableStateOf(initialMonth) }
-    var selectedDate by remember { mutableStateOf(initialDate) }
 
+    /**
+     * pagerState.currentPage가 변경될 때마다
+     * updateMonth
+     */
     LaunchedEffect(pagerState.currentPage) {
-        selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
-        currentPage = pagerState.currentPage
-        onMonthChanged(selectedMonth)
+        state.updateMonth(state.minMonth.plusMonths(pagerState.currentPage.toLong()))
     }
 
-    LaunchedEffect(selectedDate) {
-        if (selectedMonth != YearMonth.from(selectedDate)) {
-            selectedMonth = YearMonth.from(selectedDate)
-            pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
-            )
-        }
+    /**
+     * state.date가 변경될 때마다
+     * onDateSelected 호출
+     */
+    LaunchedEffect(state.date) {
+        onDateSelected(state.date)
+    }
+
+    /**
+     * state.month가 변경될 때마다
+     * 해당하는 달로 pagerState.currentPage 업데이트
+     */
+    LaunchedEffect(state.month) {
+        pagerState.animateScrollToPage(
+            ChronoUnit.MONTHS.between(state.minMonth, state.month).toInt()
+        )
+        onMonthChanged(state.month)
     }
 
     Column(modifier = modifier) {
@@ -63,22 +68,19 @@ fun Calendar(
             modifier = Modifier
                 .padding(bottom = 10.dp)
                 .fillMaxWidth(),
-            selectedMonth = selectedMonth
+            selectedMonth = state.month
         )
         HorizontalPager(
             state = pagerState,
             beyondViewportPageCount = 1
         ) { page ->
             key(page) {
-                val displayedMonth = minMonth.plusMonths(page.toLong())
+                val displayedMonth = state.minMonth.plusMonths(page.toLong())
                 CalendarBody(
                     modifier = Modifier.fillMaxSize(),
                     selectedMonth = displayedMonth,
-                    selectedDate = selectedDate,
-                    onDateSelected = { date ->
-                        selectedDate = date
-                        onDateSelected(selectedDate)
-                    },
+                    selectedDate = state.date,
+                    onDateSelected = state::updateDate,
                     dateContent = dateContent
                 )
             }
@@ -89,11 +91,15 @@ fun Calendar(
 @Preview
 @Composable
 fun CalendarPreview() {
+    val state = rememberCalendarState()
     NeeGongNaeGongTheme {
         Calendar(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxWidth(),
+            state = state,
+            onDateSelected = {},
+            onMonthChanged = {}
         )
     }
 }
