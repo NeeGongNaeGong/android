@@ -1,19 +1,14 @@
 package com.ssafy.neegongnaegong.presentation.calendar
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -79,7 +74,6 @@ fun CalendarContent(
     navigateToEditSchedule: (Schedule) -> Unit,
 ) {
     val calendarState = rememberCalendarState(uiState.selectedDate)
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
@@ -112,14 +106,9 @@ fun CalendarContent(
     if (uiState.isLoading) LoadingDialog()
 
     if (uiState.isCalendarDialogShow) CalendarScheduleDialog(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.background,
-                RoundedCornerShape(20.dp)
-            )
-            .height(screenHeight * 0.7f)
-            .padding(20.dp),
         state = calendarState,
+        onMonthChanged = onMonthSelected,
+        onDateSelected = onDateSelected,
         onDismissRequest = onDialogDismissRequest,
         schedules = uiState.schedules[uiState.selectedDate] ?: emptyList(),
         isOnCreate = uiState.isOnCreate,
@@ -161,7 +150,6 @@ fun CalendarScreen(
 @Composable
 private fun PreviewCalendarScreen() {
     val calendarState = rememberCalendarState()
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val isOnCreate = true
     val schedules = listOf(
         Schedule(
@@ -200,14 +188,9 @@ private fun PreviewCalendarScreen() {
             )
 
             CalendarScheduleDialog(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.background,
-                        RoundedCornerShape(20.dp)
-                    )
-                    .height(screenHeight * 0.7f)
-                    .padding(20.dp),
                 state = calendarState,
+                onDateSelected = {},
+                onMonthChanged = {},
                 onDismissRequest = {},
                 schedules = schedules,
                 onSubmit = { _, _ -> },

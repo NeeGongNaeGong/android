@@ -4,24 +4,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.YearMonth
 
 @Composable
 fun CalendarScheduleDialog(
     modifier: Modifier = Modifier,
     state: CalendarState,
+    onMonthChanged: (YearMonth) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
     onDismissRequest: () -> Unit = {},
     schedules: List<Schedule> = emptyList(),
     isOnCreate: Boolean = false,
@@ -30,9 +34,11 @@ fun CalendarScheduleDialog(
 ) {
     CalendarDialog(
         modifier = modifier,
-        state =  state,
+        state = state,
+        onMonthChanged = onMonthChanged,
+        onDateSelected = onDateSelected,
         onDismissRequest = onDismissRequest,
-    ) {
+    ) { date ->
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Column(
                 modifier = Modifier
@@ -53,7 +59,7 @@ fun CalendarScheduleDialog(
                 }
             }
             ScheduleInput(
-                selectedDate = state.date,
+                selectedDate = date,
                 onSubmit = onSubmit,
                 isLoading = isOnCreate,
             )
@@ -61,13 +67,31 @@ fun CalendarScheduleDialog(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 fun CalendarScheduleDialogPreview() {
-    val calendarState = rememberCalendarState()
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            CalendarScheduleDialog(state = calendarState)
-        }
+    val now: LocalDateTime = LocalDateTime.now()
+    val calendarState = rememberCalendarState(now.toLocalDate())
+    val schedules: MutableList<Schedule> = mutableListOf(
+        Schedule(
+            id = 1L,
+            type = ScheduleType.PERSONAL,
+            info = com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo(
+                title = "Test Schedule",
+                content = "This is a test schedule",
+                startAt = now,
+                endAt = now.plusHours(1),
+                isAllDay = false,
+            )
+        ),
+    )
+
+    NeeGongNaeGongTheme {
+        CalendarScheduleDialog(
+            state = calendarState,
+            schedules = schedules,
+            onMonthChanged = {},
+            onDateSelected = {},
+        )
     }
 }
