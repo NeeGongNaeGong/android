@@ -1,9 +1,8 @@
 package com.ssafy.neegongnaegong.presentation.personal
 
 import com.ssafy.neegongnaegong.domain.data.TagData
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel

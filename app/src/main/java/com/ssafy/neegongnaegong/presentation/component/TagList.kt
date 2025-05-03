@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)

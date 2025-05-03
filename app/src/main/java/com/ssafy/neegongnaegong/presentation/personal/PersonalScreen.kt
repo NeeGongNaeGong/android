@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import kotlinx.coroutines.flow.Flow

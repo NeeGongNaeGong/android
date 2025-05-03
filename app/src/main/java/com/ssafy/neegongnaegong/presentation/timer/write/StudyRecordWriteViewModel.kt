@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.timer.write
 
 import com.ssafy.neegongnaegong.domain.data.TagData
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

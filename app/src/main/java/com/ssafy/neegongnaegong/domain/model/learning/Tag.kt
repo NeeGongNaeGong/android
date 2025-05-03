@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.domain.model.write
+package com.ssafy.neegongnaegong.domain.model.learning
 
 data class Tag(
     val koName: String,

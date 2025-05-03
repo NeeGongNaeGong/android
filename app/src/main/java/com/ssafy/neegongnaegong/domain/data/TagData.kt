@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.domain.data
 
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 
 object TagData {
     val tags: List<Tag> = listOf(

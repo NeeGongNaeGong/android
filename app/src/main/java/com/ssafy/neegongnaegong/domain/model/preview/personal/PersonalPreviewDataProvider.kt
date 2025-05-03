@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.domain.model.preview.personal
 
 import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 
 class PersonalPreviewDataProvider {
 
