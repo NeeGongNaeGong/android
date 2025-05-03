@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -90,17 +91,9 @@ fun TagList(
 @Preview(showBackground = true)
 @Composable
 fun TagListPreview() {
-    val dummyTags = listOf(
-        Tag(koName = "운동", enName = "exercise"),
-        Tag(koName = "공부", enName = "study"),
-        Tag(koName = "자기계발", enName = "self_improvement"),
-        Tag(koName = "운동2", enName = "self_improvement"),
-        Tag(koName = "운동3", enName = "self_improvement")
-    )
-
     TagList(
         modifier = Modifier.padding(16.dp),
-        tags = dummyTags,
+        tags = PersonalPreviewDataProvider().getTags(),
         onTagPlusClicked = {},
         onTagEraseClicked = {}
     )
