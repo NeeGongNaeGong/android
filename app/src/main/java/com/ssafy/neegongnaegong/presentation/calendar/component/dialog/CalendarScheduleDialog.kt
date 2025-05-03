@@ -9,10 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
-import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfo
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfoItem
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -27,7 +28,7 @@ fun CalendarScheduleDialog(
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onDismissRequest: () -> Unit = {},
-    schedules: List<Schedule> = emptyList(),
+    schedules: Map<LocalDate, List<Schedule>> = emptyMap(),
     isOnCreate: Boolean = false,
     onSubmit: (LocalDate, String) -> Unit = { _, _ -> },
     onScheduleClick: (Schedule) -> Unit = {},
@@ -45,17 +46,19 @@ fun CalendarScheduleDialog(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                schedules.fastForEachIndexed { index, schedule ->
-                    ScheduleInfo(
-                        modifier = Modifier
-                            .padding(1.dp)
-                            .fillMaxWidth(),
-                        schedule = schedule,
-                        showPrefix = index == 0
-                                || schedule.info.startAt.toLocalTime() != schedules[index - 1].info.startAt.toLocalTime()
-                                || !(schedule.info.isAllDay && schedules[index - 1].info.isAllDay),
-                        onClick = onScheduleClick
-                    )
+                schedules[date]?.let { schedules ->
+                    schedules.fastForEachIndexed { index, schedule ->
+                        ScheduleInfoItem(
+                            modifier = Modifier
+                                .padding(1.dp)
+                                .fillMaxWidth(),
+                            schedule = schedule,
+                            showPrefix = index == 0
+                                    || schedule.info.startAt.toLocalTime() != schedules[index - 1].info.startAt.toLocalTime()
+                                    || !(schedule.info.isAllDay && schedules[index - 1].info.isAllDay),
+                            onClick = onScheduleClick
+                        )
+                    }
                 }
             }
             ScheduleInput(
@@ -72,19 +75,24 @@ fun CalendarScheduleDialog(
 fun CalendarScheduleDialogPreview() {
     val now: LocalDateTime = LocalDateTime.now()
     val calendarState = rememberCalendarState(now.toLocalDate())
-    val schedules: MutableList<Schedule> = mutableListOf(
-        Schedule(
-            id = 1L,
-            type = ScheduleType.PERSONAL,
-            info = com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo(
-                title = "Test Schedule",
-                content = "This is a test schedule",
-                startAt = now,
-                endAt = now.plusHours(1),
-                isAllDay = false,
+    val schedules = mutableMapOf<LocalDate, List<Schedule>>().apply {
+        put(
+            now.toLocalDate(),
+            mutableListOf(
+                Schedule(
+                    id = 1L,
+                    type = ScheduleType.PERSONAL,
+                    info = ScheduleInfo(
+                        title = "Test Schedule",
+                        content = "This is a test schedule",
+                        startAt = now,
+                        endAt = now.plusHours(1),
+                        isAllDay = false,
+                    )
+                ),
             )
-        ),
-    )
+        )
+    }
 
     NeeGongNaeGongTheme {
         CalendarScheduleDialog(

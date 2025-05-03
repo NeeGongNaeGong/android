@@ -30,13 +30,13 @@ import com.ssafy.neegongnaegong.presentation.util.getTextWidthDp
 import java.time.LocalDateTime
 
 @Composable
-fun ScheduleInfo(
+fun ScheduleInfoItem(
     modifier: Modifier = Modifier,
     schedule: Schedule,
     showPrefix: Boolean = true,
     onClick: (Schedule) -> Unit = {}
 ) {
-    ScheduleInfo(
+    ScheduleInfoItem(
         modifier = modifier,
         showPrefix = showPrefix,
         startTime = schedule.info.startAt,
@@ -49,7 +49,7 @@ fun ScheduleInfo(
 }
 
 @Composable
-fun ScheduleInfo(
+fun ScheduleInfoItem(
     modifier: Modifier = Modifier,
     startTime: LocalDateTime,
     endTime: LocalDateTime,
@@ -137,11 +137,11 @@ fun ScheduleInfo(
 
 @NeeGongNaeGongPreviews
 @Composable
-fun ScheduleInfoPreview() {
+fun ScheduleInfoItemPreview() {
     NeeGongNaeGongTheme {
         Surface {
             Column {
-                ScheduleInfo(
+                ScheduleInfoItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(NeeGongNaeGongTheme.colorScheme.background),
@@ -151,7 +151,7 @@ fun ScheduleInfoPreview() {
                     title = "Test Schedule",
                     color = Color.Red
                 )
-                ScheduleInfo(
+                ScheduleInfoItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(NeeGongNaeGongTheme.colorScheme.background),
@@ -162,7 +162,7 @@ fun ScheduleInfoPreview() {
                     color = Color.Red,
                     showPrefix = false,
                 )
-                ScheduleInfo(
+                ScheduleInfoItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(NeeGongNaeGongTheme.colorScheme.background),

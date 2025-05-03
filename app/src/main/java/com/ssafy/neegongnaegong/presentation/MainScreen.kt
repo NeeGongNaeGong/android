@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,7 +28,7 @@ import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawe
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
-import com.ssafy.neegongnaegong.presentation.personal.PersonalRoute
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
@@ -90,6 +89,7 @@ fun MainScreen() {
         },
     ) {
         Scaffold(
+            containerColor = NeeGongNaeGongTheme.colorScheme.background,
             snackbarHost = { NeeGongNaeGongSnackbarHost() },
             bottomBar = {
                 if (showBottomNavigationBar) BottomNavigationBar(navController = navController)
@@ -150,7 +150,7 @@ fun ProfileScreen() {
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewMainScreen() {
     NeeGongNaeGongTheme {

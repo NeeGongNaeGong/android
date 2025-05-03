@@ -109,7 +109,7 @@ fun CalendarContent(
         onMonthChanged = onMonthSelected,
         onDateSelected = onDateSelected,
         onDismissRequest = onDialogDismissRequest,
-        schedules = uiState.schedules[uiState.selectedDate] ?: emptyList(),
+        schedules = uiState.schedules,
         isOnCreate = uiState.isOnCreate,
         onSubmit = createSchedule,
         onScheduleClick = onScheduleClicked,
@@ -150,36 +150,42 @@ fun CalendarScreen(
 private fun PreviewCalendarScreen() {
     val calendarState = rememberCalendarState()
     val isOnCreate = true
-    val schedules = listOf(
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 1,
-            info = ScheduleInfo(
-                title = "Meeting",
-                content = "Meeting",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
-            ),
-        ),
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 2,
-            info = ScheduleInfo(
-                title = "Lunch",
-                content = "Lunch",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
+    val now = LocalDateTime.now()
+    val schedules = mutableMapOf<LocalDate, List<Schedule>>().apply {
+        put(
+            now.toLocalDate(),
+            listOf(
+                Schedule(
+                    type = ScheduleType.PERSONAL,
+                    id = 1,
+                    info = ScheduleInfo(
+                        title = "Meeting",
+                        content = "Meeting",
+                        startAt = now,
+                        endAt = now.plusHours(1),
+                        isAllDay = false,
+                    ),
+                ),
+                Schedule(
+                    type = ScheduleType.PERSONAL,
+                    id = 2,
+                    info = ScheduleInfo(
+                        title = "Lunch",
+                        content = "Lunch",
+                        startAt = now,
+                        endAt = now.plusHours(1),
+                        isAllDay = false,
+                    )
+                ),
             )
-        ),
-    )
+        )
+    }
 
     NeeGongNaeGongTheme {
         CalendarScreen(
             calendarState = calendarState,
             isOnCreate = isOnCreate,
-            schedules = mapOf(LocalDate.now() to schedules),
+            schedules = schedules,
             onMonthSelected = { },
             onDateSelected = { },
             createSchedule = { _, _ -> }
