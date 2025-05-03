@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group
 
-import com.ssafy.neegongnaegong.domain.model.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState

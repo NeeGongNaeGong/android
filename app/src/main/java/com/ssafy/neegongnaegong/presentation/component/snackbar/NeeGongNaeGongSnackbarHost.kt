@@ -1,18 +1,24 @@
 package com.ssafy.neegongnaegong.presentation.component.snackbar
 
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.ssafy.neegongnaegong.presentation.component.snackbar.multiple.MultipleSnackbarHost
+import com.ssafy.neegongnaegong.presentation.component.snackbar.multiple.rememberMultipleSnackbarState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
 @Composable
 fun NeeGongNaeGongSnackbarHost() {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val multipleSnackbarState = rememberMultipleSnackbarState()
+
+    DisposableEffect(Unit) {
+        onDispose {
+            multipleSnackbarState.clear()
+        }
+    }
 
     LaunchedEffect(Unit) {
         SnackbarManager.message.collect {
@@ -21,22 +27,23 @@ fun NeeGongNaeGongSnackbarHost() {
                 message = message,
                 type = type,
                 actionLabel = action?.label,
-                actionCallback = {
-                    action?.callback?.invoke()
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                }
+                actionCallback = action?.callback ?: {}
             )
-            snackbarHostState.showSnackbar(visuals)
+            multipleSnackbarState.showSnackbar(visuals)
         }
     }
 
-    SnackbarHost(hostState = snackbarHostState) {
-        val visuals = it.visuals as? NeeGongNaeGongSnackbarVisuals ?: return@SnackbarHost
+    MultipleSnackbarHost(multipleSnackbarState = multipleSnackbarState) { entry ->
         NeeGongNaeGongSnackbarWithVisuals(
             modifier = Modifier.dismissWithDragGestures {
-                snackbarHostState.currentSnackbarData?.dismiss()
+                multipleSnackbarState.dismissSnackbar(entry.id)
             },
-            visuals = visuals,
+            visuals = entry.visuals.copy(
+                actionCallback = {
+                    entry.visuals.actionCallback()
+                    multipleSnackbarState.dismissSnackbar(entry.id)
+                }
+            ),
         )
     }
 }

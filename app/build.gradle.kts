@@ -112,6 +112,9 @@ dependencies {
     // Kotlinx-collections-immutable (Persistent List, Immutable List)
     implementation(libs.kotlinx.collections.immutable)
 
+    // landscapist(image loader, glide)
+    implementation(libs.landscapist.glide)
+
     // fcm
     implementation(libs.firebase.messaging.ktx)
 }

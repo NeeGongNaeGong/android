@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
-import com.ssafy.neegongnaegong.data.remote.GitHubApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
@@ -100,10 +99,6 @@ object NetworkModule {
         .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
         .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
         .build()
-
-    @Provides
-    @Singleton
-    fun provideGitHubApi(@AuthRetrofit retrofit: Retrofit): GitHubApi = retrofit.create(GitHubApi::class.java)
 
     @Provides
     @Singleton
