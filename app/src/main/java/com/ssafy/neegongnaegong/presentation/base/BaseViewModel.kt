@@ -68,35 +68,6 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     }
 
     /**
-     * Flow에 맞춰 Loading 상태를 전달하는 함수
-     *
-     * @param setLoading onStart에 true를 전달하고, onCompletion에 false를 전달
-     */
-    protected fun <T> Flow<T>.withLoading(setLoading: (Boolean) -> Unit = {}): Flow<T> {
-        return this.onStart { setLoading(true) }.onCompletion { setLoading(false) }
-    }
-
-    /**
-     * 안전하게 Flow를 collect하는 함수
-     * 실패시 [_handleException]로 공통 에러 로직 처리 후
-     * [handleException]로 커스템 에러 로직 처리
-     *
-     * @param errorContext ErrorContext
-     * @param block collect 시 실행할 블록
-     */
-    protected suspend fun <T> Flow<T>.safeCollect(
-        errorContext: ErrorContext = ErrorContext.NONE,
-        block: suspend (T) -> Unit = {}
-    ) {
-        runCatching {
-            collect { value -> block(value) }
-        }.onFailure { exception ->
-            exception.printStackTrace()
-            _handleException(exception, errorContext)
-        }
-    }
-
-    /**
      * 일반 메시지를 snackbar로 표시합니다.
      *
      * ViewModel 내에서 간편하게 호출할 수 있도록 [SnackbarManager.showMessage]를 viewModelScope 내에서 실행합니다.
@@ -162,6 +133,38 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
         SnackbarManager.showErrorMessage(message, action)
     }
 
+
+    /**
+     * Flow에 맞춰 Loading 상태를 전달하는 함수
+     *
+     * @param setLoading onStart에 true를 전달하고, onCompletion에 false를 전달
+     */
+    protected fun <T> Flow<T>.withLoading(setLoading: (Boolean) -> Unit = {}): Flow<T> {
+        return this.onStart { setLoading(true) }.onCompletion { setLoading(false) }
+    }
+
+    /**
+     * 안전하게 Flow를 collect하는 함수
+     * 실패시 [_handleException]로 공통 에러 로직 처리 후
+     * [handleException]로 커스템 에러 로직 처리
+     *
+     * @param errorContext ErrorContext
+     * @param block collect 시 실행할 블록
+     */
+    protected suspend fun <T> Flow<T>.safeCollect(
+        errorContext: ErrorContext? = null,
+        block: suspend (T) -> Unit = {}
+    ) {
+        runCatching {
+            collect { value -> block(value) }
+        }.onFailure { exception ->
+            exception.printStackTrace()
+            _handleException<T>(exception, errorContext) {
+                this.safeCollect(errorContext, block)
+            }
+        }
+    }
+
     /**
      * safeCollect 중 발생한 예외를 처리하는 함수
      * 공통 에러를 처리하고, 추가적인 에러 처리는 handleErrorContext에 전달
@@ -172,8 +175,13 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      *
      * @param e Throwable
      * @param errorContext ErrorContext
+     * @param retry 재시도 콜백
      */
-    private fun _handleException(e: Throwable, errorContext: ErrorContext) {
+    private fun <T> _handleException(
+        e: Throwable,
+        errorContext: ErrorContext?,
+        retry: suspend () -> Unit
+    ) {
         when (e) {
             is AuthException.InvalidTokenException -> viewModelScope.launch {
                 showErrorMessage(e.message)
@@ -181,22 +189,29 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             }
 
             is ApiException.ServerException -> viewModelScope.launch {
-                showErrorMessage(e.message)
+                showErrorMessage(
+                    e.message,
+                    SnackbarManager.Action.retry { viewModelScope.launch { retry() } }
+                )
             }
 
             is ApiException.NetworkException -> viewModelScope.launch {
                 showErrorMessage(e.message)
             }
+
+            else -> errorContext?.let { handleException(e, it) { viewModelScope.launch { retry() } } }
         }
-        handleException(e, errorContext)
     }
 
     /**
      * ErrorContext에 따라 예외를 처리하는 함수
      * 상속 시 각 ViewModel에서 추가적인 에러 처리를 할 수 있음
      *
+     * 너무 많은 수정이 필요해서 abstract 대신에 open으로 해놨습니다.
+     *
      * @param e Throwable
      * @param errorContext ErrorContext
+     * @param retry 재시도 콜백
      */
-    open fun handleException(e: Throwable, errorContext: ErrorContext) {}
+    open fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {}
 }

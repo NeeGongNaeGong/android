@@ -38,7 +38,12 @@ fun NeeGongNaeGongSnackbarHost() {
             modifier = Modifier.dismissWithDragGestures {
                 multipleSnackbarState.dismissSnackbar(entry.id)
             },
-            visuals = entry.visuals,
+            visuals = entry.visuals.copy(
+                actionCallback = {
+                    entry.visuals.actionCallback()
+                    multipleSnackbarState.dismissSnackbar(entry.id)
+                }
+            ),
         )
     }
 }

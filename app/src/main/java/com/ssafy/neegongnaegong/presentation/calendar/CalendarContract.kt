@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.calendar
 
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
@@ -37,5 +38,10 @@ class CalendarContract {
         data class NavigateToCreateScheduleScreen(val date: LocalDate) : Effect()
         data class NavigateToScheduleDetailScreen(val schedule: Schedule) : Effect()
         data class NavigateToScheduleEditScreen(val schedule: Schedule) : Effect()
+    }
+
+    sealed class Error: ErrorContext {
+        data object GetSchedulesError: Error()
+        data object CreateScheduleError: Error()
     }
 }
