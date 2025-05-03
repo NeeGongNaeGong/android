@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
@@ -69,33 +68,31 @@ fun DatePicker(
         )
     }
 
-    Surface(modifier = modifier) {
-        Column {
-            DatePickerHeader(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth(),
-                selectedMonth = state.month
-            )
-            HorizontalPager(
-                modifier = Modifier.wrapContentHeight(),
-                state = pagerState,
-                beyondViewportPageCount = 1
-            ) { page ->
-                key(page) {
-                    val displayMonth = minMonth.plusMonths(page.toLong())
-                    DatePickerBody(
+    Column {
+        DatePickerHeader(
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .fillMaxWidth(),
+            selectedMonth = state.month
+        )
+        HorizontalPager(
+            modifier = Modifier.wrapContentHeight(),
+            state = pagerState,
+            beyondViewportPageCount = 1
+        ) { page ->
+            key(page) {
+                val displayMonth = minMonth.plusMonths(page.toLong())
+                DatePickerBody(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedMonth = displayMonth,
+                ) { date ->
+                    val isSelected = state.date == date
+                    DatePickerCell(
                         modifier = Modifier.fillMaxWidth(),
-                        selectedMonth = displayMonth,
-                    ) { date ->
-                        val isSelected = state.date == date
-                        DatePickerCell(
-                            modifier = Modifier.fillMaxWidth(),
-                            date = date,
-                            isSelected = isSelected,
-                            onSelected = state::updateDate,
-                        )
-                    }
+                        date = date,
+                        isSelected = isSelected,
+                        onSelected = state::updateDate,
+                    )
                 }
             }
         }

@@ -29,6 +29,7 @@ import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawe
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
+import com.ssafy.neegongnaegong.presentation.personal.PersonalRoute
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 

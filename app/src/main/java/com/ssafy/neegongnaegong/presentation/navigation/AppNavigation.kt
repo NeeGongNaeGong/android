@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
+import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -77,6 +78,9 @@ object AppNavigation {
             // Study Tab의 Main 화면의 경로
             @Serializable
             data object Main : Personal
+
+            @Serializable
+            data class Edit(val studyRecordId: Long) : Personal
         }
 
         @Serializable
