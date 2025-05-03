@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -103,7 +104,8 @@ fun MainScreen() {
                 modifier =
                     Modifier
                         .padding(innerPadding)
-                        .consumeWindowInsets(innerPadding),
+                        .consumeWindowInsets(innerPadding)
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
             ) {
                 MainNavigationGraph(navController = navController)
             }
