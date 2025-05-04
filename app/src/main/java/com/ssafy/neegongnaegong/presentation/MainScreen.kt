@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -29,6 +31,7 @@ import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawe
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
+import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
@@ -48,6 +51,8 @@ fun MainScreen() {
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    val context = LocalContext.current
 
     LaunchedEffect(isStudiesDrawerOpen) {
         if (isStudiesDrawerOpen) {
@@ -96,6 +101,10 @@ fun MainScreen() {
                 if (showBottomNavigationBar) {
                     BottomNavigationBar(
                         navController = navController,
+                        onFabClick = {
+                            val intent = Intent(context, TimerActivity::class.java)
+                            context.startActivity(intent)
+                        },
                     )
                 }
             },
