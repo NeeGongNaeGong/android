@@ -27,7 +27,6 @@ fun TimerRoute(
     modifier: Modifier = Modifier,
     viewModel: TimerViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
-    navigateToWriteScreen: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,7 +40,8 @@ fun TimerRoute(
         onPlayClicked = { viewModel.setEvent(TimerContract.Event.OnPlayClicked) },
         onCancelDialog = { viewModel.setEvent(TimerContract.Event.OnCancelDialog) },
         onDismissDialog = { viewModel.setEvent(TimerContract.Event.OnDismissDialog) },
-        navigateToWriteScreen = navigateToWriteScreen,
+        onConfirmDialog = { viewModel.setEvent(TimerContract.Event.OnConfirmDialog) },
+        navigateToWriteScreen = {},
     )
 }
 
@@ -56,13 +56,14 @@ fun TimerContent(
     // dialog
     onCancelDialog: () -> Unit,
     onDismissDialog: () -> Unit,
+    onConfirmDialog: () -> Unit,
     navigateToWriteScreen: () -> Unit,
 ) {
     if (uiState.isPauseDialogVisible) {
         PauseDialog(
             onCancel = onCancelDialog,
             onDismiss = onDismissDialog,
-            onConfirm = onPauseClicked,
+            onConfirm = onConfirmDialog,
         )
     }
 
@@ -70,7 +71,7 @@ fun TimerContent(
         effect.collect { effect ->
             when (effect) {
                 is TimerContract.Effect.NavigateToWriteScreen -> {
-                    // Optional side effects or system calls
+                    navigateToWriteScreen()
                 }
             }
         }

@@ -13,7 +13,7 @@ class TimerContract {
 
         data object OnDismissDialog : Event()
 
-        data object OnAcceptDialog : Event()
+        data object OnConfirmDialog : Event()
 
         data object OnCancelDialog : Event()
 
@@ -27,6 +27,7 @@ class TimerContract {
     }
 
     data class State(
+        val isTimerScreen: Boolean = true,
         val isRunning: Boolean = false,
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
