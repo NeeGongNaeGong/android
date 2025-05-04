@@ -8,13 +8,22 @@ import com.ssafy.neegongnaegong.presentation.base.UiState
 class TimerContract {
     sealed class Event : UiEvent {
         data object OnPauseClicked : Event()
+
         data object OnPlayClicked : Event()
+
         data object OnDismissDialog : Event()
+
         data object OnAcceptDialog : Event()
+
         data object OnCancelDialog : Event()
+
         data object OffScreen : Event()
+
         data object OnScreen : Event()
-        data class OnFlip(val isBack: Boolean) : Event()
+
+        data class OnFlip(
+            val isBack: Boolean,
+        ) : Event()
     }
 
     data class State(
@@ -29,6 +38,6 @@ class TimerContract {
     ) : UiState
 
     sealed class Effect : UiEffect {
-        data object ShowPauseDialog : Effect()
+        data object NavigateToWriteScreen : Effect()
     }
 }

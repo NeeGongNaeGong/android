@@ -44,10 +44,14 @@ class TimerActivity : ComponentActivity() {
 
         setContent {
             NeeGongNaeGongTheme {
-                TimerScreen()
+                TimerRoute(
+                    popBackStack = {},
+                    navigateToWriteScreen = {},
+                )
             }
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
