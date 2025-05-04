@@ -29,7 +29,6 @@ import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawe
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
-import com.ssafy.neegongnaegong.presentation.personal.PersonalRoute
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
@@ -94,7 +93,11 @@ fun MainScreen() {
     ) {
         Scaffold(
             bottomBar = {
-                if (showBottomNavigationBar) BottomNavigationBar(navController = navController)
+                if (showBottomNavigationBar) {
+                    BottomNavigationBar(
+                        navController = navController,
+                    )
+                }
             },
         ) { innerPadding ->
             // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
