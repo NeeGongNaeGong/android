@@ -30,8 +30,8 @@ class AuthRepositoryImpl @Inject constructor(
         val fcmToken = localFcmDataSource.getFcmToken()
         networkAuthDataSource.login(LoginRequest(idToken = idToken, fcmToken = fcmToken))
             .onEach { user ->
-                tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken)
-                tokenManager.saveToken(TokenType.REFRESH_TOKEN, user.createJwt.refreshToken)
+                tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken.removePrefix("Bearer "))
+                tokenManager.saveToken(TokenType.REFRESH_TOKEN, user.createJwt.refreshToken.removePrefix("Bearer "))
                 localUserDataSource.saveUser(user.userDetailedInquiryResponse.toDomain())
                 localFcmDataSource.setUpdateFcmTokenState(true)
             }.map { user ->
