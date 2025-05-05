@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
+import com.ssafy.neegongnaegong.data.model.auth.request.RefreshRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest
 import com.ssafy.neegongnaegong.data.model.auth.response.LoginResponse
 import retrofit2.http.Body
@@ -15,5 +16,5 @@ interface AuthApi {
     suspend fun register(@Body request: RegisterRequest): Result<ApiResponse<Long>>
 
     @POST("/api/auth/token/refresh")
-    suspend fun reissue(@Body refreshToken: String): Result<ApiResponse<LoginResponse>>
+    suspend fun reissue(@Body request: RefreshRequest): Result<ApiResponse<LoginResponse>>
 }

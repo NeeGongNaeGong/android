@@ -34,41 +34,56 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun StudyRecordWriteRoute(
+fun LearningRecordWriteRoute(
     modifier: Modifier = Modifier,
-    viewModel: StudyRecordWriteViewModel = hiltViewModel(),
+    viewModel: LearningRecordWriteViewModel = hiltViewModel(),
     popBackStack: () -> Unit = {},
 ) {
-
     BackHandler { popBackStack() }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    StudyRecordWriteContent(
+    LearningRecordWriteContent(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
         onCancelClicked = { popBackStack() },
-        onConfirmClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnConfirmClicked) },
-        onTitleChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTitleChanged(it)) },
-        onContentChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnContentChanged(it)) },
-        onTagPlusClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagPlusClicked) },
-        onTagEraseClicked = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagEraseClicked(it)) },
-        onDialogClosed = { viewModel.setEvent(StudyRecordWriteContract.Event.OnDialogClose) },
-        onDialogConfirmed = { viewModel.setEvent(StudyRecordWriteContract.Event.OnDialogConfirmClicked) },
-        onSearchQueryChanged = { viewModel.setEvent(StudyRecordWriteContract.Event.OnSearchTextChanged(it)) },
-        onTagSelected = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagSelected(it)) },
-        onTagDeselected = { viewModel.setEvent(StudyRecordWriteContract.Event.OnTagDeselected(it)) },
+        onConfirmClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnConfirmClicked) },
+        onTitleChanged = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTitleChanged(it)) },
+        onContentChanged = {
+            viewModel.setEvent(
+                LearningRecordWriteContract.Event.OnContentChanged(
+                    it,
+                ),
+            )
+        },
+        onTagPlusClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagPlusClicked) },
+        onTagEraseClicked = {
+            viewModel.setEvent(
+                LearningRecordWriteContract.Event.OnTagEraseClicked(
+                    it,
+                ),
+            )
+        },
+        onDialogClosed = { viewModel.setEvent(LearningRecordWriteContract.Event.OnDialogClose) },
+        onDialogConfirmed = { viewModel.setEvent(LearningRecordWriteContract.Event.OnDialogConfirmClicked) },
+        onSearchQueryChanged = {
+            viewModel.setEvent(
+                LearningRecordWriteContract.Event.OnSearchTextChanged(
+                    it,
+                ),
+            )
+        },
+        onTagSelected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagSelected(it)) },
+        onTagDeselected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagDeselected(it)) },
     )
-
 }
 
-
 @Composable
-fun StudyRecordWriteContent(
+fun LearningRecordWriteContent(
     modifier: Modifier = Modifier,
-    effect: Flow<StudyRecordWriteContract.Effect>,
-    uiState: StudyRecordWriteContract.State,
+    effect: Flow<LearningRecordWriteContract.Effect>,
+    uiState: LearningRecordWriteContract.State,
     onCancelClicked: () -> Unit,
     onConfirmClicked: () -> Unit,
     onTitleChanged: (String) -> Unit,
@@ -98,26 +113,26 @@ fun StudyRecordWriteContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is StudyRecordWriteContract.Effect.NavigateToHome -> {
+                is LearningRecordWriteContract.Effect.NavigateToHome -> {
                     onCancelClicked()
                 }
 
-                is StudyRecordWriteContract.Effect.ShowErrorToast -> {
+                is LearningRecordWriteContract.Effect.ShowErrorToast -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is StudyRecordWriteContract.Effect.ShowSuccessToast -> {
+                is LearningRecordWriteContract.Effect.ShowSuccessToast -> {
                     Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is StudyRecordWriteContract.Effect.ShowTagLimitExceededToast -> {
+                is LearningRecordWriteContract.Effect.ShowTagLimitExceededToast -> {
                     Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    StudyRecordWriteScreen(
+    LearningRecordWriteScreen(
         modifier = modifier,
         tags = uiState.tags,
         studyRecord = uiState.studyRecord,
@@ -128,13 +143,12 @@ fun StudyRecordWriteContent(
         onCancelClicked = onCancelClicked,
         onConfirmClicked = onConfirmClicked,
     )
-
 }
 
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
 
 @Composable
-fun StudyRecordWriteScreen(
+fun LearningRecordWriteScreen(
     modifier: Modifier = Modifier,
     studyRecord: StudyRecord,
     tags: List<Tag>,
@@ -148,59 +162,61 @@ fun StudyRecordWriteScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 16.dp, start = 8.dp, end = 8.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 8.dp, end = 8.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-
             DateTimeHeader(
                 dateText = studyRecord.startTime.toDateString(),
-                timeText = "${studyRecord.startTime.toTimeString()} ~ ${studyRecord.endTime.toTimeString()}"
+                timeText = "${studyRecord.startTime.toTimeString()} ~ ${studyRecord.endTime.toTimeString()}",
             )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
                 title = studyRecord.title,
-                onTitleChanged = onTitleChanged
+                onTitleChanged = onTitleChanged,
             )
 
             ContentTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(screenHeight * 0.5f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(screenHeight * 0.5f),
                 content = studyRecord.content,
                 onContentChanged = onContentChanged,
             )
 
             TagList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
                 tags = tags,
                 onTagPlusClicked = onTagPlusClicked,
-                onTagEraseClicked = onTagEraseClicked
+                onTagEraseClicked = onTagEraseClicked,
             )
         }
 
         BottomButtons(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
             onCancelClicked = onCancelClicked,
-            onConfirmClicked = onConfirmClicked
+            onConfirmClicked = onConfirmClicked,
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
-            StudyRecordWriteScreen(
+            LearningRecordWriteScreen(
                 studyRecord = StudyRecord.default(),
                 tags = PersonalPreviewDataProvider().getTags(),
                 onTitleChanged = {},
@@ -208,7 +224,7 @@ private fun PreviewWriteScreen() {
                 onTagPlusClicked = {},
                 onTagEraseClicked = {},
                 onCancelClicked = {},
-                onConfirmClicked = {}
+                onConfirmClicked = {},
             )
         }
     }

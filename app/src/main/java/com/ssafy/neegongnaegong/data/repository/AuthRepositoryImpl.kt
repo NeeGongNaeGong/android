@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
+import com.ssafy.neegongnaegong.data.model.auth.request.RefreshRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest
 import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
@@ -29,8 +30,8 @@ class AuthRepositoryImpl @Inject constructor(
         val fcmToken = localFcmDataSource.getFcmToken()
         networkAuthDataSource.login(LoginRequest(idToken = idToken, fcmToken = fcmToken))
             .onEach { user ->
-                tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken)
-                tokenManager.saveToken(TokenType.REFRESH_TOKEN, user.createJwt.refreshToken)
+                tokenManager.saveToken(TokenType.ACCESS_TOKEN, user.createJwt.accessToken.removePrefix("Bearer "))
+                tokenManager.saveToken(TokenType.REFRESH_TOKEN, user.createJwt.refreshToken.removePrefix("Bearer "))
                 localUserDataSource.saveUser(user.userDetailedInquiryResponse.toDomain())
                 localFcmDataSource.setUpdateFcmTokenState(true)
             }.map { user ->
@@ -62,10 +63,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun reissue(): Flow<Boolean> = withContext(ioDispatcher) {
         flow {
-            val refreshToken =
-                tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return@flow emit(false)
+            val existRefreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN)
+                ?: return@flow emit(false)
 
-            networkAuthDataSource.reissue(refreshToken).collect { response ->
+            val request = RefreshRequest("Bearer $existRefreshToken")
+
+            networkAuthDataSource.reissue(request).collect { response ->
                 with(response.createJwt) {
                     tokenManager.saveToken(
                         TokenType.ACCESS_TOKEN,
