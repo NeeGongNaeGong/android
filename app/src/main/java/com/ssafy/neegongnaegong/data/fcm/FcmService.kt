@@ -26,7 +26,11 @@ class FcmService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         CoroutineScope(Dispatchers.IO).launch {
-            userRepository.updateFcmToken(token)
+            try {
+                userRepository.updateFcmToken(token)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -37,12 +41,13 @@ class FcmService : FirebaseMessagingService() {
 
         val title = remoteMessage.notification?.title ?: "알림 제목 없음"
         val body = remoteMessage.notification?.body ?: "알림 내용 없음"
+        val id = remoteMessage.hashCode()
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.img_main_character)
             .setContentTitle(title)
             .setContentText(body)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -56,7 +61,7 @@ class FcmService : FirebaseMessagingService() {
             }
         }
 
-        NotificationManagerCompat.from(this).notify(0, notification)
+        NotificationManagerCompat.from(this).notify(id, notification)
     }
 
     private fun createNotificationChannel() {
