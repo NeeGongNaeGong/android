@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.calendar
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
@@ -75,9 +74,6 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun getSchedules(month: YearMonth) = viewModelScope.launch {
-        Log.d("CalendarViewModel", "getSchedules $month")
-
-        if (uiState.value.selectedMonth == month) return@launch
         setState { copy(selectedMonth = month) }
 
         getUserSchedulesUseCase(month).withLoading {
@@ -127,7 +123,6 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun setSelectedDate(date: LocalDate) {
-        Log.d("CalendarViewModel", "setSelectedDate $date")
         setState {
             copy(
                 selectedDate = date,
