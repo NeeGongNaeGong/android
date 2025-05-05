@@ -44,14 +44,6 @@ fun Calendar(
     }
 
     /**
-     * state.date가 변경될 때마다
-     * onDateSelected 호출
-     */
-    LaunchedEffect(state.date) {
-        onDateSelected(state.date)
-    }
-
-    /**
      * state.month가 변경될 때마다
      * 해당하는 달로 pagerState.currentPage 업데이트
      */
@@ -79,7 +71,13 @@ fun Calendar(
                     modifier = Modifier.fillMaxSize(),
                     selectedMonth = displayedMonth,
                     selectedDate = state.date,
-                    onDateSelected = state::updateDate,
+                    onDateSelected = {
+                        /**
+                         * date가 선택되면 onDateSelected 호출
+                         */
+                        state.updateDate(it)
+                        onDateSelected(it)
+                    },
                     dateContent = dateContent
                 )
             }
