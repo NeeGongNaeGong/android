@@ -35,8 +35,6 @@ import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
-private const val TAG = "MainScreen"
-
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -44,10 +42,9 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomNavigationBar =
-        currentDestination?.hierarchy?.any {
-            it.hasRoute(AppNavigation.Tab.Auth::class)
-        } == false
+    val showBottomNavigationBar = currentDestination?.hierarchy?.any {
+        it.hasRoute(AppNavigation.Tab.Auth::class)
+    } == false
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)

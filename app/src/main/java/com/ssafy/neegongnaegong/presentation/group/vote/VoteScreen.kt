@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -77,14 +76,6 @@ fun VoteRoute(
         LaunchedEffect(viewModel.effect) {
             viewModel.effect.collectLatest { effect ->
                 when (effect) {
-                    is VoteContract.Effect.ShowToast -> {
-                        snackbarHostState.showSnackbar(
-                            message = effect.message,
-                            actionLabel = "확인",
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-
                     VoteContract.Effect.NavigateToBackStack -> {
                         popBackStack()
                     }

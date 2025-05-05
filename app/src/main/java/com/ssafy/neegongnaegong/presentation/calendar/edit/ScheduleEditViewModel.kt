@@ -8,7 +8,6 @@ import com.ssafy.neegongnaegong.domain.usecase.calendar.GetScheduleDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.calendar.UpdatePersonalSchedulesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -77,7 +76,7 @@ class ScheduleEditViewModel @Inject constructor(
     private fun saveSchedule(type: UpdateType) = viewModelScope.launch {
         with(uiState.value) {
             if (id == null) {
-                setEffect { ScheduleEditContract.Effect.ShowErrorSnackBar("데이터가 회손되었습니다.") }
+                showErrorMessage("데이터가 회손되었습니다.")
             } else {
                 updatePersonalSchedulesUseCase(
                     id = id,
@@ -90,18 +89,6 @@ class ScheduleEditViewModel @Inject constructor(
                 }.safeCollect {
                     setEffect { ScheduleEditContract.Effect.NavigateBack }
                 }
-            }
-        }
-    }
-
-    private suspend fun <T> Flow<T>.safeCollect(block: suspend (T) -> Unit = {}) {
-        runCatching {
-            collect { value -> block(value) }
-        }.onFailure { error ->
-            error.printStackTrace()
-            setState { copy(isFailure = true) }
-            setEffect {
-                ScheduleEditContract.Effect.ShowErrorSnackBar(error.message ?: "에러 발생")
             }
         }
     }

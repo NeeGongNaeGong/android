@@ -38,9 +38,5 @@ class StudiesContract {
         data class NavigateToGroupDetail(
             val studiesId: Long,
         ) : Effect()
-
-        data class ShowToast(
-            val message: String,
-        ) : Effect()
     }
 }

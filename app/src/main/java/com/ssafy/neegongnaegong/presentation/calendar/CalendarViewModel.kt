@@ -8,8 +8,9 @@ import com.ssafy.neegongnaegong.domain.usecase.calendar.CreatePersonalSchedulesU
 import com.ssafy.neegongnaegong.domain.usecase.calendar.DeletePersonalSchedulesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.calendar.GetUserSchedulesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -23,6 +24,22 @@ class CalendarViewModel @Inject constructor(
     private val createPersonalSchedulesUseCase: CreatePersonalSchedulesUseCase,
     private val deletePersonalSchedulesUseCase: DeletePersonalSchedulesUseCase,
 ) : BaseViewModel<CalendarContract.Event, CalendarContract.State, CalendarContract.Effect>() {
+    override fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {
+        // 너무 많은 수정이 필요할 예정이라 당장은 타입을 제너릭으로 받지 않았습니다.
+        val error = errorContext as? CalendarContract.Error ?: return
+        when (error) {
+            is CalendarContract.Error.GetSchedulesError -> showErrorMessage(
+                "스캐줄 정보를 가져오지 못했습니다.",
+                SnackbarManager.Action.retry { retry() }
+            )
+
+            is CalendarContract.Error.CreateScheduleError -> showErrorMessage(
+                "스캐줄 생성에 실패하였습니다.",
+                SnackbarManager.Action.retry { retry() }
+            )
+        }
+    }
+
     override fun createInitialState(): CalendarContract.State = CalendarContract.State()
 
     override fun handleEvent(event: CalendarContract.Event) {
@@ -50,8 +67,8 @@ class CalendarViewModel @Inject constructor(
                 CalendarContract.Effect.NavigateToScheduleDetailScreen(event.schedule)
             }
 
-            CalendarContract.Event.OnDialogDismissed -> {
-                setState { copy(isCalendarDialogShow = false) }
+            CalendarContract.Event.OnDialogDismissed -> setState {
+                copy(isCalendarDialogShow = false)
             }
         }
     }
@@ -59,7 +76,7 @@ class CalendarViewModel @Inject constructor(
     private fun getSchedules(month: YearMonth) = viewModelScope.launch {
         getUserSchedulesUseCase(month).withLoading {
             setState { copy(isLoading = it) }
-        }.safeCollect { result ->
+        }.safeCollect(CalendarContract.Error.GetSchedulesError) { result ->
             val schedules = mutableMapOf<LocalDate, MutableList<Schedule>>().apply {
                 result.forEach { schedule ->
                     val date = schedule.info.startAt.toLocalDate()
@@ -89,16 +106,19 @@ class CalendarViewModel @Inject constructor(
                 )
             ).withLoading {
                 setState { copy(isOnCreate = it) }
-            }.safeCollect {
+            }.safeCollect(CalendarContract.Error.CreateScheduleError) {
                 getSchedules(YearMonth.from(date))
             }
         }
     }
 
-    private fun deleteSchedule(id: Long, type: DeleteType, date: LocalDate) =
-        viewModelScope.launch {
-            deletePersonalSchedulesUseCase(id, type, date).safeCollect()
-        }
+    private fun deleteSchedule(
+        id: Long,
+        type: DeleteType,
+        date: LocalDate
+    ) = viewModelScope.launch {
+        deletePersonalSchedulesUseCase(id, type, date).safeCollect()
+    }
 
     private fun setSelectedDate(date: LocalDate) {
         setState {
@@ -106,18 +126,6 @@ class CalendarViewModel @Inject constructor(
                 selectedDate = date,
                 isCalendarDialogShow = uiState.value.schedules[date]?.isNotEmpty() ?: false
             )
-        }
-    }
-
-    private suspend fun <T> Flow<T>.safeCollect(block: suspend (T) -> Unit = {}) {
-        runCatching {
-            collect { value -> block(value) }
-        }.onFailure { error ->
-            error.printStackTrace()
-            setState { copy(isFailure = true) }
-            setEffect {
-                CalendarContract.Effect.ShowErrorSnackBar(error.message ?: "에러 발생")
-            }
         }
     }
 }
