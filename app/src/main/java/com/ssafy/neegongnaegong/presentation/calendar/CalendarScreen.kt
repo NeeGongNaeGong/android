@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
@@ -73,6 +76,8 @@ fun CalendarContent(
     navigateToEditSchedule: (Schedule) -> Unit,
 ) {
     val calendarState = rememberCalendarState(uiState.selectedDate)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
@@ -104,7 +109,7 @@ fun CalendarContent(
 
     if (uiState.isLoading) LoadingDialog()
 
-    if (uiState.isCalendarDialogShow) CalendarScheduleDialog(
+    if (uiState.isCalendarDialogShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) CalendarScheduleDialog(
         state = calendarState,
         onMonthChanged = onMonthSelected,
         onDateSelected = onDateSelected,
