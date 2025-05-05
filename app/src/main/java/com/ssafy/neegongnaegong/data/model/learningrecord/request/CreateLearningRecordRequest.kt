@@ -1,9 +1,11 @@
 package com.ssafy.neegongnaegong.data.model.learningrecord.request
 
+import java.time.LocalDateTime
+
 data class CreateLearningRecordRequest(
-    val startAt: String,
-    val endAt: String,
+    val startAt: LocalDateTime,
+    val endAt: LocalDateTime,
     val title: String,
     val content: String,
-    val tags: List<Long>
+    val tags: List<Long>,
 )

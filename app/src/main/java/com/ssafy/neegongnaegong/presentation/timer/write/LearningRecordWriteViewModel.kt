@@ -1,16 +1,20 @@
 package com.ssafy.neegongnaegong.presentation.timer.write
 
+import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.CreateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LearningRecordWriteViewModel
     @Inject
-    constructor() :
-    BaseViewModel<LearningRecordWriteContract.Event, LearningRecordWriteContract.State, LearningRecordWriteContract.Effect>() {
+    constructor(
+        private val createLearningRecordUseCase: CreateLearningRecordUseCase,
+    ) : BaseViewModel<LearningRecordWriteContract.Event, LearningRecordWriteContract.State, LearningRecordWriteContract.Effect>() {
         override fun createInitialState(): LearningRecordWriteContract.State = LearningRecordWriteContract.State()
 
         override fun handleEvent(event: LearningRecordWriteContract.Event) {
@@ -77,6 +81,17 @@ class LearningRecordWriteViewModel
                 }
             }
         }
+
+        // api
+
+        private fun createLearningRecord() =
+            viewModelScope.launch {
+                createLearningRecordUseCase(
+                    uiState.value.learningRecord,
+                ).withLoading {
+
+                }
+            }
 
         // tag
 

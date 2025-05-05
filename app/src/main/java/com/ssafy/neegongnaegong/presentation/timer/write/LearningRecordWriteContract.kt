@@ -60,6 +60,8 @@ class LearningRecordWriteContract {
         val unSelectedTags: List<Tag> = emptyList(),
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
+        // api
+
     ) : UiState
 
     sealed class Effect : UiEffect {
