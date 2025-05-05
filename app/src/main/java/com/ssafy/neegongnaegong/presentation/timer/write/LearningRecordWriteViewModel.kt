@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.timer.write
 
 import com.ssafy.neegongnaegong.domain.data.TagData
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,11 +17,11 @@ class LearningRecordWriteViewModel
             when (event) {
                 // 글 작성
                 is LearningRecordWriteContract.Event.OnTitleChanged -> {
-                    setState { copy(studyRecord = studyRecord.copy(title = event.title)) }
+                    setState { copy(learningRecord = learningRecord.copy(title = event.title)) }
                 }
 
                 is LearningRecordWriteContract.Event.OnContentChanged -> {
-                    setState { copy(studyRecord = studyRecord.copy(content = event.content)) }
+                    setState { copy(learningRecord = learningRecord.copy(content = event.content)) }
                 }
 
                 // 취소, 확인
