@@ -27,7 +27,7 @@ import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextFi
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
-import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteScreen
+import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteScreen
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toDateString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
@@ -128,7 +128,7 @@ fun StudyRecordEditContent(
         }
     }
 
-    StudyRecordWriteScreen(
+    LearningRecordWriteScreen(
         modifier = modifier,
         tags = uiState.tags,
         learningRecord = uiState.learningRecord,

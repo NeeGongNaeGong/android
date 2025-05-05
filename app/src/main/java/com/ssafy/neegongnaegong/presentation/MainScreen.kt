@@ -1,5 +1,7 @@
 package com.ssafy.neegongnaegong.presentation
 
+import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -28,7 +31,7 @@ import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawe
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
-import com.ssafy.neegongnaegong.presentation.personal.PersonalRoute
+import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
@@ -48,6 +51,8 @@ fun MainScreen() {
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    val context = LocalContext.current
 
     LaunchedEffect(isStudiesDrawerOpen) {
         if (isStudiesDrawerOpen) {
@@ -93,7 +98,15 @@ fun MainScreen() {
     ) {
         Scaffold(
             bottomBar = {
-                if (showBottomNavigationBar) BottomNavigationBar(navController = navController)
+                if (showBottomNavigationBar) {
+                    BottomNavigationBar(
+                        navController = navController,
+                        onFabClick = {
+                            val intent = Intent(context, TimerActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                    )
+                }
             },
         ) { innerPadding ->
             // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
@@ -103,7 +116,8 @@ fun MainScreen() {
                 modifier =
                     Modifier
                         .padding(innerPadding)
-                        .consumeWindowInsets(innerPadding),
+                        .consumeWindowInsets(innerPadding)
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
             ) {
                 MainNavigationGraph(navController = navController)
             }
