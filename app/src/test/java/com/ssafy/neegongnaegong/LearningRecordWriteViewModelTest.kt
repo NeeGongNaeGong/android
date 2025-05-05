@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong
 
-import com.ssafy.neegongnaegong.presentation.timer.write.WriteContract
-import com.ssafy.neegongnaegong.presentation.timer.write.StudyRecordWriteViewModel
+import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteContract
+import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
-class StudyRecordWriteViewModelTest {
+class LearningRecordWriteViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -30,12 +30,12 @@ class StudyRecordWriteViewModelTest {
 
     @Test
     fun updateDialogTagsWithoutKmpPerformanceTest() {
-        val viewModel = StudyRecordWriteViewModel()
+        val viewModel = LearningRecordWriteViewModel()
 
         val time = measureTimeMillis {
             repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("aaa")
+                    LearningRecordWriteContract.Event.OnSearchTextChanged("aaa")
                 )
             }
         }
@@ -45,12 +45,12 @@ class StudyRecordWriteViewModelTest {
 
     @Test
     fun updateDialogTagsWithKmpPerformanceTest() {
-        val viewModel = StudyRecordWriteViewModel()
+        val viewModel = LearningRecordWriteViewModel()
 
         val time = measureTimeMillis {
             repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChangedWithKmp("aaa")
+                    LearningRecordWriteContract.Event.OnSearchTextChangedWithKmp("aaa")
                 )
             }
         }

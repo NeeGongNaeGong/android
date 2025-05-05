@@ -24,11 +24,7 @@ class CalendarViewModel @Inject constructor(
     private val createPersonalSchedulesUseCase: CreatePersonalSchedulesUseCase,
     private val deletePersonalSchedulesUseCase: DeletePersonalSchedulesUseCase,
 ) : BaseViewModel<CalendarContract.Event, CalendarContract.State, CalendarContract.Effect>() {
-    override fun handleException(
-        e: Throwable,
-        errorContext: ErrorContext,
-        retry: () -> Unit
-    ) {
+    override fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {
         // 너무 많은 수정이 필요할 예정이라 당장은 타입을 제너릭으로 받지 않았습니다.
         val error = errorContext as? CalendarContract.Error ?: return
         when (error) {

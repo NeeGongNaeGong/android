@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST("/api/auth/google/login")
+    @POST("/api/auth/google")
     suspend fun login(@Body request: LoginRequest): Result<ApiResponse<LoginResponse>>
 
     @POST("/api/auth/goggle/register")
