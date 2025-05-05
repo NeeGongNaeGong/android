@@ -16,8 +16,8 @@ data class LearningRecord(
             id = 0,
             title = "",
             content = "",
-            startTime = "2025-04-19T06:33:02.856Z",
-            endTime = "2025-04-19T08:33:02.856Z",
+            startTime = "2025-02-02T06:33:02.856Z",
+            endTime = "2025-02-02T08:33:02.856Z",
             tags = emptyList()
         )
     }
