@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong
 
-import com.ssafy.neegongnaegong.presentation.timer.write.WriteContract
+import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteContract
 import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +35,7 @@ class LearningRecordWriteViewModelTest {
         val time = measureTimeMillis {
             repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChanged("aaa")
+                    LearningRecordWriteContract.Event.OnSearchTextChanged("aaa")
                 )
             }
         }
@@ -50,7 +50,7 @@ class LearningRecordWriteViewModelTest {
         val time = measureTimeMillis {
             repeat(10000) {
                 viewModel.setEvent(
-                    WriteContract.Event.OnSearchTextChangedWithKmp("aaa")
+                    LearningRecordWriteContract.Event.OnSearchTextChangedWithKmp("aaa")
                 )
             }
         }

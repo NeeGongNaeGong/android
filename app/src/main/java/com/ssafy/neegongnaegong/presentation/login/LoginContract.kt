@@ -17,7 +17,6 @@ class LoginContract {
     ) : UiState
 
     sealed interface Effect : UiEffect {
-        data class ShowErrorSnackBar(val message: String) : Effect
         data object NavigateToMainScreen : Effect
     }
 }

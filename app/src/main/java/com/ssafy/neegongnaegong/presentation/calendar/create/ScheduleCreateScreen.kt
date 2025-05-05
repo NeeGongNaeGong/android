@@ -17,8 +17,6 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +43,6 @@ import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rem
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -99,20 +95,11 @@ fun ScheduleCreateContent(
     onCancelClick: () -> Unit,
 ) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
                 ScheduleCreateContract.Effect.NavigateBack -> backDispatcher?.onBackPressed()
-                is ScheduleCreateContract.Effect.ShowErrorSnackBar -> scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        actionLabel = "확인",
-                        duration = SnackbarDuration.Short
-                    )
-                }
             }
         }
     }

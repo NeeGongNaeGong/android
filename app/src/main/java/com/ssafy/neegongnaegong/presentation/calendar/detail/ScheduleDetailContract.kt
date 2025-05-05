@@ -24,6 +24,5 @@ class ScheduleDetailContract {
     sealed class Effect : UiEffect {
         data object NavigateBack : Effect()
         data class NavigateToEditScheduleScreen(val schedule: Schedule) : Effect()
-        data class ShowErrorSnackBar(val message: String) : Effect()
     }
 }

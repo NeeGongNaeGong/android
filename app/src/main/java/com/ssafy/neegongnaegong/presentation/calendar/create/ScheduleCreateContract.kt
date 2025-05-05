@@ -31,6 +31,5 @@ class ScheduleCreateContract {
 
     sealed class Effect : UiEffect {
         data object NavigateBack : Effect()
-        data class ShowErrorSnackBar(val message: String) : Effect()
     }
 }

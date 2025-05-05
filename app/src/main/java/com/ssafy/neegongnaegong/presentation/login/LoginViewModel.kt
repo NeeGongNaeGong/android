@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.auth.LoginUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,11 +16,7 @@ class LoginViewModel @Inject constructor(
     override fun handleEvent(event: LoginContract.Event) {
         when (event) {
             is LoginContract.Event.OnGoogleLoginSuccess -> login(event.idToken)
-            is LoginContract.Event.OnGoogleLoginFailure -> {
-                setEffect {
-                    LoginContract.Effect.ShowErrorSnackBar(event.exception.message ?: "에러 발생")
-                }
-            }
+            is LoginContract.Event.OnGoogleLoginFailure -> showErrorMessage(event.exception.message ?: "에러 발생")
         }
     }
 
@@ -29,17 +24,6 @@ class LoginViewModel @Inject constructor(
         loginUseCase(idToken, "").safeCollect {
             // 로그인 성공했으면 MainScreen으로 Navigate하는 이벤트 emit
             setEffect { LoginContract.Effect.NavigateToMainScreen }
-        }
-    }
-
-    private suspend fun <T> Flow<T>.safeCollect(block: suspend (T) -> Unit = {}) {
-        runCatching {
-            collect { value -> block(value) }
-        }.onFailure { exception ->
-            exception.printStackTrace()
-            setEffect {
-                LoginContract.Effect.ShowErrorSnackBar(exception.message ?: "에러 발생")
-            }
         }
     }
 }
