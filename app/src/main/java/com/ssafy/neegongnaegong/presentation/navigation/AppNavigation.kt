@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -12,9 +12,6 @@ import java.time.format.DateTimeFormatter
  */
 
 object AppNavigation {
-
-
-
     /**
      * Bottom Tab으로 쓸 각 탭과 탭의 경로를 설정
      */
@@ -98,7 +95,7 @@ object AppNavigation {
             data class Detail(val scheduleId: Long) : Calendar
 
             @Serializable
-            data class Edit(val scheduleId: Long) : Calendar
+            data class Edit(val scheduleId: Long, val focus: ScheduleInputFormFocus) : Calendar
         }
 
         @Serializable

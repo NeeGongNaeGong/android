@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.calendar.detail
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,11 +24,12 @@ import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
 import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
-import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
-import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
+import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePickerBody
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +42,7 @@ fun ScheduleDetailRoute(
     viewModel: ScheduleDetailViewModel = hiltViewModel(),
     scheduleId: Long,
     popBackStack: () -> Unit,
-    navigateToEditScheduleScreen: (Schedule) -> Unit
+    navigateToEditScheduleScreen: (Schedule, ScheduleInputFormFocus) -> Unit
 ) {
     BackHandler {
         popBackStack()
@@ -56,9 +58,10 @@ fun ScheduleDetailRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
+        onFormClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnFormClick(it)) },
         onEditClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnEditClick) },
         onDeleteClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnDeleteClick(it)) },
-        navigateToEditScheduleScreen = { navigateToEditScheduleScreen(it) },
+        navigateToEditScheduleScreen = navigateToEditScheduleScreen,
     )
 }
 
@@ -67,9 +70,10 @@ fun ScheduleDetailContent(
     modifier: Modifier = Modifier,
     effect: Flow<ScheduleDetailContract.Effect>,
     uiState: ScheduleDetailContract.State,
+    onFormClick: (ScheduleInputFormFocus) -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: (DeleteType) -> Unit,
-    navigateToEditScheduleScreen: (Schedule) -> Unit
+    navigateToEditScheduleScreen: (Schedule, ScheduleInputFormFocus) -> Unit
 ) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
@@ -79,7 +83,7 @@ fun ScheduleDetailContent(
                 ScheduleDetailContract.Effect.NavigateBack -> backDispatcher?.onBackPressed()
 
                 is ScheduleDetailContract.Effect.NavigateToEditScheduleScreen -> {
-                    navigateToEditScheduleScreen(effect.schedule)
+                    navigateToEditScheduleScreen(effect.schedule, effect.focus)
                 }
             }
         }
@@ -87,15 +91,11 @@ fun ScheduleDetailContent(
 
     ScheduleDetailScreen(
         modifier = modifier,
-        title = uiState.schedule.info.title,
-        content = uiState.schedule.info.content,
-        startDate = uiState.schedule.info.startAt,
-        endDate = uiState.schedule.info.endAt,
-        isAllDay = uiState.schedule.info.isAllDay,
-        location = uiState.schedule.info.location,
+        schedule = uiState.schedule.info,
         repeatRule = uiState.schedule.info.repeatRule?.info,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
+        onFormClick = onFormClick,
     )
 
     if (uiState.isLoading || uiState.isOnDelete) LoadingDialog()
@@ -104,66 +104,74 @@ fun ScheduleDetailContent(
 @Composable
 fun ScheduleDetailScreen(
     modifier: Modifier = Modifier,
-    title: String,
-    content: String? = null,
-    startDate: LocalDateTime,
-    endDate: LocalDateTime,
-    isAllDay: Boolean,
-    location: String?,
+    schedule: ScheduleInfo,
     repeatRule: RepeatRuleInfo?,
+    onFormClick: (ScheduleInputFormFocus) -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: (DeleteType) -> Unit,
 ) {
-    val dateTimeRangePickerState = rememberDateTimeRangePickerState(
-        startDateTime = startDate,
-        endDateTime = endDate,
-        isAllDay = isAllDay
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .then(modifier)
     ) {
         CalendarTopAppBar()
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .weight(1f)
-        ) {
+
+        Column(modifier = modifier
+            .weight(1f)
+            .verticalScroll(rememberScrollState())) {
             ScheduleEditText(
-                modifier = Modifier.fillMaxWidth(),
-                text = title,
+                modifier = Modifier
+                    .clickable { onFormClick(ScheduleInputFormFocus.Title) }
+                    .fillMaxWidth(),
+                text = schedule.title,
                 onTextChange = {},
                 placeHolder = "제목",
-                enabled = false
-            )
-            DateTimeRangePicker(
-                state = dateTimeRangePickerState,
                 enable = false,
             )
-            if (content != null) ScheduleEditText(
-                modifier = Modifier.fillMaxWidth(),
-                text = content,
+            DateTimeRangePickerBody(
+                modifier = modifier,
+                startDateTime = schedule.startAt,
+                endDateTime = schedule.endAt,
+                isAllDay = schedule.isAllDay,
+                isStartDateFocused = false,
+                isStartTimeFocused = false,
+                isEndDateFocused = false,
+                isEndTimeFocused = false,
+                onStartDateClicked = { onFormClick(ScheduleInputFormFocus.StartDate) },
+                onStartTimeClicked = { onFormClick(ScheduleInputFormFocus.StartTime) },
+                onEndDateClicked = { onFormClick(ScheduleInputFormFocus.EndDate) },
+                onEndTimeClicked = { onFormClick(ScheduleInputFormFocus.EndTime) },
+                onIsAllDayChanged = { onFormClick(ScheduleInputFormFocus.IsAllDay) },
+            )
+            if (schedule.content != null) ScheduleEditText(
+                modifier = Modifier
+                    .clickable { onFormClick(ScheduleInputFormFocus.Content) }
+                    .fillMaxWidth(),
+                text = schedule.content,
                 onTextChange = {},
                 placeHolder = "메모",
                 prefix = Icons.Outlined.Description,
-                enabled = false
+                enable = false,
             )
-            if (location != null) ScheduleEditText(
-                modifier = Modifier.fillMaxWidth(),
-                text = location,
+            if (schedule.location != null) ScheduleEditText(
+                modifier = Modifier
+                    .clickable { onFormClick(ScheduleInputFormFocus.Location) }
+                    .fillMaxWidth(),
+                text = schedule.location,
                 onTextChange = {},
                 placeHolder = "장소",
                 prefix = Icons.Outlined.LocationOn,
-                enabled = false
+                enable = false,
             )
             ScheduleEditText(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .clickable { onFormClick(ScheduleInputFormFocus.RepeatRule) }
+                    .fillMaxWidth(),
                 text = repeatRule?.toDisplayString() ?: "반복 안 함",
                 placeHolder = "반복 안 함",
                 prefix = Icons.Outlined.Repeat,
-                enabled = false,
+                enable = false,
             )
         }
 
@@ -198,18 +206,21 @@ private fun PreviewScheduleDetailScreen() {
     NeeGongNaeGongTheme {
         ScheduleDetailScreen(
             modifier = Modifier.fillMaxSize(),
-            title = "New Schedule",
-            content = null,
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now().plusHours(1),
-            isAllDay = false,
-            location = null,
+            schedule = ScheduleInfo(
+                title = "New Schedule",
+                content = null,
+                startAt = LocalDateTime.now(),
+                endAt = LocalDateTime.now().plusHours(1),
+                isAllDay = false,
+                location = null,
+            ),
             repeatRule = RepeatRuleInfo(
                 repeatType = RepeatType.MONTHLY,
                 repeatInterval = 1,
                 repeatDay = 3,
                 endDate = null
             ),
+            onFormClick = {},
             onEditClick = {},
             onDeleteClick = {},
         )

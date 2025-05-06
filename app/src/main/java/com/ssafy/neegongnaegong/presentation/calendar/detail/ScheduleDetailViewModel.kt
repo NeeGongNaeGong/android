@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.usecase.calendar.DeletePersonalSchedulesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.calendar.GetScheduleDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +23,7 @@ class ScheduleDetailViewModel @Inject constructor(
             is ScheduleDetailContract.Event.OnLoad -> onLoad(event.scheduleId)
             ScheduleDetailContract.Event.OnEditClick -> navigateToEditScheduleScreen()
             is ScheduleDetailContract.Event.OnDeleteClick -> deleteSchedule(event.type)
+            is ScheduleDetailContract.Event.OnFormClick -> navigateToEditScheduleScreen(event.focus)
         }
     }
 
@@ -33,9 +35,13 @@ class ScheduleDetailViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToEditScheduleScreen() {
+    private fun navigateToEditScheduleScreen(
+        focus: ScheduleInputFormFocus = ScheduleInputFormFocus.None
+    ) {
         with(uiState.value) {
-            setEffect { ScheduleDetailContract.Effect.NavigateToEditScheduleScreen(schedule) }
+            setEffect {
+                ScheduleDetailContract.Effect.NavigateToEditScheduleScreen(schedule, focus)
+            }
         }
     }
 

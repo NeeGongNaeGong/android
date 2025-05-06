@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.component.picker.datetime.range
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -20,9 +21,7 @@ fun rememberDateTimeRangePickerState(
         "startDateTime($startDateTime) must be before or equal to endDateTime($endDateTime)"
     }
 
-    return remember {
-        DateTimeRangePickerState(startDateTime, endDateTime, isAllDay)
-    }
+    return remember { DateTimeRangePickerState(startDateTime, endDateTime, isAllDay) }
 }
 
 @Stable
@@ -59,6 +58,7 @@ class DateTimeRangePickerState(
         }
     }
 
+
     fun updateIsAllDay(isAllDay: Boolean) {
         this.isAllDay = isAllDay
         if (isAllDay) {
@@ -66,6 +66,8 @@ class DateTimeRangePickerState(
             updateEndTime(LocalTime.MAX)
         }
     }
+
+    fun toggleIsAllDay() = updateIsAllDay(!isAllDay)
 
     val isFocused: Boolean
         get() = focus != Focus.None
@@ -80,6 +82,7 @@ class DateTimeRangePickerState(
 
     private fun updateFocus(focus: Focus) {
         this.focus = if (this.focus == focus) {
+            Log.d("DateTimeRangePickerState", "$focus")
             Focus.None
         } else {
             focus

@@ -27,8 +27,9 @@ fun DateTimeRangePicker(
     enable: Boolean = true,
 ) {
     val dateRangePickerState = rememberDateRangePickerState(
-        state.startDateTime.toLocalDate(),
-        state.endDateTime.toLocalDate()
+        startDate = state.startDateTime.toLocalDate(),
+        endDate = state.endDateTime.toLocalDate(),
+        autoFocus = false,
     )
 
     LaunchedEffect(state.focus) {
@@ -40,10 +41,12 @@ fun DateTimeRangePicker(
     }
 
     LaunchedEffect(state.startDateTime) {
+        dateRangePickerState.updateStartDate(state.startDateTime.toLocalDate())
         onStartDateTimeChange(state.startDateTime)
     }
 
     LaunchedEffect(state.endDateTime) {
+        dateRangePickerState.updateEndDate(state.endDateTime.toLocalDate())
         onEndDateTimeChange(state.endDateTime)
     }
 

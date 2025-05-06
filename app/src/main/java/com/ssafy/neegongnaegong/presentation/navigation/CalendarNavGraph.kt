@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.calendar.CalendarRoute
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import com.ssafy.neegongnaegong.presentation.calendar.create.ScheduleCreateRoute
 import com.ssafy.neegongnaegong.presentation.calendar.detail.ScheduleDetailRoute
 import com.ssafy.neegongnaegong.presentation.calendar.edit.ScheduleEditRoute
@@ -24,7 +25,12 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
                     navController.navigate(AppNavigation.Screen.Calendar.Create(it))
                 },
                 navigateToScheduleEdit = {
-                    navController.navigate(AppNavigation.Screen.Calendar.Edit(it.id))
+                    navController.navigate(
+                        AppNavigation.Screen.Calendar.Edit(
+                            it.id,
+                            ScheduleInputFormFocus.None
+                        )
+                    )
                 },
             )
         }
@@ -34,8 +40,8 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
             ScheduleDetailRoute(
                 scheduleId = route.scheduleId,
                 popBackStack = { navController.popBackStack() },
-                navigateToEditScheduleScreen = {
-                    navController.navigate(AppNavigation.Screen.Calendar.Edit(it.id))
+                navigateToEditScheduleScreen = { schedule, focus ->
+                    navController.navigate(AppNavigation.Screen.Calendar.Edit(schedule.id, focus))
                 }
             )
         }
@@ -53,6 +59,7 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
             ScheduleEditRoute(
                 popBackStack = { navController.popBackStack() },
                 scheduleId = route.scheduleId,
+                initialFocus = route.focus
             )
         }
     }

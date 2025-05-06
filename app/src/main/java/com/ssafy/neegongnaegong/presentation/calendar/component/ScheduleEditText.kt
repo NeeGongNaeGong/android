@@ -22,7 +22,7 @@ fun ScheduleEditText(
     onTextChange: (String) -> Unit = {},
     placeHolder: String? = null,
     prefix: ImageVector? = null,
-    enabled: Boolean = true,
+    enable: Boolean = true,
 ) {
     TextField(
         modifier = modifier,
@@ -35,7 +35,7 @@ fun ScheduleEditText(
                 )
             }
         },
-        enabled = enabled,
+        enabled = enable,
         value = text,
         onValueChange = onTextChange,
         textStyle = NeeGongNaeGongTheme.typography.bodyMedium,

@@ -5,11 +5,13 @@ import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 
 class ScheduleDetailContract {
     sealed class Event : UiEvent {
         data class OnLoad(val scheduleId: Long) : Event()
         data object OnEditClick : Event()
+        data class OnFormClick(val focus: ScheduleInputFormFocus) : Event()
         data class OnDeleteClick(val type: DeleteType) : Event()
     }
 
@@ -23,6 +25,9 @@ class ScheduleDetailContract {
 
     sealed class Effect : UiEffect {
         data object NavigateBack : Effect()
-        data class NavigateToEditScheduleScreen(val schedule: Schedule) : Effect()
+        data class NavigateToEditScheduleScreen(
+            val schedule: Schedule,
+            val focus: ScheduleInputFormFocus
+        ) : Effect()
     }
 }
