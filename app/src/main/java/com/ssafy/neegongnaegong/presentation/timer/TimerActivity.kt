@@ -11,7 +11,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteRoute
+import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteRoute
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.AccelerometerHelper
 import dagger.hilt.android.AndroidEntryPoint

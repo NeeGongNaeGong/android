@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.write
+package com.ssafy.neegongnaegong.presentation.timer.learning
 
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData

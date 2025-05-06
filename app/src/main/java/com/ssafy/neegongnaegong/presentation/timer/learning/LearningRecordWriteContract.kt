@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.write
+package com.ssafy.neegongnaegong.presentation.timer.learning
 
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag

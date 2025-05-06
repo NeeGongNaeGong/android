@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.write
+package com.ssafy.neegongnaegong.presentation.timer.learning
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
