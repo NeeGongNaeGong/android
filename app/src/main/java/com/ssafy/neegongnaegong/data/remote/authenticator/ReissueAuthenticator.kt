@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.remote.authenticator
 
 import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
+import com.ssafy.neegongnaegong.data.model.auth.request.RefreshRequest
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import kotlinx.coroutines.runBlocking
@@ -27,9 +28,10 @@ class ReissueAuthenticator @Inject constructor(
     }
 
     private suspend fun fetchNewAccessToken(): String? {
-        val existingRefreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return null
+        val existRefreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return null
+        val request = RefreshRequest("Bearer $existRefreshToken")
 
-        return authApi.reissue(existingRefreshToken).getOrThrow().data.let {
+        return authApi.reissue(request).getOrThrow().data.let {
             with(it.createJwt) {
                 tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
                 tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".ApplicationClass"
@@ -28,11 +29,16 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".data.fcm.FcmService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".presentation.timer.TimerActivity"
             android:exported="false" />
-
-
     </application>
-
 </manifest>

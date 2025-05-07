@@ -4,15 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ssafy.neegongnaegong.presentation.base.LoginStatusViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.PermissionManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val viewModel: LoginStatusViewModel by viewModels()
+
+    private val permissions = PermissionManager.getPermissions()
+
+    private val permissionLauncher by lazy {
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { _ -> }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -33,6 +42,8 @@ class MainActivity : ComponentActivity() {
          * => NavHost 리렌더링이 일어나는 대신 그냥 Navigation으로 화면이 전환되도록 함
          */
         splashScreen.setKeepOnScreenCondition { viewModel.state.value.isLoading }
+
+        PermissionManager.requestPermissions(this, permissionLauncher, permissions)
 
         enableEdgeToEdge()
 

@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.module.di.usecase
 
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
+import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import com.ssafy.neegongnaegong.domain.usecase.auth.LoginUseCase
 import com.ssafy.neegongnaegong.domain.usecase.auth.LogoutUseCase
 import com.ssafy.neegongnaegong.domain.usecase.auth.RegisterUseCase
@@ -24,7 +25,7 @@ object AuthUseCaseModule {
 
     @Provides
     @Singleton
-    fun provideReissueUseCase(authRepository: AuthRepository): ReissueUseCase = ReissueUseCase(authRepository)
+    fun provideReissueUseCase(authRepository: AuthRepository, userRepository: UserRepository): ReissueUseCase = ReissueUseCase(authRepository, userRepository)
 
     @Provides
     @Singleton
