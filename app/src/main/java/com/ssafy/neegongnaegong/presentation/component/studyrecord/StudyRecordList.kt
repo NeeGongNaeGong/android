@@ -1,6 +1,8 @@
 package com.ssafy.neegongnaegong.presentation.component.studyrecord
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -48,6 +50,9 @@ fun StudyRecordList(
                     onClick = onClick
                 )
             }
+        }
+        item {
+            Spacer(modifier = Modifier.height(0.dp))
         }
     }
 }
