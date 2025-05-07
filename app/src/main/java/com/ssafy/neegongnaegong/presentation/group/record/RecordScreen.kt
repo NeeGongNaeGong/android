@@ -29,9 +29,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -50,7 +47,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -119,24 +118,36 @@ fun RecordContent(
 ) {
     var chartHeight by remember { mutableStateOf(0.dp) }
 
-    Row(
-        modifier = modifier.padding(horizontal = 15.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        PieChartScreen(
-            modifier = Modifier
-                .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
-                .aspectRatio(1F)
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        ChartLegendScreen(
-            modifier = Modifier
-                .wrapContentWidth()
-                .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
-                .verticalScroll(
-                    rememberScrollState()
-                ),
-            onHeightChange = { newHeight -> chartHeight = newHeight },
+    Column(modifier = modifier) {
+
+        Row(
+            modifier = Modifier.padding(horizontal = 15.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            PieChartScreen(
+                modifier = Modifier
+                    .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
+                    .aspectRatio(1F)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            ChartLegendScreen(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
+                    .verticalScroll(
+                        rememberScrollState()
+                    ),
+                onHeightChange = { newHeight -> chartHeight = newHeight },
+            )
+
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        StudyRecordList(
+            modifier = Modifier.weight(1F),
+            studyRecords = PersonalPreviewDataProvider().getStudyRecords(),
+            onClick = {}
         )
 
     }
