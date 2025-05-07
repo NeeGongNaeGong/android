@@ -70,6 +70,9 @@ object AppNavigation {
 
             @Serializable
             data object MakeVote : Studies
+
+            @Serializable
+            data class Record(val groupId: Int, val memberId: Int) : Studies
         }
 
         @Serializable

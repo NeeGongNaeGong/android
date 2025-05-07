@@ -5,9 +5,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
+import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
 
 /**
@@ -53,6 +55,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         composable<AppNavigation.Screen.Studies.MakeVote> {
             VoteRoute(
                 popBackStack = { navController.popBackStack() },
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.Record> { backStackEntry ->
+            val (groupId, memberId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.Record>()
+            RecordRoute(
+                groupId = groupId,
+                memberId= memberId,
+                popBackStack = { navController.popBackStack() }
             )
         }
     }
