@@ -23,8 +23,8 @@ fun StudyRecordList(
 ) {
 
     val groupedRecords = learningRecords
-        .sortedByDescending { it.startTime }
-        .groupBy { it.startTime.toDateString() }
+        .sortedByDescending { it.startAt }
+        .groupBy { it.startAt.toDateString() }
 
 
     LazyColumn(

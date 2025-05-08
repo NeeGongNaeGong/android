@@ -73,6 +73,8 @@ fun LearningRoute(viewModel: TimerViewModel) {
             popBackStack = { /* 종료 또는 아무것도 안함 */ },
         )
     } else {
-        LearningRecordWriteRoute()
+        LearningRecordWriteRoute(
+            learningRecord = uiState.learningRecord,
+        )
     }
 }

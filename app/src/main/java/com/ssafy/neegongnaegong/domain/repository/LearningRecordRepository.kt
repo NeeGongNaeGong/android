@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface LearningRecordRepository {
     suspend fun getLearningRecords(userId: Long): List<LearningRecord>
 
-    suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<LearningRecord>
+    suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<Long>
 
     suspend fun deleteLearningRecord(learningRecordId: Long): Flow<LearningRecord>
 

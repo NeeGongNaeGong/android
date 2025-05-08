@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.timer.learning
 
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
@@ -61,20 +62,19 @@ class LearningRecordWriteContract {
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
         // api
-
+        val isLoading: Boolean = false,
     ) : UiState
 
     sealed class Effect : UiEffect {
         data object NavigateToHome : Effect()
 
-        data class ShowSuccessToast(
-            val message: String,
-        ) : Effect()
+    }
 
-        data class ShowErrorToast(
-            val message: String,
-        ) : Effect()
+    sealed class Error : ErrorContext {
+        data object CreateLearningRecordError : Error()
 
-        data object ShowTagLimitExceededToast : Effect()
+        data object UpdateLearningRecordError : Error()
+
+        data object TagOverSizeError : Error()
     }
 }

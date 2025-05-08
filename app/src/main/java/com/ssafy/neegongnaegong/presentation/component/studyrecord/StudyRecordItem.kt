@@ -58,8 +58,8 @@ fun StudyRecordItem(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                val start = record.startTime.toTimeString()
-                val end = record.endTime.toHourMinuteString()
+                val start = record.startAt.toTimeString()
+                val end = record.endAt.toHourMinuteString()
 
                 Text(
                     text = "$start ~ $end",

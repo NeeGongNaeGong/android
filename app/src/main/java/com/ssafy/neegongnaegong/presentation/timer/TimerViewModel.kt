@@ -2,20 +2,55 @@ package com.ssafy.neegongnaegong.presentation.timer
 
 import android.os.SystemClock
 import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.CreateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteContract
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel
     @Inject
-    constructor() : BaseViewModel<TimerContract.Event, TimerContract.State, TimerContract.Effect>() {
+    constructor(
+        private val createLearningRecordUseCase: CreateLearningRecordUseCase,
+    ) : BaseViewModel<TimerContract.Event, TimerContract.State, TimerContract.Effect>() {
         private var timerJob: Job? = null
 
         override fun createInitialState(): TimerContract.State = TimerContract.State()
+
+        override fun handleException(
+            e: Throwable,
+            errorContext: ErrorContext,
+            retry: () -> Unit,
+        ) {
+            val error = errorContext as? LearningRecordWriteContract.Error ?: return
+
+            when (error) {
+                is LearningRecordWriteContract.Error.CreateLearningRecordError ->
+                    showErrorMessage(
+                        message = "공부 기록을 등록 하지 못했습니다.",
+                        SnackbarManager.Action.retry { retry() },
+                    )
+
+                LearningRecordWriteContract.Error.TagOverSizeError ->
+                    showErrorMessage(
+                        message = "태그는 최대 5개까지 등록할 수 있습니다.",
+                        SnackbarManager.Action.retry { retry() },
+                    )
+
+                LearningRecordWriteContract.Error.UpdateLearningRecordError ->
+                    showErrorMessage(
+                        message = "공부 기록을 수정 하지 못했습니다.",
+                        SnackbarManager.Action.retry { retry() },
+                    )
+            }
+        }
 
         override fun handleEvent(event: TimerContract.Event) {
             when (event) {
@@ -70,6 +105,7 @@ class TimerViewModel
                             isRunning = false,
                             isPauseDialogVisible = false,
                             totalElapsedTime = totalElapsedTime + currentElapsedTime,
+                            learningRecord = learningRecord.copy(endAt = LocalDateTime.now()),
                         )
                     }
                     timerJob?.cancel()
@@ -84,12 +120,26 @@ class TimerViewModel
             }
         }
 
+        // api
+        private fun createLearningRecord() =
+            viewModelScope.launch {
+                createLearningRecordUseCase(
+                    uiState.value.learningRecord,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect(LearningRecordWriteContract.Error.CreateLearningRecordError) { result ->
+                    println("$result")
+                }
+            }
+
         private fun startTimer() {
             timerJob?.cancel()
             setState {
                 copy(
                     startTime = SystemClock.elapsedRealtime(),
                     isRunning = true,
+                    learningRecord = if (isFirstTimer) learningRecord.copy(startAt = LocalDateTime.now()) else learningRecord,
+                    isFirstTimer = false,
                 )
             }
             timerJob =
@@ -105,8 +155,5 @@ class TimerViewModel
                         delay(1000L)
                     }
                 }
-        }
-
-        private fun pauseTimer() {
         }
     }

@@ -165,8 +165,8 @@ fun StudyRecordEditScreen(
         Column {
 
             DateTimeHeader(
-                dateText = learningRecord.startTime.toDateString(),
-                timeText = "${learningRecord.startTime.toTimeString()} ~ ${learningRecord.endTime.toTimeString()}"
+                dateText = learningRecord.startAt.toDateString(),
+                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}"
             )
 
             TitleTextField(

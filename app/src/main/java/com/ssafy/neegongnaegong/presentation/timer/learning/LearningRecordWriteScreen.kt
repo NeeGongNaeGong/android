@@ -19,8 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
-import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
@@ -38,6 +39,7 @@ fun LearningRecordWriteRoute(
     modifier: Modifier = Modifier,
     viewModel: LearningRecordWriteViewModel = hiltViewModel(),
     popBackStack: () -> Unit = {},
+    learningRecord: LearningRecord
 ) {
     BackHandler { popBackStack() }
 
@@ -98,18 +100,6 @@ fun LearningRecordWriteContent(
 ) {
     val context = LocalContext.current
 
-    if (uiState.isDialogShow) {
-        TagSelectDialog(
-            selectedTags = uiState.selectedTags,
-            unSelectedTags = uiState.unSelectedTags,
-            onCancel = onDialogClosed,
-            onConfirm = onDialogConfirmed,
-            onSearchQueryChanged = onSearchQueryChanged,
-            onTagSelected = onTagSelected,
-            onTagDeselected = onTagDeselected,
-        )
-    }
-
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
@@ -117,17 +107,6 @@ fun LearningRecordWriteContent(
                     onCancelClicked()
                 }
 
-                is LearningRecordWriteContract.Effect.ShowErrorToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is LearningRecordWriteContract.Effect.ShowSuccessToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is LearningRecordWriteContract.Effect.ShowTagLimitExceededToast -> {
-                    Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }
@@ -143,6 +122,20 @@ fun LearningRecordWriteContent(
         onCancelClicked = onCancelClicked,
         onConfirmClicked = onConfirmClicked,
     )
+
+    if (uiState.isDialogShow) {
+        TagSelectDialog(
+            selectedTags = uiState.selectedTags,
+            unSelectedTags = uiState.unSelectedTags,
+            onCancel = onDialogClosed,
+            onConfirm = onDialogConfirmed,
+            onSearchQueryChanged = onSearchQueryChanged,
+            onTagSelected = onTagSelected,
+            onTagDeselected = onTagDeselected,
+        )
+    }
+
+    if (uiState.isLoading) LoadingDialog()
 }
 
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
@@ -170,20 +163,21 @@ fun LearningRecordWriteScreen(
     ) {
         Column {
             DateTimeHeader(
-                dateText = learningRecord.startTime.toDateString(),
-                timeText = "${learningRecord.startTime.toTimeString()} ~ ${learningRecord.endTime.toTimeString()}"
+                dateText = learningRecord.startAt.toDateString(),
+                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
             )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
                 title = learningRecord.title,
-                onTitleChanged = onTitleChanged
+                onTitleChanged = onTitleChanged,
             )
 
             ContentTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(screenHeight * 0.5f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(screenHeight * 0.5f),
                 content = learningRecord.content,
                 onContentChanged = onContentChanged,
             )
