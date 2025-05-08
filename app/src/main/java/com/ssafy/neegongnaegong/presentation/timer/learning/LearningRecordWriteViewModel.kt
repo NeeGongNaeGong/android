@@ -1,15 +1,12 @@
 package com.ssafy.neegongnaegong.presentation.timer.learning
 
-import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
-import com.ssafy.neegongnaegong.domain.usecase.learningrecord.CreateLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.UpdateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -104,11 +101,19 @@ class LearningRecordWriteViewModel
                 is LearningRecordWriteContract.Event.OnDialogCancelClicked -> {
                     setState { copy(isDialogShow = false) }
                 }
+
+                // LearningRecordWriteScreen
+                is LearningRecordWriteContract.Event.OnLearningWriteDialogShow -> {
+                    setState { copy(isLearningWriteCancelDialogShow = true) }
+                }
+
+                is LearningRecordWriteContract.Event.OnLearningWriteDialogCancelClicked -> {
+                    setState { copy(isLearningWriteCancelDialogShow = false) }
+                }
             }
         }
 
         // api
-
 
         // tag
 

@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.timer.learning
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
+import com.ssafy.neegongnaegong.presentation.timer.component.write.LearningWriteCancelDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -38,18 +38,18 @@ import kotlinx.coroutines.flow.collectLatest
 fun LearningRecordWriteRoute(
     modifier: Modifier = Modifier,
     viewModel: LearningRecordWriteViewModel = hiltViewModel(),
-    popBackStack: () -> Unit = {},
-    learningRecord: LearningRecord
+    onCloseActivity: () -> Unit,
+    learningRecord: LearningRecord,
 ) {
-    BackHandler { popBackStack() }
-
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    BackHandler { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogShow) }
 
     LearningRecordWriteContent(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
-        onCancelClicked = { popBackStack() },
+        onCancelClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogShow) },
         onConfirmClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnConfirmClicked) },
         onTitleChanged = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTitleChanged(it)) },
         onContentChanged = {
@@ -78,6 +78,8 @@ fun LearningRecordWriteRoute(
         },
         onTagSelected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagDeselected(it)) },
+        onLearningWriteCancelDialogClosed = { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogCancelClicked) },
+        onLearningWriteCancelDialogConfirmed = onCloseActivity,
     )
 }
 
@@ -97,6 +99,9 @@ fun LearningRecordWriteContent(
     onSearchQueryChanged: (String) -> Unit,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
+    // LearningWriteCancelDialog
+    onLearningWriteCancelDialogClosed: () -> Unit,
+    onLearningWriteCancelDialogConfirmed: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -106,7 +111,6 @@ fun LearningRecordWriteContent(
                 is LearningRecordWriteContract.Effect.NavigateToHome -> {
                     onCancelClicked()
                 }
-
             }
         }
     }
@@ -136,6 +140,14 @@ fun LearningRecordWriteContent(
     }
 
     if (uiState.isLoading) LoadingDialog()
+
+    if (uiState.isLearningWriteCancelDialogShow) {
+        LearningWriteCancelDialog(
+            onCancel = onLearningWriteCancelDialogClosed,
+            onConfirm = onLearningWriteCancelDialogConfirmed,
+            onDismiss = onLearningWriteCancelDialogClosed,
+        )
+    }
 }
 
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리

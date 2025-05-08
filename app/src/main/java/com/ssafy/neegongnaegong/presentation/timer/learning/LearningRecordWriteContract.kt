@@ -50,6 +50,12 @@ class LearningRecordWriteContract {
         data object OnDialogConfirmClicked : Event()
 
         data object OnDialogCancelClicked : Event()
+
+        // LearningWriteCancel Dialog
+
+        data object OnLearningWriteDialogShow : Event()
+
+        data object OnLearningWriteDialogCancelClicked : Event()
     }
 
     data class State(
@@ -63,11 +69,12 @@ class LearningRecordWriteContract {
         val isDialogShow: Boolean = false,
         // api
         val isLoading: Boolean = false,
+        // LearningWriteCancel
+        val isLearningWriteCancelDialogShow: Boolean = false,
     ) : UiState
 
     sealed class Effect : UiEffect {
         data object NavigateToHome : Effect()
-
     }
 
     sealed class Error : ErrorContext {

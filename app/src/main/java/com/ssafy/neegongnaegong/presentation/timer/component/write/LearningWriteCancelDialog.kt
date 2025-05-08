@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.timer.component.timer
+package com.ssafy.neegongnaegong.presentation.timer.component.write
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

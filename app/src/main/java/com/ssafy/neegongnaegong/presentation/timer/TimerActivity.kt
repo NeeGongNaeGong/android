@@ -81,6 +81,7 @@ fun LearningRoute(
     } else {
         LearningRecordWriteRoute(
             learningRecord = uiState.learningRecord,
+            onCloseActivity = onCloseActivity,
         )
     }
 }
