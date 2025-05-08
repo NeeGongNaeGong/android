@@ -53,7 +53,10 @@ class TimerActivity : ComponentActivity() {
 
         setContent {
             NeeGongNaeGongTheme {
-                LearningRoute(viewModel)
+                LearningRoute(
+                    viewModel = viewModel,
+                    onCloseActivity = { finish() },
+                )
             }
         }
     }
@@ -66,11 +69,14 @@ class TimerActivity : ComponentActivity() {
 }
 
 @Composable
-fun LearningRoute(viewModel: TimerViewModel) {
+fun LearningRoute(
+    viewModel: TimerViewModel,
+    onCloseActivity: () -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     if (uiState.isTimerScreen) {
         TimerRoute(
-            popBackStack = { /* 종료 또는 아무것도 안함 */ },
+            onCloseActivity = onCloseActivity,
         )
     } else {
         LearningRecordWriteRoute(

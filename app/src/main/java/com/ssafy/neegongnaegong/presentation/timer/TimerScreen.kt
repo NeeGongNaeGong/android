@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.GuideText
+import com.ssafy.neegongnaegong.presentation.timer.component.timer.LearningCancelDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.MainCharacterImage
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.PauseButton
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.PauseDialog
@@ -26,11 +27,11 @@ import kotlinx.coroutines.flow.Flow
 fun TimerRoute(
     modifier: Modifier = Modifier,
     viewModel: TimerViewModel = hiltViewModel(),
-    popBackStack: () -> Unit,
+    onCloseActivity: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    BackHandler { popBackStack() }
+    BackHandler { viewModel.setEvent(TimerContract.Event.OnLearningCancelDialogShow) }
 
     TimerContent(
         modifier = modifier,
@@ -41,7 +42,11 @@ fun TimerRoute(
         onCancelDialog = { viewModel.setEvent(TimerContract.Event.OnCancelDialog) },
         onDismissDialog = { viewModel.setEvent(TimerContract.Event.OnDismissDialog) },
         onConfirmDialog = { viewModel.setEvent(TimerContract.Event.OnConfirmDialog) },
-        navigateToWriteScreen = {},
+        navigateToWriteScreen = { },
+        onLearningCancelDialogCancel = { viewModel.setEvent(TimerContract.Event.OnLearningCancelDialogDismiss) },
+        onLearningCancelDialogDismiss = { viewModel.setEvent(TimerContract.Event.OnLearningCancelDialogDismiss) },
+        onLearningCancelDialogConfirm = { viewModel.setEvent(TimerContract.Event.OnLearningCancelDialogConfirm) },
+        onCloseActivity = onCloseActivity,
     )
 }
 
@@ -53,11 +58,17 @@ fun TimerContent(
     // play button
     onPauseClicked: () -> Unit,
     onPlayClicked: () -> Unit,
-    // dialog
+    // Pause dialog
     onCancelDialog: () -> Unit,
     onDismissDialog: () -> Unit,
     onConfirmDialog: () -> Unit,
     navigateToWriteScreen: () -> Unit,
+    // Cancel dialog
+    onLearningCancelDialogCancel: () -> Unit,
+    onLearningCancelDialogDismiss: () -> Unit,
+    onLearningCancelDialogConfirm: () -> Unit,
+    // activity
+    onCloseActivity: () -> Unit,
 ) {
     if (uiState.isPauseDialogVisible) {
         PauseDialog(
@@ -67,11 +78,23 @@ fun TimerContent(
         )
     }
 
+    if (uiState.isLearningCancelDialogShow) {
+        LearningCancelDialog(
+            onCancel = onLearningCancelDialogCancel,
+            onDismiss = onLearningCancelDialogDismiss,
+            onConfirm = onLearningCancelDialogConfirm,
+        )
+    }
+
     LaunchedEffect(effect) {
         effect.collect { effect ->
             when (effect) {
                 is TimerContract.Effect.NavigateToWriteScreen -> {
                     navigateToWriteScreen()
+                }
+
+                is TimerContract.Effect.CloseTimerActivity -> {
+                    onCloseActivity()
                 }
             }
         }

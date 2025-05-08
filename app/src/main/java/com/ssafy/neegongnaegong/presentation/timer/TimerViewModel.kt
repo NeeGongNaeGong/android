@@ -110,6 +110,20 @@ class TimerViewModel
                     }
                     timerJob?.cancel()
                 }
+
+                // Learning Cancel Dialog
+                is TimerContract.Event.OnLearningCancelDialogConfirm -> {
+                    setEffect { TimerContract.Effect.CloseTimerActivity }
+                }
+
+                is TimerContract.Event.OnLearningCancelDialogDismiss -> {
+                    setState { copy(isLearningCancelDialogShow = false) }
+                }
+
+                is TimerContract.Event.OnLearningCancelDialogShow -> {
+                    setState { copy(isLearningCancelDialogShow = true) }
+                }
+
                 // Screen On Off
                 // 화면이 꺼졌을 때, 지금은 별다른 로직이 필요 없음
                 is TimerContract.Event.OffScreen -> {
