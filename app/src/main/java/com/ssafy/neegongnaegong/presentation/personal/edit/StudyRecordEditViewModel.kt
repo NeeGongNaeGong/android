@@ -54,7 +54,6 @@ class StudyRecordEditViewModel
 
                 is StudyRecordEditContract.Event.OnConfirmClicked -> {
                     updateLearningRecord()
-                    setEffect { StudyRecordEditContract.Effect.NavigateToHome }
                 }
 
                 // 태그 추가,삭제
@@ -112,8 +111,8 @@ class StudyRecordEditViewModel
                     learningRecord = uiState.value.learningRecord,
                 ).withLoading {
                     setState { copy(isLoading = true) }
-                }.safeCollect { result ->
-                    println("확인 $result")
+                }.safeCollect {
+                    setEffect { StudyRecordEditContract.Effect.NavigateToHome }
                 }
             }
 

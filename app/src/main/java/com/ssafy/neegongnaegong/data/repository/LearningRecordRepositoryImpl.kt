@@ -1,14 +1,13 @@
 package com.ssafy.neegongnaegong.data.repository
 
-import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -40,7 +39,11 @@ class LearningRecordRepositoryImpl
         override suspend fun updateLearningRecord(
             learningRecordId: Long,
             learningRecord: LearningRecord,
-        ): Flow<LearningRecord> {
-            TODO("Not yet implemented")
-        }
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.updateLearningRecord(
+                    learningRecordId = learningRecordId,
+                    request = UpdateLearningRecordRequest.fromDomain(learningRecord),
+                )
+            }
     }

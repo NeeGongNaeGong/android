@@ -20,7 +20,7 @@ class NetworkLearningRecordDataSourceImpl
         override suspend fun updateLearningRecord(
             learningRecordId: Long,
             request: UpdateLearningRecordRequest,
-        ): Flow<UpdateLearningRecordResponse> = apiFlow { api.updateLearningRecord(learningRecordId, request) }
+        ): Flow<Unit> = apiFlow { api.updateLearningRecord(learningRecordId, request) }
 
         override suspend fun deleteLearningRecord(learningRecordId: Long): Flow<DeleteLearningRecordResponse> =
             apiFlow { api.deleteLearningRecord(learningRecordId) }

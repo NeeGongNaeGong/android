@@ -13,5 +13,5 @@ interface LearningRecordRepository {
     suspend fun updateLearningRecord(
         learningRecordId: Long,
         learningRecord: LearningRecord,
-    ): Flow<LearningRecord>
+    ): Flow<Unit>
 }

@@ -48,10 +48,8 @@ class LearningRecordWriteViewModel
                 }
 
                 // 취소, 확인
-                is LearningRecordWriteContract.Event.OnCancelClicked -> {
-                }
-
                 is LearningRecordWriteContract.Event.OnConfirmClicked -> {
+                    updateLearningRecord()
                 }
 
                 // 태그 추가,삭제
@@ -123,8 +121,8 @@ class LearningRecordWriteViewModel
                     learningRecord = uiState.value.learningRecord,
                 ).withLoading {
                     setState { copy(isLoading = true) }
-                }.safeCollect { result ->
-                    println("확인 $result")
+                }.safeCollect {
+                    setEffect { LearningRecordWriteContract.Effect.NavigateToHome }
                 }
             }
 

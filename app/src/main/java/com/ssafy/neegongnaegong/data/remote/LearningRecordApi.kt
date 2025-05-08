@@ -6,7 +6,6 @@ import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRec
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.UpdateLearningRecordResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -19,7 +18,7 @@ interface LearningRecordApi {
     suspend fun updateLearningRecord(
         @Path("learningRecordId") learningRecordId: Long,
         @Body request: UpdateLearningRecordRequest,
-    ): Result<ApiResponse<UpdateLearningRecordResponse>>
+    ): Result<ApiResponse<Unit>>
 
     @DELETE("api/records/{learningRecordId}")
     suspend fun deleteLearningRecord(

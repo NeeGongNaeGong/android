@@ -9,8 +9,6 @@ import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class LearningRecordWriteContract {
     sealed class Event : UiEvent {
-        data object OnCancelClicked : Event()
-
         data object OnConfirmClicked : Event()
 
         // record

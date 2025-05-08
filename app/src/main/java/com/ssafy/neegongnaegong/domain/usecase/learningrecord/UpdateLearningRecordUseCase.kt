@@ -10,5 +10,5 @@ class UpdateLearningRecordUseCase(
     suspend operator fun invoke(
         learningRecordId: Long,
         learningRecord: LearningRecord,
-    ): Flow<LearningRecord> = learningRecordRepository.updateLearningRecord(learningRecordId, learningRecord)
+    ): Flow<Unit> = learningRecordRepository.updateLearningRecord(learningRecordId, learningRecord)
 }

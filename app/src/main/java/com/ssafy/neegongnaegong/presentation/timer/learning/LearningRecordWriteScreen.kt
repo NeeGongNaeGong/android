@@ -41,7 +41,9 @@ fun LearningRecordWriteRoute(
     onCloseActivity: () -> Unit,
     learningRecord: LearningRecord,
 ) {
-    viewModel.setLearningRecord(learningRecord)
+    LaunchedEffect(Unit) {
+        viewModel.setLearningRecord(learningRecord)
+    }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -53,7 +55,10 @@ fun LearningRecordWriteRoute(
         uiState = uiState.value,
         onCancelClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogShow) },
         onConfirmClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnConfirmClicked) },
-        onTitleChanged = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTitleChanged(it)) },
+        onTitleChanged = {
+            print("확인 $it")
+            viewModel.setEvent(LearningRecordWriteContract.Event.OnTitleChanged(it))
+        },
         onContentChanged = {
             viewModel.setEvent(
                 LearningRecordWriteContract.Event.OnContentChanged(
@@ -82,6 +87,7 @@ fun LearningRecordWriteRoute(
         onTagDeselected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagDeselected(it)) },
         onLearningWriteCancelDialogClosed = { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogCancelClicked) },
         onLearningWriteCancelDialogConfirmed = onCloseActivity,
+        onCloseActivity = onCloseActivity,
     )
 }
 
@@ -104,6 +110,8 @@ fun LearningRecordWriteContent(
     // LearningWriteCancelDialog
     onLearningWriteCancelDialogClosed: () -> Unit,
     onLearningWriteCancelDialogConfirmed: () -> Unit,
+    // activity
+    onCloseActivity: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -111,7 +119,7 @@ fun LearningRecordWriteContent(
         effect.collectLatest { effect ->
             when (effect) {
                 is LearningRecordWriteContract.Effect.NavigateToHome -> {
-                    onCancelClicked()
+                    onCloseActivity()
                 }
             }
         }
