@@ -11,12 +11,13 @@ data class CreateLearningRecordRequest(
     val tags: List<Long>,
 ) {
     companion object {
-        fun fromDomain(learningRecord: LearningRecord) = CreateLearningRecordRequest(
-            startAt = learningRecord.startAt,
-            endAt = learningRecord.endAt,
-            title = learningRecord.title,
-            content = learningRecord.content,
-            tags = learningRecord.tags.map { it.id },
-        )
+        fun fromDomain(learningRecord: LearningRecord) =
+            CreateLearningRecordRequest(
+                startAt = learningRecord.startAt,
+                endAt = learningRecord.endAt,
+                title = learningRecord.title,
+                content = learningRecord.content,
+                tags = learningRecord.tags.map { it.id },
+            )
     }
 }

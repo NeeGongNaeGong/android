@@ -31,5 +31,7 @@ interface LearningRecordApi {
     suspend fun getLearningRecord(request: GetLearningRecordRequest): Result<ApiResponse<GetLearningRecordResponse>>
 
     @POST("/api/records")
-    suspend fun createLearningRecord(request: CreateLearningRecordRequest): Result<ApiResponse<CreateLearningRecordResponse>>
+    suspend fun createLearningRecord(
+        @Body request: CreateLearningRecordRequest,
+    ): Result<ApiResponse<CreateLearningRecordResponse>>
 }

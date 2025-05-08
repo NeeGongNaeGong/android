@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.CreateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
-import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteContract
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -90,21 +89,24 @@ class TimerViewModel
                     val totalTime = uiState.value.totalElapsedTime + currentElapsedTime
 
                     if (totalTime < 60_000L) {
-                        println("확인 1분미만임")
                         setEffect { TimerContract.Effect.ShowLeastOneMinuteGuideToast }
 //                        showWarningMessage("공부 시간은 최소 1분 이상이어야 합니다.", SnackbarManager.Action.ok())
                         return
                     }
-                    setState {
-                        copy(
-                            isTimerScreen = false,
-                            isRunning = false,
-                            isPauseDialogVisible = false,
-                            totalElapsedTime = totalElapsedTime + currentElapsedTime,
-                            learningRecord = learningRecord.copy(endAt = LocalDateTime.now()),
-                        )
-                    }
-                    timerJob?.cancel()
+
+                    setState { copy(learningRecord = learningRecord.copy(endAt = LocalDateTime.now())) }
+
+                    createLearningRecord()
+//                    setState {
+//                        copy(
+//                            isTimerScreen = false,
+//                            isRunning = false,
+//                            isPauseDialogVisible = false,
+//                            totalElapsedTime = totalElapsedTime + currentElapsedTime,
+//                            learningRecord = learningRecord.copy(endAt = LocalDateTime.now()),
+//                        )
+//                    }
+//                    timerJob?.cancel()
                 }
 
                 // Learning Cancel Dialog
@@ -138,7 +140,7 @@ class TimerViewModel
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect(TimerContract.Error.CreateLearningRecordError) { result ->
-                    println("$result")
+                    println("확인 $result")
                 }
             }
 
