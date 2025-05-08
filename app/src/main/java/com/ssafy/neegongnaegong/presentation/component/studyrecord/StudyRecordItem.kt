@@ -88,7 +88,7 @@ fun StudyRecordItem(
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 record.tags.forEach { tag ->
                     Text(
-                        text = "#$tag",
+                        text = "#${tag.koName}",
                         fontSize = 12.sp,
                         color = Color.Black,
                     )
