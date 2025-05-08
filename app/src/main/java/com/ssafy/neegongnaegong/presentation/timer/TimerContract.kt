@@ -43,7 +43,7 @@ class TimerContract {
         val learningRecord: LearningRecord = LearningRecord.default(),
         // timer
         val startTime: Long = SystemClock.elapsedRealtime(),
-        val totalElapsedTime: Long = 0L,
+        val totalElapsedTime: Long = 60000L,
         val isFirstTimer: Boolean = true,
         // pause dialog
         val isDialogShow: Boolean = true,
@@ -56,11 +56,11 @@ class TimerContract {
         data object NavigateToWriteScreen : Effect()
 
         data object CloseTimerActivity : Effect()
+
+        data object ShowLeastOneMinuteGuideToast : Effect()
     }
 
     sealed class Error : ErrorContext {
         data object CreateLearningRecordError : Error()
-
-        data object TagOverSizeError : Error()
     }
 }

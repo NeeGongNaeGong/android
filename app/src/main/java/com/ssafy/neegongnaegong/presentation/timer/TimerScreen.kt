@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -70,6 +72,8 @@ fun TimerContent(
     // activity
     onCloseActivity: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     if (uiState.isPauseDialogVisible) {
         PauseDialog(
             onCancel = onCancelDialog,
@@ -95,6 +99,10 @@ fun TimerContent(
 
                 is TimerContract.Effect.CloseTimerActivity -> {
                     onCloseActivity()
+                }
+
+                is TimerContract.Effect.ShowLeastOneMinuteGuideToast -> {
+                    Toast.makeText(context, "공부 시간은 최소 1분 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

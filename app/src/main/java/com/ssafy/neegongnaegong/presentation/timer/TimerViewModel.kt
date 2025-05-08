@@ -29,25 +29,13 @@ class TimerViewModel
             errorContext: ErrorContext,
             retry: () -> Unit,
         ) {
-            val error = errorContext as? LearningRecordWriteContract.Error ?: return
+            val error = errorContext as? TimerContract.Error ?: return
 
             when (error) {
-                is LearningRecordWriteContract.Error.CreateLearningRecordError ->
+                is TimerContract.Error.CreateLearningRecordError ->
                     showErrorMessage(
                         message = "공부 기록을 등록 하지 못했습니다.",
-                        SnackbarManager.Action.retry { retry() },
-                    )
-
-                LearningRecordWriteContract.Error.TagOverSizeError ->
-                    showErrorMessage(
-                        message = "태그는 최대 5개까지 등록할 수 있습니다.",
-                        SnackbarManager.Action.retry { retry() },
-                    )
-
-                LearningRecordWriteContract.Error.UpdateLearningRecordError ->
-                    showErrorMessage(
-                        message = "공부 기록을 수정 하지 못했습니다.",
-                        SnackbarManager.Action.retry { retry() },
+                        action = SnackbarManager.Action.retry { retry() },
                     )
             }
         }
@@ -78,7 +66,7 @@ class TimerViewModel
                     }
                 }
 
-                // Dialog
+                // Pause Dialog
                 is TimerContract.Event.OnCancelDialog -> {
                     setState {
                         copy(isPauseDialogVisible = false)
@@ -99,6 +87,14 @@ class TimerViewModel
 
                 is TimerContract.Event.OnConfirmDialog -> {
                     val currentElapsedTime = SystemClock.elapsedRealtime() - uiState.value.startTime
+                    val totalTime = uiState.value.totalElapsedTime + currentElapsedTime
+
+                    if (totalTime < 60_000L) {
+                        println("확인 1분미만임")
+                        setEffect { TimerContract.Effect.ShowLeastOneMinuteGuideToast }
+//                        showWarningMessage("공부 시간은 최소 1분 이상이어야 합니다.", SnackbarManager.Action.ok())
+                        return
+                    }
                     setState {
                         copy(
                             isTimerScreen = false,
@@ -141,7 +137,7 @@ class TimerViewModel
                     uiState.value.learningRecord,
                 ).withLoading {
                     setState { copy(isLoading = it) }
-                }.safeCollect(LearningRecordWriteContract.Error.CreateLearningRecordError) { result ->
+                }.safeCollect(TimerContract.Error.CreateLearningRecordError) { result ->
                     println("$result")
                 }
             }

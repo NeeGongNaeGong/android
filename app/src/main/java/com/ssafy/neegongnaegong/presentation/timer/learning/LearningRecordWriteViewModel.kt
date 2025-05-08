@@ -28,12 +28,6 @@ class LearningRecordWriteViewModel
             val error = errorContext as? LearningRecordWriteContract.Error ?: return
 
             when (error) {
-                is LearningRecordWriteContract.Error.CreateLearningRecordError ->
-                    showErrorMessage(
-                        message = "공부 기록을 등록 하지 못했습니다.",
-                        SnackbarManager.Action.retry { retry() },
-                    )
-
                 LearningRecordWriteContract.Error.TagOverSizeError ->
                     showErrorMessage(
                         message = "태그는 최대 5개까지 등록할 수 있습니다.",
