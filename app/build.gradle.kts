@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 val properties = Properties().apply {
@@ -50,6 +51,12 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    detekt {
+        buildUponDefaultConfig = true
+        allRules = false
+        config.setFrom(files("$rootDir/detekt.yml"))
     }
 }
 

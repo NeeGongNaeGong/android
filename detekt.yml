@@ -1,0 +1,3 @@
+# detekt.yml
+style:
+  active: false  # style 규칙 전체 비활성화
