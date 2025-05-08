@@ -1,5 +1,7 @@
 package com.ssafy.neegongnaegong.module.di
 
+import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSource
+import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
@@ -34,6 +36,10 @@ internal interface DataSourceModule {
     @Singleton
     @Binds
     fun bindLocalUserDataSource(localUserDataSourceImpl: LocalUserDataSourceImpl): LocalUserDataSource
+
+    @Singleton
+    @Binds
+    fun bindLocalFcmDataSource(localFcmDataSourceImpl: LocalFcmDataSourceImpl): LocalFcmDataSource
 
     @Singleton
     @Binds

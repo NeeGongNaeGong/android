@@ -114,4 +114,7 @@ dependencies {
 
     // landscapist(image loader, glide)
     implementation(libs.landscapist.glide)
+
+    // fcm
+    implementation(libs.firebase.messaging.ktx)
 }
