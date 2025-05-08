@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.timer.learning
 
 import com.ssafy.neegongnaegong.domain.data.TagData
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.UpdateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -111,6 +112,11 @@ class LearningRecordWriteViewModel
                     setState { copy(isLearningWriteCancelDialogShow = false) }
                 }
             }
+        }
+
+        // init
+        fun setLearningRecord(learningRecord: LearningRecord) {
+            setState { copy(learningRecord = learningRecord) }
         }
 
         // api

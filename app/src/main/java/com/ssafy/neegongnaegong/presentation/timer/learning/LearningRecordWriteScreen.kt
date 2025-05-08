@@ -41,6 +41,8 @@ fun LearningRecordWriteRoute(
     onCloseActivity: () -> Unit,
     learningRecord: LearningRecord,
 ) {
+    viewModel.setLearningRecord(learningRecord)
+
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     BackHandler { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogShow) }
