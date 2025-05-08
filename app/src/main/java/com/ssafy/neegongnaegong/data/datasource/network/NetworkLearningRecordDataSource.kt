@@ -19,5 +19,5 @@ interface NetworkLearningRecordDataSource {
 
     suspend fun getLearningRecord(request: GetLearningRecordRequest): Flow<GetLearningRecordResponse>
 
-    suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<CreateLearningRecordResponse>
+    suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<Long>
 }

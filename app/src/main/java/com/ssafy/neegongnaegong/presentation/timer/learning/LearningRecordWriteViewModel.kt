@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.timer.learning
 
+import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
@@ -8,6 +9,7 @@ import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,12 +28,6 @@ class LearningRecordWriteViewModel
             val error = errorContext as? LearningRecordWriteContract.Error ?: return
 
             when (error) {
-                LearningRecordWriteContract.Error.TagOverSizeError ->
-                    showErrorMessage(
-                        message = "태그는 최대 5개까지 등록할 수 있습니다.",
-                        SnackbarManager.Action.retry { retry() },
-                    )
-
                 LearningRecordWriteContract.Error.UpdateLearningRecordError ->
                     showErrorMessage(
                         message = "공부 기록을 수정 하지 못했습니다.",
@@ -120,6 +116,17 @@ class LearningRecordWriteViewModel
         }
 
         // api
+        private fun updateLearningRecord() =
+            viewModelScope.launch {
+                updateLearningRecordUseCase(
+                    learningRecordId = uiState.value.learningRecord.id,
+                    learningRecord = uiState.value.learningRecord,
+                ).withLoading {
+                    setState { copy(isLoading = true) }
+                }.safeCollect { result ->
+                    println("확인 $result")
+                }
+            }
 
         // tag
 

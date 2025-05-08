@@ -79,7 +79,5 @@ class LearningRecordWriteContract {
 
     sealed class Error : ErrorContext {
         data object UpdateLearningRecordError : Error()
-
-        data object TagOverSizeError : Error()
     }
 }

@@ -28,6 +28,6 @@ class NetworkLearningRecordDataSourceImpl
         override suspend fun getLearningRecord(request: GetLearningRecordRequest): Flow<GetLearningRecordResponse> =
             apiFlow { api.getLearningRecord(request) }
 
-        override suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<CreateLearningRecordResponse> =
+        override suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<Long> =
             apiFlow { api.createLearningRecord(request) }
     }

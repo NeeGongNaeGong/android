@@ -94,19 +94,7 @@ class TimerViewModel
                         return
                     }
 
-                    setState { copy(learningRecord = learningRecord.copy(endAt = LocalDateTime.now())) }
-
-                    createLearningRecord()
-//                    setState {
-//                        copy(
-//                            isTimerScreen = false,
-//                            isRunning = false,
-//                            isPauseDialogVisible = false,
-//                            totalElapsedTime = totalElapsedTime + currentElapsedTime,
-//                            learningRecord = learningRecord.copy(endAt = LocalDateTime.now()),
-//                        )
-//                    }
-//                    timerJob?.cancel()
+                    createLearningRecord(totalTime = totalTime)
                 }
 
                 // Learning Cancel Dialog
@@ -128,19 +116,33 @@ class TimerViewModel
                 }
 
                 is TimerContract.Event.OnScreen -> {
+
                 }
             }
         }
 
         // api
-        private fun createLearningRecord() =
+        private fun createLearningRecord(totalTime: Long) =
             viewModelScope.launch {
                 createLearningRecordUseCase(
                     uiState.value.learningRecord,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect(TimerContract.Error.CreateLearningRecordError) { result ->
-                    println("확인 $result")
+                    setState {
+                        copy(
+                            isTimerScreen = false,
+                            isRunning = false,
+                            isPauseDialogVisible = false,
+                            totalElapsedTime = totalTime,
+                            learningRecord =
+                                learningRecord.copy(
+                                    id = result,
+                                    endAt = LocalDateTime.now(),
+                                ),
+                        )
+                    }
+                    timerJob?.cancel()
                 }
             }
 

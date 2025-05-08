@@ -4,7 +4,6 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.CreateLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.UpdateLearningRecordResponse
@@ -33,5 +32,5 @@ interface LearningRecordApi {
     @POST("/api/records")
     suspend fun createLearningRecord(
         @Body request: CreateLearningRecordRequest,
-    ): Result<ApiResponse<CreateLearningRecordResponse>>
+    ): Result<ApiResponse<Long>>
 }

@@ -1,8 +1,8 @@
 package com.ssafy.neegongnaegong.data.repository
 
+import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.CreateLearningRecordResponse
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
@@ -24,14 +24,13 @@ class LearningRecordRepositoryImpl
 
         override suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<Long> =
             withContext(ioDispatcher) {
-                dataSource.createLearningRecord(
-                    request =
-                        CreateLearningRecordRequest.fromDomain(
-                            learningRecord,
-                        ),
-                ).map {
-                    it.data
-                }
+                dataSource
+                    .createLearningRecord(
+                        request =
+                            CreateLearningRecordRequest.fromDomain(
+                                learningRecord,
+                            ),
+                    )
             }
 
         override suspend fun deleteLearningRecord(learningRecordId: Long): Flow<LearningRecord> {
