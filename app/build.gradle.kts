@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.google.services)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.ktlint)
 }
 
 val properties = Properties().apply {
