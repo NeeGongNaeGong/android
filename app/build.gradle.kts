@@ -125,4 +125,7 @@ dependencies {
 
     // fcm
     implementation(libs.firebase.messaging.ktx)
+
+    // detekt formatting
+    detektPlugins(libs.detekt.formatting)
 }
