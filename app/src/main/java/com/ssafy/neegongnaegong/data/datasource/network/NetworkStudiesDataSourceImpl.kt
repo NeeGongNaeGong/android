@@ -5,7 +5,9 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NetworkStudiesDataSourceImpl @Inject constructor(
     private val studiesApi: StudiesApi
 ) : NetworkStudiesDataSource {

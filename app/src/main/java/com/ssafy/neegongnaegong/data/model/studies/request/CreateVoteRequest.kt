@@ -1,11 +1,12 @@
 package com.ssafy.neegongnaegong.data.model.studies.request
 
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
+import java.time.LocalDateTime
 
 data class CreateVoteRequest(
     val title: String,
-    val startTime: String,
-    val endTime: String?,
+    val startTime: LocalDateTime,
+    val endTime: LocalDateTime?,
     val state: Boolean = true,
     val items: List<String>,
     val multiple: Boolean,
