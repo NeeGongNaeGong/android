@@ -118,7 +118,10 @@ fun MainScreen() {
     }
 
     ModalNavigationDrawer(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+        modifier =
+            Modifier
+                .background(color = NeeGongNaeGongTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.systemBars),
         drawerState = studiesDrawerState,
         gesturesEnabled = enableGestures.value,
         drawerContent = {

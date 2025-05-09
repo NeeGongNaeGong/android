@@ -38,6 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.component.button.GradientFloatingActionButton
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -83,6 +84,12 @@ fun BottomNavigationBar(
                                     id = if (selected) screen.iconSelected else screen.icon,
                                 ),
                             contentDescription = stringResource(id = screen.title),
+                            tint =
+                                if (selected) {
+                                    NeeGongNaeGongTheme.colorScheme.primaryText
+                                } else {
+                                    NeeGongNaeGongTheme.colorScheme.secondaryText
+                                },
                         )
                     },
                     label = {
@@ -93,6 +100,12 @@ fun BottomNavigationBar(
                                     NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 10.sp)
                                 } else {
                                     NeeGongNaeGongTheme.typography.labelSmall.copy(fontSize = 10.sp)
+                                },
+                            color =
+                                if (selected) {
+                                    NeeGongNaeGongTheme.colorScheme.primaryText
+                                } else {
+                                    NeeGongNaeGongTheme.colorScheme.secondaryText
                                 },
                         )
                     },
@@ -137,6 +150,7 @@ fun BottomNavigationBar(
 }
 
 @Preview(showBackground = true, heightDp = 70)
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewBottomNavigationBar() {
     NeeGongNaeGongTheme {
