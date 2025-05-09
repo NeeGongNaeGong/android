@@ -27,6 +27,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawer
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
@@ -94,6 +95,7 @@ fun MainScreen() {
         },
     ) {
         Scaffold(
+            snackbarHost = { NeeGongNaeGongSnackbarHost() },
             bottomBar = {
                 if (showBottomNavigationBar) {
                     BottomNavigationBar(
