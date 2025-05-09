@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.module.di.usecase
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.CreateLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.DeleteLearningRecordUseCase
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.UpdateLearningRecordUseCase
 import dagger.Module
@@ -39,4 +40,9 @@ object LearningRecordUseCaseModule {
     @Singleton
     fun provideGetLearningRecordUseCase(learningRecordRepository: LearningRecordRepository): GetLearningRecordUseCase =
         GetLearningRecordUseCase(learningRecordRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetLearningRecordListUseCase(learningRecordRepository: LearningRecordRepository): GetLearningRecordListUseCase =
+        GetLearningRecordListUseCase(learningRecordRepository)
 }

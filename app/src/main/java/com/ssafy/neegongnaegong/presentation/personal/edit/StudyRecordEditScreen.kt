@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
@@ -45,7 +46,10 @@ fun StudyRecordEditRoute(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    viewModel.loadStudyRecord(studyRecordId)
+    LaunchedEffect(studyRecordId) {
+        viewModel.loadStudyRecord(studyRecordId)
+    }
+
 
     StudyRecordEditContent(
         modifier = modifier,
@@ -68,6 +72,7 @@ fun StudyRecordEditRoute(
         },
         onTagSelected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagDeselected(it)) },
+        navigateToHome = popBackStack,
     )
 }
 
@@ -87,6 +92,8 @@ fun StudyRecordEditContent(
     onSearchQueryChanged: (String) -> Unit,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
+    // api
+    navigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -106,6 +113,7 @@ fun StudyRecordEditContent(
         effect.collectLatest { effect ->
             when (effect) {
                 is StudyRecordEditContract.Effect.NavigateToHome -> {
+                    navigateToHome()
                 }
 
                 is StudyRecordEditContract.Effect.ShowErrorToast -> {
@@ -134,6 +142,8 @@ fun StudyRecordEditContent(
         onCancelClicked = onCancelClicked,
         onConfirmClicked = onConfirmClicked,
     )
+
+    if (uiState.isLoading) LoadingDialog()
 }
 
 @Composable

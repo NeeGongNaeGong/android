@@ -2,7 +2,9 @@ package com.ssafy.neegongnaegong.data.repository
 
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSlice
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
@@ -47,5 +49,32 @@ class LearningRecordRepositoryImpl
                     learningRecordId = learningRecordId,
                     request = UpdateLearningRecordRequest.fromDomain(learningRecord),
                 )
+            }
+
+        override suspend fun getLearningRecordList(
+            tag: List<Long>?,
+            targetDate: String?,
+            cursorCreatedAt: String?,
+            cursorId: Long?,
+            size: Int,
+        ): Flow<CursorSlice> =
+            withContext(ioDispatcher) {
+                dataSource
+                    .getLearningRecordList(
+                        GetLearningRecordListRequest(
+                            tag = tag,
+                            targetDate = targetDate,
+                            cursorCreatedAt = cursorCreatedAt,
+                            cursorId = cursorId,
+                            size = size,
+                        ),
+                    ).map { slice ->
+                        CursorSlice(
+                            content = slice.content,
+                            hasNext = slice.hasNext,
+                            cursorCreatedAt = slice.cursorCreatedAt,
+                            cursorId = slice.cursorId,
+                        )
+                    }
             }
     }

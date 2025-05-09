@@ -1,21 +1,27 @@
 package com.ssafy.neegongnaegong.presentation.personal
 
+import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
-import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class PersonalViewModel
     @Inject
-    constructor() :
-    BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
-        override fun createInitialState(): PersonalContract.State =
-            PersonalContract.State(learningRecords = PersonalPreviewDataProvider().getStudyRecords())
+    constructor(
+        private val getLearningRecordListUseCase: GetLearningRecordListUseCase,
+    ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
+        override fun createInitialState(): PersonalContract.State = PersonalContract.State()
+
+        init {
+            loadLearningRecords()
+        }
 
         override fun handleEvent(event: PersonalContract.Event) {
             when (event) {
@@ -83,6 +89,63 @@ class PersonalViewModel
                 // calendar
                 is PersonalContract.Event.OnDateSelected -> {
                     filteringRecordByDate(event.date)
+                }
+
+                // paging
+                is PersonalContract.Event.OnRecordLoadMore -> {
+                    loadNextRecords()
+                }
+
+                is PersonalContract.Event.OnRecordRefresh -> {
+                    loadLearningRecords()
+                }
+            }
+        }
+        // api
+
+        private fun loadLearningRecords(
+            tagIds: List<Long>? = null,
+            date: String? = null,
+        ) {
+            viewModelScope.launch {
+                setState { copy(isLoading = true) }
+                getLearningRecordListUseCase(
+                    tag = tagIds,
+                    targetDate = date,
+                    size = 20,
+                ).safeCollect { result ->
+                    setState {
+                        copy(
+                            learningRecords = result.content.map { it.toDomain() },
+                            hasNext = result.hasNext,
+                            cursorId = result.cursorId,
+                            cursorCreatedAt = result.cursorCreatedAt,
+                            isLoading = false,
+                        )
+                    }
+                }
+            }
+        }
+
+        private fun loadNextRecords() {
+            val state = uiState.value
+            if (!state.hasNext || state.isLoading) return
+
+            viewModelScope.launch {
+                setState { copy(isLoading = true) }
+                getLearningRecordListUseCase(
+                    cursorId = state.cursorId,
+                    cursorCreatedAt = state.cursorCreatedAt,
+                ).safeCollect { result ->
+                    setState {
+                        copy(
+                            learningRecords = learningRecords + result.content.map { it.toDomain() },
+                            hasNext = result.hasNext,
+                            cursorId = result.cursorId,
+                            cursorCreatedAt = result.cursorCreatedAt,
+                            isLoading = false,
+                        )
+                    }
                 }
             }
         }

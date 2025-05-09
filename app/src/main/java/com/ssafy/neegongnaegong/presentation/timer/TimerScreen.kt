@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.GuideText
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.LearningCancelDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.MainCharacterImage
@@ -115,6 +116,8 @@ fun TimerContent(
         onPauseClicked = onPauseClicked,
         onPlayClicked = onPlayClicked,
     )
+
+    if (uiState.isLoading) LoadingDialog()
 }
 
 @Composable

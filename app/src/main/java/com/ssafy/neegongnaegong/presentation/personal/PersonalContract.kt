@@ -10,20 +10,43 @@ class PersonalContract {
     sealed class Event : UiEvent {
         // DropDown
         data object OnTagScreenSelected : Event()
-        data object OnDateScreenSelected : Event()
-        // Tag
-        data class OnTagEraseClicked(val tag: Tag) : Event()
-        data class OnTagSelected(val tag: Tag) : Event()
-        data class OnTagDeselected(val tag: Tag) : Event()
-        data class OnSearchTextChanged(val query: String) : Event()
-        data object OnTagPlusClicked : Event()
-        data object OnDialogClose : Event()
-        data object OnDialogConfirmClicked : Event()
-        data object OnDialogCancelClicked : Event()
-        // Record
-        // Date
-        data class OnDateSelected(val date: String) : Event()
 
+        data object OnDateScreenSelected : Event()
+
+        // Tag
+        data class OnTagEraseClicked(
+            val tag: Tag,
+        ) : Event()
+
+        data class OnTagSelected(
+            val tag: Tag,
+        ) : Event()
+
+        data class OnTagDeselected(
+            val tag: Tag,
+        ) : Event()
+
+        data class OnSearchTextChanged(
+            val query: String,
+        ) : Event()
+
+        data object OnTagPlusClicked : Event()
+
+        data object OnDialogClose : Event()
+
+        data object OnDialogConfirmClicked : Event()
+
+        data object OnDialogCancelClicked : Event()
+
+        // Record
+        data object OnRecordLoadMore : Event()
+
+        data object OnRecordRefresh : Event()
+
+        // Date
+        data class OnDateSelected(
+            val date: String,
+        ) : Event()
     }
 
     data class State(
@@ -42,10 +65,18 @@ class PersonalContract {
         // calendar
         val selectedDate: String = "",
         val selectedRecordsByDate: List<LearningRecord> = emptyList(),
+        // api
+        val isLoading: Boolean = false,
+        val cursorId: Long? = null,
+        val cursorCreatedAt: String? = null,
+        val hasNext: Boolean = true,
     ) : UiState
 
     sealed class Effect : UiEffect {
-        data class ShowErrorToast(val message: String) : Effect()
+        data class ShowErrorToast(
+            val message: String,
+        ) : Effect()
+
         data object ShowTagLimitExceededToast : Effect()
     }
 }

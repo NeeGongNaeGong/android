@@ -5,7 +5,7 @@ import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import java.time.LocalDateTime
 
 data class GetLearningRecordResponse(
-    val id: Long,
+    val learningRecordId: Long,
     val title: String,
     val content: String,
     val startAt: LocalDateTime,
@@ -14,7 +14,7 @@ data class GetLearningRecordResponse(
 ) {
     fun toDomain(): LearningRecord =
         LearningRecord(
-            id = id,
+            id = learningRecordId,
             title = title,
             content = content,
             startAt = startAt,

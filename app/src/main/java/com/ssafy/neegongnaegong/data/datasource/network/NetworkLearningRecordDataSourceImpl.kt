@@ -2,12 +2,11 @@ package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.CreateLearningRecordResponse
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSlice
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.UpdateLearningRecordResponse
 import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -30,4 +29,15 @@ class NetworkLearningRecordDataSourceImpl
 
         override suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<Long> =
             apiFlow { api.createLearningRecord(request) }
+
+        override suspend fun getLearningRecordList(request: GetLearningRecordListRequest): Flow<CursorSlice> =
+            apiFlow {
+                api.getLearningRecordList(
+                    tag = request.tag,
+                    targetDate = request.targetDate,
+                    cursorCreatedAt = request.cursorCreatedAt,
+                    cursorId = request.cursorId,
+                    size = request.size,
+                )
+            }
     }
