@@ -24,7 +24,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,11 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun StudiesCard(
@@ -69,6 +67,7 @@ fun StudiesCard(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .background(color = NeeGongNaeGongTheme.colorScheme.background)
                     .animateContentSize(
                         animationSpec =
                             spring(
@@ -93,9 +92,8 @@ fun StudiesCard(
                     Text(
                         text = category,
                         style =
-                            NeeGongNaeGongTheme.typography.bodyMedium.copy(
-                                color = Color(0xFFE53935),
-                            ),
+                            NeeGongNaeGongTheme.typography.bodyMedium,
+                        color = NeeGongNaeGongTheme.colorScheme.peach,
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -104,6 +102,7 @@ fun StudiesCard(
                     Text(
                         text = title,
                         style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 16.sp), // 제목 크기 약간 축소
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
@@ -113,11 +112,13 @@ fun StudiesCard(
                         Text(
                             text = goalTime,
                             style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = memberInfo,
                             style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
                     }
 
@@ -128,11 +129,13 @@ fun StudiesCard(
                         Text(
                             text = leader,
                             style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = startInfo,
                             style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
                     }
                 }
@@ -172,12 +175,13 @@ fun StudiesCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = description,
-                    style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 10.sp),
                     modifier =
                         Modifier
                             .weight(1f)
                             .padding(vertical = 8.dp),
+                    text = description,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 10.sp),
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     maxLines = if (expanded) Int.MAX_VALUE else 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -190,24 +194,8 @@ fun StudiesCard(
     }
 }
 
+@NeeGongNaeGongPreviews
 @Composable
-@Preview(widthDp = 400, heightDp = 140)
-private fun PreviewStudiesCard() {
-    NeeGongNaeGongTheme {
-        StudiesCard(
-            category = "대학생",
-            title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-            goalTime = "목표 3시간",
-            memberInfo = "인원 3/20명",
-            leader = "그룹장 박준식",
-            startInfo = "시작일 2일 전",
-            description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
-        )
-    }
-}
-
-@Composable
-@Preview(widthDp = 400, heightDp = 200)
 private fun PreviewStudiesCardExpanded() {
     NeeGongNaeGongTheme {
         StudiesCard(
@@ -219,6 +207,22 @@ private fun PreviewStudiesCardExpanded() {
             startInfo = "시작일 2일 전",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
             initialExpanded = true,
+        )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun PreviewStudiesCard() {
+    NeeGongNaeGongTheme {
+        StudiesCard(
+            category = "대학생",
+            title = "개발, 코딩(프론트, 백엔드 등) 취준방",
+            goalTime = "목표 3시간",
+            memberInfo = "인원 3/20명",
+            leader = "그룹장 박준식",
+            startInfo = "시작일 2일 전",
+            description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
         )
     }
 }
