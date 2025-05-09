@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.management
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,28 +27,35 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,28 +63,97 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.domain.model.studies.Category
+import com.ssafy.neegongnaegong.domain.model.studies.Tag
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.TimeUnit
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 private const val TAG = "StudiesManagementScreen"
 
 @Composable
 fun StudiesManagementRoute(
     modifier: Modifier = Modifier,
+    viewModel: StudiesManagementViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
 ) {
     BackHandler {
         popBackStack()
     }
 
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(StudiesManagementContract.Event.OnLoad)
+    }
+
     StudiesManagementContent(
         modifier = modifier,
+        effect = viewModel.effect,
+        uiState = uiState.value,
+        onNameChanged = { viewModel.setEvent(StudiesManagementContract.Event.OnNameChanged(it)) },
+        onIsPublicChanged = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnIsPublicChanged(
+                    it,
+                ),
+            )
+        },
+        onTargetStudyTimeChanged = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnTargetStudyTimeChanged(
+                    it,
+                ),
+            )
+        },
+        onMaxMembersChanged = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnMaxMembersChanged(
+                    it,
+                ),
+            )
+        },
+        onCategorySelected = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnSelectedCategory(
+                    it,
+                ),
+            )
+        },
+        onTagSelected = { viewModel.setEvent(StudiesManagementContract.Event.OnTagSelected(it)) },
+        onTagUnSelected = { viewModel.setEvent(StudiesManagementContract.Event.OnTagUnSelected(it)) },
+        onDescriptionChanged = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnDescriptionChanged(
+                    it,
+                ),
+            )
+        },
+        onProfileImgChanged = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnProfileImgChanged(
+                    it,
+                ),
+            )
+        },
+        onCreateStudies = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnCreateStudiesClicked,
+            )
+        },
         popBackStack = popBackStack,
     )
 }
@@ -84,26 +161,84 @@ fun StudiesManagementRoute(
 @Composable
 fun StudiesManagementContent(
     modifier: Modifier = Modifier,
+    effect: Flow<StudiesManagementContract.Effect>,
+    uiState: StudiesManagementContract.State,
+    onNameChanged: (String) -> Unit,
+    onIsPublicChanged: (Boolean) -> Unit,
+    onTargetStudyTimeChanged: (Int) -> Unit,
+    onMaxMembersChanged: (Int) -> Unit,
+    onCategorySelected: (Category) -> Unit,
+    onTagSelected: (Tag) -> Unit,
+    onTagUnSelected: (Tag) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
+    onProfileImgChanged: (String?) -> Unit,
+    onCreateStudies: () -> Unit,
     popBackStack: () -> Unit,
 ) {
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    LaunchedEffect(effect) {
+        effect.collectLatest { effect ->
+            when (effect) {
+                StudiesManagementContract.Effect.NavigateToBack -> backDispatcher?.onBackPressed()
+            }
+        }
+    }
     StudiesManagementScreen(
         modifier = modifier,
+        name = uiState.studyInfo.name,
+        isPublic = uiState.studyInfo.isPublic,
+        targetStudyTime = uiState.studyInfo.targetStudyTime,
+        maxMembers = uiState.studyInfo.maxMembers,
+        selectedCategory = uiState.selectedCategory,
+        categories = uiState.categories,
+        selectedTags = uiState.selectedTags,
+        tags = uiState.tags,
+        description = uiState.studyInfo.description,
+        onNameChanged = onNameChanged,
+        onIsPublicChanged = onIsPublicChanged,
+        onTargetStudyTimeChanged = onTargetStudyTimeChanged,
+        onMaxMembersChanged = onMaxMembersChanged,
+        onCategorySelected = onCategorySelected,
+        onTagSelected = onTagSelected,
+        onTagUnSelected = onTagUnSelected,
+        onDescriptionChanged = onDescriptionChanged,
+        onProfileImgChanged = onProfileImgChanged,
+        onCreateStudies = onCreateStudies,
         popBackStack = popBackStack,
     )
+
+    if (uiState.isOnCreate) LoadingDialog()
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StudiesManagementScreen(
     modifier: Modifier = Modifier,
+    name: String,
+    isPublic: Boolean,
+    targetStudyTime: Int,
+    maxMembers: Int,
+    selectedCategory: Category?,
+    categories: List<Category>,
+    selectedTags: List<Tag>,
+    tags: List<Tag>,
+    description: String,
+    onNameChanged: (String) -> Unit,
+    onIsPublicChanged: (Boolean) -> Unit,
+    onTargetStudyTimeChanged: (Int) -> Unit,
+    onMaxMembersChanged: (Int) -> Unit,
+    onCategorySelected: (Category) -> Unit,
+    onTagSelected: (Tag) -> Unit,
+    onTagUnSelected: (Tag) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
+    onProfileImgChanged: (String?) -> Unit,
+    onCreateStudies: () -> Unit,
     popBackStack: () -> Unit = {},
 ) {
-    var studyName by remember { mutableStateOf("") }
-    var isPublic by remember { mutableStateOf(true) }
-    var studyDescription by remember { mutableStateOf("") }
-    val selectedTags = remember { mutableStateOf(setOf<String>()) }
-    var selectedMembers by remember { mutableIntStateOf(10) }
-    var isDropdownExpanded by remember { mutableStateOf(false) }
+    var targetStudyTimeDropdown by remember { mutableStateOf(false) }
+    var maxMembersDropdown by remember { mutableStateOf(false) }
+    var categoryDropdown by remember { mutableStateOf(false) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val photoFromAlbumLauncher =
         rememberLauncherForActivityResult(
@@ -117,381 +252,600 @@ fun StudiesManagementScreen(
             },
         )
 
-    Surface(
+    Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        Column {
-            TopAppBar(
-                title = {
+        TopAppBar(
+            title = {
+                Text(
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    text = stringResource(R.string.studies_management_title),
+                    style = NeeGongNaeGongTheme.typography.titleMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            },
+            onNavigationClick = popBackStack,
+        )
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
+        ) {
+            // 스터디명 섹션
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                text = stringResource(R.string.studies_management_study_name),
+                style = NeeGongNaeGongTheme.typography.titleSmall,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+            )
+
+            OutlinedTextField(
+                value = name,
+                onValueChange = { onNameChanged(it) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
                     Text(
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        text = stringResource(R.string.studies_management_title),
-                        style = NeeGongNaeGongTheme.typography.titleMedium,
+                        text = "스터디 이름을 입력하세요",
+                        style = NeeGongNaeGongTheme.typography.bodySmall,
+                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                     )
                 },
-                onNavigationClick = popBackStack,
+                singleLine = true,
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        unfocusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        cursorColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                        focusedBorderColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                        selectionColors =
+                            TextSelectionColors(
+                                handleColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                                backgroundColor =
+                                    NeeGongNaeGongTheme.colorScheme.mintBlue.copy(
+                                        alpha = 0.3f,
+                                    ),
+                            ),
+                    ),
             )
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp),
+
+            // 공개/비공개 설정
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                // 타이틀은 호출하는 쪽에서 넣기로 함
-
-                // 스터디명 섹션
                 Text(
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = stringResource(R.string.studies_management_study_name),
+                    text = stringResource(R.string.studies_management_public_private),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
-
-                OutlinedTextField(
-                    value = studyName,
-                    onValueChange = { studyName = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("스터디 이름을 입력하세요") },
-                    singleLine = true,
-                )
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
-
-                // 공개/비공개 설정
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = stringResource(R.string.studies_management_public_private),
-                        style = NeeGongNaeGongTheme.typography.titleSmall,
+                    Icon(
+                        painter = painterResource(id = if (isPublic) R.drawable.ic_studies_public else R.drawable.ic_studies_private),
+                        tint = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                        contentDescription = null,
                     )
                     Switch(
                         checked = isPublic,
-                        onCheckedChange = { isPublic = it },
+                        onCheckedChange = { onIsPublicChanged(it) },
+                        colors =
+                            SwitchDefaults.colors(
+                                checkedThumbColor = NeeGongNaeGongTheme.colorScheme.background,
+                                checkedTrackColor = NeeGongNaeGongTheme.colorScheme.blue,
+                                uncheckedThumbColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                                uncheckedTrackColor = NeeGongNaeGongTheme.colorScheme.gray2,
+                            ),
                     )
                 }
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.studies_management_max_members),
-                        style = NeeGongNaeGongTheme.typography.titleSmall,
-                    )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.studies_management_study_time),
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
 
-                    Box {
-                        OutlinedCard(
+                Box {
+                    OutlinedCard(
+                        modifier =
+                            Modifier
+                                .width(120.dp)
+                                .clickable { targetStudyTimeDropdown = true },
+                        shape = RoundedCornerShape(8.dp),
+                        colors =
+                            CardColors(
+                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                                contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                disabledContainerColor = Color.Transparent,
+                                disabledContentColor = Color.Transparent,
+                            ),
+                    ) {
+                        Row(
                             modifier =
                                 Modifier
-                                    .width(120.dp)
-                                    .clickable { isDropdownExpanded = true },
-                            shape = RoundedCornerShape(8.dp),
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Row(
-                                modifier =
-                                    Modifier
-                                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                                        .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Text(
-                                    text = "$selectedMembers 명",
-                                    style = NeeGongNaeGongTheme.typography.bodyLarge,
-                                )
+                            Text(
+                                text = "주 ${targetStudyTime / TimeUnit.HOUR.seconds} 시간",
+                                style = NeeGongNaeGongTheme.typography.bodySmall,
+                            )
 
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = "선택하기",
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "선택하기",
+                                tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
                         }
+                    }
 
-                        DropdownMenu(
-                            expanded = isDropdownExpanded,
-                            onDismissRequest = { isDropdownExpanded = false },
-                            modifier =
-                                Modifier
-                                    .width(120.dp)
-                                    .heightIn(max = 200.dp),
-                        ) {
-                            for (i in 1..30) {
-                                DropdownMenuItem(
-                                    text = { Text("$i 명") },
-                                    onClick = {
-                                        selectedMembers = i
-                                        isDropdownExpanded = false
-                                    },
-                                )
-                            }
+                    DropdownMenu(
+                        expanded = targetStudyTimeDropdown,
+                        onDismissRequest = { targetStudyTimeDropdown = false },
+                        modifier =
+                            Modifier
+                                .width(120.dp)
+                                .heightIn(max = 200.dp)
+                                .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
+                    ) {
+                        for (hour in 1..50) {
+                            DropdownMenuItem(
+                                text = { Text("주 ${hour}시간") },
+                                onClick = {
+                                    onTargetStudyTimeChanged((hour * TimeUnit.HOUR.seconds).toInt())
+                                    targetStudyTimeDropdown = false
+                                },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                        disabledTextColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                                    ),
+                            )
                         }
                     }
                 }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.studies_management_max_members),
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
 
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
-                // TODO : 임시 카테고리
-                // 카테고리 선택
+                Box {
+                    OutlinedCard(
+                        modifier =
+                            Modifier
+                                .width(120.dp)
+                                .clickable { maxMembersDropdown = true },
+                        shape = RoundedCornerShape(8.dp),
+                        colors =
+                            CardColors(
+                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                                contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                disabledContainerColor = Color.Transparent,
+                                disabledContentColor = Color.Transparent,
+                            ),
+                    ) {
+                        Row(
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = "$maxMembers 명",
+                                style = NeeGongNaeGongTheme.typography.bodyLarge,
+                            )
+
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "선택하기",
+                                tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
+                        }
+                    }
+
+                    DropdownMenu(
+                        expanded = maxMembersDropdown,
+                        onDismissRequest = { maxMembersDropdown = false },
+                        modifier =
+                            Modifier
+                                .width(120.dp)
+                                .heightIn(max = 200.dp)
+                                .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
+                    ) {
+                        for (memberCount in 1..30) {
+                            DropdownMenuItem(
+                                text = { Text("$memberCount 명") },
+                                onClick = {
+                                    onMaxMembersChanged(memberCount)
+                                    maxMembersDropdown = false
+                                },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                        disabledTextColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                                    ),
+                            )
+                        }
+                    }
+                }
+            }
+
+            HorizontalDivider(
+                modifier =
+                    Modifier
+                        .padding(vertical = 10.dp),
+                color = NeeGongNaeGongTheme.colorScheme.gray3,
+            )
+            // TODO : 임시 카테고리
+            // 카테고리 선택
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = stringResource(R.string.studies_management_select_category),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
+                Box {
+                    OutlinedCard(
+                        modifier =
+                            Modifier
+                                .width(120.dp)
+                                .clickable { categoryDropdown = true },
+                        shape = RoundedCornerShape(8.dp),
+                        colors =
+                            CardColors(
+                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                                contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                disabledContainerColor = Color.Red,
+                                disabledContentColor = Color.Blue,
+                            ),
+                    ) {
+                        Row(
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = selectedCategory?.name ?: "선택",
+                                style = NeeGongNaeGongTheme.typography.bodyLarge,
+                            )
 
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 16.dp),
-                ) {
-                    val categories = listOf("프로그래밍", "외국어", "취업준비", "자격증")
-                    categories.forEach { category ->
-                        var isSelected by remember { mutableStateOf(false) }
-                        TagChip(
-                            text = category,
-                            isSelected = isSelected,
-                            onClick = { isSelected = !isSelected },
-                        )
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "선택하기",
+                                tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
+                        }
+                    }
+
+                    DropdownMenu(
+                        expanded = categoryDropdown,
+                        onDismissRequest = { categoryDropdown = false },
+                        modifier =
+                            Modifier
+                                .width(120.dp)
+                                .heightIn(max = 200.dp)
+                                .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
+                    ) {
+                        for (category in categories) {
+                            DropdownMenuItem(
+                                text = { Text(category.name) },
+                                onClick = {
+                                    onCategorySelected(category)
+                                    categoryDropdown = false
+                                },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                        disabledTextColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                                    ),
+                            )
+                        }
                     }
                 }
-                // TODO : 임시 태그
-                // 태그 선택
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            // 태그 선택
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                text = stringResource(R.string.studies_management_select_tags),
+                style = NeeGongNaeGongTheme.typography.titleSmall,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+            )
+
+            if (selectedCategory == null && tags.isEmpty()) {
                 Text(
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = stringResource(R.string.studies_management_select_tags),
-                    style = NeeGongNaeGongTheme.typography.titleSmall,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                    text = "카레고리를 선택해주세요",
+                    style = NeeGongNaeGongTheme.typography.bodySmall,
+                    color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                    textAlign = TextAlign.Center,
                 )
+            }
 
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = 5.dp),
-                ) {
-                    selectedTags.value.forEach { tag ->
-                        TagChip(
-                            text = tag,
-                            isSelected = true,
-                            onClick = {
-                                selectedTags.value -= tag
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                tags.forEach { tag ->
+                    val isSelected = tag in selectedTags
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = {
+                            if (isSelected) {
+                                onTagUnSelected(tag)
+                            } else {
+                                onTagSelected(tag)
+                            }
+                        },
+                        label = { Text(tag.name) },
+                        leadingIcon =
+                            if (isSelected) {
+                                {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    )
+                                }
+                            } else {
+                                null
                             },
-                        )
-                    }
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                labelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                                selectedLabelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                selectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                            ),
+                    )
+                }
+            }
 
-                    // 태그 추가 버튼
+            HorizontalDivider(
+                modifier =
+                    Modifier
+                        .padding(vertical = 10.dp),
+                color = NeeGongNaeGongTheme.colorScheme.gray3,
+            )
+
+            // 스터디 설명
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                text = stringResource(R.string.studies_management_description),
+                style = NeeGongNaeGongTheme.typography.titleSmall,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+            )
+
+            OutlinedTextField(
+                value = description,
+                onValueChange = { onDescriptionChanged(it) },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
+                placeholder = {
+                    Text(
+                        text = "스터디 설명을 입력하세요",
+                        style = NeeGongNaeGongTheme.typography.bodySmall,
+                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                    )
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                maxLines = 3,
+                textStyle = NeeGongNaeGongTheme.typography.bodySmall,
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        unfocusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        cursorColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                        focusedBorderColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                        selectionColors =
+                            TextSelectionColors(
+                                handleColor = NeeGongNaeGongTheme.colorScheme.blue,
+                                backgroundColor = NeeGongNaeGongTheme.colorScheme.blue.copy(alpha = 0.3f),
+                            ),
+                    ),
+            )
+
+            HorizontalDivider(
+                modifier =
+                    Modifier
+                        .padding(vertical = 10.dp),
+                color = NeeGongNaeGongTheme.colorScheme.gray3,
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                text = stringResource(R.string.studies_management_add_photo),
+                style = NeeGongNaeGongTheme.typography.titleSmall,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                // 이미지가 선택되었는지 여부에 따라 다른 UI 표시
+                if (selectedImageUri != null) {
                     Box(
                         modifier =
                             Modifier
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(Color.LightGray.copy(alpha = 0.5f))
+                                .size(120.dp)
+                                .clip(RoundedCornerShape(12.dp))
                                 .clickable {
-                                    // TODO: 태그 추가 다이얼로그 표시
+                                    photoFromAlbumLauncher.launch(
+                                        PickVisualMediaRequest(
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly,
+                                        ),
+                                    )
+                                },
+                    ) {
+                        // Landscapist-Glide로 선택된 이미지 표시
+                        GlideImage(
+                            imageModel = { selectedImageUri },
+                            modifier = Modifier.fillMaxSize(),
+                            loading = {
+                                Box(modifier = Modifier.matchParentSize()) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.align(Alignment.Center),
+                                    )
                                 }
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                            },
+                            failure = {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.errorContainer),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Error,
+                                        contentDescription = "이미지 로드 실패",
+                                        modifier = Modifier.align(Alignment.Center),
+                                        tint = MaterialTheme.colorScheme.error,
+                                    )
+                                }
+                            },
+                        )
+
+                        // 이미지 위에 삭제 버튼
+                        Box(
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                                    .size(24.dp)
+                                    .background(
+                                        color =
+                                            NeeGongNaeGongTheme.colorScheme.background.copy(
+                                                alpha = 0.7f,
+                                            ),
+                                        shape = CircleShape,
+                                    )
+                                    .clickable { selectedImageUri = null },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "이미지 삭제",
+                                tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
+                    }
+                } else {
+                    // 기존 이미지 추가 버튼
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(120.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(NeeGongNaeGongTheme.colorScheme.blue)
+                                .clickable {
+                                    photoFromAlbumLauncher.launch(
+                                        PickVisualMediaRequest(
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly,
+                                        ),
+                                    )
+                                },
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "태그 추가",
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            contentDescription = stringResource(R.string.studies_management_add_photo),
+                            tint = NeeGongNaeGongTheme.colorScheme.background,
+                            modifier = Modifier.size(64.dp),
                         )
                     }
                 }
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
-
-                // 스터디 설명
-                Text(
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = stringResource(R.string.studies_management_description),
-                    style = NeeGongNaeGongTheme.typography.titleSmall,
-                )
-
-                OutlinedTextField(
-                    value = studyDescription,
-                    onValueChange = { studyDescription = it },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(80.dp),
-                    placeholder = { Text("스터디 설명을 입력하세요") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    maxLines = 3,
-                    textStyle = NeeGongNaeGongTheme.typography.bodySmall,
-                )
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
-
-                Text(
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = stringResource(R.string.studies_management_add_photo),
-                    style = NeeGongNaeGongTheme.typography.titleSmall,
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    // 이미지가 선택되었는지 여부에 따라 다른 UI 표시
-                    if (selectedImageUri != null) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(120.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .clickable {
-                                        photoFromAlbumLauncher.launch(
-                                            PickVisualMediaRequest(
-                                                ActivityResultContracts.PickVisualMedia.ImageOnly,
-                                            ),
-                                        )
-                                    },
-                        ) {
-                            // Landscapist-Glide로 선택된 이미지 표시
-                            GlideImage(
-                                imageModel = { selectedImageUri },
-                                modifier = Modifier.fillMaxSize(),
-                                loading = {
-                                    Box(modifier = Modifier.matchParentSize()) {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier.align(Alignment.Center),
-                                        )
-                                    }
-                                },
-                                failure = {
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .fillMaxSize()
-                                                .background(MaterialTheme.colorScheme.errorContainer),
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Error,
-                                            contentDescription = "이미지 로드 실패",
-                                            modifier = Modifier.align(Alignment.Center),
-                                            tint = MaterialTheme.colorScheme.error,
-                                        )
-                                    }
-                                },
-                            )
-
-                            // 이미지 위에 삭제 버튼
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.TopEnd)
-                                        .padding(4.dp)
-                                        .size(24.dp)
-                                        .background(
-                                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
-                                            shape = CircleShape,
-                                        )
-                                        .clickable { selectedImageUri = null },
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = "이미지 삭제",
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.size(16.dp),
-                                )
-                            }
-                        }
-                    } else {
-                        // 기존 이미지 추가 버튼
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(120.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .clickable {
-                                        photoFromAlbumLauncher.launch(
-                                            PickVisualMediaRequest(
-                                                ActivityResultContracts.PickVisualMedia.ImageOnly,
-                                            ),
-                                        )
-                                    },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = stringResource(R.string.studies_management_add_photo),
-                                tint = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.size(32.dp),
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // 생성하기 버튼
-                Button(
-                    onClick = { /* TODO : 그룹 생성 및 수정 */ },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.studies_management_create),
-                        style = NeeGongNaeGongTheme.typography.labelMedium,
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // 생성하기 버튼
+            Button(
+                onClick = onCreateStudies,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                    ),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.studies_management_create),
+                    style = NeeGongNaeGongTheme.typography.labelMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
-@Composable
-fun TagChip(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier =
-            Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(
-                    if (isSelected) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        Color.LightGray.copy(alpha = 0.5f)
-                    },
-                )
-                .clickable(onClick = onClick)
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            color =
-                if (isSelected) {
-                    MaterialTheme.colorScheme.onPrimary
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                },
-            style = NeeGongNaeGongTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 private fun PreviewStudiesComponentScreen() {
     NeeGongNaeGongTheme {
-        StudiesManagementScreen()
+        StudiesManagementScreen(
+            modifier = Modifier,
+            name = "",
+            isPublic = true,
+            targetStudyTime = 60 * 60 * 7,
+            maxMembers = 10,
+            selectedCategory = null,
+            categories = emptyList(),
+            selectedTags = emptyList(),
+            tags = emptyList(),
+            description = "",
+            onNameChanged = {},
+            onIsPublicChanged = {},
+            onTargetStudyTimeChanged = {},
+            onMaxMembersChanged = {},
+            onCategorySelected = { },
+            onTagSelected = { },
+            onTagUnSelected = {},
+            onDescriptionChanged = {},
+            onProfileImgChanged = {},
+            onCreateStudies = { },
+            popBackStack = {},
+        )
     }
 }

@@ -8,6 +8,10 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCategoryDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCategoryDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSourceImpl
 import dagger.Binds
@@ -38,4 +42,12 @@ internal interface DataSourceModule {
     @Singleton
     @Binds
     fun bindLocalFcmDataSource(localFcmDataSourceImpl: LocalFcmDataSourceImpl): LocalFcmDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkStudiesDataSource(networkStudiesDataSourceImpl: NetworkStudiesDataSourceImpl): NetworkStudiesDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkCategoryDataSource(networkCategoryDataSourceImpl: NetworkCategoryDataSourceImpl): NetworkCategoryDataSource
 }

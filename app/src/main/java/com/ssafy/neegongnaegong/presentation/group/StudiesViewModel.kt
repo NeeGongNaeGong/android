@@ -2,6 +2,8 @@ package com.ssafy.neegongnaegong.presentation.group
 
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
+import com.ssafy.neegongnaegong.domain.model.studies.StudyMember
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,44 +50,25 @@ class StudiesViewModel
         private fun getDummyStudies(): List<Studies> =
             listOf(
                 Studies(
-                    id = 1L,
-                    category = "대학생",
-                    title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-                    goalTime = "목표 3시간",
-                    memberInfo = "인원 3/20명",
-                    leader = "그룹장 박준식",
-                    startInfo = "시작일 2일 전",
-                    description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 答案을 자유롭게 나누며 함께 성장해 나가요.",
-                ),
-                Studies(
-                    id = 2L,
-                    category = "대학생",
-                    title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-                    goalTime = "목표 3시간",
-                    memberInfo = "인원 3/20명",
-                    leader = "그룹장 박준식",
-                    startInfo = "시작일 2일 전",
-                    description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 答案을 자유롭게 나누며 함께 성장해 나가요. ~~~~~ @(@)@! ...",
-                ),
-                Studies(
-                    id = 3L,
-                    category = "대학생",
-                    title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-                    goalTime = "목표 3시간",
-                    memberInfo = "인원 3/20명",
-                    leader = "그룹장 박준식",
-                    startInfo = "시작일 2일 전",
-                    description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다.",
-                ),
-                Studies(
-                    id = 4L,
-                    category = "대학생",
-                    title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-                    goalTime = "목표 3시간",
-                    memberInfo = "인원 3/20명",
-                    leader = "그룹장 박준식",
-                    startInfo = "시작일 2일 전",
-                    description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다.",
+                    id = 9337,
+                    leader =
+                        StudyMember(
+                            id = 2220,
+                            name = "Alfredo Humphrey",
+                        ),
+                    currentMembers = 6628,
+                    createdDate = "evertitur",
+                    studyInfo =
+                        StudyInfo(
+                            name = "Jermaine Ochoa",
+                            maxMembers = 1969,
+                            description = "cu",
+                            profileImg = null,
+                            isPublic = false,
+                            targetStudyTime = 9500,
+                            category = null,
+                            tags = listOf(),
+                        ),
                 ),
             )
     }
