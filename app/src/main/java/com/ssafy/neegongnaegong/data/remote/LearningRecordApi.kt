@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
@@ -25,8 +24,10 @@ interface LearningRecordApi {
         @Path("learningRecordId") learningRecordId: Long,
     ): Result<ApiResponse<DeleteLearningRecordResponse>>
 
-    @GET("/api/records/{lastId}")
-    suspend fun getLearningRecord(request: GetLearningRecordRequest): Result<ApiResponse<GetLearningRecordResponse>>
+    @GET("/api/records/{learningRecordId}")
+    suspend fun getLearningRecord(
+        @Path("learningRecordId") learningRecordId: Long,
+    ): Result<ApiResponse<GetLearningRecordResponse>>
 
     @POST("/api/records")
     suspend fun createLearningRecord(

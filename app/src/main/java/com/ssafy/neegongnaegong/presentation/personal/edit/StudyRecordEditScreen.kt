@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
-import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
@@ -34,7 +34,6 @@ import com.ssafy.neegongnaegong.presentation.util.toTimeString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
-
 @Composable
 fun StudyRecordEditRoute(
     modifier: Modifier = Modifier,
@@ -47,7 +46,6 @@ fun StudyRecordEditRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     viewModel.loadStudyRecord(studyRecordId)
-
 
     StudyRecordEditContent(
         modifier = modifier,
@@ -64,16 +62,14 @@ fun StudyRecordEditRoute(
         onSearchQueryChanged = {
             viewModel.setEvent(
                 StudyRecordEditContract.Event.OnSearchTextChanged(
-                    it
-                )
+                    it,
+                ),
             )
         },
         onTagSelected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagDeselected(it)) },
     )
-
 }
-
 
 @Composable
 fun StudyRecordEditContent(
@@ -110,7 +106,6 @@ fun StudyRecordEditContent(
         effect.collectLatest { effect ->
             when (effect) {
                 is StudyRecordEditContract.Effect.NavigateToHome -> {
-
                 }
 
                 is StudyRecordEditContract.Effect.ShowErrorToast -> {
@@ -139,7 +134,6 @@ fun StudyRecordEditContent(
         onCancelClicked = onCancelClicked,
         onConfirmClicked = onConfirmClicked,
     )
-
 }
 
 @Composable
@@ -157,48 +151,51 @@ fun StudyRecordEditScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 16.dp, start = 8.dp, end = 8.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 8.dp, end = 8.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-
             DateTimeHeader(
                 dateText = learningRecord.startAt.toDateString(),
-                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}"
+                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
             )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
                 title = learningRecord.title,
-                onTitleChanged = onTitleChanged
+                onTitleChanged = onTitleChanged,
             )
 
             ContentTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(screenHeight * 0.5f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(screenHeight * 0.5f),
                 content = learningRecord.content,
                 onContentChanged = onContentChanged,
             )
 
             TagList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
                 tags = tags,
                 onTagPlusClicked = onTagPlusClicked,
-                onTagEraseClicked = onTagEraseClicked
+                onTagEraseClicked = onTagEraseClicked,
             )
         }
 
         BottomButtons(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
             onCancelClicked = onCancelClicked,
-            onConfirmClicked = onConfirmClicked
+            onConfirmClicked = onConfirmClicked,
         )
     }
 }
@@ -216,7 +213,7 @@ private fun PreviewWriteScreen() {
                 onTagPlusClicked = {},
                 onTagEraseClicked = {},
                 onCancelClicked = {},
-                onConfirmClicked = {}
+                onConfirmClicked = {},
             )
         }
     }

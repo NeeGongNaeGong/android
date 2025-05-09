@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -17,9 +18,10 @@ class LearningRecordRepositoryImpl
         private val dataSource: NetworkLearningRecordDataSource,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : LearningRecordRepository {
-        override suspend fun getLearningRecords(userId: Long): List<LearningRecord> {
-            TODO("Not yet implemented")
-        }
+        override suspend fun getLearningRecord(learningRecordId: Long): Flow<LearningRecord> =
+            withContext(ioDispatcher) {
+                dataSource.getLearningRecord(learningRecordId = learningRecordId).map { it.toDomain() }
+            }
 
         override suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<Long> =
             withContext(ioDispatcher) {

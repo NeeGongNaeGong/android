@@ -4,7 +4,7 @@ import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import kotlinx.coroutines.flow.Flow
 
 interface LearningRecordRepository {
-    suspend fun getLearningRecords(userId: Long): List<LearningRecord>
+    suspend fun getLearningRecord(learningRecordId: Long): Flow<LearningRecord>
 
     suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<Long>
 

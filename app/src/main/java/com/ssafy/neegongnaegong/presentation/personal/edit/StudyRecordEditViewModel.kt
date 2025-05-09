@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.personal.edit
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.UpdateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -17,6 +18,7 @@ class StudyRecordEditViewModel
     @Inject
     constructor(
         private val updateLearningRecordUseCase: UpdateLearningRecordUseCase,
+        private val getLearningRecordUseCase: GetLearningRecordUseCase,
     ) : BaseViewModel<StudyRecordEditContract.Event, StudyRecordEditContract.State, StudyRecordEditContract.Effect>() {
         override fun createInitialState(): StudyRecordEditContract.State = StudyRecordEditContract.State()
 
@@ -102,8 +104,14 @@ class StudyRecordEditViewModel
                 }
             }
         }
-        // api
 
+        // init
+        fun loadStudyRecord(studyRecordId: Long) {
+            setState { copy(learningRecord = learningRecord.copy(id = studyRecordId)) }
+            getLearningRecord(studyRecordId)
+        }
+
+        // api
         private fun updateLearningRecord() =
             viewModelScope.launch {
                 updateLearningRecordUseCase(
@@ -116,12 +124,17 @@ class StudyRecordEditViewModel
                 }
             }
 
-        fun loadStudyRecord(studyRecordId: Long) {
-            setState { copy(learningRecord = learningRecord.copy(id = studyRecordId)) }
-        }
+        private fun getLearningRecord(studyRecordId: Long) =
+            viewModelScope.launch {
+                getLearningRecordUseCase(studyRecordId)
+                    .withLoading {
+                        setState { copy(isLoading = true) }
+                    }.safeCollect { learningRecord ->
+                        setState { copy(learningRecord = learningRecord) }
+                    }
+            }
 
         // tag
-
         private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
 
         private fun clearDialogTags() = setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
