@@ -1,3 +1,4 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import java.util.Properties
 
 plugins {
@@ -12,9 +13,10 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-val properties = Properties().apply {
-    load(File(rootProject.rootDir, "local.properties").inputStream())
-}
+val properties =
+    Properties().apply {
+        load(File(rootProject.rootDir, "local.properties").inputStream())
+    }
 
 android {
     namespace = "com.ssafy.neegongnaegong"
@@ -37,7 +39,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -128,4 +130,27 @@ dependencies {
 
     // detekt formatting
     detektPlugins(libs.detekt.formatting)
+}
+
+// Stage된 파일만 검사하는 커스텀 태스크
+val stagedFiles: String? by project
+val stagedFileList =
+    stagedFiles
+        ?.lines()
+        ?.filter { it.isNotBlank() }
+        ?.map { file(it) } ?: emptyList()
+tasks.register<Detekt>("detektStaged") {
+    description = "Run Detekt on staged Kotlin files"
+    group = "verification"
+
+    setSource(files(stagedFileList))
+    config.setFrom(files("$rootDir/detekt.yml"))
+    buildUponDefaultConfig = true
+    autoCorrect = true
+
+    reports {
+        html.required.set(false)
+        xml.required.set(false)
+        txt.required.set(false)
+    }
 }

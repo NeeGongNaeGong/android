@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# 1) 스테이지된 Kotlin 파일만
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.kts?$' || true)
+[ -z "$FILES" ] && exit 0
+
+# 2) ktlint 자동 포매팅
+echo "🔧 ktlint formatting..."
+./ktlint -F $FILES
+
+# 3) 다시 스테이지
+git add $FILES
+
+# 4) ktlint 검증 (auto-fix 불가 위반이 있는지 확인)
+#echo "🚨 ktlint checking..."
+./ktlint $FILES
+if [ $? -ne 0 ]; then
+  echo "✖️ ktlint violations detected. Ktlint Check Failed..."
+fi
+
+if [ $? -eq 0 ]; then
+  echo "✅ ktlint checking passed"
+fi
+
+# 5) detekt 자동 수정
+echo "🔧 detekt auto-correct..."
+./gradlew detektStaged -PstagedFiles="$FILES"
+
+git add $FILES
+
+# 6) detekt strict 검사
+#echo "🚨 detekt checking..."
+./gradlew detektStaged -PstagedFiles="$FILES"
+
+if [ $? -ne 0 ]; then
+  echo "✖️ Detekt violations detected. Detekt Check Failed..."
+fi
+
+if [ $? -eq 0 ]; then
+  echo "✅ Detekt checks passed."
+  exit 0
+fi
+
