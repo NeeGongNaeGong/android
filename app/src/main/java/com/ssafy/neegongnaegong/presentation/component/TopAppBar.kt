@@ -37,7 +37,7 @@ fun TopAppBar(
     navigationType: TopAppBarNavigationType = TopAppBarNavigationType.Back,
     actionButtons: @Composable () -> Unit = {},
     onNavigationClick: () -> Unit = {},
-    iconColor: Color = MaterialTheme.colorScheme.onSurface,
+    iconColor: Color = NeeGongNaeGongTheme.colorScheme.primaryText,
 ) {
     Box(
         modifier =

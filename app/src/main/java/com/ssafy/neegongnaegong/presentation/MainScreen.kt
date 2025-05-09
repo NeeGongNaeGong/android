@@ -42,9 +42,10 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomNavigationBar = currentDestination?.hierarchy?.any {
-        it.hasRoute(AppNavigation.Tab.Auth::class)
-    } == false
+    val showBottomNavigationBar =
+        currentDestination?.hierarchy?.any {
+            it.hasRoute(AppNavigation.Tab.Auth::class)
+        } == false
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -77,7 +78,10 @@ fun MainScreen() {
     }
 
     ModalNavigationDrawer(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+        modifier =
+            Modifier
+                .background(color = NeeGongNaeGongTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.systemBars),
         drawerState = studiesDrawerState,
         gesturesEnabled = enableGestures.value,
         drawerContent = {
@@ -105,7 +109,7 @@ fun MainScreen() {
                     )
                 }
             },
-            containerColor = NeeGongNaeGongTheme.colorScheme.background
+            containerColor = NeeGongNaeGongTheme.colorScheme.background,
         ) { innerPadding ->
             // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
             // 시스템적으로 패딩을 계산할 때 여기에 사용된 Padding을 중복 사용하지 않도록 함
