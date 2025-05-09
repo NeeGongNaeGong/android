@@ -13,32 +13,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.group.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -64,15 +58,28 @@ fun VoteRoute(
     viewModel: VoteViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
-    Scaffold(
-        topBar = {
-            VoteTopBar(
-                popBackStack,
-                onClickCompleteButton = { viewModel.setEvent(VoteContract.Event.OnClickCompleteButton(studyGroupId)) })
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
+    Column {
+        TopAppBar(
+            title = {
+                Text(
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
+                    text = "투표 만들기"
+                )
+            },
+            onNavigationClick = { popBackStack() },
+            actionButtons = {
+                TextButton(onClick = {
+                    viewModel.setEvent(
+                        VoteContract.Event.OnClickCompleteButton(studyGroupId)
+                    )
+                }) {
+                    Text(
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        text = "완료"
+                    )
+                }
+            }
+        )
 
         LaunchedEffect(viewModel.effect) {
             viewModel.effect.collectLatest { effect ->
@@ -85,9 +92,7 @@ fun VoteRoute(
         }
 
         VoteContent(
-            modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier.weight(1F),
             uiState,
             onClickAddVoteItemButton = { viewModel.setEvent(VoteContract.Event.OnClickAddVoteItemButton) },
             onClickMultipleSelectionOption = { viewModel.setEvent(VoteContract.Event.OnClickMultipleSelectionOption) },
@@ -125,46 +130,6 @@ fun VoteRoute(
             },
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun VoteTopBar(
-    popBackStack: () -> Boolean,
-    onClickCompleteButton: () -> Unit
-) {
-    // title을 가운데로 위치시켜주는 CenterAlignedTopAppBar
-    // https://stackoverflow.com/questions/67497414/how-to-align-title-at-layout-center-in-topappbar
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                style = NeeGongNaeGongTheme.typography.titleSmall,
-                text = "투표 만들기"
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { popBackStack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "뒤로 가기 버튼"
-                )
-            }
-        },
-        actions = {
-            TextButton(onClick = onClickCompleteButton) {
-                Text(
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    text = "완료"
-                )
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = NeeGongNaeGongTheme.colorScheme.background,
-            titleContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            navigationIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            actionIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-        )
-    )
 }
 
 @Composable
@@ -539,15 +504,6 @@ fun LoadDialog(
                 state = timePickerState
             )
         }
-    }
-}
-
-
-@NeeGongNaeGongPreviews
-@Composable
-fun PreviewTopAppBar() {
-    NeeGongNaeGongTheme {
-        VoteTopBar(popBackStack = { true }, {})
     }
 }
 
