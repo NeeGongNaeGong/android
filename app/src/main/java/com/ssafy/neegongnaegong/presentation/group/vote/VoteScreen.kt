@@ -60,6 +60,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun VoteRoute(
     popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
+    studyGroupId: Int,
     viewModel: VoteViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,7 +69,7 @@ fun VoteRoute(
         topBar = {
             VoteTopBar(
                 popBackStack,
-                onClickCompleteButton = { viewModel.setEvent(VoteContract.Event.OnClickCompleteButton) })
+                onClickCompleteButton = { viewModel.setEvent(VoteContract.Event.OnClickCompleteButton(studyGroupId)) })
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
@@ -150,7 +151,7 @@ fun VoteTopBar(
             }
         },
         actions = {
-            TextButton(onClick = { popBackStack() }) {
+            TextButton(onClick = onClickCompleteButton) {
                 Text(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     text = "완료"
