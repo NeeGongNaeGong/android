@@ -79,6 +79,21 @@ object TimeFormatter {
         return localDateTime.format(timeFormatter)
     }
 
+    /**
+     * yyyy년 MM월 dd일 (E) 꼴의 문자열과 a hh:mm 꼴의 문자열을 받아서
+     * 2025-05-09T03:58:41.360 이런 꼴의 LocalDateTime을 반환하는 함수
+     * @param String yyyy년 MM월 dd일 (E)
+     * @param String a hh:mm
+     * @return String 2025-05-09T03:58:41.360
+     */
+    fun convertStringToLocalDateTime(dateStr: String, timeStr: String): LocalDateTime {
+        // 날짜는 임의로 설정 (시간 형식만 중요하므로)
+        val date = LocalDate.parse(dateStr, dateFormatter)
+        val time = LocalTime.parse(timeStr, timeFormatter)
+        val dateTime = LocalDateTime.of(date, time)
+        return dateTime
+    }
+
     /** DateDialog의 경우 UTC로 값을 받아서 그렇게 변환하기 위한 함수
      * @param LocalDateTime 기준의 Long 값
      * @return UTC 기준의 Long 값
