@@ -13,5 +13,5 @@ interface StudiesApi {
     suspend fun getStudies(): List<Studies>
 
     @POST("/api/studies/{studyId}/posts/votes")
-    suspend fun createVote(@Path("studyId") studyId: Int, @Body requestBody: CreateVoteRequest): Result<ApiResponse<String>>
+    suspend fun createVote(@Path("studyId") studyId: Int, @Body requestBody: CreateVoteRequest): Result<ApiResponse<Unit>>
 }

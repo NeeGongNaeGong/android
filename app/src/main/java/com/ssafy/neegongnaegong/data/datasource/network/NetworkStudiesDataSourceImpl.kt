@@ -11,6 +11,6 @@ class NetworkStudiesDataSourceImpl @Inject constructor(
 ) : NetworkStudiesDataSource {
 
 
-    override suspend fun createVote(studyId: Int, requestBody: CreateVoteRequest): Flow<String> =
+    override suspend fun createVote(studyId: Int, requestBody: CreateVoteRequest): Flow<Unit> =
         apiFlow { studiesApi.createVote(studyId, requestBody) }
 }
