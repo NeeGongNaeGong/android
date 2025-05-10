@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -94,7 +95,6 @@ fun MainScreen() {
         },
     ) {
         Scaffold(
-            containerColor = NeeGongNaeGongTheme.colorScheme.background,
             snackbarHost = { NeeGongNaeGongSnackbarHost() },
             bottomBar = {
                 if (showBottomNavigationBar) {
@@ -107,15 +107,17 @@ fun MainScreen() {
                     )
                 }
             },
+            containerColor = NeeGongNaeGongTheme.colorScheme.background
         ) { innerPadding ->
             // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
             // 시스템적으로 패딩을 계산할 때 여기에 사용된 Padding을 중복 사용하지 않도록 함
             // 다른 화면의 Scaffold에서 사용된 값은 빼고서 계산해줌
             Box(
                 modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
+                    Modifier
+                        .padding(innerPadding)
+                        .consumeWindowInsets(innerPadding)
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
             ) {
                 MainNavigationGraph(navController = navController)
             }
