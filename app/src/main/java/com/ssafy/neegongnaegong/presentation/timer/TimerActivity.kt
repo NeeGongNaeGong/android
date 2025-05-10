@@ -55,7 +55,14 @@ class TimerActivity : ComponentActivity() {
             NeeGongNaeGongTheme {
                 LearningRoute(
                     viewModel = viewModel,
-                    onCloseActivity = { finish() },
+                    onCloseActivity = {
+                        val resultIntent =
+                            Intent().apply {
+                                putExtra("needRefreshRecordList", true)
+                            }
+                        setResult(RESULT_OK, resultIntent)
+                        finish()
+                    },
                 )
             }
         }

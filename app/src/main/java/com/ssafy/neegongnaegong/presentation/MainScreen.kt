@@ -42,9 +42,17 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomNavigationBar = currentDestination?.hierarchy?.any {
-        it.hasRoute(AppNavigation.Tab.Auth::class)
-    } == false
+    val showBottomNavigationBar = currentDestination?.let { destination ->
+        val isAuthTab = destination.hierarchy.any {
+            it.hasRoute(AppNavigation.Tab.Auth::class)
+        }
+
+        val isEditScreen = destination.hierarchy.any {
+            it.hasRoute(AppNavigation.Screen.Personal.Edit::class)
+        }
+
+        !isAuthTab && !isEditScreen
+    } ?: true
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
