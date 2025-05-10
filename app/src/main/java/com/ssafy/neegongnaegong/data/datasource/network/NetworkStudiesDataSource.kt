@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
-import com.ssafy.neegongnaegong.data.model.studies.request.StudiesRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
@@ -14,8 +14,8 @@ interface NetworkStudiesDataSource {
     suspend fun getStudies(studyGroupId: Int): Flow<StudiesResponse>
 
     suspend fun updateStudies(
-        studyGroupId: Int,
-        request: StudiesRequest,
+        studyGroupId: Long,
+        request: UpdateStudiesRequest,
     ): Flow<Unit>
 
     suspend fun deleteStudies(studyGroupId: Int): Flow<Unit>

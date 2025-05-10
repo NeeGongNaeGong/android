@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.repository
 
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
@@ -36,10 +37,14 @@ class StudiesRepositoryImpl
 
         override suspend fun updateStudies(
             studyGroupId: Long,
-            studies: Studies,
-        ): Flow<Unit> {
-            TODO("Not yet implemented")
-        }
+            studyInfo: StudyInfo,
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.updateStudies(
+                    studyGroupId = studyGroupId,
+                    request = UpdateStudiesRequest.fromDomain(studyInfo),
+                )
+            }
 
         override suspend fun deleteStudies(studyGroupId: Long): Flow<Unit> {
             TODO("Not yet implemented")

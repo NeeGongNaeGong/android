@@ -2,7 +2,7 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
-import com.ssafy.neegongnaegong.data.model.studies.request.StudiesRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
@@ -32,8 +32,8 @@ interface StudiesApi {
 
     @PUT("/api/studies/{studyGroupId}")
     suspend fun updateStudies(
-        @Path("studyGroupId") studyGroupId: Int,
-        @Body request: StudiesRequest,
+        @Path("studyGroupId") studyGroupId: Long,
+        @Body request: UpdateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
     @DELETE("/api/studies/{studyGroupId}")

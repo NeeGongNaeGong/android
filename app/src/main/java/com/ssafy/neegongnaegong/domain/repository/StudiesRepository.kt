@@ -15,7 +15,7 @@ interface StudiesRepository {
 
     suspend fun updateStudies(
         studyGroupId: Long,
-        studies: Studies,
+        studyInfo: StudyInfo,
     ): Flow<Unit>
 
     suspend fun deleteStudies(studyGroupId: Long): Flow<Unit>
