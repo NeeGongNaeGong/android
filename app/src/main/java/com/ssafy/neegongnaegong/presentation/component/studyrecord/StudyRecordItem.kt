@@ -50,7 +50,7 @@ fun StudyRecordItem(
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = record.title,
+                    text = record.title.ifBlank { "제목을 설정해주세요." },
                     style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 20.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -75,7 +75,7 @@ fun StudyRecordItem(
 
             // 내용
             Text(
-                text = record.content,
+                text = record.content.ifBlank { "내용을 설정해주세요" },
                 style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp),
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
