@@ -132,6 +132,7 @@ class StudyRecordEditViewModel
                         setState {
                             copy(
                                 learningRecord = learningRecord,
+                                tags = learningRecord.tags,
                                 isLoading = false,
                             )
                         }
