@@ -9,6 +9,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -79,7 +80,8 @@ fun DatePicker(
         HorizontalPager(
             modifier = Modifier.wrapContentHeight(),
             state = pagerState,
-            beyondViewportPageCount = 1
+            beyondViewportPageCount = 1,
+            verticalAlignment = Alignment.Top
         ) { page ->
             key(page) {
                 val displayMonth = minMonth.plusMonths(page.toLong())

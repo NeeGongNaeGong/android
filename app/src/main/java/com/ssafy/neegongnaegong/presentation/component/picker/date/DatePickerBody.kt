@@ -42,37 +42,35 @@ fun DatePickerBody(
     }
 
     Column(modifier = modifier) {
-        Column {
-            repeat(weeks) { row ->
-                Row(modifier = Modifier.padding(vertical = 1.dp)) {
-                    repeat(7) { column ->
-                        /**
-                         * 선택된 달의 첫째 날의 요일을 기준으로 날짜 계산
-                         */
-                        val calendarIndex = row * 7 + column
-                        val dayOffset = calendarIndex - firstDayOfWeek + 1
-                        val date = if (dayOffset < 1) { // 지난 달
-                            val previousMonth = selectedMonth.minusMonths(1)
-                            val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
-                            previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
-                        } else if (dayOffset > lastDay) { // 다음 달
-                            val nextMonth = selectedMonth.plusMonths(1)
-                            nextMonth.atDay(dayOffset - lastDay)
-                        } else { // 이번 달
-                            selectedMonth.atDay(dayOffset)
-                        }
+        repeat(weeks) { row ->
+            Row(modifier = Modifier.padding(vertical = 1.dp)) {
+                repeat(7) { column ->
+                    /**
+                     * 선택된 달의 첫째 날의 요일을 기준으로 날짜 계산
+                     */
+                    val calendarIndex = row * 7 + column
+                    val dayOffset = calendarIndex - firstDayOfWeek + 1
+                    val date = if (dayOffset < 1) { // 지난 달
+                        val previousMonth = selectedMonth.minusMonths(1)
+                        val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
+                        previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
+                    } else if (dayOffset > lastDay) { // 다음 달
+                        val nextMonth = selectedMonth.plusMonths(1)
+                        nextMonth.atDay(dayOffset - lastDay)
+                    } else { // 이번 달
+                        selectedMonth.atDay(dayOffset)
+                    }
 
-                        /**
-                         * 지난달 혹은 다음 달 이면 반투명
-                         */
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            cell(date)
-                        }
+                    /**
+                     * 지난달 혹은 다음 달 이면 반투명
+                     */
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        cell(date)
                     }
                 }
             }

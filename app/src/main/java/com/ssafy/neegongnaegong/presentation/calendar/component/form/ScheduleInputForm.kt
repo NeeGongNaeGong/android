@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.presentation.calendar.component.form
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
@@ -90,7 +89,7 @@ fun ScheduleInputForm(
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         ScheduleEditText(
             modifier = Modifier
-                .focusable(titleFocus)
+                .focusRequester(titleFocus)
                 .fillMaxWidth(),
             text = schedule.title,
             onTextChange = onTitleChanged,
@@ -105,7 +104,7 @@ fun ScheduleInputForm(
         )
         ScheduleEditText(
             modifier = Modifier
-                .focusable(contentFocus)
+                .focusRequester(contentFocus)
                 .fillMaxWidth(),
             text = schedule.content ?: "",
             onTextChange = onContentChanged,
@@ -115,7 +114,7 @@ fun ScheduleInputForm(
         )
         ScheduleEditText(
             modifier = Modifier
-                .focusable(locationFocus)
+                .focusRequester(locationFocus)
                 .fillMaxWidth(),
             text = schedule.location ?: "",
             onTextChange = onLocationChanged,
@@ -170,10 +169,6 @@ private fun ScheduleInputFormPreview() {
         )
     }
 }
-
-fun Modifier.focusable(focusRequester: FocusRequester) = this
-    .focusRequester(focusRequester)
-    .focusable()
 
 enum class ScheduleInputFormFocus {
     None,

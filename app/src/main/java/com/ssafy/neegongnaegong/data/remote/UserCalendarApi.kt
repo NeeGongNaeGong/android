@@ -9,8 +9,8 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResp
 import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -39,7 +39,7 @@ interface UserCalendarApi {
         @Body request: UpdatePersonalScheduleRequest
     ): Result<ApiResponse<UpdatePersonalScheduleResponse>>
 
-    @DELETE("/api/user/calendar/schedules/{scheduleId}")
+    @HTTP(method = "DELETE", path = "/api/user/calendar/schedules/{scheduleId}", hasBody = true)
     suspend fun deletePersonalSchedule(
         @Path("scheduleId") scheduleId: Long,
         @Body request: DeletePersonalScheduleRequest

@@ -208,14 +208,14 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             }
 
             is ApiException.NetworkException -> viewModelScope.launch {
-                showErrorMessage(e.message)
+                showErrorMessage(
+                    e.message,
+                    SnackbarManager.Action.retry { viewModelScope.launch { retry() } }
+                )
             }
 
             else -> errorContext?.let {
-                handleException(
-                    e,
-                    it
-                ) { viewModelScope.launch { retry() } }
+                handleException(e, it) { viewModelScope.launch { retry() } }
             }
         }
     }

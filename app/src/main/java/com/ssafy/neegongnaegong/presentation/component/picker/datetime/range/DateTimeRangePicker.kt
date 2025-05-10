@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.component.LaunchedEffectAfterFirst
 import com.ssafy.neegongnaegong.presentation.component.picker.date.range.DateRangePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.date.range.rememberDateRangePickerState
 import com.ssafy.neegongnaegong.presentation.component.picker.time.TimePicker
@@ -40,21 +41,21 @@ fun DateTimeRangePicker(
         }
     }
 
-    LaunchedEffect(state.startDateTime) {
+    LaunchedEffectAfterFirst(state.startDateTime) {
         dateRangePickerState.updateStartDate(state.startDateTime.toLocalDate())
         onStartDateTimeChange(state.startDateTime)
     }
 
-    LaunchedEffect(state.endDateTime) {
+    LaunchedEffectAfterFirst(state.endDateTime) {
         dateRangePickerState.updateEndDate(state.endDateTime.toLocalDate())
         onEndDateTimeChange(state.endDateTime)
     }
 
-    LaunchedEffect(dateRangePickerState.startDate) {
+    LaunchedEffectAfterFirst(dateRangePickerState.startDate) {
         state.updateStartDate(dateRangePickerState.startDate)
     }
 
-    LaunchedEffect(dateRangePickerState.endDate) {
+    LaunchedEffectAfterFirst(dateRangePickerState.endDate) {
         state.updateEndDate(dateRangePickerState.endDate)
     }
 

@@ -144,7 +144,7 @@ fun ScheduleDetailScreen(
                 onEndTimeClicked = { onFormClick(ScheduleInputFormFocus.EndTime) },
                 onIsAllDayChanged = { onFormClick(ScheduleInputFormFocus.IsAllDay) },
             )
-            if (schedule.content != null) ScheduleEditText(
+            if (!schedule.content.isNullOrEmpty()) ScheduleEditText(
                 modifier = Modifier
                     .clickable { onFormClick(ScheduleInputFormFocus.Content) }
                     .fillMaxWidth(),
@@ -154,7 +154,7 @@ fun ScheduleDetailScreen(
                 prefix = Icons.Outlined.Description,
                 enable = false,
             )
-            if (schedule.location != null) ScheduleEditText(
+            if (!schedule.location.isNullOrEmpty()) ScheduleEditText(
                 modifier = Modifier
                     .clickable { onFormClick(ScheduleInputFormFocus.Location) }
                     .fillMaxWidth(),
