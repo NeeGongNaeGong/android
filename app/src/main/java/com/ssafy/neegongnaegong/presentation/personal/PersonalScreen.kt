@@ -16,7 +16,12 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -57,8 +62,6 @@ fun PersonalRoute(
                 ?.savedStateHandle
                 ?.get<Boolean>("refreshNeeded") == true
 
-        println("확인 ㅋㅋ 루트바낌 $shouldRefresh")
-
         if (shouldRefresh) {
             viewModel.setEvent(PersonalContract.Event.OnRecordRefresh)
             currentBackStackEntry?.let {
@@ -73,7 +76,6 @@ fun PersonalRoute(
         uiState = uiState.value,
         onTagScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnTagScreenSelected) },
         onDateScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnDateScreenSelected) },
-        learningRecords = uiState.value.learningRecords,
         onTagPlusClicked = { viewModel.setEvent(PersonalContract.Event.OnTagPlusClicked) },
         onTagEraseClicked = { viewModel.setEvent(PersonalContract.Event.OnTagEraseClicked(it)) },
         onDialogClosed = { viewModel.setEvent(PersonalContract.Event.OnDialogClose) },
@@ -95,8 +97,6 @@ fun PersonalContent(
     // dropdown
     onTagScreenSelected: () -> Unit,
     onDateScreenSelected: () -> Unit,
-    // study
-    learningRecords: List<LearningRecord>,
     // tag
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
@@ -138,7 +138,9 @@ fun PersonalContent(
 
     PersonalScreen(
         modifier = modifier,
-        learningRecords = uiState.learningRecords,
+        // pager
+        onTagScreenSelected = onTagScreenSelected,
+        onDateScreenSelected = onDateScreenSelected,
         // tag
         tags = uiState.tags,
         onTagPlusClicked = onTagPlusClicked,
@@ -163,7 +165,9 @@ fun PersonalContent(
 @Composable
 fun PersonalScreen(
     modifier: Modifier = Modifier,
-    learningRecords: List<LearningRecord>,
+    // pager
+    onTagScreenSelected: () -> Unit,
+    onDateScreenSelected: () -> Unit,
     tags: List<Tag>,
     selectedRecordsByTag: List<LearningRecord>,
     onTagPlusClicked: () -> Unit,
@@ -216,24 +220,37 @@ fun PersonalScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        var previousPage by rememberSaveable { mutableIntStateOf(-1) }
+
+        LaunchedEffect(pagerState.currentPage) {
+            if (previousPage != pagerState.currentPage) {
+                previousPage = pagerState.currentPage
+                when (pagerState.currentPage) {
+                    0 -> onTagScreenSelected()
+                    1 -> onDateScreenSelected()
+                }
+            }
+        }
+
         HorizontalPager(
             pageSize = PageSize.Fill,
             state = pagerState,
             modifier = Modifier.fillMaxSize(),
         ) { page ->
             when (page) {
-                0 ->
+                0 -> {
                     PersonalByTagScreen(
                         tags = tags,
-                        learningRecords = if (tags.isEmpty()) learningRecords else selectedRecordsByTag,
+                        learningRecords = selectedRecordsByTag,
                         onTagPlusClicked = onTagPlusClicked,
                         onTagEraseClicked = onTagEraseClicked,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
                         hasNext = hasNext,
                     )
+                }
 
-                1 ->
+                1 -> {
                     PersonalByDateScreen(
                         datePickerState = datePickerState,
                         onDateSelected = onDateSelected,
@@ -243,6 +260,7 @@ fun PersonalScreen(
                         onLoadMore = onLoadMore,
                         hasNext = hasNext,
                     )
+                }
             }
         }
     }
@@ -252,8 +270,9 @@ fun PersonalScreen(
 @Composable
 fun PersonalScreenPreview() {
     PersonalScreen(
-        learningRecords = PersonalPreviewDataProvider().getStudyRecords(),
         tags = PersonalPreviewDataProvider().getTags(),
+        onTagScreenSelected = {},
+        onDateScreenSelected = {},
         onTagPlusClicked = {},
         onTagEraseClicked = {},
         onDateSelected = {},

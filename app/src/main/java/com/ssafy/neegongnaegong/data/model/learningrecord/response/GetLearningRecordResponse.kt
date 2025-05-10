@@ -1,7 +1,6 @@
 package com.ssafy.neegongnaegong.data.model.learningrecord.response
 
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
-import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import java.time.LocalDateTime
 
 data class GetLearningRecordResponse(
@@ -10,7 +9,7 @@ data class GetLearningRecordResponse(
     val content: String,
     val startAt: LocalDateTime,
     val endAt: LocalDateTime,
-    val tags: List<Tag>,
+    val tags: List<TagResponse>,
 ) {
     fun toDomain(): LearningRecord =
         LearningRecord(
@@ -19,6 +18,6 @@ data class GetLearningRecordResponse(
             content = content,
             startAt = startAt,
             endAt = endAt,
-            tags = tags,
+            tags = tags.map { it.toDomain() },
         )
 }

@@ -60,8 +60,6 @@ class PersonalContract {
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
         val selectedRecordsByTag: List<LearningRecord> = emptyList(),
-        // study
-        val learningRecords: List<LearningRecord> = emptyList(),
         // calendar
         val selectedDate: String = "",
         val selectedRecordsByDate: List<LearningRecord> = emptyList(),

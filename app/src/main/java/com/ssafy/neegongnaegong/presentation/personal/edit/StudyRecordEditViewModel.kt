@@ -154,6 +154,7 @@ class StudyRecordEditViewModel
                     tags = merged.toList(),
                     selectedTags = emptyList(),
                     unSelectedTags = emptyList(),
+                    learningRecord = learningRecord.copy(tags = merged.toList())
                 )
             }
         }

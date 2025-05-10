@@ -94,6 +94,7 @@ class TimerViewModel
                         return
                     }
 
+                    setState { copy(learningRecord = learningRecord.copy(endAt = LocalDateTime.now())) }
                     createLearningRecord(totalTime = totalTime)
                 }
 
@@ -116,7 +117,6 @@ class TimerViewModel
                 }
 
                 is TimerContract.Event.OnScreen -> {
-
                 }
             }
         }
@@ -135,11 +135,7 @@ class TimerViewModel
                             isRunning = false,
                             isPauseDialogVisible = false,
                             totalElapsedTime = totalTime,
-                            learningRecord =
-                                learningRecord.copy(
-                                    id = result,
-                                    endAt = LocalDateTime.now(),
-                                ),
+                            learningRecord = learningRecord.copy(id = result),
                         )
                     }
                     timerJob?.cancel()

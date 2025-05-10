@@ -17,9 +17,10 @@ class PersonalViewModel
     constructor(
         private val getLearningRecordListUseCase: GetLearningRecordListUseCase,
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
-        override fun createInitialState(): PersonalContract.State = PersonalContract.State()
+        override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
         init {
+//            println("확인 호출1")
             loadLearningRecords()
         }
 
@@ -33,7 +34,8 @@ class PersonalViewModel
                             isDateScreen = true,
                         )
                     }
-                    filteringTodayRecord()
+//                    println("확인 호출2")
+//                    loadLearningRecords()
                 }
 
                 is PersonalContract.Event.OnTagScreenSelected -> {
@@ -43,6 +45,8 @@ class PersonalViewModel
                             isDateScreen = false,
                         )
                     }
+//                    println("확인 호출3")
+                    loadLearningRecords()
                 }
                 // tag
                 is PersonalContract.Event.OnTagEraseClicked -> {
@@ -77,7 +81,8 @@ class PersonalViewModel
                     } else {
                         moveFromSelectedTagsToTags()
                         clearDialogTags()
-                        updateSelectedRecordsByTag()
+//                      println("확인 호출4")
+                        loadLearningRecords()
                         setState { copy(isDialogShow = false) }
                     }
                 }
@@ -88,6 +93,7 @@ class PersonalViewModel
 
                 // calendar
                 is PersonalContract.Event.OnDateSelected -> {
+                    setState { copy(isTagScreen = false, isDateScreen = true) }
                     filteringRecordByDate(event.date)
                 }
 
@@ -97,31 +103,45 @@ class PersonalViewModel
                 }
 
                 is PersonalContract.Event.OnRecordRefresh -> {
+//                    println("확인 호출5")
                     loadLearningRecords()
                 }
             }
         }
-        // api
 
-        private fun loadLearningRecords(
-            tagIds: List<Long>? = null,
-            date: String? = null,
-        ) {
+        // api
+        private fun loadLearningRecords() {
             viewModelScope.launch {
                 setState { copy(isLoading = true) }
-                getLearningRecordListUseCase(
-                    tag = tagIds,
-                    targetDate = date,
-                    size = 20,
-                ).safeCollect { result ->
-                    setState {
-                        copy(
-                            learningRecords = result.content.map { it.toDomain() },
-                            hasNext = result.hasNext,
-                            cursorId = result.cursorId,
-                            cursorCreatedAt = result.cursorCreatedAt,
-                            isLoading = false,
-                        )
+                if (uiState.value.isTagScreen) {
+//                    println("확인 태그 보냄 ${uiState.value.tags}")
+                    getLearningRecordListUseCase(
+                        tag = uiState.value.selectedTags.map { it.id },
+                    ).safeCollect { result ->
+                        setState {
+                            copy(
+                                selectedRecordsByTag = result.content.map { it.toDomain() },
+                                hasNext = result.hasNext,
+                                cursorId = result.cursorId,
+                                cursorCreatedAt = result.cursorCreatedAt,
+                                isLoading = false,
+                            )
+                        }
+                    }
+                } else {
+//                    println("확인 날짜 보냄 ${uiState.value.selectedDate}")
+                    getLearningRecordListUseCase(
+                        targetDate = uiState.value.selectedDate,
+                    ).safeCollect { result ->
+                        setState {
+                            copy(
+                                selectedRecordsByDate = result.content.map { it.toDomain() },
+                                hasNext = result.hasNext,
+                                cursorId = result.cursorId,
+                                cursorCreatedAt = result.cursorCreatedAt,
+                                isLoading = false,
+                            )
+                        }
                     }
                 }
             }
@@ -133,18 +153,37 @@ class PersonalViewModel
 
             viewModelScope.launch {
                 setState { copy(isLoading = true) }
-                getLearningRecordListUseCase(
-                    cursorId = state.cursorId,
-                    cursorCreatedAt = state.cursorCreatedAt,
-                ).safeCollect { result ->
-                    setState {
-                        copy(
-                            learningRecords = learningRecords + result.content.map { it.toDomain() },
-                            hasNext = result.hasNext,
-                            cursorId = result.cursorId,
-                            cursorCreatedAt = result.cursorCreatedAt,
-                            isLoading = false,
-                        )
+                if (uiState.value.isTagScreen) {
+                    getLearningRecordListUseCase(
+                        tag = uiState.value.tags.map { it.id },
+                        cursorId = state.cursorId,
+                        cursorCreatedAt = state.cursorCreatedAt,
+                    ).safeCollect { result ->
+                        setState {
+                            copy(
+                                selectedRecordsByTag = selectedRecordsByTag + result.content.map { it.toDomain() },
+                                hasNext = result.hasNext,
+                                cursorId = result.cursorId,
+                                cursorCreatedAt = result.cursorCreatedAt,
+                                isLoading = false,
+                            )
+                        }
+                    }
+                } else {
+                    getLearningRecordListUseCase(
+                        targetDate = uiState.value.selectedDate,
+                        cursorId = state.cursorId,
+                        cursorCreatedAt = state.cursorCreatedAt,
+                    ).safeCollect { result ->
+                        setState {
+                            copy(
+                                selectedRecordsByDate = selectedRecordsByDate + result.content.map { it.toDomain() },
+                                hasNext = result.hasNext,
+                                cursorId = result.cursorId,
+                                cursorCreatedAt = result.cursorCreatedAt,
+                                isLoading = false,
+                            )
+                        }
                     }
                 }
             }
@@ -152,52 +191,15 @@ class PersonalViewModel
 
         // calendar
         private fun filteringRecordByDate(date: String) {
-            val filtered =
-                uiState.value.learningRecords.filter {
-                    it.startAt.toString().substring(0, 10) == date
-                }
             setState {
-                copy(
-                    selectedDate = date,
-                    selectedRecordsByDate = filtered,
-                )
+                copy(selectedDate = date)
             }
-        }
 
-        private fun filteringTodayRecord() {
-            val today = LocalDate.now().toString()
-
-            val filtered =
-                uiState.value.learningRecords.filter {
-                    it.startAt.toString().substring(0, 10) == today
-                }
-
-            setState {
-                copy(
-                    selectedDate = today,
-                    selectedRecordsByDate = filtered,
-                )
-            }
+//            println("확인 호출6")
+            loadLearningRecords()
         }
 
         // tag
-
-        private fun updateSelectedRecordsByTag() {
-            val selectedTagIds =
-                uiState.value.tags
-                    .map { it.id }
-                    .toSet()
-
-            val filteredRecords =
-                uiState.value.learningRecords.filter { record ->
-                    record.tags.any { it.id in selectedTagIds }
-                }
-
-            setState {
-                copy(selectedRecordsByTag = filteredRecords)
-            }
-        }
-
         private fun checkTagSize(): Boolean {
             val tags = uiState.value.tags
             val selected = uiState.value.selectedTags
