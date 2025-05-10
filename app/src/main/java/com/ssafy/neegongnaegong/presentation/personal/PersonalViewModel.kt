@@ -20,7 +20,7 @@ class PersonalViewModel
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
         init {
-//            println("확인 호출1")
+//            println("확인 호출 init")
             loadLearningRecords()
         }
 
@@ -34,7 +34,7 @@ class PersonalViewModel
                             isDateScreen = true,
                         )
                     }
-//                    println("확인 호출2")
+//                    println("확인 호출 OnDateScreenSelected")
 //                    loadLearningRecords()
                 }
 
@@ -45,12 +45,14 @@ class PersonalViewModel
                             isDateScreen = false,
                         )
                     }
-//                    println("확인 호출3")
+//                    println("확인 호출 OnTagScreenSelected")
                     loadLearningRecords()
                 }
                 // tag
                 is PersonalContract.Event.OnTagEraseClicked -> {
                     deleteTag(event.tag)
+                    // println("확인 호출 OnTagEraseClicked")
+                    loadLearningRecords()
                 }
 
                 is PersonalContract.Event.OnTagSelected -> {
@@ -81,7 +83,7 @@ class PersonalViewModel
                     } else {
                         moveFromSelectedTagsToTags()
                         clearDialogTags()
-//                      println("확인 호출4")
+//                      println("확인 호출 OnDialogConfirmClicked")
                         loadLearningRecords()
                         setState { copy(isDialogShow = false) }
                     }
@@ -103,7 +105,7 @@ class PersonalViewModel
                 }
 
                 is PersonalContract.Event.OnRecordRefresh -> {
-//                    println("확인 호출5")
+//                    println("확인 호출 OnRecordRefresh")
                     loadLearningRecords()
                 }
             }
@@ -116,7 +118,7 @@ class PersonalViewModel
                 if (uiState.value.isTagScreen) {
 //                    println("확인 태그 보냄 ${uiState.value.tags}")
                     getLearningRecordListUseCase(
-                        tag = uiState.value.selectedTags.map { it.id },
+                        tag = uiState.value.tags.map { it.id },
                     ).safeCollect { result ->
                         setState {
                             copy(
@@ -195,7 +197,7 @@ class PersonalViewModel
                 copy(selectedDate = date)
             }
 
-//            println("확인 호출6")
+//            println("확인 호출 filteringRecordByDate 함수")
             loadLearningRecords()
         }
 
