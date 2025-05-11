@@ -10,7 +10,8 @@ data class CreateVoteRequest(
     val state: Boolean = true,
     val items: List<String>,
     val multiple: Boolean,
-    val secret: Boolean
+    val secret: Boolean,
+    val notify: Boolean
 ) {
     companion object{
         fun fromDomain(voteInfo: VoteInfo): CreateVoteRequest =
@@ -22,6 +23,7 @@ data class CreateVoteRequest(
                 voteInfo.items,
                 voteInfo.multiple,
                 voteInfo.secret,
+                voteInfo.notify
             )
     }
 

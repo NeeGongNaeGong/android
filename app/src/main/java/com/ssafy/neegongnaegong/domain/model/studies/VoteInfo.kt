@@ -9,5 +9,6 @@ data class VoteInfo(
     val state: Boolean,
     val items: List<String>,
     val multiple: Boolean,
-    val secret: Boolean
+    val secret: Boolean,
+    val notify: Boolean
 )
