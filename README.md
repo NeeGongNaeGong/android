@@ -25,7 +25,7 @@
 ./gradlew detekt --auto-correct --continue
 
 # 특정 파일을 검사하고 싶을 땐 아래와 같은 꼴로
-./gradlew detekt --include "src/main/java/com/ssafy/neegongnaegong/ApplicationClass.kt"
+./gradlew detektStaged -PstagedFiles="app/src/main/java/com/ssafy/neegongnaegong/presentation/group/record/RecordScreen.kt"
 ```
 
 
