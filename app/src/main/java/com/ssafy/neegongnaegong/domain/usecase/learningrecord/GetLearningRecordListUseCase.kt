@@ -12,7 +12,7 @@ class GetLearningRecordListUseCase(
         targetDate: String? = null,
         cursorCreatedAt: String? = null,
         cursorId: Long? = null,
-        size: Int = 20,
+        size: Int = 30,
     ): Flow<CursorSlice> =
         repository.getLearningRecordList(
             tag = tag,
