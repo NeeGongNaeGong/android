@@ -1,4 +1,3 @@
-import io.gitlab.arturbosch.detekt.Detekt
 import java.util.Properties
 
 plugins {
@@ -53,12 +52,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-
-    detekt {
-        buildUponDefaultConfig = true
-        allRules = false
-        config.setFrom(files("$rootDir/detekt.yml"))
     }
 }
 
@@ -127,30 +120,4 @@ dependencies {
 
     // fcm
     implementation(libs.firebase.messaging.ktx)
-
-    // detekt formatting
-    detektPlugins(libs.detekt.formatting)
-}
-
-// Stage된 파일만 검사하는 커스텀 태스크
-val stagedFiles: String? by project
-val stagedFileList =
-    stagedFiles
-        ?.lines()
-        ?.filter { it.isNotBlank() }
-        ?.map { file(it) } ?: emptyList()
-tasks.register<Detekt>("detektStaged") {
-    description = "Run Detekt on staged Kotlin files"
-    group = "verification"
-
-    setSource(files(stagedFileList))
-    config.setFrom(files("$rootDir/detekt.yml"))
-    buildUponDefaultConfig = true
-    autoCorrect = true
-
-    reports {
-        html.required.set(false)
-        xml.required.set(false)
-        txt.required.set(false)
-    }
 }
