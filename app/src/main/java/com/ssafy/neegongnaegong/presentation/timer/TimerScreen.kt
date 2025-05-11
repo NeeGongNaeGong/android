@@ -101,10 +101,6 @@ fun TimerContent(
                 is TimerContract.Effect.CloseTimerActivity -> {
                     onCloseActivity()
                 }
-
-                is TimerContract.Effect.ShowLeastOneMinuteGuideToast -> {
-                    Toast.makeText(context, "공부 시간은 최소 1분 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }

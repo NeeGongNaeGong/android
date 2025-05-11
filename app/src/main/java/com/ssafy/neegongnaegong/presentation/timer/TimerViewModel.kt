@@ -88,12 +88,6 @@ class TimerViewModel
                     val currentElapsedTime = SystemClock.elapsedRealtime() - uiState.value.startTime
                     val totalTime = uiState.value.totalElapsedTime + currentElapsedTime
 
-                    if (totalTime < 60_000L) {
-                        setEffect { TimerContract.Effect.ShowLeastOneMinuteGuideToast }
-//                        showWarningMessage("공부 시간은 최소 1분 이상이어야 합니다.", SnackbarManager.Action.ok())
-                        return
-                    }
-
                     setState { copy(learningRecord = learningRecord.copy(endAt = LocalDateTime.now())) }
                     createLearningRecord(totalTime = totalTime)
                 }

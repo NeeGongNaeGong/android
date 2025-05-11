@@ -56,8 +56,6 @@ class TimerContract {
         data object NavigateToWriteScreen : Effect()
 
         data object CloseTimerActivity : Effect()
-
-        data object ShowLeastOneMinuteGuideToast : Effect()
     }
 
     sealed class Error : ErrorContext {
