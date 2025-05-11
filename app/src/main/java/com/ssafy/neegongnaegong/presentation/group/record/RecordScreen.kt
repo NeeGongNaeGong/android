@@ -81,37 +81,6 @@ fun RecordRoute(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RecordTopBar(
-    popBackStack: () -> Boolean,
-) {
-    // title을 가운데로 위치시켜주는 CenterAlignedTopAppBar
-    // https://stackoverflow.com/questions/67497414/how-to-align-title-at-layout-center-in-topappbar
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                style = NeeGongNaeGongTheme.typography.titleSmall,
-                text = "박준식 이번주 공부내용"
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { popBackStack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "뒤로 가기 버튼"
-                )
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = NeeGongNaeGongTheme.colorScheme.background,
-            titleContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            navigationIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            actionIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-        )
-    )
-}
-
 @Composable
 fun RecordContent(
     modifier: Modifier = Modifier,
@@ -281,6 +250,7 @@ fun ChartLegendScreen(onHeightChange: (Dp) -> Unit, modifier: Modifier = Modifie
 
                                 ),
                             style = NeeGongNaeGongTheme.typography.labelMedium,
+                            // 범례의 컬러를 다크모드일 때 어떤 거로 해야 할지 결정 못함
                             color = NeeGongNaeGongTheme.colorScheme.chartLegend,
                             text = item.first, maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -304,15 +274,6 @@ fun ChartLegendScreen(onHeightChange: (Dp) -> Unit, modifier: Modifier = Modifie
 
         }
 
-    }
-}
-
-
-@NeeGongNaeGongPreviews
-@Composable
-fun PreviewTopAppBar() {
-    NeeGongNaeGongTheme {
-        RecordTopBar(popBackStack = { true })
     }
 }
 
