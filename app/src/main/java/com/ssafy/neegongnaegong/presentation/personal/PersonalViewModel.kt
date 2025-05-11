@@ -21,6 +21,7 @@ class PersonalViewModel
 
         init {
 //            println("확인 호출 init")
+            // 이렇게 작성 하면 UnitTest 할때 단점이 있음
             loadLearningRecords()
         }
 
@@ -119,7 +120,9 @@ class PersonalViewModel
 //                    println("확인 태그 보냄 ${uiState.value.tags}")
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
-                    ).safeCollect { result ->
+                    ).withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
                         setState {
                             copy(
                                 selectedRecordsByTag = result.content.map { it.toDomain() },
@@ -154,20 +157,20 @@ class PersonalViewModel
             if (!state.hasNext || state.isLoading) return
 
             viewModelScope.launch {
-                setState { copy(isLoading = true) }
                 if (uiState.value.isTagScreen) {
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
                         cursorId = state.cursorId,
                         cursorCreatedAt = state.cursorCreatedAt,
-                    ).safeCollect { result ->
+                    ).withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
                         setState {
                             copy(
                                 selectedRecordsByTag = selectedRecordsByTag + result.content.map { it.toDomain() },
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
-                                isLoading = false,
                             )
                         }
                     }
@@ -176,14 +179,15 @@ class PersonalViewModel
                         targetDate = uiState.value.selectedDate,
                         cursorId = state.cursorId,
                         cursorCreatedAt = state.cursorCreatedAt,
-                    ).safeCollect { result ->
+                    ).withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
                         setState {
                             copy(
                                 selectedRecordsByDate = selectedRecordsByDate + result.content.map { it.toDomain() },
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
-                                isLoading = false,
                             )
                         }
                     }

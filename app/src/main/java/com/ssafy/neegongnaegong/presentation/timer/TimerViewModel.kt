@@ -136,6 +136,7 @@ class TimerViewModel
                 }
             }
 
+        // timer
         private fun startTimer() {
             timerJob?.cancel()
             setState {

@@ -114,26 +114,26 @@ class StudyRecordEditViewModel
         // api
         private fun updateLearningRecord() =
             viewModelScope.launch {
-                setState { copy(isLoading = true) }
                 updateLearningRecordUseCase(
                     learningRecordId = uiState.value.learningRecord.id,
                     learningRecord = uiState.value.learningRecord,
-                ).safeCollect {
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect {
                     setEffect { StudyRecordEditContract.Effect.NavigateToHome }
-                    setState { copy(isLoading = false) }
                 }
             }
 
         private fun getLearningRecord(studyRecordId: Long) =
             viewModelScope.launch {
-                setState { copy(isLoading = true) }
                 getLearningRecordUseCase(studyRecordId)
-                    .safeCollect { learningRecord ->
+                    .withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { learningRecord ->
                         setState {
                             copy(
                                 learningRecord = learningRecord,
                                 tags = learningRecord.tags,
-                                isLoading = false,
                             )
                         }
                     }
@@ -155,7 +155,7 @@ class StudyRecordEditViewModel
                     tags = merged.toList(),
                     selectedTags = emptyList(),
                     unSelectedTags = emptyList(),
-                    learningRecord = learningRecord.copy(tags = merged.toList())
+                    learningRecord = learningRecord.copy(tags = merged.toList()),
                 )
             }
         }
