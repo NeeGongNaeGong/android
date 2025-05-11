@@ -76,11 +76,12 @@ class VoteViewModel @Inject constructor(
                             VoteInfo(
                                 title = voteTitle,
                                 startTime = LocalDateTime.now(), //getCurrentTimeByISO8601Format(),
-                                endTime = convertStringToLocalDateTime(date, time),
+                                endTime = if(isEndDateEnabled) {convertStringToLocalDateTime(date, time)} else null,
                                 state = true,
                                 items = voteItemList.filter { it.isNotEmpty() },
                                 multiple = isMultipleSelectionEnabled,
-                                secret = isAnonymousVotingEnabled
+                                secret = isAnonymousVotingEnabled,
+                                notify = isAlarmBeforeClosingEnabled
                             )
                         }
                     ).safeCollect(VoteContract.Error.CreateVoteError) {
