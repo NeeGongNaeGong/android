@@ -56,6 +56,10 @@ fun PersonalRoute(
 
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value
 
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(PersonalContract.Event.OnRecordRefresh)
+    }
+
     LaunchedEffect(currentBackStackEntry) {
         val shouldRefresh =
             currentBackStackEntry

@@ -19,11 +19,11 @@ class PersonalViewModel
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
-        init {
-//            println("확인 호출 init")
-            // 이렇게 작성 하면 UnitTest 할때 단점이 있음
-            loadLearningRecords()
-        }
+//        init {
+////            println("확인 호출 init")
+//            // 이렇게 작성 하면 UnitTest 할때 단점이 있음
+//            loadLearningRecords()
+//        }
 
         override fun handleEvent(event: PersonalContract.Event) {
             when (event) {

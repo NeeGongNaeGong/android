@@ -43,7 +43,7 @@ class TimerContract {
         val learningRecord: LearningRecord = LearningRecord.default(),
         // timer
         val startTime: Long = SystemClock.elapsedRealtime(),
-        val totalElapsedTime: Long = 60000L,
+        val totalElapsedTime: Long = 0L,
         val isFirstTimer: Boolean = true,
         // pause dialog
         val isDialogShow: Boolean = true,
