@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -23,14 +24,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,22 +41,45 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
-import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
+import com.ssafy.neegongnaegong.presentation.group.record.component.StudyRecordListBySlice
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.time.LocalDateTime
 
 
 @Composable
 fun RecordRoute(
-    groupId: Int,
-    memberId: Int,
+    groupId: Long,
+    memberId: Long,
     popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
-//    viewModel: RecordViewModel = hiltViewModel()
+    viewModel: RecordViewModel = hiltViewModel()
 ) {
-//    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val pagingItem = viewModel.studyLogFlow.collectAsLazyPagingItems()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect {
+            when (it) {
+                RecordContract.Effect.NavigateToBackStack -> {
+                    popBackStack()
+                }
+            }
+        }
+    }
+
     Column {
         TopAppBar(
             title = {
@@ -76,7 +93,9 @@ fun RecordRoute(
 
         RecordContent(
             modifier
-                .weight(1F)
+                .weight(1F),
+            pagingItem,
+            uiState
         )
     }
 }
@@ -84,8 +103,19 @@ fun RecordRoute(
 @Composable
 fun RecordContent(
     modifier: Modifier = Modifier,
+    pagingItem: LazyPagingItems<StudyContentInfo>,
+    uiState: RecordContract.State
 ) {
     var chartHeight by remember { mutableStateOf(0.dp) }
+
+    val colors: List<Color> =
+        listOf(
+            NeeGongNaeGongTheme.colorScheme.peach,
+            NeeGongNaeGongTheme.colorScheme.lightGreen,
+            NeeGongNaeGongTheme.colorScheme.blue,
+            NeeGongNaeGongTheme.colorScheme.mintBlue,
+            Color.Magenta
+        )
 
     Column(modifier = modifier) {
 
@@ -96,7 +126,9 @@ fun RecordContent(
             PieChartScreen(
                 modifier = Modifier
                     .height(if (chartHeight > 0.dp) chartHeight else Dp.Unspecified)
-                    .aspectRatio(1F)
+                    .aspectRatio(1F),
+                uiState.studyLogsByTag,
+                colors,
             )
             Spacer(modifier = Modifier.width(10.dp))
             ChartLegendScreen(
@@ -106,6 +138,8 @@ fun RecordContent(
                     .verticalScroll(
                         rememberScrollState()
                     ),
+                studyLogsByTag = uiState.studyLogsByTag,
+                color = colors,
                 onHeightChange = { newHeight -> chartHeight = newHeight },
             )
 
@@ -113,9 +147,9 @@ fun RecordContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        StudyRecordList(
+        StudyRecordListBySlice(
             modifier = Modifier.weight(1F),
-            studyRecords = PersonalPreviewDataProvider().getStudyRecords(),
+            lazyItems = pagingItem,
             onClick = {}
         )
 
@@ -126,12 +160,14 @@ fun RecordContent(
 @Composable
 fun PieChartScreen(
     modifier: Modifier = Modifier,
+    studyLogsByTag: PersistentList<StudyLogByTagInfo>,
+    color: List<Color>
 ) {
 // 1) 애니메이션 시작 플래그
     var startAnimation by remember { mutableStateOf(false) }
 
     val slices: List<Float> =
-        listOf(0.3F, 0.5F, 0.6F, 0.1F, 0.2F)           // 각 조각의 값 (합은 100이 아니어도 됨)
+        studyLogsByTag.map { it.totalSeconds.toFloat() }           // 각 조각의 값 (합은 100이 아니어도 됨)
     val colors: List<Color> =
         listOf(
             NeeGongNaeGongTheme.colorScheme.peach,
@@ -141,7 +177,7 @@ fun PieChartScreen(
             Color.Magenta
         )
 
-    val animationDuration: Int = 1000
+    val animationDuration = 1000
     // 전체 합계 계산
     val total = remember(slices) { slices.sum() }
 
@@ -154,8 +190,6 @@ fun PieChartScreen(
             easing = LinearEasing
         )
     )
-
-
 
     LaunchedEffect(Unit) {
         startAnimation = true
@@ -197,93 +231,113 @@ fun PieChartScreen(
 }
 
 @Composable
-fun ChartLegendScreen(onHeightChange: (Dp) -> Unit, modifier: Modifier = Modifier) {
-
-    val legendItems: List<Triple<String, String, Color>> =
-        listOf(
-            Triple("알고리즘", "5H", NeeGongNaeGongTheme.colorScheme.peach),
-            Triple("네트워크", "2H 45M", NeeGongNaeGongTheme.colorScheme.lightGreen),
-            Triple("운영체제", "4H", NeeGongNaeGongTheme.colorScheme.blue),
-            Triple("영어회화", "3H 30M", NeeGongNaeGongTheme.colorScheme.mintBlue),
-            Triple("데이터 베이스", "1H", Color.Magenta),
-        )
-
+fun ChartLegendScreen(
+    onHeightChange: (Dp) -> Unit,
+    modifier: Modifier = Modifier,
+    studyLogsByTag: PersistentList<StudyLogByTagInfo>,
+    color: List<Color>,
+) {
     val density = LocalDensity.current
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
-        legendItems.forEachIndexed { index, item ->
-            Column(
-                modifier = if (index == 0) {
-                    Modifier
-                        .wrapContentSize()//.background(Color.Blue)
-                        .onSizeChanged { size -> // 2. 크기 변경 시 높이 측정
-                            if (size.height > 0) { // 초기 0 값 무시
-                                onHeightChange(with(density) {
-                                    size.height.toDp() * 4 + if (legendItems.size > 1) {
-                                        (-15).dp
-                                    } else {
-                                        0.dp
-                                    }
-                                })
-                            }
-                        }
-                } else {
-                    Modifier.wrapContentSize()
-                }
-
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
+        studyLogsByTag.let {
+            it.forEachIndexed { index, item ->
+                Column(
+                    modifier = if (index == 0) {
                         Modifier
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(item.third)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Column {
-                        Text(
-                            modifier = Modifier.basicMarquee(
-                                iterations = Int.MAX_VALUE,
-
-                                ),
-                            style = NeeGongNaeGongTheme.typography.labelMedium,
-                            // 범례의 컬러를 다크모드일 때 어떤 거로 해야 할지 결정 못함
-                            color = NeeGongNaeGongTheme.colorScheme.chartLegend,
-                            text = item.first, maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            .wrapContentSize()
+                            .onSizeChanged { size -> // 2. 크기 변경 시 높이 측정
+                                if (size.height > 0) { // 초기 0 값 무시
+                                    onHeightChange(with(density) {
+                                        size.height.toDp() * 4 + if (it.size > 1) {
+                                            (-15).dp
+                                        } else {
+                                            0.dp
+                                        }
+                                    })
+                                }
+                            }
+                    } else {
+                        Modifier.wrapContentSize()
+                    }
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            Modifier
+                                .size(12.dp)
+                                .clip(CircleShape)
+                                .background(color[index % 4])
                         )
+                        Spacer(Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                modifier = Modifier.basicMarquee(
+                                    iterations = Int.MAX_VALUE,
+
+                                    ),
+                                style = NeeGongNaeGongTheme.typography.labelMedium,
+                                // 범례의 컬러를 다크모드일 때 어떤 거로 해야 할지 결정 못함
+                                color = NeeGongNaeGongTheme.colorScheme.chartLegend,
+                                text = item.tagName, maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(5.dp))
+                    Text(
+                        modifier = Modifier.offset(x = (20).dp),
+                        text = TimeFormatter.formatDurationToHM(item.totalSeconds),
+                        maxLines = 1,
+                        style = NeeGongNaeGongTheme.typography.bodyLarge,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 16.sp,
+                        color = NeeGongNaeGongTheme.colorScheme.blue,
+                    )
+                    if (index != it.lastIndex) {
+                        Spacer(Modifier.height(15.dp))
                     }
                 }
-                Spacer(Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier.offset(x = (20).dp),
-                    text = item.second,
-                    maxLines = 1,
-                    style = NeeGongNaeGongTheme.typography.bodyLarge,
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = 16.sp,
-                    color = NeeGongNaeGongTheme.colorScheme.blue,
-                )
-                if (index != legendItems.lastIndex) {
-                    Spacer(Modifier.height(15.dp))
-                }
+
             }
-
         }
-
     }
 }
 
 @NeeGongNaeGongPreviews
 @Composable
 fun PreviewRecordContent() {
+
+    val sampleItems = mutableListOf<StudyContentInfo>().apply {
+        for (i in 0..3) {
+            add(
+                StudyContentInfo(
+                    title = "Kotlin Basics",
+                    learningRecordId = 1,
+                    startAt = LocalDateTime.now(),
+                    endAt = LocalDateTime.now(),
+                    content = "Kotlin Basics",
+                    tags = listOf(),
+                    learningRecordCreatedAt = LocalDateTime.now(),
+                    learningRecordModifiedAt = LocalDateTime.now(),
+                )
+            )
+        }
+    }
+
+    val pagingData = PagingData.from(sampleItems)
+    val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
+    val dummyState = RecordContract.State(
+        studyLogsByTag = persistentListOf()
+    )
     NeeGongNaeGongTheme {
         RecordContent(
             Modifier
                 .fillMaxSize(),
+            pagingItem = lazyItems,
+            dummyState
         )
     }
 }
@@ -295,6 +349,21 @@ fun PreviewPieChart() {
         PieChartScreen(
             Modifier
                 .fillMaxSize(),
+            studyLogsByTag = persistentListOf(
+                StudyLogByTagInfo(
+                    tagId = 1,
+                    tagName = "",
+                    totalSeconds = 1
+                )
+            ),
+            color =
+                listOf(
+                    NeeGongNaeGongTheme.colorScheme.peach,
+                    NeeGongNaeGongTheme.colorScheme.lightGreen,
+                    NeeGongNaeGongTheme.colorScheme.blue,
+                    NeeGongNaeGongTheme.colorScheme.mintBlue,
+                    Color.Magenta
+                )
         )
     }
 }
@@ -303,6 +372,24 @@ fun PreviewPieChart() {
 @Composable
 fun PreviewChartLegend() {
     NeeGongNaeGongTheme {
-        ChartLegendScreen({})
+        ChartLegendScreen(
+            modifier = Modifier.fillMaxWidth(),
+            onHeightChange = {},
+            studyLogsByTag = persistentListOf(
+                StudyLogByTagInfo(
+                    tagId = 1,
+                    tagName = "",
+                    totalSeconds = 1
+                )
+            ),
+            color =
+                listOf(
+                    NeeGongNaeGongTheme.colorScheme.peach,
+                    NeeGongNaeGongTheme.colorScheme.lightGreen,
+                    NeeGongNaeGongTheme.colorScheme.blue,
+                    NeeGongNaeGongTheme.colorScheme.mintBlue,
+                    Color.Magenta
+                )
+        )
     }
 }

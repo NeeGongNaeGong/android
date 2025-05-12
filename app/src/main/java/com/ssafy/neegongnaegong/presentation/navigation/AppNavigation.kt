@@ -72,7 +72,7 @@ object AppNavigation {
             data object MakeVote : Studies
 
             @Serializable
-            data class Record(val groupId: Int, val memberId: Int) : Studies
+            data class Record(val groupId: Long, val memberId: Long) : Studies
         }
 
         @Serializable
