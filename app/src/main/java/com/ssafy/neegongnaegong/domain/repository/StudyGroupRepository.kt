@@ -1,0 +1,14 @@
+package com.ssafy.neegongnaegong.domain.repository
+
+import androidx.paging.PagingData
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.coroutines.flow.Flow
+
+interface StudyGroupRepository {
+    fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<PersistentList<StudyLogByTagInfo>>
+
+    fun getMemberStudyContents(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>>
+}

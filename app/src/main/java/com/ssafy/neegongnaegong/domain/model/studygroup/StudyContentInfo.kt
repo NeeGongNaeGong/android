@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
+import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import java.time.LocalDateTime
 
 data class StudyContentInfo(
@@ -11,4 +12,15 @@ data class StudyContentInfo(
     val tags: List<TagInfo>,
     val learningRecordCreatedAt: LocalDateTime,
     val learningRecordModifiedAt: LocalDateTime
-)
+) {
+    fun toStudyRecord() = StudyRecord(
+        id = learningRecordId,
+        title = title,
+        content = content,
+        startTime = startAt.toString().plus("z"),
+        endTime = endAt.toString().plus("z"),
+        tags = tags.map { it.name }
+
+    )
+
+}

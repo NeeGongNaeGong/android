@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
-import com.ssafy.neegongnaegong.data.remote.StudyGroupsApi
+import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import com.ssafy.neegongnaegong.data.remote.adapter.call.ConvertToResultAdapterFactory
@@ -119,5 +119,5 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideStudyGroupsApi(@SecureRetrofit retrofit: Retrofit): StudyGroupsApi = retrofit.create(StudyGroupsApi::class.java)
+    fun provideStudyGroupApi(@SecureRetrofit retrofit: Retrofit): StudyGroupApi = retrofit.create(StudyGroupApi::class.java)
 }
