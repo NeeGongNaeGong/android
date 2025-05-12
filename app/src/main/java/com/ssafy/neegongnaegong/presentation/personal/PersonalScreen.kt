@@ -37,6 +37,7 @@ import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDat
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -196,7 +197,7 @@ fun PersonalScreen(
     ) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
-            containerColor = Color(0xFFFAFAFA),
+            containerColor = NeeGongNaeGongTheme.colorScheme.background,
         ) {
             tabTitles.forEachIndexed { index, title ->
                 val isSelected = pagerState.currentPage == index
