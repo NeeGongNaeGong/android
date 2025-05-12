@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.domain.model.studies
+package com.ssafy.neegongnaegong.domain.studygroup
 
 data class StudyLogByTagInfo(
     val tagId: Long,
