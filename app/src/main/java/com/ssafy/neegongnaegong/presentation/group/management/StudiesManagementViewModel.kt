@@ -55,10 +55,10 @@ class StudiesManagementViewModel
 
         private fun selectedCategory(category: Category) {
             viewModelScope.launch {
+                setState { copy(selectedCategory = category) }
                 getTagsUseCase(category.id)
                     .withLoading {
                         setState { copy(isLoading = it) }
-                        setState { copy(selectedCategory = category) }
                     }.safeCollect { result ->
                         setState { copy(tags = result) }
                     }
