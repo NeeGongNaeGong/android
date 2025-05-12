@@ -39,17 +39,6 @@ jobs:
       - name: Move google-services.json to app directory
         run: mv google-services.json app/google-services.json
 
-      # 🔐 strings.xml 동적 생성
-      - name: Create strings.xml with secrets
-        run: |
-          mkdir -p app/src/main/res/values
-          cat <<EOF > app/src/main/res/values/strings.xml
-          <resources>
-              <string name="app_name">NeeGongNaeGong</string>
-              <string name="google_web_client_id">${{ secrets.GOOGLE_CLIENT_ID }}</string>
-          </resources>
-          EOF
-
       # ⚙️ Gradle build
       - name: Build Debug APK
         run: ./gradlew assembleDebug
