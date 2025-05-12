@@ -3,7 +3,7 @@ package com.ssafy.neegongnaegong.data.remote
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSlice
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import retrofit2.http.Body
@@ -43,5 +43,5 @@ interface LearningRecordApi {
         @Query("cursor_created_at") cursorCreatedAt: String?,
         @Query("cursor_id") cursorId: Long?,
         @Query("size") size: Int,
-    ): Result<ApiResponse<CursorSlice>>
+    ): Result<ApiResponse<CursorSliceResponse>>
 }

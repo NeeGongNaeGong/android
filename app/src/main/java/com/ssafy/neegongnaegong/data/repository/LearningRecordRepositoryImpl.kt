@@ -4,7 +4,7 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDat
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSlice
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
@@ -57,7 +57,7 @@ class LearningRecordRepositoryImpl
             cursorCreatedAt: String?,
             cursorId: Long?,
             size: Int,
-        ): Flow<CursorSlice> =
+        ): Flow<CursorSliceResponse> =
             withContext(ioDispatcher) {
                 dataSource
                     .getLearningRecordList(
@@ -69,7 +69,7 @@ class LearningRecordRepositoryImpl
                             size = size,
                         ),
                     ).map { slice ->
-                        CursorSlice(
+                        CursorSliceResponse(
                             content = slice.content,
                             hasNext = slice.hasNext,
                             cursorCreatedAt = slice.cursorCreatedAt,

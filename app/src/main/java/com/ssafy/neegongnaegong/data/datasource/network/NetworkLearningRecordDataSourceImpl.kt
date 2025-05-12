@@ -4,7 +4,7 @@ import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSlice
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
@@ -30,7 +30,7 @@ class NetworkLearningRecordDataSourceImpl
         override suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<Long> =
             apiFlow { api.createLearningRecord(request) }
 
-        override suspend fun getLearningRecordList(request: GetLearningRecordListRequest): Flow<CursorSlice> =
+        override suspend fun getLearningRecordList(request: GetLearningRecordListRequest): Flow<CursorSliceResponse> =
             apiFlow {
                 api.getLearningRecordList(
                     tag = request.tag,
