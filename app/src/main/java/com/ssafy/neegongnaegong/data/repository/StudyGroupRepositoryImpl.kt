@@ -9,7 +9,6 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import com.ssafy.neegongnaegong.domain.repository.StudyGroupRepository
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -17,7 +17,7 @@ interface StudyGroupApi {
     suspend fun getMemberStudyLogsByTag(
         @Path("studyGroupId") studyGroupId: Long,
         @Path("targetUserId") userId: Long,
-    ): Result<ApiResponse<PersistentList<StudyLogByTagResponse>>>
+    ): Result<ApiResponse<List<StudyLogByTagResponse>>>
 
     // 해당 유저의 주간 학습내용을 반환하는 함수
     @GET("$PREFIX/{studyGroupId}/feeds/{userId}")

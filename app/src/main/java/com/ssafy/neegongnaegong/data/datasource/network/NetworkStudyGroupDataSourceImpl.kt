@@ -7,14 +7,13 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResp
 import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class NetworkStudyGroupDataSourceImpl @Inject constructor(
     private val api: StudyGroupApi
 ) : NetworkStudyGroupDataSource {
-    override fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<PersistentList<StudyLogByTagResponse>> =
+    override fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagResponse>> =
         apiFlow {
             api.getMemberStudyLogsByTag(request.studyGroupId, request.targetUserId)
         }
