@@ -17,7 +17,7 @@ interface StudyGroupsApi {
         @Path("targetUserId") userId: Int,
     ): List<StudyLogByTagInfo>
 
-    // 해당 유저의 주간 태그별 학습시간을 반환하는 함수
+    // 해당 유저의 주간 학습내용을 반환하는 함수
     @GET("$PREFIX/{studyGroupId}/feeds/{userId}")
     suspend fun getMemberStudyContents(
         @Path("studyGroupId") studyGroupId: Long,
