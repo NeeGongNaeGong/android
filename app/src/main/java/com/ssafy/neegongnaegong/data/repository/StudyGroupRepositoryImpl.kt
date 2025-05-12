@@ -24,7 +24,7 @@ constructor(
     override fun getMemberStudyContents(request: StudyMemberInfo):
             Flow<PagingData<StudyContentInfo>> =
         Pager(
-            config = PagingConfig(pageSize = 20, enablePlaceholders = true),
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
             pagingSourceFactory = {
                 MemberStudyContentsPagingSource(
                     dataSource,
