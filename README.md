@@ -13,3 +13,20 @@
 - init(#이슈): 초기 생성
 - rename(#이슈): 파일 혹은 폴더명을 수정하거나 옮기는 작업만 한 경우
 - remove(#이슈): 파일을 삭제하는 작업만 수행한 경우
+
+## Ktlint & Detekt
+### Ktlint 검사
+```bash
+#ktlint는 특정 파일만 검사하는게 안됩니다
+./gradlew ktlintFormat
+```
+### Detekt 검사
+```bash
+./gradlew detekt --auto-correct --continue
+
+# 특정 파일을 검사하고 싶을 땐 아래와 같은 꼴로
+./gradlew detektStaged -PstagedFiles="app/src/main/java/com/ssafy/neegongnaegong/presentation/group/record/RecordScreen.kt"
+```
+
+
+

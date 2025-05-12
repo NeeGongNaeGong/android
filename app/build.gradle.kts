@@ -8,11 +8,14 @@ plugins {
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.google.services)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
-val properties = Properties().apply {
-    load(File(rootProject.rootDir, "local.properties").inputStream())
-}
+val properties =
+    Properties().apply {
+        load(File(rootProject.rootDir, "local.properties").inputStream())
+    }
 
 android {
     namespace = "com.ssafy.neegongnaegong"
@@ -35,7 +38,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
