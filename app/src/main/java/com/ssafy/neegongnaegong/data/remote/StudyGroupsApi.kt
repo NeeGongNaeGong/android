@@ -1,8 +1,8 @@
 package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
-import com.ssafy.neegongnaegong.domain.studygroup.MemberWeeklyStudyContentBySliceInfo
-import com.ssafy.neegongnaegong.domain.studygroup.StudyLogByTagInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.MemberWeeklyStudyContentBySliceInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.domain.studygroup
+package com.ssafy.neegongnaegong.domain.model.studygroup
 
 data class StudyMemberInfo(
     val studyGroupId: Int,

@@ -2,10 +2,10 @@ package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.remote.StudyGroupsApi
-import com.ssafy.neegongnaegong.domain.studygroup.MemberStudyContentsInfo
-import com.ssafy.neegongnaegong.domain.studygroup.MemberWeeklyStudyContentBySliceInfo
-import com.ssafy.neegongnaegong.domain.studygroup.StudyLogByTagInfo
-import com.ssafy.neegongnaegong.domain.studygroup.StudyMemberInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.MemberWeeklyStudyContentBySliceInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
