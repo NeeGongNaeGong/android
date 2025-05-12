@@ -1,13 +1,14 @@
 name: Build Android Debug APK
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
-      - feat/#77-cicd-github-actions
-  workflow_dispatch:
+      - develop
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
