@@ -351,7 +351,6 @@ fun PreviewPieChart() {
                 .fillMaxSize(),
             studyLogsByTag = persistentListOf(
                 StudyLogByTagInfo(
-                    tagId = 1,
                     tagName = "",
                     totalSeconds = 1
                 )
@@ -377,7 +376,6 @@ fun PreviewChartLegend() {
             onHeightChange = {},
             studyLogsByTag = persistentListOf(
                 StudyLogByTagInfo(
-                    tagId = 1,
                     tagName = "",
                     totalSeconds = 1
                 )

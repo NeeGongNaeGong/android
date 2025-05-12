@@ -11,6 +11,7 @@ import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetMemberStudyLogsByTa
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ constructor(
             )
             viewModelScope.launch {
                 getMemberStudyLogsByTagUseCase(StudyMemberInfo(groupId, userId)).safeCollect {
-                    setState { copy(studyLogsByTag = it) }
+                    setState { copy(studyLogsByTag = it.toPersistentList()) }
                 }
             }
         } else {

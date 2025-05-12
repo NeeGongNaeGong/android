@@ -22,11 +22,15 @@ class MemberStudyContentsPagingSource(
                 lastLearningRecordId = cursor?.lastLearningRecordId,
             )
             val response = dataSource.getMemberStudyContents(request).getOrThrow().data
-            val data= response.content
+            val data = response.content
             LoadResult.Page(
-                data = data,
+                data = data.map { it.toStudyContentInfo() },
                 prevKey = null,
-                nextKey = if(response.hasNext){ MemberStudyContentSliceKey(response.cursorCreatedAt,response.cursorId) } else{ null }
+                nextKey = if (response.hasNext) {
+                    MemberStudyContentSliceKey(response.cursorCreatedAt, response.cursorId)
+                } else {
+                    null
+                }
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

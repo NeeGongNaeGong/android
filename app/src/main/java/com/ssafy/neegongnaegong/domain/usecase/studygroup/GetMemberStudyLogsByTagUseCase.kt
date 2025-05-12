@@ -11,6 +11,6 @@ import kotlinx.coroutines.flow.Flow
 class GetMemberStudyLogsByTagUseCase(
     private val repository: StudyGroupRepository,
 ) {
-    operator fun invoke(request: StudyMemberInfo): Flow<PersistentList<StudyLogByTagInfo>> =
+    operator fun invoke(request: StudyMemberInfo): Flow<List<StudyLogByTagInfo>> =
         repository.getMemberStudyLogsByTag(request)
 }

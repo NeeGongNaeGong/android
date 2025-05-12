@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
 
 interface StudyGroupRepository {
-    fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<PersistentList<StudyLogByTagInfo>>
+    fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagInfo>>
 
     fun getMemberStudyContents(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>>
 }

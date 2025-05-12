@@ -11,6 +11,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import com.ssafy.neegongnaegong.domain.repository.StudyGroupRepository
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class StudyGroupRepositoryImpl
@@ -18,8 +19,8 @@ class StudyGroupRepositoryImpl
 constructor(
     private val dataSource: NetworkStudyGroupDataSource
 ) : StudyGroupRepository {
-    override fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<PersistentList<StudyLogByTagInfo>> =
-        dataSource.getMemberStudyLogsByTag(request)
+    override fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagInfo>> =
+        dataSource.getMemberStudyLogsByTag(request).map { tagList -> tagList.map{it.toStudyLogByTagInfo()} }
 
     override fun getMemberStudyContents(request: StudyMemberInfo):
             Flow<PagingData<StudyContentInfo>> =
