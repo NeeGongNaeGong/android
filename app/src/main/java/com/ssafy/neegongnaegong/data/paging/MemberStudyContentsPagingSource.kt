@@ -38,6 +38,11 @@ class MemberStudyContentsPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<MemberStudyContentSliceKey, StudyContentInfo>): MemberStudyContentSliceKey? {
-        return state.anchorPosition?.let { state.closestPageToPosition(it)?.nextKey }
+        return state.firstItemOrNull()?.let {
+            MemberStudyContentSliceKey(
+                it.learningRecordCreatedAt,
+                it.learningRecordId
+            )
+        }
     }
 }
