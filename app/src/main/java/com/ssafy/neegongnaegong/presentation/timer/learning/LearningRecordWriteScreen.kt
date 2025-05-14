@@ -1,6 +1,5 @@
-package com.ssafy.neegongnaegong.presentation.timer.write
+package com.ssafy.neegongnaegong.presentation.timer.learning
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,13 +17,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
+import com.ssafy.neegongnaegong.presentation.timer.component.write.LearningWriteCancelDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -37,19 +38,27 @@ import kotlinx.coroutines.flow.collectLatest
 fun LearningRecordWriteRoute(
     modifier: Modifier = Modifier,
     viewModel: LearningRecordWriteViewModel = hiltViewModel(),
-    popBackStack: () -> Unit = {},
+    onCloseActivity: () -> Unit,
+    learningRecord: LearningRecord,
 ) {
-    BackHandler { popBackStack() }
+    LaunchedEffect(Unit) {
+        viewModel.setLearningRecord(learningRecord)
+    }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    BackHandler { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogShow) }
 
     LearningRecordWriteContent(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
-        onCancelClicked = { popBackStack() },
+        onCancelClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogShow) },
         onConfirmClicked = { viewModel.setEvent(LearningRecordWriteContract.Event.OnConfirmClicked) },
-        onTitleChanged = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTitleChanged(it)) },
+        onTitleChanged = {
+            print("확인 $it")
+            viewModel.setEvent(LearningRecordWriteContract.Event.OnTitleChanged(it))
+        },
         onContentChanged = {
             viewModel.setEvent(
                 LearningRecordWriteContract.Event.OnContentChanged(
@@ -76,6 +85,9 @@ fun LearningRecordWriteRoute(
         },
         onTagSelected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(LearningRecordWriteContract.Event.OnTagDeselected(it)) },
+        onLearningWriteCancelDialogClosed = { viewModel.setEvent(LearningRecordWriteContract.Event.OnLearningWriteDialogCancelClicked) },
+        onLearningWriteCancelDialogConfirmed = onCloseActivity,
+        onCloseActivity = onCloseActivity,
     )
 }
 
@@ -95,8 +107,35 @@ fun LearningRecordWriteContent(
     onSearchQueryChanged: (String) -> Unit,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
+    // LearningWriteCancelDialog
+    onLearningWriteCancelDialogClosed: () -> Unit,
+    onLearningWriteCancelDialogConfirmed: () -> Unit,
+    // activity
+    onCloseActivity: () -> Unit,
 ) {
     val context = LocalContext.current
+
+    LaunchedEffect(effect) {
+        effect.collectLatest { effect ->
+            when (effect) {
+                is LearningRecordWriteContract.Effect.NavigateToHome -> {
+                    onCloseActivity()
+                }
+            }
+        }
+    }
+
+    LearningRecordWriteScreen(
+        modifier = modifier,
+        tags = uiState.tags,
+        learningRecord = uiState.learningRecord,
+        onTitleChanged = onTitleChanged,
+        onContentChanged = onContentChanged,
+        onTagPlusClicked = onTagPlusClicked,
+        onTagEraseClicked = onTagEraseClicked,
+        onCancelClicked = onCancelClicked,
+        onConfirmClicked = onConfirmClicked,
+    )
 
     if (uiState.isDialogShow) {
         TagSelectDialog(
@@ -110,39 +149,15 @@ fun LearningRecordWriteContent(
         )
     }
 
-    LaunchedEffect(effect) {
-        effect.collectLatest { effect ->
-            when (effect) {
-                is LearningRecordWriteContract.Effect.NavigateToHome -> {
-                    onCancelClicked()
-                }
+    if (uiState.isLoading) LoadingDialog()
 
-                is LearningRecordWriteContract.Effect.ShowErrorToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is LearningRecordWriteContract.Effect.ShowSuccessToast -> {
-                    Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                }
-
-                is LearningRecordWriteContract.Effect.ShowTagLimitExceededToast -> {
-                    Toast.makeText(context, "태그는 최대 5개만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+    if (uiState.isLearningWriteCancelDialogShow) {
+        LearningWriteCancelDialog(
+            onCancel = onLearningWriteCancelDialogClosed,
+            onConfirm = onLearningWriteCancelDialogConfirmed,
+            onDismiss = onLearningWriteCancelDialogClosed,
+        )
     }
-
-    LearningRecordWriteScreen(
-        modifier = modifier,
-        tags = uiState.tags,
-        studyRecord = uiState.studyRecord,
-        onTitleChanged = onTitleChanged,
-        onContentChanged = onContentChanged,
-        onTagPlusClicked = onTagPlusClicked,
-        onTagEraseClicked = onTagEraseClicked,
-        onCancelClicked = onCancelClicked,
-        onConfirmClicked = onConfirmClicked,
-    )
 }
 
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
@@ -150,7 +165,7 @@ fun LearningRecordWriteContent(
 @Composable
 fun LearningRecordWriteScreen(
     modifier: Modifier = Modifier,
-    studyRecord: StudyRecord,
+    learningRecord: LearningRecord,
     tags: List<Tag>,
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
@@ -170,13 +185,13 @@ fun LearningRecordWriteScreen(
     ) {
         Column {
             DateTimeHeader(
-                dateText = studyRecord.startTime.toDateString(),
-                timeText = "${studyRecord.startTime.toTimeString()} ~ ${studyRecord.endTime.toTimeString()}",
+                dateText = learningRecord.startAt.toDateString(),
+                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
             )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
-                title = studyRecord.title,
+                title = learningRecord.title,
                 onTitleChanged = onTitleChanged,
             )
 
@@ -185,7 +200,7 @@ fun LearningRecordWriteScreen(
                     Modifier
                         .fillMaxWidth()
                         .height(screenHeight * 0.5f),
-                content = studyRecord.content,
+                content = learningRecord.content,
                 onContentChanged = onContentChanged,
             )
 
@@ -217,7 +232,7 @@ private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
             LearningRecordWriteScreen(
-                studyRecord = StudyRecord.default(),
+                learningRecord = LearningRecord.default(),
                 tags = PersonalPreviewDataProvider().getTags(),
                 onTitleChanged = {},
                 onContentChanged = {},

@@ -1,34 +1,55 @@
-package com.ssafy.neegongnaegong.presentation.timer.write
+package com.ssafy.neegongnaegong.presentation.timer.learning
 
+import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.UpdateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LearningRecordWriteViewModel
     @Inject
-    constructor() :
-    BaseViewModel<LearningRecordWriteContract.Event, LearningRecordWriteContract.State, LearningRecordWriteContract.Effect>() {
+    constructor(
+        private val updateLearningRecordUseCase: UpdateLearningRecordUseCase,
+    ) : BaseViewModel<LearningRecordWriteContract.Event, LearningRecordWriteContract.State, LearningRecordWriteContract.Effect>() {
         override fun createInitialState(): LearningRecordWriteContract.State = LearningRecordWriteContract.State()
+
+        override fun handleException(
+            e: Throwable,
+            errorContext: ErrorContext,
+            retry: () -> Unit,
+        ) {
+            val error = errorContext as? LearningRecordWriteContract.Error ?: return
+
+            when (error) {
+                LearningRecordWriteContract.Error.UpdateLearningRecordError ->
+                    showErrorMessage(
+                        message = "공부 기록을 수정 하지 못했습니다.",
+                        SnackbarManager.Action.retry { retry() },
+                    )
+            }
+        }
 
         override fun handleEvent(event: LearningRecordWriteContract.Event) {
             when (event) {
                 // 글 작성
                 is LearningRecordWriteContract.Event.OnTitleChanged -> {
-                    setState { copy(studyRecord = studyRecord.copy(title = event.title)) }
+                    setState { copy(learningRecord = learningRecord.copy(title = event.title)) }
                 }
 
                 is LearningRecordWriteContract.Event.OnContentChanged -> {
-                    setState { copy(studyRecord = studyRecord.copy(content = event.content)) }
+                    setState { copy(learningRecord = learningRecord.copy(content = event.content)) }
                 }
 
                 // 취소, 확인
-                is LearningRecordWriteContract.Event.OnCancelClicked -> {
-                }
-
                 is LearningRecordWriteContract.Event.OnConfirmClicked -> {
+                    updateLearningRecord()
                 }
 
                 // 태그 추가,삭제
@@ -64,7 +85,7 @@ class LearningRecordWriteViewModel
 
                 is LearningRecordWriteContract.Event.OnDialogConfirmClicked -> {
                     if (checkTagSize()) {
-                        setEffect { LearningRecordWriteContract.Effect.ShowTagLimitExceededToast }
+                        showWarningMessage("태그는 최대 5개 이하로 설정할 수 있습니다.", SnackbarManager.Action.ok())
                     } else {
                         moveFromSelectedTagsToTags()
                         clearDialogTags()
@@ -75,8 +96,35 @@ class LearningRecordWriteViewModel
                 is LearningRecordWriteContract.Event.OnDialogCancelClicked -> {
                     setState { copy(isDialogShow = false) }
                 }
+
+                // LearningRecordWriteScreen
+                is LearningRecordWriteContract.Event.OnLearningWriteDialogShow -> {
+                    setState { copy(isLearningWriteCancelDialogShow = true) }
+                }
+
+                is LearningRecordWriteContract.Event.OnLearningWriteDialogCancelClicked -> {
+                    setState { copy(isLearningWriteCancelDialogShow = false) }
+                }
             }
         }
+
+        // init
+        fun setLearningRecord(learningRecord: LearningRecord) {
+            setState { copy(learningRecord = learningRecord) }
+        }
+
+        // api
+        private fun updateLearningRecord() =
+            viewModelScope.launch {
+                updateLearningRecordUseCase(
+                    learningRecordId = uiState.value.learningRecord.id,
+                    learningRecord = uiState.value.learningRecord,
+                ).withLoading {
+                    setState { copy(isLoading = true) }
+                }.safeCollect {
+                    setEffect { LearningRecordWriteContract.Effect.NavigateToHome }
+                }
+            }
 
         // tag
 
@@ -95,6 +143,7 @@ class LearningRecordWriteViewModel
                     tags = merged.toList(),
                     selectedTags = emptyList(),
                     unSelectedTags = emptyList(),
+                    learningRecord = learningRecord.copy(tags = merged.toList())
                 )
             }
         }

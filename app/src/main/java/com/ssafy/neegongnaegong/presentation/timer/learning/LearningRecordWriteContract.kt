@@ -1,15 +1,14 @@
-package com.ssafy.neegongnaegong.presentation.timer.write
+package com.ssafy.neegongnaegong.presentation.timer.learning
 
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class LearningRecordWriteContract {
     sealed class Event : UiEvent {
-        data object OnCancelClicked : Event()
-
         data object OnConfirmClicked : Event()
 
         // record
@@ -49,30 +48,34 @@ class LearningRecordWriteContract {
         data object OnDialogConfirmClicked : Event()
 
         data object OnDialogCancelClicked : Event()
+
+        // LearningWriteCancel Dialog
+
+        data object OnLearningWriteDialogShow : Event()
+
+        data object OnLearningWriteDialogCancelClicked : Event()
     }
 
     data class State(
         // study record
-        val studyRecord: StudyRecord = StudyRecord.default(),
+        val learningRecord: LearningRecord = LearningRecord.default(),
         // tag
         val tags: List<Tag> = emptyList(),
         val selectedTags: List<Tag> = emptyList(),
         val unSelectedTags: List<Tag> = emptyList(),
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
+        // api
+        val isLoading: Boolean = false,
+        // LearningWriteCancel
+        val isLearningWriteCancelDialogShow: Boolean = false,
     ) : UiState
 
     sealed class Effect : UiEffect {
         data object NavigateToHome : Effect()
+    }
 
-        data class ShowSuccessToast(
-            val message: String,
-        ) : Effect()
-
-        data class ShowErrorToast(
-            val message: String,
-        ) : Effect()
-
-        data object ShowTagLimitExceededToast : Effect()
+    sealed class Error : ErrorContext {
+        data object UpdateLearningRecordError : Error()
     }
 }

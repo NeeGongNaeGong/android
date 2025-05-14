@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
