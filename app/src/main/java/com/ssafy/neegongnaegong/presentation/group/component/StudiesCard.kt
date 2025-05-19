@@ -6,6 +6,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,16 +40,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 
 @Composable
 fun StudiesCard(
     modifier: Modifier = Modifier,
     category: String = "",
-    title: String = "",
-    goalTime: String = "",
-    memberInfo: String = "",
+    name: String = "",
+    targetStudyTime: Int,
+    currentMembers: Int,
+    maxMembers: Int,
     leader: String = "",
-    startInfo: String = "",
+    createdDate: String = "",
     description: String = "",
     initialExpanded: Boolean = false,
 ) {
@@ -86,7 +89,7 @@ fun StudiesCard(
                     modifier =
                         Modifier
                             .weight(1f)
-                            .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 8.dp),
+                            .padding(start = 16.dp, top = 20.dp, bottom = 20.dp, end = 16.dp),
                 ) {
                     // 상단 카테고리 (예: "대학생")
                     Text(
@@ -100,43 +103,46 @@ fun StudiesCard(
 
                     // 그룹 제목
                     Text(
-                        text = title,
+                        text = name,
                         style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 16.sp), // 제목 크기 약간 축소
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    // 목표 시간 | 인원수
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = goalTime,
-                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = memberInfo,
-                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    // 그룹장 | 시작일"
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = leader,
-                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = startInfo,
-                            style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                        )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        // 목표 시간 | 인원수
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text = "목표 : 주 ${targetStudyTime / TimeUnit.HOUR.seconds}시간",
+                                style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
+                            Text(
+                                text = "인원 : $currentMembers / $maxMembers 명",
+                                style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
+                        }
+                        // 그룹장 | 생성일"
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text = "그룹장 : $leader",
+                                style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
+                            Text(
+                                text = "생성일 : $createdDate",
+                                style = NeeGongNaeGongTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            )
+                        }
                     }
                 }
 
@@ -200,11 +206,12 @@ private fun PreviewStudiesCardExpanded() {
     NeeGongNaeGongTheme {
         StudiesCard(
             category = "대학생",
-            title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-            goalTime = "목표 3시간",
-            memberInfo = "인원 3/20명",
-            leader = "그룹장 박준식",
-            startInfo = "시작일 2일 전",
+            name = "개발, 코딩(프론트, 백엔드 등) 취준방",
+            targetStudyTime = (TimeUnit.HOUR.seconds * 7).toInt(),
+            currentMembers = 3,
+            maxMembers = 20,
+            leader = "박준식",
+            createdDate = "2025-05-05",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
             initialExpanded = true,
         )
@@ -217,11 +224,12 @@ private fun PreviewStudiesCard() {
     NeeGongNaeGongTheme {
         StudiesCard(
             category = "대학생",
-            title = "개발, 코딩(프론트, 백엔드 등) 취준방",
-            goalTime = "목표 3시간",
-            memberInfo = "인원 3/20명",
-            leader = "그룹장 박준식",
-            startInfo = "시작일 2일 전",
+            name = "개발, 코딩(프론트, 백엔드 등) 취준방",
+            targetStudyTime = (TimeUnit.HOUR.seconds * 7).toInt(),
+            currentMembers = 3,
+            maxMembers = 20,
+            leader = "박준식",
+            createdDate = "2025-05-05",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
         )
     }

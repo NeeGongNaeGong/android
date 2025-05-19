@@ -1,13 +1,14 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
-import com.ssafy.neegongnaegong.data.model.studies.response.StudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkStudiesDataSource {
-    suspend fun getStudiesList(): Flow<StudiesListResponse>
+    suspend fun getStudiesList(request: GetStudiesListRequest): Flow<CursorSliceStudiesListResponse>
 
     suspend fun createStudies(request: CreateStudiesRequest): Flow<Unit>
 

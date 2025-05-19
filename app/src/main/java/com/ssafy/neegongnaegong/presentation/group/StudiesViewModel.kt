@@ -1,74 +1,99 @@
 package com.ssafy.neegongnaegong.presentation.group
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.ssafy.neegongnaegong.domain.model.studies.Studies
-import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
-import com.ssafy.neegongnaegong.domain.model.studies.StudyMember
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+
+private const val TAG = "StudiesViewModel"
 
 @HiltViewModel
 class StudiesViewModel
     @Inject
     constructor(
         private val getStudiesUseCase: GetStudiesUseCase,
+        private val getStudiesListUseCase: GetStudiesListUseCase,
     ) : BaseViewModel<StudiesContract.Event, StudiesContract.State, StudiesContract.Effect>() {
-        override fun createInitialState(): StudiesContract.State =
-            StudiesContract.State(
-                StudiesContract.StudiesState.Idle,
-            )
+        override fun handleException(
+            e: Throwable,
+            errorContext: ErrorContext,
+            retry: () -> Unit,
+        ) {
+            val error = errorContext as? StudiesContract.Error ?: return
+            when (error) {
+                StudiesContract.Error.GetStudiesListError -> {
+                    // TODO : snackbarHost = { NeeGongNaeGongSnackbarHost() }, 커밋 붙으면 스낵바 나옴
+                    Log.d(TAG, "handleException: GetStudiesListError")
+                    showErrorMessage(
+                        "스터디 목록을 가져오지 못했습니다.",
+                        SnackbarManager.Action.retry { retry() },
+                    )
+                }
+            }
+        }
+
+        override fun createInitialState(): StudiesContract.State = StudiesContract.State()
 
         override fun handleEvent(event: StudiesContract.Event) {
             when (event) {
-                is StudiesContract.Event.LoadGroups -> fetchGroups()
+                is StudiesContract.Event.OnLoadStudies -> loadStudies()
                 is StudiesContract.Event.StudiesClicked -> {
                     setEffect { StudiesContract.Effect.NavigateToGroupDetail(event.studiesId) }
                 }
             }
         }
 
-        private fun fetchGroups() {
-            viewModelScope.launch {
-                setState { copy(studiesState = StudiesContract.StudiesState.Loading) }
+        private fun loadStudies() {
+            if (uiState.value.hasNext.not() || uiState.value.isLoading) { // 더 이상 불러올 데이터가 없으면 리턴
+                return
+            }
 
-                runCatching {
-                    // TODO: 스터디 그룹 레포 적용
-                    getDummyStudies()
-                }.onSuccess { groups ->
-                    setState { copy(studiesState = StudiesContract.StudiesState.Success(groups)) }
-                }.onFailure {
-                    setState { copy(studiesState = StudiesContract.StudiesState.Error("그룹 정보를 불러오지 못했습니다.")) }
-                    showErrorMessage("그룹 정보를 불러오지 못했습니다.")
+            viewModelScope.launch {
+                // TODO : 로직 처리 필요
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                getStudiesListUseCase(
+                    cursorCreatedAt =
+                        uiState.value.cursorCreateAt?.let {
+                            runCatching {
+                                // 밀리초를 3자리 이하로 잘라냄
+                                val fixedDate =
+                                    if (it.contains('.')) {
+                                        val split = it.split('.')
+                                        val milli = split[1].take(3) // 밀리초만 가져와 잘라냄
+                                        "${split[0]}.$milli"
+                                    } else {
+                                        it
+                                    }
+                                LocalDateTime.parse(fixedDate, formatter)
+                            }.onFailure {
+                                Log.e(TAG, "Failed to parse date: $it", it)
+                            }.getOrNull()
+                        },
+                    cursorId = uiState.value.cursorId,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect(StudiesContract.Error.GetStudiesListError) { result ->
+                    setState {
+                        copy(
+                            studiesList = studiesList + result.content,
+                        )
+                    }
+                    setState {
+                        copy(
+                            hasNext = result.hasNext,
+                            cursorCreateAt = result.cursorCreatedAt,
+                            cursorId = result.cursorId,
+                        )
+                    }
                 }
             }
         }
-
-        // Temporary dummy data
-        private fun getDummyStudies(): List<Studies> =
-            listOf(
-                Studies(
-                    id = 9337,
-                    leader =
-                        StudyMember(
-                            id = 2220,
-                            name = "Alfredo Humphrey",
-                        ),
-                    currentMembers = 6628,
-                    createdDate = "evertitur",
-                    studyInfo =
-                        StudyInfo(
-                            name = "Jermaine Ochoa",
-                            maxMembers = 1969,
-                            description = "cu",
-                            profileImg = null,
-                            isPublic = false,
-                            targetStudyTime = 9500,
-                            category = null,
-                            tags = listOf(),
-                        ),
-                ),
-            )
     }
