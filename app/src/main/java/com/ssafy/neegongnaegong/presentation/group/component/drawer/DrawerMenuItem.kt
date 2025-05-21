@@ -60,13 +60,13 @@ fun DrawerMenuItem(
             Text(
                 text = title,
                 style = NeeGongNaeGongTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
             if (subtitle != null) {
                 Text(
                     text = subtitle,
                     style = NeeGongNaeGongTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                 )
             }
         }

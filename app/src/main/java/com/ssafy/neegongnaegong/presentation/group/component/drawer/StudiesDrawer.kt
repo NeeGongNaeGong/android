@@ -25,13 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun StudiesDrawer(
@@ -50,17 +48,14 @@ fun StudiesDrawer(
             modifier
                 .fillMaxHeight()
                 .fillMaxWidth(0.75f)
-                .background(MaterialTheme.colorScheme.surface),
+                .background(NeeGongNaeGongTheme.colorScheme.background),
     ) {
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(180.dp)
-                    .padding(horizontal = 0.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
+                    .padding(horizontal = 0.dp),
         ) {
             GlideImage(
                 imageModel = { headerImageUrl ?: R.drawable.img_main_character },
@@ -90,17 +85,19 @@ fun StudiesDrawer(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                    .background(color = NeeGongNaeGongTheme.colorScheme.gray1),
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
                     text = "취업 스터디",
                     style = NeeGongNaeGongTheme.typography.bodyLarge,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
                 Text(
                     text = "취업을 향해서...",
                     style = NeeGongNaeGongTheme.typography.labelMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
         }
@@ -152,14 +149,13 @@ fun StudiesDrawer(
         ) {
             Text(
                 text = stringResource(R.string.studies_drw_my_studies),
-                style = NeeGongNaeGongTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
+                style = NeeGongNaeGongTheme.typography.titleSmall,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
             Text(
                 text = stringResource(R.string.studies_drw_see_more),
                 style = NeeGongNaeGongTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 modifier = Modifier.clickable { onMyStudyClick() },
             )
         }
@@ -235,8 +231,18 @@ fun CircleIcon(
 
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun PreviewStudiesDrawer() {
+fun PreviewLightModeStudiesDrawer() {
     NeeGongNaeGongTheme {
+        StudiesDrawer()
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun PreviewDarkModeStudiesDrawer() {
+    NeeGongNaeGongTheme(
+        darkTheme = true,
+    ) {
         StudiesDrawer()
     }
 }

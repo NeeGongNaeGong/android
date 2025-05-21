@@ -63,14 +63,13 @@ fun StudiesCard(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 4.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = NeeGongNaeGongTheme.colorScheme.gray1),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = NeeGongNaeGongTheme.colorScheme.background)
                     .animateContentSize(
                         animationSpec =
                             spring(
@@ -166,7 +165,10 @@ fun StudiesCard(
             }
 
             // 구분선 (전체 너비)
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+            )
 
             // 클릭 가능한 설명 줄과 화살표 (항상 표시)
             Row(
@@ -194,6 +196,7 @@ fun StudiesCard(
                 Icon(
                     imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (expanded) "접기" else "펼치기",
+                    tint = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
         }

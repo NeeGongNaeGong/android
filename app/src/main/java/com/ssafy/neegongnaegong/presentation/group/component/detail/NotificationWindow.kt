@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ fun NotificationWindow(
                 .clickable(onClick = onNotificationClick),
         shape = RoundedCornerShape(8.dp),
         shadowElevation = 2.dp,
+        color = NeeGongNaeGongTheme.colorScheme.gray1,
     ) {
         Row(
             modifier =
@@ -66,6 +66,7 @@ fun NotificationWindow(
                         .weight(1f)
                         .padding(start = 10.dp),
                 text = notification.title,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
             )
@@ -73,7 +74,7 @@ fun NotificationWindow(
             // 상대적 시간
             Text(
                 text = relativeTime,
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                 fontSize = 14.sp,
             )
         }
