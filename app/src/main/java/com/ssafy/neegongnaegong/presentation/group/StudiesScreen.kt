@@ -155,7 +155,10 @@ fun StudiesScreen(
             ) {
                 itemsIndexed(studiesList) { index, studies ->
                     StudiesCard(
-                        modifier = Modifier.padding(bottom = 20.dp),
+                        modifier =
+                            Modifier.padding(bottom = 20.dp).noRippleClickable {
+                                navigateToStudiesDetail(studies.id)
+                            },
                         category = studies.studyInfo.category?.name ?: "없음",
                         name = studies.studyInfo.name,
                         targetStudyTime = studies.studyInfo.targetStudyTime,

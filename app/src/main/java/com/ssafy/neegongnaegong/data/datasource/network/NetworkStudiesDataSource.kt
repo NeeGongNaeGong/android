@@ -12,7 +12,7 @@ interface NetworkStudiesDataSource {
 
     suspend fun createStudies(request: CreateStudiesRequest): Flow<Unit>
 
-    suspend fun getStudies(studyGroupId: Int): Flow<StudiesResponse>
+    suspend fun getStudies(studyGroupId: Long): Flow<StudiesResponse>
 
     suspend fun updateStudies(
         studyGroupId: Long,

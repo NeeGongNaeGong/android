@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group
+package com.ssafy.neegongnaegong.presentation.group.detail
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
@@ -10,10 +10,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
@@ -22,8 +24,8 @@ import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudie
 import com.ssafy.neegongnaegong.presentation.group.component.detail.MedalType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
 private const val TAG = "StudiesDetailScreen"
@@ -31,21 +33,32 @@ private const val TAG = "StudiesDetailScreen"
 @Composable
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
+    viewModel: StudiesDetailViewModel = hiltViewModel(),
+    studyGroupId: Long,
     popBackStack: () -> Unit = {},
 ) {
     BackHandler {
         popBackStack()
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoad(studyGroupId))
+    }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
         modifier = modifier,
+        uiState = uiState.value,
     )
 }
 
 @Composable
-fun StudiesContent(modifier: Modifier = Modifier) {
+fun StudiesContent(
+    modifier: Modifier = Modifier,
+    uiState: StudiesDetailContract.State,
+) {
     StudiesDetailScreen(
         modifier = modifier,
+        name = uiState.studies.studyInfo.name,
         onProfileClick = {},
         profiles = listOf(),
     )
@@ -54,6 +67,7 @@ fun StudiesContent(modifier: Modifier = Modifier) {
 @Composable
 fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
+    name: String,
     onProfileClick: (Long) -> Unit = {},
     profiles: List<ProfileData> = emptyList(),
 ) {
@@ -67,8 +81,9 @@ fun StudiesDetailScreen(
             title = {
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    text = "수학 스터디",
+                    text = name,
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             navigationType = TopAppBarNavigationType.Menu,
@@ -113,7 +128,7 @@ fun StudiesDetailScreen(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewStudiesDetailScreen() {
     val previewProfiles =
@@ -161,6 +176,7 @@ fun PreviewStudiesDetailScreen() {
     NeeGongNaeGongTheme {
         StudiesDetailScreen(
             onProfileClick = {},
+            name = "스터디 이름",
             profiles = previewProfiles,
         )
     }

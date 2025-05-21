@@ -33,7 +33,7 @@ interface StudiesApi {
 
     @GET("/api/studies/{studyGroupId}")
     suspend fun getStudies(
-        @Path("studyGroupId") studyGroupId: Int,
+        @Path("studyGroupId") studyGroupId: Long,
     ): Result<ApiResponse<StudiesResponse>>
 
     @PUT("/api/studies/{studyGroupId}")

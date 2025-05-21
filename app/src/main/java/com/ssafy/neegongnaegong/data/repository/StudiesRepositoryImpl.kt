@@ -57,9 +57,10 @@ class StudiesRepositoryImpl
                 dataSource.createStudies(request = CreateStudiesRequest.fromDomain(studyInfo))
             }
 
-        override suspend fun getStudiesDetail(studyGroupId: Long): Flow<Studies> {
-            TODO("Not yet implemented")
-        }
+        override suspend fun getStudiesDetail(studyGroupId: Long): Flow<Studies> =
+            withContext(ioDispatcher) {
+                dataSource.getStudies(studyGroupId).map { it.toDomain() }
+            }
 
         override suspend fun updateStudies(
             studyGroupId: Long,

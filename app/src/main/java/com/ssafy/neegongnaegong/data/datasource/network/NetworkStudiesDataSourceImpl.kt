@@ -29,7 +29,7 @@ class NetworkStudiesDataSourceImpl
                 studiesApi.createStudies(request)
             }
 
-        override suspend fun getStudies(studyGroupId: Int): Flow<StudiesResponse> =
+        override suspend fun getStudies(studyGroupId: Long): Flow<StudiesResponse> =
             apiFlow {
                 studiesApi.getStudies(studyGroupId)
             }
