@@ -8,10 +8,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteRoute
+import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
+import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteRoute
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.AccelerometerHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +57,20 @@ class TimerActivity : ComponentActivity() {
 
         setContent {
             NeeGongNaeGongTheme {
-                LearningRoute(viewModel)
+                Scaffold(snackbarHost = { NeeGongNaeGongSnackbarHost() }) { innerPadding ->
+                    LearningRoute(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel,
+                        onCloseActivity = {
+                            val resultIntent =
+                                Intent().apply {
+                                    putExtra("needRefreshRecordList", true)
+                                }
+                            setResult(RESULT_OK, resultIntent)
+                            finish()
+                        },
+                    )
+                }
             }
         }
     }
@@ -66,13 +83,22 @@ class TimerActivity : ComponentActivity() {
 }
 
 @Composable
-fun LearningRoute(viewModel: TimerViewModel) {
+fun LearningRoute(
+    modifier: Modifier = Modifier,
+    viewModel: TimerViewModel,
+    onCloseActivity: () -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     if (uiState.isTimerScreen) {
         TimerRoute(
-            popBackStack = { /* 종료 또는 아무것도 안함 */ },
+            modifier = modifier,
+            onCloseActivity = onCloseActivity,
         )
     } else {
-        LearningRecordWriteRoute()
+        LearningRecordWriteRoute(
+            modifier = modifier,
+            learningRecord = uiState.learningRecord,
+            onCloseActivity = onCloseActivity,
+        )
     }
 }

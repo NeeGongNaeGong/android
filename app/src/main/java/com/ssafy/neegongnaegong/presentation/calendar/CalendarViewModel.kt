@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.calendar
 
 import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
@@ -27,6 +28,11 @@ class CalendarViewModel @Inject constructor(
     override fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {
         // 너무 많은 수정이 필요할 예정이라 당장은 타입을 제너릭으로 받지 않았습니다.
         val error = errorContext as? CalendarContract.Error ?: return
+        when(e){
+            is ApiException.NetworkException -> {
+
+            }
+        }
         when (error) {
             is CalendarContract.Error.GetSchedulesError -> showErrorMessage(
                 "스캐줄 정보를 가져오지 못했습니다.",
