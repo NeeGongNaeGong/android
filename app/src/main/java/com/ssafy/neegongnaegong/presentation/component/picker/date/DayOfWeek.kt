@@ -9,7 +9,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.color
-import com.ssafy.neegongnaegong.presentation.util.dayOfWeekOrder
+import com.ssafy.neegongnaegong.domain.model.calendar.dayOfWeekOrder
 import java.time.format.TextStyle
 import java.util.Locale
 

@@ -52,6 +52,7 @@ class DateTimeRangePickerState(
     }
 
     fun updateEndDateTime(dateTime: LocalDateTime) {
+        Log.d("DateTimeRangePickerState", "updateEndDateTime $dateTime")
         endDateTime = dateTime
         if (dateTime.isBefore(startDateTime)) {
             startDateTime = dateTime
@@ -62,6 +63,7 @@ class DateTimeRangePickerState(
     fun updateIsAllDay(isAllDay: Boolean) {
         this.isAllDay = isAllDay
         if (isAllDay) {
+            Log.d("DateTimeRangePickerState", "updateIsAllDay $isAllDay")
             updateStartTime(LocalTime.MIN)
             updateEndTime(LocalTime.MAX)
         }

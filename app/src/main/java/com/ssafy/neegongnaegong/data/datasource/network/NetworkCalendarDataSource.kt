@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResp
 import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.YearMonth
 
 interface NetworkCalendarDataSource {
@@ -16,7 +17,8 @@ interface NetworkCalendarDataSource {
     ): Flow<GetUserScheduleResponse>
 
     suspend fun getPersonalSchedule(
-        scheduleId: Long
+        scheduleId: Long,
+        date: LocalDate,
     ): Flow<ScheduleResponse>
 
     suspend fun createPersonalSchedule(

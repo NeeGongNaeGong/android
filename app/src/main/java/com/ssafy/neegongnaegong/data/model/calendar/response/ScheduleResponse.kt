@@ -24,7 +24,6 @@ data class ScheduleResponse(
                 content = content,
                 startAt = startAt,
                 endAt = endAt,
-                isAllDay = endAt.second == 59, // TODO: 추후 수정
                 location = location,
                 repeatRule = repeatRule?.toDomain()
             ),

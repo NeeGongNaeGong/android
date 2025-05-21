@@ -11,7 +11,7 @@ import androidx.compose.ui.util.fastForEachIndexed
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
-import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfoItem
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
@@ -87,7 +87,6 @@ fun CalendarScheduleDialogPreview() {
                         content = "This is a test schedule",
                         startAt = now,
                         endAt = now.plusHours(1),
-                        isAllDay = false,
                     )
                 ),
             )

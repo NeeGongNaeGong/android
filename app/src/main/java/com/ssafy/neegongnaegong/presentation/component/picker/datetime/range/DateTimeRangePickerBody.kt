@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.calendar.component.switchColors
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.DateTimePickerBody
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews

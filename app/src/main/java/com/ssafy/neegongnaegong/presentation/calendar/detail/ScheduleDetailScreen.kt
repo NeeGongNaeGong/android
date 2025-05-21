@@ -18,15 +18,19 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.presentation.calendar.component.CalendarTopAppBar
-import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
+import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.DeleteTypeSelectDialog
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleEditText
 import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePickerBody
@@ -34,6 +38,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
@@ -41,6 +46,7 @@ fun ScheduleDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ScheduleDetailViewModel = hiltViewModel(),
     scheduleId: Long,
+    date: LocalDate,
     popBackStack: () -> Unit,
     navigateToEditScheduleScreen: (Schedule, ScheduleInputFormFocus) -> Unit
 ) {
@@ -51,7 +57,7 @@ fun ScheduleDetailRoute(
     val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(ScheduleDetailContract.Event.OnLoad(scheduleId))
+        viewModel.setEvent(ScheduleDetailContract.Event.OnLoad(scheduleId, date))
     }
 
     ScheduleDetailContent(
@@ -60,7 +66,9 @@ fun ScheduleDetailRoute(
         uiState = uiState.value,
         onFormClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnFormClick(it)) },
         onEditClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnEditClick) },
-        onDeleteClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnDeleteClick(it)) },
+        onDeleteClick = { viewModel.setEvent(ScheduleDetailContract.Event.OnDeleteClick) },
+        onDeleteTypeSelected = { viewModel.setEvent(ScheduleDetailContract.Event.OnDeleteTypeSelected(it)) },
+        onDialogDismissed = { viewModel.setEvent(ScheduleDetailContract.Event.OnDialogDismissed) },
         navigateToEditScheduleScreen = navigateToEditScheduleScreen,
     )
 }
@@ -72,10 +80,14 @@ fun ScheduleDetailContent(
     uiState: ScheduleDetailContract.State,
     onFormClick: (ScheduleInputFormFocus) -> Unit,
     onEditClick: () -> Unit,
-    onDeleteClick: (DeleteType) -> Unit,
+    onDeleteClick: () -> Unit,
+    onDeleteTypeSelected: (DeleteType) -> Unit,
+    onDialogDismissed: () -> Unit,
     navigateToEditScheduleScreen: (Schedule, ScheduleInputFormFocus) -> Unit
 ) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
@@ -99,6 +111,12 @@ fun ScheduleDetailContent(
     )
 
     if (uiState.isLoading || uiState.isOnDelete) LoadingDialog()
+
+    if (uiState.isDeleteTypeSelectorShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) DeleteTypeSelectDialog(
+        repeatType = uiState.schedule.info.repeatRule?.info?.repeatType,
+        onDismissRequest = onDialogDismissed,
+        onDeleteTypeSelected = onDeleteTypeSelected
+    )
 }
 
 @Composable
@@ -108,7 +126,7 @@ fun ScheduleDetailScreen(
     repeatRule: RepeatRuleInfo?,
     onFormClick: (ScheduleInputFormFocus) -> Unit,
     onEditClick: () -> Unit,
-    onDeleteClick: (DeleteType) -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -117,9 +135,11 @@ fun ScheduleDetailScreen(
     ) {
         CalendarTopAppBar()
 
-        Column(modifier = modifier
-            .weight(1f)
-            .verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
             ScheduleEditText(
                 modifier = Modifier
                     .clickable { onFormClick(ScheduleInputFormFocus.Title) }
@@ -177,13 +197,13 @@ fun ScheduleDetailScreen(
 
         Row(modifier = Modifier.fillMaxWidth()) {
             TextButton(
-                onClick = { onDeleteClick(DeleteType.ALL) }, // TODO: 추후 수정
+                onClick = onDeleteClick,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
                     "삭제",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.peach
                 )
             }
             TextButton(
@@ -211,7 +231,6 @@ private fun PreviewScheduleDetailScreen() {
                 content = null,
                 startAt = LocalDateTime.now(),
                 endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
                 location = null,
             ),
             repeatRule = RepeatRuleInfo(

@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.form
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -23,8 +24,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
-import com.ssafy.neegongnaegong.presentation.calendar.component.RepeatRuleInput
-import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleEditText
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleEditText
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.repeatrule.RepeatRuleInput
+import com.ssafy.neegongnaegong.presentation.component.LaunchedEffectAfterFirst
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.DateTimeRangePicker
 import com.ssafy.neegongnaegong.presentation.component.picker.datetime.range.rememberDateTimeRangePickerState
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -58,16 +60,13 @@ fun ScheduleInputForm(
         isAllDay = schedule.isAllDay
     )
 
-    LaunchedEffect(schedule.startAt) {
+    LaunchedEffectAfterFirst(schedule.startAt) {
         dateTimeRangePickerState.updateStartDateTime(schedule.startAt)
     }
 
-    LaunchedEffect(schedule.endAt) {
+    LaunchedEffectAfterFirst(schedule.endAt) {
+        Log.d("DateTimeRangePickerState", "ScheduleInputForm schedule.endAt ${schedule.endAt}")
         dateTimeRangePickerState.updateEndDateTime(schedule.endAt)
-    }
-
-    LaunchedEffect(schedule.isAllDay) {
-        dateTimeRangePickerState.updateIsAllDay(schedule.isAllDay)
     }
 
     LaunchedEffect(initialFocus) {
@@ -133,6 +132,7 @@ fun ScheduleInputForm(
         )
         AnimatedVisibility(enable && isRepeatRuleFocused) {
             RepeatRuleInput(
+                schedule = schedule,
                 repeatRule = repeatRule,
                 onRepeatRuleChange = onRepeatRuleChanged
             )
@@ -150,13 +150,12 @@ private fun ScheduleInputFormPreview() {
                 content = null,
                 startAt = LocalDateTime.now(),
                 endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
                 location = null,
             ),
             repeatRule = RepeatRuleInfo(
-                repeatType = RepeatType.MONTHLY,
+                repeatType = RepeatType.WEEKLY,
                 repeatInterval = 1,
-                repeatDay = 3,
+                repeatDay = 6,
                 endDate = null
             ),
             onTitleChanged = {},

@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component
+package com.ssafy.neegongnaegong.presentation.calendar.component.input
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

@@ -13,7 +13,7 @@ fun LaunchedEffectAfterFirst(
     vararg keys: Any?,
     block: suspend CoroutineScope.() -> Unit
 ) {
-    var hasLaunched by remember(*keys) { mutableStateOf(false) }
+    var hasLaunched by remember { mutableStateOf(false) }
 
     LaunchedEffect(*keys) {
         if (hasLaunched) {

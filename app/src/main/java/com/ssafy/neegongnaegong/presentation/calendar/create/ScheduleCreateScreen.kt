@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -51,8 +50,8 @@ fun ScheduleCreateRoute(
         uiState = uiState.value,
         onTitleChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnTitleChanged(it)) },
         onContentChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnContentChanged(it)) },
-        onStartDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnStartDateChanged(it)) },
-        onEndDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnEndDateChanged(it)) },
+        onStartDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnStartAtChanged(it)) },
+        onEndDateChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnEndAtChanged(it)) },
         onLocationChanged = { viewModel.setEvent(ScheduleCreateContract.Event.OnLocationChanged(it)) },
         onRepeatRuleChanged = {
             viewModel.setEvent(
@@ -149,7 +148,7 @@ fun ScheduleCreateScreen(
                 Text(
                     "취소",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = NeeGongNaeGongTheme.colorScheme.peach
                 )
             }
             TextButton(
@@ -159,7 +158,7 @@ fun ScheduleCreateScreen(
                 Text(
                     "확인",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText
                 )
             }
         }
@@ -177,7 +176,6 @@ private fun PreviewScheduleEditScreen() {
                 content = null,
                 startAt = LocalDateTime.now(),
                 endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
                 location = null,
             ),
             repeatRule = RepeatRuleInfo(

@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +24,8 @@ class ScheduleCreateViewModel @Inject constructor(
             is ScheduleCreateContract.Event.OnCreateScheduleClicked -> createSchedule()
             is ScheduleCreateContract.Event.OnTitleChanged -> setSchedule(title = event.title)
             is ScheduleCreateContract.Event.OnContentChanged -> setSchedule(content = event.content)
-            is ScheduleCreateContract.Event.OnStartDateChanged -> setSchedule(startDate = event.date)
-            is ScheduleCreateContract.Event.OnEndDateChanged -> setSchedule(endDate = event.date)
+            is ScheduleCreateContract.Event.OnStartAtChanged -> setSchedule(startAt = event.at)
+            is ScheduleCreateContract.Event.OnEndAtChanged -> setSchedule(endAt = event.at)
             is ScheduleCreateContract.Event.OnLocationChanged -> setSchedule(location = event.location)
             is ScheduleCreateContract.Event.OnRepeatRuleChanged -> setSchedule(repeatRule = event.repeatRule)
             is ScheduleCreateContract.Event.OnCancelClick -> setEffect { ScheduleCreateContract.Effect.NavigateBack }
@@ -35,16 +34,16 @@ class ScheduleCreateViewModel @Inject constructor(
 
     private fun onLoad(date: LocalDate) {
         setSchedule(
-            startDate = date.atStartOfDay(),
-            endDate = date.atStartOfDay().plusDays(1).minusSeconds(1)
+            startAt = date.atStartOfDay(),
+            endAt = date.atStartOfDay().plusHours(1)
         )
     }
 
     private fun setSchedule(
         title: String = uiState.value.schedule.title,
         content: String? = uiState.value.schedule.content,
-        startDate: LocalDateTime = uiState.value.schedule.startAt,
-        endDate: LocalDateTime = uiState.value.schedule.endAt,
+        startAt: LocalDateTime = uiState.value.schedule.startAt,
+        endAt: LocalDateTime = uiState.value.schedule.endAt,
         location: String? = uiState.value.schedule.location,
         repeatRule: RepeatRuleInfo? = uiState.value.repeatRule,
     ) {
@@ -53,10 +52,9 @@ class ScheduleCreateViewModel @Inject constructor(
                 schedule = ScheduleInfo(
                     title = title,
                     content = content,
-                    startAt = startDate,
-                    endAt = endDate,
+                    startAt = startAt,
+                    endAt = endAt,
                     location = location,
-                    isAllDay = startDate.toLocalTime() == LocalTime.MIN && endDate.toLocalTime() == LocalTime.MAX,
                 ),
                 repeatRule = repeatRule
             )

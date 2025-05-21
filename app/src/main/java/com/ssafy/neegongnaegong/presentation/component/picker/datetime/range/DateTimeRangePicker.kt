@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.component.picker.datetime.range
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
@@ -42,11 +43,13 @@ fun DateTimeRangePicker(
     }
 
     LaunchedEffectAfterFirst(state.startDateTime) {
+        Log.d("DateTimeRangePickerState", "state.startDateTime ${state.startDateTime}")
         dateRangePickerState.updateStartDate(state.startDateTime.toLocalDate())
         onStartDateTimeChange(state.startDateTime)
     }
 
     LaunchedEffectAfterFirst(state.endDateTime) {
+        Log.d("DateTimeRangePickerState", "state.endDateTime ${state.endDateTime}")
         dateRangePickerState.updateEndDate(state.endDateTime.toLocalDate())
         onEndDateTimeChange(state.endDateTime)
     }

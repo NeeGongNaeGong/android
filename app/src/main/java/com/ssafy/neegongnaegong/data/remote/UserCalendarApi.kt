@@ -15,6 +15,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.time.LocalDate
 import java.time.YearMonth
 
 interface UserCalendarApi {
@@ -25,7 +26,8 @@ interface UserCalendarApi {
 
     @GET("/api/user/calendar/schedules/{scheduleId}")
     suspend fun getPersonalSchedule(
-        @Path("scheduleId") scheduleId: Long
+        @Path("scheduleId") scheduleId: Long,
+        @Query("date") date: LocalDate
     ): Result<ApiResponse<ScheduleResponse>>
 
     @POST("/api/user/calendar/schedules")

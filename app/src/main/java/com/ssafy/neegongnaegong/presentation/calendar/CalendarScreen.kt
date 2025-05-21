@@ -17,7 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
-import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
@@ -168,7 +168,6 @@ private fun PreviewCalendarScreen() {
                         content = "Meeting",
                         startAt = now,
                         endAt = now.plusHours(1),
-                        isAllDay = false,
                     ),
                 ),
                 Schedule(
@@ -179,7 +178,6 @@ private fun PreviewCalendarScreen() {
                         content = "Lunch",
                         startAt = now,
                         endAt = now.plusHours(1),
-                        isAllDay = false,
                     )
                 ),
             )
