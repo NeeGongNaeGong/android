@@ -11,16 +11,17 @@ data class StudyContentInfo(
     val content: String,
     val tags: List<TagInfo>,
     val learningRecordCreatedAt: LocalDateTime,
-    val learningRecordModifiedAt: LocalDateTime
-) {
-    fun toStudyRecord() = StudyRecord(
-        id = learningRecordId,
-        title = title,
-        content = content,
-        startTime = startAt.toString().plus("z"),
-        endTime = endAt.toString().plus("z"),
-        tags = tags.map { it.name }
+    val learningRecordModifiedAt: LocalDateTime,
+    val cursorCreatedAt: LocalDateTime,
+    val cursorId: Long
+)
 
-    )
+fun StudyContentInfo.toStudyRecord() = StudyRecord(
+    id = learningRecordId,
+    title = title,
+    content = content,
+    startTime = startAt.toString().plus("z"),
+    endTime = endAt.toString().plus("z"),
+    tags = tags.map { it.name }
 
-}
+)
