@@ -322,6 +322,8 @@ fun PreviewRecordContent() {
                     tags = listOf(),
                     learningRecordCreatedAt = LocalDateTime.now(),
                     learningRecordModifiedAt = LocalDateTime.now(),
+                    cursorCreatedAt = LocalDateTime.now(),
+                    cursorId = 0,
                 )
             )
         }

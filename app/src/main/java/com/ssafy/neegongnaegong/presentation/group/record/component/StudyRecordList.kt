@@ -17,8 +17,10 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.toStudyRecord
 import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordItem
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.LocalDateTime
 
@@ -94,6 +96,8 @@ fun StudyRecordListBySlicePreview() {
                     tags = listOf(),
                     learningRecordCreatedAt = LocalDateTime.now(),
                     learningRecordModifiedAt = LocalDateTime.now(), /* 기타 필드 */
+                    cursorCreatedAt = LocalDateTime.now(),
+                    cursorId = 0,
                 )
             )
         }
@@ -101,9 +105,10 @@ fun StudyRecordListBySlicePreview() {
 
     val pagingData = PagingData.from(sampleItems)
     val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
-
-    StudyRecordListBySlice(
-        lazyItems = lazyItems,
-        onClick = { id -> println("Clicked item with id: $id") }
-    )
+    NeeGongNaeGongTheme {
+        StudyRecordListBySlice(
+            lazyItems = lazyItems,
+            onClick = { id -> println("Clicked item with id: $id") }
+        )
+    }
 }
