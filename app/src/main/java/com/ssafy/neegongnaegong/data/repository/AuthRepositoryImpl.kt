@@ -65,8 +65,8 @@ class AuthRepositoryImpl @Inject constructor(
 
             networkAuthDataSource.reissue(refreshToken).collect { response ->
                 with(response.createJwt) {
-                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
-                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
+                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
+                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
                 }
                 emit(true)
             }

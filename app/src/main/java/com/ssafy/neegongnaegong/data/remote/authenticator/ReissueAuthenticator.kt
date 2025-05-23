@@ -31,8 +31,8 @@ class ReissueAuthenticator @Inject constructor(
 
         return authApi.reissue(existingRefreshToken).getOrThrow().data.let {
             with(it.createJwt) {
-                tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken.removePrefix("Bearer "))
-                tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken.removePrefix("Bearer "))
+                tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
+                tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
             }
             tokenManager.getToken(TokenType.ACCESS_TOKEN)
         }
