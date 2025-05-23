@@ -22,8 +22,8 @@ class NetworkStudyGroupDataSourceImpl @Inject constructor(
             api.getMemberStudyContents(
                 request.studyGroupId,
                 request.userId,
-                request.lastCursorCreatedAt,
-                request.lastLearningRecordId,
+                request.cursorCreatedAt,
+                request.cursorId,
                 request.size
             )
 
