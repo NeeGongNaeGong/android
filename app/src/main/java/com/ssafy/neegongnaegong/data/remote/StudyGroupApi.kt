@@ -13,19 +13,19 @@ const val PREFIX = "/api/study-groups"
 
 interface StudyGroupApi {
     // 해당 유저의 주간 태그별 학습시간을 반환하는 함수
-    @GET("$PREFIX/{studyGroupId}/weekly-study-time/{targetUserId}")
+    @GET("$PREFIX/{study-group-id}/members/{user-id}/weekly-study-time")
     suspend fun getMemberStudyLogsByTag(
-        @Path("studyGroupId") studyGroupId: Long,
-        @Path("targetUserId") userId: Long,
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
     ): Result<ApiResponse<List<StudyLogByTagResponse>>>
 
     // 해당 유저의 주간 학습내용을 반환하는 함수
-    @GET("$PREFIX/{studyGroupId}/feeds/{userId}")
+    @GET("$PREFIX/{study-group-id}/members/{user-id}/weekly-feeds")
     suspend fun getMemberStudyContents(
-        @Path("studyGroupId") studyGroupId: Long,
-        @Path("userId") userId: Long,
-        @Query("lastCursorCreatedAt") lastCursorCreatedAt: LocalDateTime?,
-        @Query("lastLearningRecordId") lastLearningRecordId: Long?,
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("cursor-created-at") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
 }
