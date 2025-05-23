@@ -6,9 +6,9 @@ data class StudyLogByTagResponse(
     val tagId: Long,
     val tagName: String,
     val totalSeconds: Long
-){
-    fun toStudyLogByTagInfo() = StudyLogByTagInfo(
-        tagName = tagName,
-        totalSeconds = totalSeconds
-    )
-}
+)
+
+fun StudyLogByTagResponse.toStudyLogByTagInfo() = StudyLogByTagInfo(
+    tagName = tagName,
+    totalSeconds = totalSeconds
+)
