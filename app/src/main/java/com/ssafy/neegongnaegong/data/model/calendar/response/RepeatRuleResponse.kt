@@ -1,7 +1,5 @@
 package com.ssafy.neegongnaegong.data.model.calendar.response
 
-import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRule
-import com.ssafy.neegongnaegong.domain.model.calendar.RepeatRuleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.RepeatType
 import java.time.LocalDate
 
@@ -11,16 +9,4 @@ data class RepeatRuleResponse(
     val repeatInterval: Int,
     val repeatDay: Int,
     val endDate: LocalDate?,
-) {
-    fun toDomain(): RepeatRule {
-        return RepeatRule(
-            id = id,
-            info = RepeatRuleInfo(
-                repeatType = repeatType,
-                repeatInterval = repeatInterval,
-                repeatDay = repeatDay,
-                endDate = endDate
-            )
-        )
-    }
-}
+)
