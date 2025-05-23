@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
+import com.ssafy.neegongnaegong.data.mapper.user.UserMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RefreshRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest
