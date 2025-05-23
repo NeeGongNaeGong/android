@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.repository
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
+import com.ssafy.neegongnaegong.data.mapper.user.UserMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
 import com.ssafy.neegongnaegong.domain.model.User
