@@ -1,6 +1,8 @@
 package com.ssafy.neegongnaegong.presentation
 
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,14 +25,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawer
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
+import com.ssafy.neegongnaegong.presentation.personal.PersonalContract
+import com.ssafy.neegongnaegong.presentation.personal.PersonalViewModel
 import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
@@ -39,12 +46,46 @@ import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 fun MainScreen() {
     val navController = rememberNavController()
 
+    val resultLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val needRefresh = result.data?.getBooleanExtra("needRefreshRecordList", false) ?: false
+            if (needRefresh) {
+                val navBackStackEntry = navController.currentBackStackEntry
+                val destination = navBackStackEntry?.destination
+
+                val isInPersonalTab =
+                    destination?.hierarchy?.any {
+                        it.hasRoute(AppNavigation.Tab.Personal::class)
+                    } == true
+
+                navBackStackEntry?.let {
+                    if (isInPersonalTab) {
+                        val viewModelStoreOwner = navBackStackEntry as ViewModelStoreOwner
+                        val personalViewModel =
+                            ViewModelProvider(viewModelStoreOwner)[PersonalViewModel::class.java]
+                        personalViewModel.setEvent(PersonalContract.Event.OnRecordRefresh)
+                    }
+                }
+            }
+        }
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val showBottomNavigationBar = currentDestination?.hierarchy?.any {
-        it.hasRoute(AppNavigation.Tab.Auth::class)
-    } == false
+    val showBottomNavigationBar =
+        currentDestination?.let { destination ->
+            val isAuthTab =
+                destination.hierarchy.any {
+                    it.hasRoute(AppNavigation.Tab.Auth::class)
+                }
+
+            val isEditScreen =
+                destination.hierarchy.any {
+                    it.hasRoute(AppNavigation.Screen.Personal.Edit::class)
+                }
+
+            !isAuthTab && !isEditScreen
+        } ?: true
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -94,18 +135,19 @@ fun MainScreen() {
         },
     ) {
         Scaffold(
+            snackbarHost = { NeeGongNaeGongSnackbarHost() },
             bottomBar = {
                 if (showBottomNavigationBar) {
                     BottomNavigationBar(
                         navController = navController,
                         onFabClick = {
                             val intent = Intent(context, TimerActivity::class.java)
-                            context.startActivity(intent)
+                            resultLauncher.launch(intent)
                         },
                     )
                 }
             },
-            containerColor = NeeGongNaeGongTheme.colorScheme.background
+            containerColor = NeeGongNaeGongTheme.colorScheme.background,
         ) { innerPadding ->
             // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
             // 시스템적으로 패딩을 계산할 때 여기에 사용된 Padding을 중복 사용하지 않도록 함

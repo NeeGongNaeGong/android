@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong
 
-import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteContract
-import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteViewModel
+import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteContract
+import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

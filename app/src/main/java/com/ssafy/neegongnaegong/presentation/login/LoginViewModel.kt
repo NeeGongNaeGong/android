@@ -21,7 +21,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login(idToken: String) = viewModelScope.launch {
-        loginUseCase(idToken, "").safeCollect {
+        loginUseCase(idToken).safeCollect {
             // 로그인 성공했으면 MainScreen으로 Navigate하는 이벤트 emit
             setEffect { LoginContract.Effect.NavigateToMainScreen }
         }

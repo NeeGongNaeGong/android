@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
+import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
@@ -120,4 +121,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideStudyGroupApi(@SecureRetrofit retrofit: Retrofit): StudyGroupApi = retrofit.create(StudyGroupApi::class.java)
+    
+    @Provides
+    @Singleton
+    fun provideLearningRecordApi(@SecureRetrofit retrofit: Retrofit): LearningRecordApi = retrofit.create(LearningRecordApi::class.java)
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -104,4 +105,14 @@ fun PauseDialog(
             }
         }
     }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun PauseDialogPreview() {
+    PauseDialog(
+        onCancel = {},
+        onDismiss = {},
+        onConfirm = {}
+    )
 }
