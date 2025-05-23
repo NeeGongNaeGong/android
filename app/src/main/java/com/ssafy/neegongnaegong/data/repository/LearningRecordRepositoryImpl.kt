@@ -1,9 +1,10 @@
 package com.ssafy.neegongnaegong.data.repository
 
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
-import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toCreateRequest
+import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toUpdateRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
-import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
@@ -27,13 +28,7 @@ class LearningRecordRepositoryImpl
 
         override suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<Long> =
             withContext(ioDispatcher) {
-                dataSource
-                    .createLearningRecord(
-                        request =
-                            CreateLearningRecordRequest.fromDomain(
-                                learningRecord,
-                            ),
-                    )
+                dataSource.createLearningRecord(request = learningRecord.toCreateRequest())
             }
 
         override suspend fun deleteLearningRecord(learningRecordId: Long): Flow<LearningRecord> {
@@ -47,7 +42,7 @@ class LearningRecordRepositoryImpl
             withContext(ioDispatcher) {
                 dataSource.updateLearningRecord(
                     learningRecordId = learningRecordId,
-                    request = UpdateLearningRecordRequest.fromDomain(learningRecord),
+                    request = learningRecord.toUpdateRequest()
                 )
             }
 

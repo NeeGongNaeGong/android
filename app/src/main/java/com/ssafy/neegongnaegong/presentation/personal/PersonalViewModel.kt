@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.personal
 
 import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
@@ -125,7 +126,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByTag = result.content.map { it.toDomain() },
+                                selectedRecordsByTag = result.content.toDomain(),
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
@@ -140,7 +141,7 @@ class PersonalViewModel
                     ).safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByDate = result.content.map { it.toDomain() },
+                                selectedRecordsByDate = result.content.toDomain(),
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
@@ -167,7 +168,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByTag = selectedRecordsByTag + result.content.map { it.toDomain() },
+                                selectedRecordsByTag = selectedRecordsByTag + result.content.toDomain(),
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
@@ -184,7 +185,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByDate = selectedRecordsByDate + result.content.map { it.toDomain() },
+                                selectedRecordsByDate = selectedRecordsByDate + result.content.toDomain(),
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
