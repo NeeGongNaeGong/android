@@ -1,17 +1,24 @@
 package com.ssafy.neegongnaegong.presentation.group.vote
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
+import com.ssafy.neegongnaegong.domain.usecase.studies.CreateVoteUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
+import com.ssafy.neegongnaegong.presentation.util.TimeFormatter.convertStringToLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class VoteViewModel
-@Inject
-constructor(
-
+class VoteViewModel @Inject constructor(
+    private val createVoteUseCase: CreateVoteUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<VoteContract.Event, VoteContract.State, VoteContract.Effect>() {
     override fun createInitialState(): VoteContract.State =
         VoteContract.State(
@@ -27,6 +34,19 @@ constructor(
             isDateDialogVisible = false,
             isTimeDialogVisible = false
         )
+
+    override fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {
+        if (errorContext is VoteContract.Error) {
+            when (errorContext) {
+                VoteContract.Error.CreateVoteError -> {
+                    showErrorMessage(
+                        e.message ?: "투표 생성에 실패했습니다",
+                        SnackbarManager.Action.retry { retry() }
+                    )
+                }
+            }
+        }
+    }
 
     override fun handleEvent(event: VoteContract.Event) {
         when (event) {
@@ -50,9 +70,28 @@ constructor(
                 setState { copy(isAnonymousVotingEnabled = !isAnonymousVotingEnabled) }
             }
 
-            VoteContract.Event.OnClickCompleteButton -> {
-                setEffect { VoteContract.Effect.NavigateToBackStack }
-                TODO("API 호출 후 Navigation")
+            is VoteContract.Event.OnClickCompleteButton -> {
+                viewModelScope.launch {
+                    createVoteUseCase(
+                        studyId = savedStateHandle["studyGroupId"]!!,
+                        uiState.value.run {
+                            VoteInfo(
+                                title = voteTitle,
+                                startTime = LocalDateTime.now(), //getCurrentTimeByISO8601Format(),
+                                endTime = if(isEndDateEnabled) {convertStringToLocalDateTime(date, time)} else null,
+                                state = true,
+                                items = voteItemList.filter { it.isNotEmpty() },
+                                multiple = isMultipleSelectionEnabled,
+                                secret = isAnonymousVotingEnabled,
+                                notify = isAlarmBeforeClosingEnabled,
+                                choose = allowAddingSelection
+                            )
+                        }
+                    ).safeCollect(VoteContract.Error.CreateVoteError) {
+                        showSuccessMessage("투표를 생성했습니다!")
+                        setEffect { VoteContract.Effect.NavigateToBackStack }
+                    }
+                }
             }
 
             VoteContract.Event.OnClickEndDateOption -> {
