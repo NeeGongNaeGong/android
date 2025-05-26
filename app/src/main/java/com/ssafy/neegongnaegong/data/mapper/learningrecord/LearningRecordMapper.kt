@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.mapper.learningrecord
 
+import com.ssafy.neegongnaegong.data.mapper.TagMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
