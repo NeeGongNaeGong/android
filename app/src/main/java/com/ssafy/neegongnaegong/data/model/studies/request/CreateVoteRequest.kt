@@ -11,7 +11,8 @@ data class CreateVoteRequest(
     val items: List<String>,
     val multiple: Boolean,
     val secret: Boolean,
-    val notify: Boolean
+    val notify: Boolean,
+    val choose: Boolean,
 ) {
     companion object{
         fun fromDomain(voteInfo: VoteInfo): CreateVoteRequest =
@@ -23,7 +24,8 @@ data class CreateVoteRequest(
                 voteInfo.items,
                 voteInfo.multiple,
                 voteInfo.secret,
-                voteInfo.notify
+                voteInfo.notify,
+                voteInfo.choose
             )
     }
 
