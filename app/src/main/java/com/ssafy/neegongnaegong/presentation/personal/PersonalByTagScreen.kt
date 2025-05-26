@@ -6,53 +6,60 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.write.Tag
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun PersonalByTagScreen(
     modifier: Modifier = Modifier,
     tags: List<Tag>,
-    studyRecords: List<StudyRecord>,
+    learningRecords: List<LearningRecord>,
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
-    navigateToEditScreen: (Long) -> Unit
+    navigateToEditScreen: (Long) -> Unit,
+    // Paging
+    onLoadMore: () -> Unit,
+    hasNext: Boolean,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         TagList(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(vertical = 16.dp),
+            modifier =
+                Modifier
+                    .wrapContentSize()
+                    .padding(vertical = 16.dp),
             tags = tags,
             onTagPlusClicked = onTagPlusClicked,
-            onTagEraseClicked = onTagEraseClicked
+            onTagEraseClicked = onTagEraseClicked,
         )
 
         StudyRecordList(
             modifier = Modifier.weight(1f),
-            studyRecords = studyRecords,
-            onClick = navigateToEditScreen
+            learningRecords = learningRecords,
+            onClick = navigateToEditScreen,
+            onLoadMore = onLoadMore,
+            hasNext = hasNext,
         )
     }
 }
 
-
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PersonalByTagScreenPreview() {
     NeeGongNaeGongTheme {
         PersonalByTagScreen(
             tags = PersonalPreviewDataProvider().getTags(),
-            studyRecords = PersonalPreviewDataProvider().getStudyRecords(),
+            learningRecords = PersonalPreviewDataProvider().getStudyRecords(),
             onTagPlusClicked = {},
             onTagEraseClicked = {},
-            navigateToEditScreen = {}
+            navigateToEditScreen = {},
+            onLoadMore = {},
+            hasNext = false,
         )
     }
 }

@@ -10,6 +10,8 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourc
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSourceImpl
 import dagger.Binds
@@ -43,4 +45,10 @@ internal interface DataSourceModule {
 
     @Binds
     fun bindNetworkStudiesDataSource(networkStudiesDataSourceImpl: NetworkStudiesDataSourceImpl): NetworkStudiesDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkLearningRecordDataSource(
+        networkLearningRecordDataSourceImpl: NetworkLearningRecordDataSourceImpl,
+    ): NetworkLearningRecordDataSource
 }

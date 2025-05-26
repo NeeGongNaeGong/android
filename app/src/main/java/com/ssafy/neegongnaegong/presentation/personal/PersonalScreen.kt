@@ -16,7 +16,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -25,27 +29,50 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun PersonalRoute(
     modifier: Modifier = Modifier,
     viewModel: PersonalViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
-    navigateToEditScreen: (Long) -> Unit
+    navigateToEditScreen: (Long) -> Unit,
+    navController: NavController,
 ) {
-
     BackHandler { popBackStack() }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    val currentBackStackEntry = navController.currentBackStackEntryAsState().value
+
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(PersonalContract.Event.OnRecordRefresh)
+    }
+
+    LaunchedEffect(currentBackStackEntry) {
+        val shouldRefresh =
+            currentBackStackEntry
+                ?.savedStateHandle
+                ?.get<Boolean>("refreshNeeded") == true
+
+        if (shouldRefresh) {
+            viewModel.setEvent(PersonalContract.Event.OnRecordRefresh)
+            currentBackStackEntry?.let {
+                currentBackStackEntry.savedStateHandle["refreshNeeded"] = false
+            }
+        }
+    }
 
     PersonalContent(
         modifier = modifier,
@@ -53,7 +80,6 @@ fun PersonalRoute(
         uiState = uiState.value,
         onTagScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnTagScreenSelected) },
         onDateScreenSelected = { viewModel.setEvent(PersonalContract.Event.OnDateScreenSelected) },
-        studyRecords = uiState.value.studyRecords,
         onTagPlusClicked = { viewModel.setEvent(PersonalContract.Event.OnTagPlusClicked) },
         onTagEraseClicked = { viewModel.setEvent(PersonalContract.Event.OnTagEraseClicked(it)) },
         onDialogClosed = { viewModel.setEvent(PersonalContract.Event.OnDialogClose) },
@@ -62,9 +88,9 @@ fun PersonalRoute(
         onTagSelected = { viewModel.setEvent(PersonalContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(PersonalContract.Event.OnTagDeselected(it)) },
         onDateSelected = { viewModel.setEvent(PersonalContract.Event.OnDateSelected(it)) },
-        navigateToEditScreen = navigateToEditScreen
+        navigateToEditScreen = navigateToEditScreen,
+        onLoadMore = { viewModel.setEvent(PersonalContract.Event.OnRecordLoadMore) },
     )
-
 }
 
 @Composable
@@ -75,8 +101,6 @@ fun PersonalContent(
     // dropdown
     onTagScreenSelected: () -> Unit,
     onDateScreenSelected: () -> Unit,
-    // study
-    studyRecords: List<StudyRecord>,
     // tag
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
@@ -87,6 +111,8 @@ fun PersonalContent(
     onTagDeselected: (Tag) -> Unit,
     onDateSelected: (String) -> Unit,
     navigateToEditScreen: (Long) -> Unit,
+    // paging
+    onLoadMore: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -116,7 +142,9 @@ fun PersonalContent(
 
     PersonalScreen(
         modifier = modifier,
-        studyRecords = uiState.studyRecords,
+        // pager
+        onTagScreenSelected = onTagScreenSelected,
+        onDateScreenSelected = onDateScreenSelected,
         // tag
         tags = uiState.tags,
         onTagPlusClicked = onTagPlusClicked,
@@ -127,22 +155,34 @@ fun PersonalContent(
         selectedRecordsByDate = uiState.selectedRecordsByDate,
         selectedDate = uiState.selectedDate,
         // navigate
-        navigateToEditScreen = navigateToEditScreen
+        navigateToEditScreen = navigateToEditScreen,
+        // paging
+        onLoadMore = onLoadMore,
+        hasNext = uiState.hasNext,
     )
+
+    if (uiState.isLoading) {
+        LoadingDialog()
+    }
 }
 
 @Composable
 fun PersonalScreen(
     modifier: Modifier = Modifier,
-    studyRecords: List<StudyRecord>,
+    // pager
+    onTagScreenSelected: () -> Unit,
+    onDateScreenSelected: () -> Unit,
     tags: List<Tag>,
-    selectedRecordsByTag: List<StudyRecord>,
+    selectedRecordsByTag: List<LearningRecord>,
     onTagPlusClicked: () -> Unit,
     onTagEraseClicked: (Tag) -> Unit,
     onDateSelected: (String) -> Unit,
-    selectedRecordsByDate: List<StudyRecord>,
+    selectedRecordsByDate: List<LearningRecord>,
     selectedDate: String,
-    navigateToEditScreen: (Long) -> Unit
+    navigateToEditScreen: (Long) -> Unit,
+    // Paging3
+    onLoadMore: () -> Unit,
+    hasNext: Boolean,
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -150,13 +190,14 @@ fun PersonalScreen(
     val datePickerState = rememberDatePickerState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
-            containerColor = Color(0xFFFAFAFA)
+            containerColor = NeeGongNaeGongTheme.colorScheme.background,
         ) {
             tabTitles.forEachIndexed { index, title ->
                 val isSelected = pagerState.currentPage == index
@@ -170,58 +211,80 @@ fun PersonalScreen(
                     text = {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.labelLarge.copy(
-                                fontSize = 18.sp,
-                                color = if (isSelected) Color.Black else Color.Gray
-                            )
+                            style =
+                                MaterialTheme.typography.labelLarge.copy(
+                                    fontSize = 18.sp,
+                                    color = if (isSelected) Color.Black else Color.Gray,
+                                ),
                         )
-                    }
+                    },
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        var previousPage by rememberSaveable { mutableIntStateOf(-1) }
+
+        LaunchedEffect(pagerState.currentPage) {
+            if (previousPage != pagerState.currentPage) {
+                previousPage = pagerState.currentPage
+                when (pagerState.currentPage) {
+                    0 -> onTagScreenSelected()
+                    1 -> onDateScreenSelected()
+                }
+            }
+        }
+
         HorizontalPager(
             pageSize = PageSize.Fill,
             state = pagerState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) { page ->
             when (page) {
-                0 -> PersonalByTagScreen(
-                    tags = tags,
-                    studyRecords = if (tags.isEmpty()) studyRecords else selectedRecordsByTag,
-                    onTagPlusClicked = onTagPlusClicked,
-                    onTagEraseClicked = onTagEraseClicked,
-                    navigateToEditScreen = navigateToEditScreen
-                )
+                0 -> {
+                    PersonalByTagScreen(
+                        tags = tags,
+                        learningRecords = selectedRecordsByTag,
+                        onTagPlusClicked = onTagPlusClicked,
+                        onTagEraseClicked = onTagEraseClicked,
+                        navigateToEditScreen = navigateToEditScreen,
+                        onLoadMore = onLoadMore,
+                        hasNext = hasNext,
+                    )
+                }
 
-                1 -> PersonalByDateScreen(
-                    datePickerState = datePickerState,
-                    onDateSelected = onDateSelected,
-                    selectedRecordsByDate = selectedRecordsByDate,
-                    selectedDate = selectedDate,
-                    navigateToEditScreen = navigateToEditScreen
-                )
+                1 -> {
+                    PersonalByDateScreen(
+                        datePickerState = datePickerState,
+                        onDateSelected = onDateSelected,
+                        selectedRecordsByDate = selectedRecordsByDate,
+                        selectedDate = selectedDate,
+                        navigateToEditScreen = navigateToEditScreen,
+                        onLoadMore = onLoadMore,
+                        hasNext = hasNext,
+                    )
+                }
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PersonalScreenPreview() {
     PersonalScreen(
-        studyRecords = PersonalPreviewDataProvider().getStudyRecords(),
         tags = PersonalPreviewDataProvider().getTags(),
+        onTagScreenSelected = {},
+        onDateScreenSelected = {},
         onTagPlusClicked = {},
         onTagEraseClicked = {},
         onDateSelected = {},
         selectedRecordsByDate = PersonalPreviewDataProvider().getStudyRecords(),
         navigateToEditScreen = {},
         selectedDate = "2024-01-01",
-        selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords()
+        selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords(),
+        onLoadMore = {},
+        hasNext = false,
     )
 }
-
