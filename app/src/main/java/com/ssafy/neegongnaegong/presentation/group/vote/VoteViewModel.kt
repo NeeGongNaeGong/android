@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.vote
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateVoteUseCase
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VoteViewModel @Inject constructor(
-    private val createVoteUseCase: CreateVoteUseCase
+    private val createVoteUseCase: CreateVoteUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<VoteContract.Event, VoteContract.State, VoteContract.Effect>() {
     override fun createInitialState(): VoteContract.State =
         VoteContract.State(
@@ -71,7 +73,7 @@ class VoteViewModel @Inject constructor(
             is VoteContract.Event.OnClickCompleteButton -> {
                 viewModelScope.launch {
                     createVoteUseCase(
-                        studyId = event.studyGroupId,
+                        studyId = savedStateHandle["studyGroupId"]!!,
                         uiState.value.run {
                             VoteInfo(
                                 title = voteTitle,
@@ -81,7 +83,8 @@ class VoteViewModel @Inject constructor(
                                 items = voteItemList.filter { it.isNotEmpty() },
                                 multiple = isMultipleSelectionEnabled,
                                 secret = isAnonymousVotingEnabled,
-                                notify = isAlarmBeforeClosingEnabled
+                                notify = isAlarmBeforeClosingEnabled,
+                                choose = allowAddingSelection
                             )
                         }
                     ).safeCollect(VoteContract.Error.CreateVoteError) {
