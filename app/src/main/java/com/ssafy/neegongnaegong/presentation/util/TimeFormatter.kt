@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.util
 
+import android.annotation.SuppressLint
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -105,4 +106,19 @@ object TimeFormatter {
 
         return time + offsetMillis
     }
+
+    /**
+     * 밀리초로 들어온 기간을 00H00M으로 바꾸기 위한 함수
+     * @param Long 기간
+     * @return String 00H00M 꼴
+      */
+    @SuppressLint("DefaultLocale")
+    fun formatDurationToHM(millis: Long): String {
+        val totalMinutes = millis / (1000 * 60)
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+
+        return String.format("%02dH%02dM", hours, minutes)
+    }
+
 }

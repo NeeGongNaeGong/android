@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
+import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import com.ssafy.neegongnaegong.data.remote.adapter.call.ConvertToResultAdapterFactory
@@ -117,6 +118,10 @@ object NetworkModule {
     @Singleton
     fun provideGroupApi(@SecureRetrofit retrofit: Retrofit): StudiesApi = retrofit.create(StudiesApi::class.java)
 
+    @Provides
+    @Singleton
+    fun provideStudyGroupApi(@SecureRetrofit retrofit: Retrofit): StudyGroupApi = retrofit.create(StudyGroupApi::class.java)
+    
     @Provides
     @Singleton
     fun provideLearningRecordApi(@SecureRetrofit retrofit: Retrofit): LearningRecordApi = retrofit.create(LearningRecordApi::class.java)
