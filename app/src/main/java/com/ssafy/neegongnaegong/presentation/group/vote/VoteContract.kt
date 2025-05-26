@@ -9,7 +9,7 @@ import kotlinx.collections.immutable.PersistentList
 class VoteContract {
     sealed interface Event : UiEvent {
         data object OnClickAddVoteItemButton : Event
-        data class OnClickCompleteButton(val studyGroupId: Int) : Event
+        data object OnClickCompleteButton : Event
         data object OnClickMultipleSelectionOption : Event
         data object OnClickAnonymousVotingOption : Event
         data object OnClickAllowAddingSelectionOption : Event

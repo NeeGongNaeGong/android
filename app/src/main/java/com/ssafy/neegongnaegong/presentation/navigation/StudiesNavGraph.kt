@@ -52,11 +52,9 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             )
         }
 
-        composable<AppNavigation.Screen.Studies.MakeVote> { backStackEntry ->
-            val studyGroupId = backStackEntry.toRoute<AppNavigation.Screen.Studies.MakeVote>().studyGroupId
+        composable<AppNavigation.Screen.Studies.MakeVote> {
             VoteRoute(
                 popBackStack = { navController.popBackStack() },
-                studyGroupId = studyGroupId
             )
         }
 
@@ -64,7 +62,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             val (groupId, memberId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.Record>()
             RecordRoute(
                 groupId = groupId,
-                memberId= memberId,
+                memberId = memberId,
                 popBackStack = { navController.popBackStack() }
             )
         }

@@ -54,7 +54,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun VoteRoute(
     popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
-    studyGroupId: Int,
     viewModel: VoteViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -70,7 +69,7 @@ fun VoteRoute(
             actionButtons = {
                 TextButton(onClick = {
                     viewModel.setEvent(
-                        VoteContract.Event.OnClickCompleteButton(studyGroupId)
+                        VoteContract.Event.OnClickCompleteButton
                     )
                 }) {
                     Text(
@@ -346,9 +345,9 @@ fun VoteOption(
             .fillMaxWidth()
             .background(NeeGongNaeGongTheme.colorScheme.gray2)
     ) {
-        OptionButton(isMultipleSelectionEnabled, "복수선택") { onClickMultipleSelectionOption() }
-        OptionButton(isAnonymousVotingEnabled, "익명투표") { onClickAnonymousVotingOption() }
-        OptionButton(allowAddingSelection, "선택 항목 추가 허용") { onClickAllowAddingSelectionOption() }
+        OptionButton(isSelected = isMultipleSelectionEnabled, optionTitle = "복수선택") { onClickMultipleSelectionOption() }
+        OptionButton(isSelected = isAnonymousVotingEnabled, optionTitle = "익명투표") { onClickAnonymousVotingOption() }
+        OptionButton(isSelected = allowAddingSelection, optionTitle = "선택 항목 추가 허용") { onClickAllowAddingSelectionOption() }
     }
 }
 
@@ -369,7 +368,7 @@ fun EndOption(
             .background(NeeGongNaeGongTheme.colorScheme.gray2)
             .padding(13.dp)
     ) {
-        OptionButton(isEndDateEnabled, "종료 시간") { onClickEndDateOption() }
+        OptionButton(isSelected = isEndDateEnabled, optionTitle = "종료 시간") { onClickEndDateOption() }
 
         Row(
             Modifier
@@ -416,8 +415,9 @@ fun EndOption(
 
         }
         OptionButton(
-            isAlarmBeforeClosingEnabled,
-            "종료 30분 전 알림"
+            enable = isEndDateEnabled,
+            isSelected = isAlarmBeforeClosingEnabled,
+            optionTitle = "종료 30분 전 알림"
         ) { onClickAlarmBeforeClosingOption() }
     }
 }
