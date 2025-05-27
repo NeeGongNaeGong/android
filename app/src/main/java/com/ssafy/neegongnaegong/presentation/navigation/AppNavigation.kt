@@ -113,7 +113,7 @@ object AppNavigation {
             ) : Profile
 
             @Serializable
-            data object Notification: Screen
+            data object Notification: Profile
         }
     }
 }
