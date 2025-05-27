@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
+import com.ssafy.neegongnaegong.data.mapper.tag.TagInfoMapper.toDomain
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import java.time.LocalDateTime
 
@@ -23,5 +24,5 @@ fun StudyContentInfo.toLearningRecord() =
         content = content,
         startAt = startAt,
         endAt = endAt,
-        tags = tags.map { it.toDomain() },
+        tags = tags.toDomain(),
     )
