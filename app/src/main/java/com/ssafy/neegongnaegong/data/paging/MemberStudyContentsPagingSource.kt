@@ -3,7 +3,8 @@ package com.ssafy.neegongnaegong.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
-import com.ssafy.neegongnaegong.data.model.studygroup.response.toStudyContentInfo
+import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyContentInfoMapper.toDomain
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyContentResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentSliceKey
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
@@ -23,9 +24,9 @@ class MemberStudyContentsPagingSource(
                 cursorId = cursor?.lastLearningRecordId,
             )
             val response = dataSource.getMemberStudyContents(request).getOrThrow().data
-            val data = response.content
+            val data: List<StudyContentResponse> = response.content
             LoadResult.Page(
-                data = data.map { it.toStudyContentInfo() },
+                data = data.toDomain(),
                 prevKey = null,
                 nextKey = if (response.hasNext) {
                     MemberStudyContentSliceKey(response.cursorCreatedAt, response.cursorId)
