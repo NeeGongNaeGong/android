@@ -44,6 +44,7 @@ class NotificationViewModel @Inject constructor(
         NotificationContract.Event.RefreshEvent -> handleRefresh()
         NotificationContract.Event.DeleteAllNotification -> handleDeleteAllNotification()
         is NotificationContract.Event.DeleteNotification -> handleDeleteNotification(data = event.data)
+        is NotificationContract.Event.MoveNotification -> handleMoveNotification(data = event.data)
     }
 
     private fun endLoad() {
@@ -65,7 +66,13 @@ class NotificationViewModel @Inject constructor(
 
     private fun handleDeleteNotification(data: NotificationUiModel) {
         viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
-            TODO("특정 알람을 삭제합니다. ${data.id}")
+            TODO("알람을 삭제합니다. ${data.id}")
+        }
+    }
+
+    private fun handleMoveNotification(data: NotificationUiModel) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+            TODO("알람으로 이동합니다. ${data.id}")
         }
     }
 

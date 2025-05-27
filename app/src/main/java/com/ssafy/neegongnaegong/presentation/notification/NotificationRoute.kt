@@ -48,6 +48,10 @@ fun NotificationRoute() {
         onDeleteNotification = { notificationUiModel: NotificationUiModel ->
             val event = NotificationContract.Event.DeleteNotification(data = notificationUiModel)
             viewModel.setEvent(event = event)
+        },
+        onMoveNotification = { notificationUiModel: NotificationUiModel ->
+            val event = NotificationContract.Event.MoveNotification(data = notificationUiModel)
+            viewModel.setEvent(event = event)
         }
     )
 }

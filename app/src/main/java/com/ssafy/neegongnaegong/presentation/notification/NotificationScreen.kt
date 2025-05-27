@@ -35,6 +35,7 @@ fun NotificationScreen(
     onRefresh: () -> Unit,
     onDeleteAll: () -> Unit,
     onDeleteNotification: (NotificationUiModel) -> Unit,
+    onMoveNotification: (NotificationUiModel) -> Unit
 ) {
     DefaultRefreshBox(
         isRefreshing = isRefresh,
@@ -68,7 +69,8 @@ fun NotificationScreen(
                 modifier = Modifier.fillMaxSize(),
                 listState = listState,
                 notificationList = notificationList,
-                onDeleteNotification = onDeleteNotification
+                onDeleteNotification = onDeleteNotification,
+                onMoveNotification = onMoveNotification
             )
         }
     }
@@ -94,6 +96,7 @@ fun NotificationPreviewScreen() {
         notificationList = fakeFlow,
         onRefresh = {},
         onDeleteAll = {},
-        onDeleteNotification = {}
+        onDeleteNotification = {},
+        onMoveNotification = {}
     )
 }

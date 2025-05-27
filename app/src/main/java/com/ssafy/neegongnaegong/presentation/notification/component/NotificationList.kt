@@ -15,6 +15,7 @@ fun NotificationList(
     listState: LazyListState,
     notificationList: LazyPagingItems<NotificationUiModel>,
     onDeleteNotification: (NotificationUiModel) -> Unit,
+    onMoveNotification: (NotificationUiModel) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -28,9 +29,8 @@ fun NotificationList(
                 user = data.user,
                 content = data.content,
                 isRead = data.isRead,
-                onDelete = {
-                    onDeleteNotification(data)
-                }
+                onDelete = { onDeleteNotification(data) },
+                onMove = { onMoveNotification(data) }
             )
 
             if (index < notificationList.itemCount - 1) {

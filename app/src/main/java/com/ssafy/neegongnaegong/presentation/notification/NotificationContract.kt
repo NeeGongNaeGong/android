@@ -11,6 +11,7 @@ interface NotificationContract {
         data object RefreshEvent : Event()
         data object DeleteAllNotification : Event()
         data class DeleteNotification(val data: NotificationUiModel) : Event()
+        data class MoveNotification(val data: NotificationUiModel) : Event()
     }
 
     data class State(
@@ -22,7 +23,7 @@ interface NotificationContract {
         data object ScrollToFirstPosition : Effect()
     }
 
-    sealed class Error: ErrorContext {
+    sealed class Error : ErrorContext {
         data object ShowErrorMessage : Error()
     }
 }
