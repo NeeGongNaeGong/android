@@ -28,7 +28,7 @@ internal object LearningRecordMapper {
         content = content,
         startAt = startAt,
         endAt = endAt,
-        tags = tags.map { it.toDomain() },
+        tags = tags.toDomain(),
     )
 
     fun List<GetLearningRecordResponse>.toDomain() = map { it.toDomain() }
