@@ -1,8 +1,9 @@
-package com.ssafy.neegongnaegong.data.mapper
+package com.ssafy.neegongnaegong.data.mapper.tag
 
 import com.ssafy.neegongnaegong.domain.data.TagData
 
 object TagMapper {
+
     // id → 한글 이름
     val idToKoName: Map<Long, String> by lazy {
         TagData.tags.associate { it.id to it.koName }
@@ -12,4 +13,5 @@ object TagMapper {
     val idToEnName: Map<Long, String> by lazy {
         TagData.tags.associate { it.id to it.enName }
     }
+
 }
