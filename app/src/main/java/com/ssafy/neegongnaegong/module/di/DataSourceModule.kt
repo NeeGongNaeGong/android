@@ -8,12 +8,12 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourceImpl
-import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
-import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSourceImpl
-import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
-import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSourceImpl
 import dagger.Binds
@@ -43,9 +43,9 @@ internal interface DataSourceModule {
 
     @Singleton
     @Binds
-
     fun bindNetworkStudyGroupDataSource(networkStudyGroupDataSource: NetworkStudyGroupDataSourceImpl): NetworkStudyGroupDataSource
 
+    @Binds
     fun bindLocalFcmDataSource(localFcmDataSourceImpl: LocalFcmDataSourceImpl): LocalFcmDataSource
 
     @Binds
