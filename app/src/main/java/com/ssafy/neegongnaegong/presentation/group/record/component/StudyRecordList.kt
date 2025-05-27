@@ -17,7 +17,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
-import com.ssafy.neegongnaegong.domain.model.studygroup.toStudyRecord
+import com.ssafy.neegongnaegong.domain.model.studygroup.toLearningRecord
 import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordItem
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -33,13 +33,13 @@ fun StudyRecordListBySlice(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(bottom = 12.dp)
+        contentPadding = PaddingValues(bottom = 12.dp),
     ) {
         items(lazyItems.itemCount) { idx ->
             lazyItems[idx]?.let { item ->
                 StudyRecordItem(
-                    record = item.toStudyRecord(),
-                    onClick = onClick
+                    record = item.toLearningRecord(),
+                    onClick = onClick,
                 )
             }
         }
@@ -47,17 +47,20 @@ fun StudyRecordListBySlice(
         when {
             lazyItems.loadState.refresh is LoadState.Loading -> item { LoadingItem() }
             lazyItems.loadState.append is LoadState.Loading -> item { LoadingItem() }
-            lazyItems.loadState.refresh is LoadState.Error -> item {
-                val e = lazyItems.loadState.refresh as LoadState.Error
-                ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
-            }
-            lazyItems.loadState.append is LoadState.Error -> item {
-                val e = lazyItems.loadState.append as LoadState.Error
-                ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
-            }
-            lazyItems.itemCount == 0 -> item {
-                NoDataItem()
-            }
+            lazyItems.loadState.refresh is LoadState.Error ->
+                item {
+                    val e = lazyItems.loadState.refresh as LoadState.Error
+                    ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
+                }
+            lazyItems.loadState.append is LoadState.Error ->
+                item {
+                    val e = lazyItems.loadState.append as LoadState.Error
+                    ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
+                }
+            lazyItems.itemCount == 0 ->
+                item {
+                    NoDataItem()
+                }
         }
     }
 }
@@ -68,7 +71,10 @@ fun LoadingItem() {
 }
 
 @Composable
-fun ErrorItem(message: String, onRetry: () -> Unit) {
+fun ErrorItem(
+    message: String,
+    onRetry: () -> Unit,
+) {
     Box(Modifier.fillMaxSize(), Alignment.Center) {
         Text("Error: $message", Modifier.clickable { onRetry() })
     }
@@ -84,31 +90,32 @@ fun NoDataItem() {
 @NeeGongNaeGongPreviews
 @Composable
 fun StudyRecordListBySlicePreview() {
-    val sampleItems = mutableListOf<StudyContentInfo>().apply {
-        for (i in 0..3) {
-            add(
-                StudyContentInfo(
-                    title = "Kotlin Basics",
-                    learningRecordId = 1,
-                    startAt = LocalDateTime.now(),
-                    endAt = LocalDateTime.now(),
-                    content = "Kotlin Basics",
-                    tags = listOf(),
-                    learningRecordCreatedAt = LocalDateTime.now(),
-                    learningRecordModifiedAt = LocalDateTime.now(), /* 기타 필드 */
-                    cursorCreatedAt = LocalDateTime.now(),
-                    cursorId = 0,
+    val sampleItems =
+        mutableListOf<StudyContentInfo>().apply {
+            repeat(3) {
+                add(
+                    StudyContentInfo(
+                        title = "Kotlin Basics",
+                        learningRecordId = 1,
+                        startAt = LocalDateTime.now(),
+                        endAt = LocalDateTime.now(),
+                        content = "Kotlin Basics",
+                        tags = listOf(),
+                        learningRecordCreatedAt = LocalDateTime.now(),
+                        learningRecordModifiedAt = LocalDateTime.now(), // 기타 필드
+                        cursorCreatedAt = LocalDateTime.now(),
+                        cursorId = 0,
+                    ),
                 )
-            )
+            }
         }
-    }
 
     val pagingData = PagingData.from(sampleItems)
     val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
     NeeGongNaeGongTheme {
         StudyRecordListBySlice(
             lazyItems = lazyItems,
-            onClick = { id -> println("Clicked item with id: $id") }
+            onClick = { id -> println("Clicked item with id: $id") },
         )
     }
 }
