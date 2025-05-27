@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ssafy.neegongnaegong.presentation.ProfileScreen
+import com.ssafy.neegongnaegong.presentation.notification.notificationScreen
 
 fun NavGraphBuilder.profileNavGraph(navController: NavController){
     navigation<AppNavigation.Tab.Profile>(
@@ -13,5 +14,7 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController){
         composable<AppNavigation.Screen.Profile.Main> {
             ProfileScreen()
         }
+
+        notificationScreen()
     }
 }
