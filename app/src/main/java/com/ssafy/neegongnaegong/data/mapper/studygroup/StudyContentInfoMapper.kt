@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.data.mapper.studygroup
 
-import com.ssafy.neegongnaegong.data.mapper.TagMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.tag.StudyTagMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyContentResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
 
