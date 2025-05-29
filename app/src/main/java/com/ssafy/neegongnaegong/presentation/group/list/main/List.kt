@@ -41,6 +41,7 @@ import okhttp3.internal.toImmutableList
 fun ListRoute(
     modifier: Modifier = Modifier,
     popBackStack: () -> Unit,
+    title: String,
     viewModel: ListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -111,8 +112,9 @@ fun ListRoute(
         TopAppBar(
             title = {
                 Text(
+                    text = title,
                     style = NeeGongNaeGongTheme.typography.titleSmall,
-                    text = "~~공부방",
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             onNavigationClick = popBackStack,
