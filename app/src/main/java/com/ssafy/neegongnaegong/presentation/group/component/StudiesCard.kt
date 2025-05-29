@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,13 +19,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
@@ -53,6 +57,7 @@ fun StudiesCard(
     leader: String = "",
     createdDate: String = "",
     description: String = "",
+    profileImageUrl: String?,
     initialExpanded: Boolean = false,
 ) {
     var expanded by remember { mutableStateOf(initialExpanded) }
@@ -152,14 +157,34 @@ fun StudiesCard(
                             .padding(end = 16.dp)
                             .size(width = 80.dp, height = 80.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFFD9D9D9)),
+                            .background(NeeGongNaeGongTheme.colorScheme.gray3),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Study Group Character",
-                        modifier = Modifier.size(50.dp),
-                        tint = Color(0xFF666666),
+                    GlideImage(
+                        imageModel = { profileImageUrl },
+                        modifier = Modifier.fillMaxSize(),
+                        loading = {
+                            Box(modifier = Modifier.matchParentSize()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center),
+                                )
+                            }
+                        },
+                        failure = {
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .background(MaterialTheme.colorScheme.errorContainer),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Error,
+                                    contentDescription = "이미지 로드 실패",
+                                    modifier = Modifier.align(Alignment.Center),
+                                    tint = MaterialTheme.colorScheme.error,
+                                )
+                            }
+                        },
                     )
                 }
             }
@@ -216,6 +241,7 @@ private fun PreviewStudiesCardExpanded() {
             leader = "박준식",
             createdDate = "2025-05-05",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
+            profileImageUrl = null,
             initialExpanded = true,
         )
     }
@@ -234,6 +260,7 @@ private fun PreviewStudiesCard() {
             leader = "박준식",
             createdDate = "2025-05-05",
             description = "개발 취준을 준비하시는 취준생 분들을 위한 스터디 그룹입니다. 매일 함께 공부해요! 질문과 답변을 자유롭게 나누며 함께 성장해 나가요.",
+            profileImageUrl = null,
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.management
 
+import android.net.Uri
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.Tag
@@ -7,6 +8,7 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import okhttp3.RequestBody
 
 class StudiesManagementContract {
     sealed class Event : UiEvent {
@@ -44,6 +46,15 @@ class StudiesManagementContract {
             val description: String,
         ) : Event()
 
+        data class OnSelectedImage(
+            val imageUri: Uri,
+            val extension: String?,
+        ) : Event()
+
+        data class OnSelectedImageRequest(
+            val requestImage: RequestBody?,
+        ) : Event()
+
         data class OnProfileImgChanged(
             val profileImg: String? = null,
         ) : Event()
@@ -59,6 +70,9 @@ class StudiesManagementContract {
         val selectedCategory: Category? = null,
         val selectedTags: List<Tag> = emptyList(),
         val tags: List<Tag> = emptyList(),
+        val selectedImageUri: Uri? = null,
+        val presignedUrl: String? = null,
+        val requestImage: RequestBody? = null,
         val studyInfo: StudyInfo = StudyInfo.empty(),
     ) : UiState
 

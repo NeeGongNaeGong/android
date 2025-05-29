@@ -1,16 +1,24 @@
 package com.ssafy.neegongnaegong.presentation.group.management
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.model.file.UploadPathType
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.Tag
 import com.ssafy.neegongnaegong.domain.usecase.category.GetCategoriesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.category.GetTagsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.file.IssuePresignedUrlUseCase
+import com.ssafy.neegongnaegong.domain.usecase.s3.UploadImageToS3UseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateStudiesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.RequestBody
 import javax.inject.Inject
+
+private const val TAG = "StudiesManagementViewModel"
 
 @HiltViewModel
 class StudiesManagementViewModel
@@ -19,6 +27,8 @@ class StudiesManagementViewModel
         private val createStudiesUseCase: CreateStudiesUseCase,
         private val getCategoriesUseCase: GetCategoriesUseCase,
         private val getTagsUseCase: GetTagsUseCase,
+        private val issuePresignedUrlUseCase: IssuePresignedUrlUseCase,
+        private val uploadImageToS3UseCase: UploadImageToS3UseCase,
     ) : BaseViewModel<StudiesManagementContract.Event, StudiesManagementContract.State, StudiesManagementContract.Effect>() {
         override fun createInitialState(): StudiesManagementContract.State = StudiesManagementContract.State()
 
@@ -38,6 +48,13 @@ class StudiesManagementViewModel
                 is StudiesManagementContract.Event.OnTagUnSelected -> unSelectedTag(event.tag)
                 is StudiesManagementContract.Event.OnDescriptionChanged -> setStudyInfo(description = event.description)
                 is StudiesManagementContract.Event.OnProfileImgChanged -> setStudyInfo(profileImg = event.profileImg)
+                is StudiesManagementContract.Event.OnSelectedImage ->
+                    issuePresignedUrl(
+                        event.imageUri,
+                        event.extension,
+                    )
+
+                is StudiesManagementContract.Event.OnSelectedImageRequest -> setImageRequest(event.requestImage)
                 is StudiesManagementContract.Event.OnCreateStudiesClicked -> createStudies()
             }
         }
@@ -50,6 +67,40 @@ class StudiesManagementViewModel
                     }.safeCollect { result ->
                         setState { copy(categories = result) }
                     }
+            }
+        }
+
+        private fun issuePresignedUrl(
+            imageUri: Uri,
+            extension: String?,
+        ) {
+            if (extension == null) {
+                return
+            }
+            viewModelScope.launch {
+                Log.d(TAG, "issuePresignedUrl: $imageUri")
+                issuePresignedUrlUseCase(
+                    uploadPathType = UploadPathType.PROFILE_STUDY_TEMP.path,
+                    imageExtension = extension,
+                ).withLoading {
+                    Log.d(TAG, "issuePresignedUrl: $it")
+                }.safeCollect { result ->
+                    Log.d(TAG, "issuePresignedUrl: $result")
+                    setState { copy(presignedUrl = result.presignedUrl) }
+                    setStudyInfo(profileImg = result.imageUrl)
+                    if (uiState.value.presignedUrl != null && uiState.value.requestImage != null) {
+                        uploadImageToS3UseCase(
+                            presignedUrl = uiState.value.presignedUrl!!,
+                            request = uiState.value.requestImage!!,
+                        )
+                    }
+                }
+            }
+        }
+
+        private fun setImageRequest(request: RequestBody?) {
+            setState {
+                copy(requestImage = request)
             }
         }
 

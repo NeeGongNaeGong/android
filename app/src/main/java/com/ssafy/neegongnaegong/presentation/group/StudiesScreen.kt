@@ -167,6 +167,7 @@ fun StudiesScreen(
                         leader = studies.leader.name,
                         createdDate = studies.createdDate,
                         description = studies.studyInfo.description,
+                        profileImageUrl = studies.studyInfo.profileImg,
                     )
 
                     if (index == studiesList.lastIndex) {

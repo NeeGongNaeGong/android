@@ -63,6 +63,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -78,9 +79,12 @@ import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.FileUtils.getFileExtension
+import com.ssafy.neegongnaegong.presentation.util.FileUtils.uriToRequestBody
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import okhttp3.RequestBody
 
 private const val TAG = "StudiesManagementScreen"
 
@@ -107,46 +111,44 @@ fun StudiesManagementRoute(
         onNameChanged = { viewModel.setEvent(StudiesManagementContract.Event.OnNameChanged(it)) },
         onIsPublicChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnIsPublicChanged(
-                    it,
-                ),
+                StudiesManagementContract.Event.OnIsPublicChanged(it),
             )
         },
         onTargetStudyTimeChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnTargetStudyTimeChanged(
-                    it,
-                ),
+                StudiesManagementContract.Event.OnTargetStudyTimeChanged(it),
             )
         },
         onMaxMembersChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnMaxMembersChanged(
-                    it,
-                ),
+                StudiesManagementContract.Event.OnMaxMembersChanged(it),
             )
         },
         onCategorySelected = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnSelectedCategory(
-                    it,
-                ),
+                StudiesManagementContract.Event.OnSelectedCategory(it),
             )
         },
         onTagSelected = { viewModel.setEvent(StudiesManagementContract.Event.OnTagSelected(it)) },
         onTagUnSelected = { viewModel.setEvent(StudiesManagementContract.Event.OnTagUnSelected(it)) },
         onDescriptionChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnDescriptionChanged(
-                    it,
-                ),
+                StudiesManagementContract.Event.OnDescriptionChanged(it),
             )
         },
         onProfileImgChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnProfileImgChanged(
-                    it,
-                ),
+                StudiesManagementContract.Event.OnProfileImgChanged(it),
+            )
+        },
+        onSelectedImage = { uri, ext ->
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnSelectedImage(imageUri = uri, extension = ext),
+            )
+        },
+        onSelectedImageRequest = {
+            viewModel.setEvent(
+                StudiesManagementContract.Event.OnSelectedImageRequest(it),
             )
         },
         onCreateStudies = {
@@ -172,6 +174,8 @@ fun StudiesManagementContent(
     onTagUnSelected: (Tag) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onProfileImgChanged: (String?) -> Unit,
+    onSelectedImage: (Uri, String?) -> Unit,
+    onSelectedImageRequest: (RequestBody?) -> Unit,
     onCreateStudies: () -> Unit,
     popBackStack: () -> Unit,
 ) {
@@ -203,6 +207,8 @@ fun StudiesManagementContent(
         onTagSelected = onTagSelected,
         onTagUnSelected = onTagUnSelected,
         onDescriptionChanged = onDescriptionChanged,
+        onSelectedImage = onSelectedImage,
+        onSelectedImageRequest = onSelectedImageRequest,
         onProfileImgChanged = onProfileImgChanged,
         onCreateStudies = onCreateStudies,
         popBackStack = popBackStack,
@@ -232,10 +238,13 @@ fun StudiesManagementScreen(
     onTagSelected: (Tag) -> Unit,
     onTagUnSelected: (Tag) -> Unit,
     onDescriptionChanged: (String) -> Unit,
+    onSelectedImage: (Uri, String?) -> Unit,
+    onSelectedImageRequest: (RequestBody?) -> Unit,
     onProfileImgChanged: (String?) -> Unit,
     onCreateStudies: () -> Unit,
     popBackStack: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     var targetStudyTimeDropdown by remember { mutableStateOf(false) }
     var maxMembersDropdown by remember { mutableStateOf(false) }
     var categoryDropdown by remember { mutableStateOf(false) }
@@ -247,7 +256,12 @@ fun StudiesManagementScreen(
                 uri?.let {
                     selectedImageUri = it
                     val encodeUri = Uri.encode(it.toString())
-                    Log.d(TAG, "StudiesComponentScreen: $encodeUri")
+                    Log.d(TAG, "image uri: $uri")
+                    Log.d(TAG, "encoded uri: $encodeUri")
+                    onSelectedImage(it, context.getFileExtension(it))
+                    Log.d(TAG, "extension: ${context.getFileExtension(it)}")
+                    Log.d(TAG, "request: ${context.uriToRequestBody(it)}")
+                    onSelectedImageRequest(context.uriToRequestBody(it))
                 }
             },
         )
@@ -843,6 +857,8 @@ private fun PreviewStudiesComponentScreen() {
             onTagSelected = { },
             onTagUnSelected = {},
             onDescriptionChanged = {},
+            onSelectedImage = { _, _ -> },
+            onSelectedImageRequest = {},
             onProfileImgChanged = {},
             onCreateStudies = { },
             popBackStack = {},
