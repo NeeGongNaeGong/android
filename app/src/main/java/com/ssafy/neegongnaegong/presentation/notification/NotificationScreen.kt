@@ -13,12 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.component.refresh.DefaultRefreshBox
 import com.ssafy.neegongnaegong.presentation.notification.component.NotificationList
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
@@ -44,15 +46,26 @@ fun NotificationScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 24.dp)
+                .padding(top = 20.dp)
         ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.notification),
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                )
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = "전체 삭제",
+                    text = stringResource(id = R.string.delete_all),
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .clickable(
@@ -61,7 +74,7 @@ fun NotificationScreen(
                             onClick = onDeleteAll
                         ),
                     textAlign = TextAlign.End,
-                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    style = NeeGongNaeGongTheme.typography.bodySmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText
                 )
             }

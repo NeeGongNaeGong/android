@@ -11,4 +11,8 @@
     <string name="txt_dialog_pause">일시 정지</string>
     <string name="txt_dialog_close">종료</string>
 
+    <!--    Notification Screen-->
+    <string name="notification">알람</string>
+    <string name="delete_all">전체 삭제</string>
+
 </resources>
