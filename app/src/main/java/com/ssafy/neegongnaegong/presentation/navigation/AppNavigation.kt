@@ -75,7 +75,7 @@ object AppNavigation {
             @Serializable
             sealed interface List : Studies {
                 @Serializable
-                data class Main(val startTab: Int = Index.Notice.index, val groupId: Long)
+                data class Main(val startTab: Int = Index.Notice.index, val title: String, val groupId: Long)
 
                 @Serializable
                 sealed interface Tab : List {
