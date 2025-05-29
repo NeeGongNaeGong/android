@@ -3,11 +3,15 @@ package com.ssafy.neegongnaegong.module.di
 import com.ssafy.neegongnaegong.data.repository.AuthRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.CalendarRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.CategoryRepositoryImpl
+import com.ssafy.neegongnaegong.data.repository.FileRepositoryImpl
+import com.ssafy.neegongnaegong.data.repository.S3RepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.StudiesRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.UserRepositoryImpl
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
 import com.ssafy.neegongnaegong.domain.repository.CalendarRepository
 import com.ssafy.neegongnaegong.domain.repository.CategoryRepository
+import com.ssafy.neegongnaegong.domain.repository.FileRepository
+import com.ssafy.neegongnaegong.domain.repository.S3Repository
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import dagger.Binds
@@ -38,4 +42,12 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindCalendarRepository(calendarRepositoryImpl: CalendarRepositoryImpl): CalendarRepository
+
+    @Binds
+    @Singleton
+    fun bindFileRepository(fileRepositoryImpl: FileRepositoryImpl): FileRepository
+
+    @Binds
+    @Singleton
+    fun bindS3Repository(s3RepositoryImpl: S3RepositoryImpl): S3Repository
 }

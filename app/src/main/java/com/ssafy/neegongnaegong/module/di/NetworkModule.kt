@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder
 import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.CategoryApi
+import com.ssafy.neegongnaegong.data.remote.FileApi
+import com.ssafy.neegongnaegong.data.remote.S3Api
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
@@ -76,6 +78,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @S3Retrofit
+    fun provideS3Retrofit(
+        @S3OkHttpClient okHttpClient: OkHttpClient,
+    ): Retrofit = Retrofit
+        .Builder()
+        .baseUrl("https://dummy/")
+        .client(okHttpClient)
+        .build()
+
+
+    @Provides
+    @Singleton
     @AuthOkHttpClient
     fun provideAuthOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
@@ -101,6 +115,17 @@ object NetworkModule {
         .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
         .build()
 
+    @Singleton
+    @Provides
+    @S3OkHttpClient
+    fun provideS3OkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            setLevel(HttpLoggingInterceptor.Level.BODY)
+        })
+        .build()
+
+
+
     @Provides
     @Singleton
     fun provideAuthApi(@AuthRetrofit retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
@@ -120,4 +145,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideCategoryApi(@SecureRetrofit retrofit: Retrofit): CategoryApi = retrofit.create(CategoryApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFileApi(@SecureRetrofit retrofit: Retrofit): FileApi = retrofit.create(FileApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideS3Api(@S3Retrofit retrofit: Retrofit): S3Api = retrofit.create(S3Api::class.java)
 }
