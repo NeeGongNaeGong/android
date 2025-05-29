@@ -9,17 +9,24 @@ class ListContract {
     sealed interface Event : UiEvent {
         data object OnClickAddContent : Event
 
-        data class OnClickTab(val tab: Index) : Event
+        data class OnTabChanged(val tab: Index) : Event
+
+        data class OnSyncTab(val tab: Index) : Event
 
         // Record Screen의 인자가 제대로 들어오지 않은 경우
         data object InvalidAccess : Event
     }
 
     data class State(
+        val groupId: Long,
         val index: Index,
     ) : UiState
 
     sealed interface Effect : UiEffect {
         data object NavigateToBackStack : Effect
+
+        data object NavigateToNoticeScreen : Effect
+
+        data object NavigateToVoteScreen : Effect
     }
 }

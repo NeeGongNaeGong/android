@@ -3,8 +3,8 @@ package com.ssafy.neegongnaegong.presentation.group.list.main
 import androidx.lifecycle.SavedStateHandle
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.navigation.Index
-import com.ssafy.neegongnaegong.presentation.navigation.ListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 // TODO(나중에 되면, 투표 화면에서 클릭했을 때는 투표화면이 최초 선택된 탭으로 해야 하고, 공지화면이면 공지화면으로 해야 하므로,
@@ -32,15 +32,11 @@ class ListViewModel
                     }
                 }
 
-                is ListContract.Event.OnClickTab -> {
-                    // 같은 탭이면 굳이 state 다시 만들어서 recomposition 하지 않도록
-                    if (uiState.value.index != event.tab) {
-                        setState { copy(index = event.tab) }
-                        setEffect {
-                            when (event.tab) {
-                                Index.Notice -> ListContract.Effect.NavigateToNoticeScreen
-                                Index.Vote -> ListContract.Effect.NavigateToVoteScreen
-                            }
+                is ListContract.Event.OnTabChanged -> {
+                    setEffect {
+                        when (event.tab) {
+                            Index.Notice -> ListContract.Effect.NavigateToNoticeScreen
+                            Index.Vote -> ListContract.Effect.NavigateToVoteScreen
                         }
                     }
                 }
@@ -49,6 +45,10 @@ class ListViewModel
                 ListContract.Event.InvalidAccess -> {
                     setEffect { ListContract.Effect.NavigateToBackStack }
                 }
+
+                is ListContract.Event.OnSyncTab -> {
+                    setState { copy(index = event.tab) }
+                }
             }
         }
 
@@ -56,14 +56,8 @@ class ListViewModel
             val groupId: Long? = savedStateHandle["groupId"]
             val startTabIdx: Int? = savedStateHandle["startTab"]
             if (groupId != null && startTabIdx != null) {
-                val index = ListItem.first { it.index == startTabIdx }
+                val index = Index.entries.toImmutableList().first { it.index == startTabIdx }
                 setState { copy(groupId = groupId, index = index) }
-                setEffect {
-                    when (index) {
-                        Index.Notice -> ListContract.Effect.NavigateToNoticeScreen
-                        Index.Vote -> ListContract.Effect.NavigateToVoteScreen
-                    }
-                }
             } else {
                 showErrorMessage("잘못된 접근입니다")
                 setEvent(ListContract.Event.InvalidAccess)
