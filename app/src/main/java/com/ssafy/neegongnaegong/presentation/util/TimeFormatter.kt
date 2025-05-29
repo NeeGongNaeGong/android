@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.util
 
+import android.annotation.SuppressLint
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -79,6 +80,21 @@ object TimeFormatter {
         return localDateTime.format(timeFormatter)
     }
 
+    /**
+     * yyyy년 MM월 dd일 (E) 꼴의 문자열과 a hh:mm 꼴의 문자열을 받아서
+     * 2025-05-09T03:58:41.360 이런 꼴의 LocalDateTime을 반환하는 함수
+     * @param String yyyy년 MM월 dd일 (E)
+     * @param String a hh:mm
+     * @return String 2025-05-09T03:58:41.360
+     */
+    fun convertStringToLocalDateTime(dateStr: String, timeStr: String): LocalDateTime {
+        // 날짜는 임의로 설정 (시간 형식만 중요하므로)
+        val date = LocalDate.parse(dateStr, dateFormatter)
+        val time = LocalTime.parse(timeStr, timeFormatter)
+        val dateTime = LocalDateTime.of(date, time)
+        return dateTime
+    }
+
     /** DateDialog의 경우 UTC로 값을 받아서 그렇게 변환하기 위한 함수
      * @param LocalDateTime 기준의 Long 값
      * @return UTC 기준의 Long 값
@@ -90,4 +106,19 @@ object TimeFormatter {
 
         return time + offsetMillis
     }
+
+    /**
+     * 밀리초로 들어온 기간을 00H00M으로 바꾸기 위한 함수
+     * @param Long 기간
+     * @return String 00H00M 꼴
+      */
+    @SuppressLint("DefaultLocale")
+    fun formatDurationToHM(millis: Long): String {
+        val totalMinutes = millis / (1000 * 60)
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+
+        return String.format("%02dH%02dM", hours, minutes)
+    }
+
 }

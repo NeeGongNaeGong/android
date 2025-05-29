@@ -6,7 +6,7 @@ class TokenManagerImpl @Inject constructor(
    private val localStorageManager: LocalStorageManager
 ) : TokenManager {
     override fun saveToken(tokenType: TokenType, token: String) {
-       localStorageManager.saveData(tokenType.type, token)
+       localStorageManager.saveData(tokenType.type, token.removePrefix("Bearer "))
     }
 
     override fun getToken(tokenType: TokenType): String? {

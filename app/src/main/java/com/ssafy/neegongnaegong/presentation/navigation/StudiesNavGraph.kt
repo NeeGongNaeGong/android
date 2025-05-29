@@ -62,7 +62,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             val (groupId, memberId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.Record>()
             RecordRoute(
                 groupId = groupId,
-                memberId= memberId,
+                memberId = memberId,
                 popBackStack = { navController.popBackStack() }
             )
         }

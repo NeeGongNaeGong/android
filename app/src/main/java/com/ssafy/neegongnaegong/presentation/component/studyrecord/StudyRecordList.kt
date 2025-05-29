@@ -2,7 +2,9 @@ package com.ssafy.neegongnaegong.presentation.component.studyrecord
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -24,25 +26,26 @@ fun StudyRecordList(
     modifier: Modifier = Modifier,
     learningRecords: List<LearningRecord>,
     onClick: (Long) -> Unit,
-    //paging
+    // paging
     onLoadMore: () -> Unit,
     hasNext: Boolean,
 ) {
     if (learningRecords.isEmpty()) {
         Box(
             modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "공부 기록이 없습니다.",
                 style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 16.sp),
-                color = NeeGongNaeGongTheme.colorScheme.gray4
+                color = NeeGongNaeGongTheme.colorScheme.gray4,
             )
         }
     } else {
-        val groupedRecords = learningRecords
-            .sortedByDescending { it.startAt }
-            .groupBy { it.startAt.toDateString() }
+        val groupedRecords =
+            learningRecords
+                .sortedByDescending { it.startAt }
+                .groupBy { it.startAt.toDateString() }
 
         LazyColumn(
             modifier = modifier,
@@ -66,6 +69,9 @@ fun StudyRecordList(
                         }
                     }
                 }
+            }
+            item {
+                Spacer(modifier = Modifier.height(0.dp))
             }
         }
     }

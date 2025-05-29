@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
+import com.ssafy.neegongnaegong.data.mapper.user.UserMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.auth.request.LoginRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RefreshRequest
 import com.ssafy.neegongnaegong.data.model.auth.request.RegisterRequest
@@ -70,14 +71,8 @@ class AuthRepositoryImpl @Inject constructor(
 
             networkAuthDataSource.reissue(request).collect { response ->
                 with(response.createJwt) {
-                    tokenManager.saveToken(
-                        TokenType.ACCESS_TOKEN,
-                        accessToken.removePrefix("Bearer ")
-                    )
-                    tokenManager.saveToken(
-                        TokenType.REFRESH_TOKEN,
-                        refreshToken.removePrefix("Bearer ")
-                    )
+                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
+                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
                 }
                 emit(true)
             }
