@@ -20,7 +20,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import okhttp3.internal.immutableListOf
 
 @Composable
 fun ListRoute(
@@ -40,7 +39,7 @@ fun ListRoute(
             onNavigationClick = { popBackStack() },
             actionButtons = {
                 IconButton(onClick = {
-                    TODO("공지화면이냐, 투표화면이냐에 따라서 연필 아이콘을 눌렀을 때 각각의 탭에 맞는 생성 화면이 나타나도록")
+                    viewModel.setEvent(ListContract.Event.OnClickAddContent)
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Create,
@@ -49,44 +48,66 @@ fun ListRoute(
                 }
             },
         )
-        ListContent(modifier = modifier, state.index)
+        ListScreen(modifier = modifier, state.index) { tab ->
+            viewModel.setEvent(
+                ListContract.Event.OnClickTab(
+                    tab,
+                ),
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListContent(
+fun ListScreen(
     modifier: Modifier = Modifier,
-    index: Int,
+    selectedTab: Index,
+    onTabClick: (Index) -> Unit,
 ) {
-    val tabList = immutableListOf("공지", "투표")
-    SecondaryTabRow(
-        modifier = modifier,
-        selectedTabIndex = index,
-        indicator = {
-            TabRowDefaults.SecondaryIndicator(
-                modifier =
-                    Modifier
-                        .tabIndicatorOffset(index, false),
-                color = NeeGongNaeGongTheme.colorScheme.primaryText,
-            )
-        },
-    ) {
-        tabList.forEachIndexed { tabListIndex, item ->
-            Tab(
-                modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
-                selectedContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                unselectedContentColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                selected = index == tabListIndex,
-                onClick = {},
-                text = {
-                    Text(
-                        text = item,
-                        style = NeeGongNaeGongTheme.typography.bodyMedium,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-            )
+    Column {
+        SecondaryTabRow(
+            modifier = modifier,
+            selectedTabIndex = selectedTab.index,
+            indicator = {
+                TabRowDefaults.SecondaryIndicator(
+                    modifier =
+                        Modifier
+                            .tabIndicatorOffset(selectedTab.index, false),
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            },
+        ) {
+            Index.entries.forEach { item ->
+                Tab(
+                    modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
+                    selectedContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                    unselectedContentColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                    selected = selectedTab.index == item.index,
+                    onClick = { onTabClick(item) },
+                    text = {
+                        Text(
+                            text = item.title,
+                            style = NeeGongNaeGongTheme.typography.bodyMedium,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                )
+            }
+        }
+        ListContent(selectedTab)
+    }
+}
+
+@Composable
+fun ListContent(selectedTab: Index) {
+    when (selectedTab) {
+        Index.Notice -> {
+            TODO("공지 화면 만들고 그곳으로 이동하도록 하기")
+        }
+
+        Index.Vote -> {
+            TODO("투표 화면 만들고 그곳으로 이동하도록 하기")
         }
     }
 }
@@ -95,6 +116,6 @@ fun ListContent(
 @NeeGongNaeGongPreviews
 fun ListContentPreview() {
     NeeGongNaeGongTheme {
-        ListContent(index = 0)
+        ListScreen(selectedTab = Index.Vote, onTabClick = {})
     }
 }
