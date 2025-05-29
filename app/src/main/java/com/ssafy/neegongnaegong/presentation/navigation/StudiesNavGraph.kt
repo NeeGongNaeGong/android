@@ -69,8 +69,10 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         }
 
         composable<AppNavigation.Screen.Studies.List.Main> { backStackEntry ->
+            val title = backStackEntry.toRoute<AppNavigation.Screen.Studies.List.Main>().title
             ListRoute(
                 popBackStack = { navController.popBackStack() },
+                title = title,
             )
         }
     }
