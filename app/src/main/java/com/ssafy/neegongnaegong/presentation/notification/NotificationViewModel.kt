@@ -94,9 +94,9 @@ class NotificationViewModel @Inject constructor(
             image = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
             user = "킹 민 조",
             content = "님이 길을 나선다 모두 머리를 조아려라",
-            isRead = Random.nextBoolean()
+            isRead = false
         )
-        val TestList = List<NotificationUiModel>(500) { TestModel }
+        val TestList = List(10) { index -> TestModel.copy(isRead = index >= 5) }
         val TestPagingData = PagingData.from(TestList)
     }
 }
