@@ -19,40 +19,40 @@ interface StudiesApi {
     @GET("/studies")
     suspend fun getStudiesDel(): List<Studies> // TODO : 제거
 
-    @GET("/api/studies/study-groups")
+    @GET("/api/study-groups/list")
     suspend fun getStudiesList(
         @Query("cursorCreatedAt") cursorCreatedAt: LocalDateTime?,
         @Query("cursorId") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceStudiesListResponse>>
 
-    @POST("/api/studies")
+    @POST("/api/study-groups")
     suspend fun createStudies(
         @Body request: CreateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
-    @GET("/api/studies/{studyGroupId}")
+    @GET("/api/study-groups/{studyGroupId}")
     suspend fun getStudies(
         @Path("studyGroupId") studyGroupId: Long,
     ): Result<ApiResponse<StudiesResponse>>
 
-    @PUT("/api/studies/{studyGroupId}")
+    @PUT("/api/study-groups/{studyGroupId}")
     suspend fun updateStudies(
         @Path("studyGroupId") studyGroupId: Long,
         @Body request: UpdateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/studies/{studyGroupId}")
+    @DELETE("/api/study-groups/{studyGroupId}")
     suspend fun deleteStudies(
         @Path("studyGroupId") studyGroupId: Int,
     ): Result<ApiResponse<Unit>>
 
-    @POST("/api/studies/{studyGroupId}/applications")
+    @POST("/api/study-groups/{studyGroupId}/applications")
     suspend fun applyStudies(
         @Path("studyGroupId") studyGroupId: Int,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/studies/{studyGroupId}/applications")
+    @DELETE("/api/study-groups/{studyGroupId}/applications")
     suspend fun cancelApplicationsStudies(
         @Path("studyGroupId") studyGroupId: Int,
     ): Result<ApiResponse<Unit>>
