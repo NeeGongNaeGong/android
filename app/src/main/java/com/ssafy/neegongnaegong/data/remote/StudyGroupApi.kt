@@ -2,8 +2,8 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
-import kotlinx.collections.immutable.PersistentList
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -28,4 +28,12 @@ interface StudyGroupApi {
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
+
+    @GET("$PREFIX/vote/{study-group-id}")
+    suspend fun getStudyGroupVoteList(
+        @Path("study-group-id") studyGroupId: Long,
+        @Query("cursor-time") cursorTime: LocalDateTime?,
+        @Query("cursor-id") cursorId: Long?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
 }
