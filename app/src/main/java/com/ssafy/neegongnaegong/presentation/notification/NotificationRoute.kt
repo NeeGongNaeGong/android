@@ -13,8 +13,7 @@ import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiMod
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
 @Composable
-fun NotificationRoute() {
-    val viewModel: NotificationViewModel = hiltViewModel()
+fun NotificationRoute(viewModel: NotificationViewModel = hiltViewModel()) {
     val listState: LazyListState = rememberLazyListState()
     val uiState: NotificationContract.State by viewModel.uiState.collectAsStateWithLifecycle()
     val notificationList: LazyPagingItems<NotificationUiModel> = viewModel
