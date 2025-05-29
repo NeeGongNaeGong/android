@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group.list
+package com.ssafy.neegongnaegong.presentation.group.list.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,12 +12,20 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.list.VoteListRoute
+import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
+import com.ssafy.neegongnaegong.presentation.navigation.Index
+import com.ssafy.neegongnaegong.presentation.navigation.ListItem
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -65,6 +73,18 @@ fun ListScreen(
     selectedTab: Index,
     onTabClick: (Index) -> Unit,
 ) {
+    val listController = rememberNavController()
+
+//    이하 현재 어디 있는지 알기 위한 코드
+//    val backStackEntry by listController.currentBackStackEntryAsState()
+//    val currentDestination = backStackEntry?.destination
+//    val tabs = ListItem.map { it.route }
+//    val selectedIndex = tabs.indexOfFirst { tab ->
+//        currentDestination?.hierarchy?.any {
+//            it.hasRoute(tab::class)
+//        } == true
+//    }
+
     Column {
         SecondaryTabRow(
             modifier = modifier,
@@ -78,7 +98,7 @@ fun ListScreen(
                 )
             },
         ) {
-            Index.entries.forEach { item ->
+            ListItem.forEach { item ->
                 Tab(
                     modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
                     selectedContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -95,7 +115,29 @@ fun ListScreen(
                 )
             }
         }
-        ListContent(selectedTab)
+        NavHost(
+            navController = listController,
+            startDestination = AppNavigation.Screen.Studies.List.NoticeList,
+        ) {
+            composable<AppNavigation.Screen.Studies.List.NoticeList> {
+
+            }
+            composable<AppNavigation.Screen.Studies.List.NoticeDetail> {
+
+            }
+            composable<AppNavigation.Screen.Studies.List.VoteList> {
+                VoteListRoute()
+            }
+            composable<AppNavigation.Screen.Studies.List.VoteDetail> {
+
+            }
+        }
+        LaunchedEffect(selectedTab) {
+            val targetRoute = selectedTab.route
+            listController.navigate(targetRoute) {
+                popUpTo(targetRoute) { inclusive = true }
+            }
+        }
     }
 }
 
@@ -107,14 +149,14 @@ fun ListContent(selectedTab: Index) {
         }
 
         Index.Vote -> {
-            TODO("투표 화면 만들고 그곳으로 이동하도록 하기")
+            VoteListRoute(viewModel = viewmo)
         }
     }
 }
 
 @Composable
 @NeeGongNaeGongPreviews
-fun ListContentPreview() {
+fun PreviewListContent() {
     NeeGongNaeGongTheme {
         ListScreen(selectedTab = Index.Vote, onTabClick = {})
     }
