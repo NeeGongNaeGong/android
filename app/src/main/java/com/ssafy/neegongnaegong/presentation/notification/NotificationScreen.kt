@@ -62,6 +62,7 @@ fun NotificationScreen(
                         ),
                     textAlign = TextAlign.End,
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText
                 )
             }
 

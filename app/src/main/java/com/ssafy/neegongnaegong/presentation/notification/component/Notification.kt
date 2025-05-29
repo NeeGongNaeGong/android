@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -146,16 +145,19 @@ private fun NotificationContent(
             modifier = Modifier.weight(1f),
             text = buildText(user = user, content = content),
             style = NeeGongNaeGongTheme.typography.bodySmall,
+            color = NeeGongNaeGongTheme.colorScheme.primaryText
         )
     }
 }
 
 @Composable
 private fun notificationBackgroundColor(isRead: Boolean): Color {
-    val isDark = isSystemInDarkTheme()
-    val baseColor = if (isDark) Color.Gray else Color.White
-    return if (isRead) lerp(baseColor, Color.LightGray, 0.5f)
-    else baseColor
+    val isDark: Boolean = isSystemInDarkTheme()
+    return if (isDark) {
+        if (isRead) Color(0xFF0D1015) else Color.Gray
+    } else {
+        if (isRead) Color.White else Color(0xFFEFF6FE)
+    }
 }
 
 private fun buildText(user: String, content: String): AnnotatedString = buildAnnotatedString {

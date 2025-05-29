@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.presentation.notification.component
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
@@ -32,10 +31,6 @@ fun NotificationList(
                 onDelete = { onDeleteNotification(data) },
                 onMove = { onMoveNotification(data) }
             )
-
-            if (index < notificationList.itemCount - 1) {
-                HorizontalDivider()
-            }
         }
     }
 }
