@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
@@ -19,8 +20,8 @@ import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
  * 여기가 Study Nav Graph이지만
  * 모든 경로의 이름이 BottomNavigation.Screen.~~.route로 다 들어가 있기 때문에
  * 여기서 Profile 탭의 화면의 경로도 BottomNavigation으로 접근해서 사용할 수 있다.
+ * Study 탭의 Navigation을 설정하는 곳
  */
-// Study 탭의 Navigation을 설정하는 곳
 fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
     navigation<AppNavigation.Tab.Studies>(
         startDestination = AppNavigation.Screen.Studies.Main,
@@ -63,7 +64,13 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             RecordRoute(
                 groupId = groupId,
                 memberId = memberId,
-                popBackStack = { navController.popBackStack() }
+                popBackStack = { navController.popBackStack() },
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.List.Main> { backStackEntry ->
+            ListRoute(
+                popBackStack = { navController.popBackStack() },
             )
         }
     }
