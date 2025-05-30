@@ -18,22 +18,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TagList
 import com.ssafy.neegongnaegong.presentation.timer.component.write.BottomButtons
 import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextField
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
-import com.ssafy.neegongnaegong.presentation.timer.write.LearningRecordWriteScreen
+import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteScreen
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toDateString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-
 
 @Composable
 fun StudyRecordEditRoute(
@@ -46,8 +46,9 @@ fun StudyRecordEditRoute(
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-    viewModel.loadStudyRecord(studyRecordId)
-
+    LaunchedEffect(studyRecordId) {
+        viewModel.loadStudyRecord(studyRecordId)
+    }
 
     StudyRecordEditContent(
         modifier = modifier,
@@ -64,16 +65,15 @@ fun StudyRecordEditRoute(
         onSearchQueryChanged = {
             viewModel.setEvent(
                 StudyRecordEditContract.Event.OnSearchTextChanged(
-                    it
-                )
+                    it,
+                ),
             )
         },
         onTagSelected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagSelected(it)) },
         onTagDeselected = { viewModel.setEvent(StudyRecordEditContract.Event.OnTagDeselected(it)) },
+        navigateToHome = popBackStack,
     )
-
 }
-
 
 @Composable
 fun StudyRecordEditContent(
@@ -91,6 +91,8 @@ fun StudyRecordEditContent(
     onSearchQueryChanged: (String) -> Unit,
     onTagSelected: (Tag) -> Unit,
     onTagDeselected: (Tag) -> Unit,
+    // api
+    navigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -110,7 +112,7 @@ fun StudyRecordEditContent(
         effect.collectLatest { effect ->
             when (effect) {
                 is StudyRecordEditContract.Effect.NavigateToHome -> {
-
+                    navigateToHome()
                 }
 
                 is StudyRecordEditContract.Effect.ShowErrorToast -> {
@@ -131,7 +133,7 @@ fun StudyRecordEditContent(
     LearningRecordWriteScreen(
         modifier = modifier,
         tags = uiState.tags,
-        studyRecord = uiState.studyRecord,
+        learningRecord = uiState.learningRecord,
         onTitleChanged = onTitleChanged,
         onContentChanged = onContentChanged,
         onTagPlusClicked = onTagPlusClicked,
@@ -140,12 +142,13 @@ fun StudyRecordEditContent(
         onConfirmClicked = onConfirmClicked,
     )
 
+    if (uiState.isLoading) LoadingDialog()
 }
 
 @Composable
 fun StudyRecordEditScreen(
     modifier: Modifier = Modifier,
-    studyRecord: StudyRecord,
+    learningRecord: LearningRecord,
     tags: List<Tag>,
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
@@ -157,48 +160,51 @@ fun StudyRecordEditScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 16.dp, start = 8.dp, end = 8.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 8.dp, end = 8.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-
             DateTimeHeader(
-                dateText = studyRecord.startTime.toDateString(),
-                timeText = "${studyRecord.startTime.toTimeString()} ~ ${studyRecord.endTime.toTimeString()}"
+                dateText = learningRecord.startAt.toDateString(),
+                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
             )
 
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
-                title = studyRecord.title,
-                onTitleChanged = onTitleChanged
+                title = learningRecord.title,
+                onTitleChanged = onTitleChanged,
             )
 
             ContentTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(screenHeight * 0.5f),
-                content = studyRecord.content,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(screenHeight * 0.5f),
+                content = learningRecord.content,
                 onContentChanged = onContentChanged,
             )
 
             TagList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
                 tags = tags,
                 onTagPlusClicked = onTagPlusClicked,
-                onTagEraseClicked = onTagEraseClicked
+                onTagEraseClicked = onTagEraseClicked,
             )
         }
 
         BottomButtons(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
             onCancelClicked = onCancelClicked,
-            onConfirmClicked = onConfirmClicked
+            onConfirmClicked = onConfirmClicked,
         )
     }
 }
@@ -209,14 +215,14 @@ private fun PreviewWriteScreen() {
     NeeGongNaeGongTheme {
         Surface {
             StudyRecordEditScreen(
-                studyRecord = StudyRecord.default(),
+                learningRecord = LearningRecord.default(),
                 tags = PersonalPreviewDataProvider().getTags(),
                 onTitleChanged = {},
                 onContentChanged = {},
                 onTagPlusClicked = {},
                 onTagEraseClicked = {},
                 onCancelClicked = {},
-                onConfirmClicked = {}
+                onConfirmClicked = {},
             )
         }
     }

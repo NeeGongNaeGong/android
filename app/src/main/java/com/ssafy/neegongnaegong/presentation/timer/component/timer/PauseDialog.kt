@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -36,19 +37,20 @@ fun PauseDialog(
 ) {
     Dialog(onDismissRequest = { onCancel.invoke() }) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White, shape = RoundedCornerShape(12.dp))
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
         ) {
             Column(
                 modifier = Modifier.padding(top = 20.dp, start = 10.dp, end = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(R.string.txt_dialog_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -56,7 +58,7 @@ fun PauseDialog(
                 Text(
                     text = stringResource(R.string.txt_dialog_content),
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -65,17 +67,17 @@ fun PauseDialog(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     TextButton(
                         onClick = onDismiss,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             stringResource(R.string.txt_dialog_pause),
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = NeeGongNaeGongTheme.colorScheme.peach
+                            color = NeeGongNaeGongTheme.colorScheme.peach,
                         )
                     }
 
@@ -84,24 +86,34 @@ fun PauseDialog(
                     VerticalDivider(
                         thickness = 0.4.dp,
                         color = Color.Gray,
-                        modifier = Modifier.height(50.dp)
+                        modifier = Modifier.height(50.dp),
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TextButton(
                         onClick = onConfirm,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             stringResource(R.string.txt_dialog_close),
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Blue
+                            color = Blue,
                         )
                     }
                 }
             }
         }
     }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun PauseDialogPreview() {
+    PauseDialog(
+        onCancel = {},
+        onDismiss = {},
+        onConfirm = {},
+    )
 }

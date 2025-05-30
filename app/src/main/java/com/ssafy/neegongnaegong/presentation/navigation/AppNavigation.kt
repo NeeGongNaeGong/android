@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
-import com.ssafy.neegongnaegong.domain.model.personal.StudyRecord
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -12,9 +11,6 @@ import java.time.format.DateTimeFormatter
  */
 
 object AppNavigation {
-
-
-
     /**
      * Bottom Tab으로 쓸 각 탭과 탭의 경로를 설정
      */
@@ -24,9 +20,10 @@ object AppNavigation {
         // 이런 식으로 이제는 각 NavGraph의 navigation의 route를 제네릭 타입으로 AppNavigation에서 Tab 내부에 구현한 클래스를 건네주면 됨
         //
 
-        //생각해보면 회원가입 페이지도 있을텐데, 로그인, 회원가입들을 관리하는 Tab 하나 정도 있어야 하지 않을까 싶어서 생성
+        // 생각해보면 회원가입 페이지도 있을텐데, 로그인, 회원가입들을 관리하는 Tab 하나 정도 있어야 하지 않을까 싶어서 생성
         @Serializable
-        data object Auth: Tab
+        data object Auth : Tab
+
         @Serializable
         data object Studies : Tab
 
@@ -47,13 +44,14 @@ object AppNavigation {
     sealed interface Screen {
         // 회원가입과 로그인 관련 Screen들을 관리할 Auth Screen
         @Serializable
-        sealed interface Auth : Screen{
+        sealed interface Auth : Screen {
             /**
              * 로그인 화면 화면 경로
              */
             @Serializable
-            data object Login: Auth
+            data object Login : Auth
         }
+
         // Study Tab에 들어갈 화면들을 선언
         @Serializable
         sealed interface Studies : Screen {
@@ -69,10 +67,10 @@ object AppNavigation {
             data object Management : Studies
 
             @Serializable
-            data object MakeVote : Studies
+            data class MakeVote(val studyGroupId: Int) : Studies
 
             @Serializable
-            data class Record(val groupId: Int, val memberId: Int) : Studies
+            data class Record(val groupId: Long, val memberId: Long) : Studies
         }
 
         @Serializable
@@ -94,6 +92,7 @@ object AppNavigation {
             @Serializable
             data class Create(val date: String) : Calendar {
                 constructor(date: LocalDate) : this(DateTimeFormatter.ISO_LOCAL_DATE.format(date))
+
                 fun date(): LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
             }
 

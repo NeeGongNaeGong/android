@@ -3,10 +3,16 @@ package com.ssafy.neegongnaegong.domain.repository
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
+import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import kotlinx.coroutines.flow.Flow
 
 interface StudiesRepository {
     suspend fun getStudies(): List<Studies>
+
+    suspend fun createVote(
+        studyId: Int,
+        voteInfo: VoteInfo,
+    ): Flow<Unit>
 
     suspend fun getStudiesList(
         cursorCreatedAt: String?,

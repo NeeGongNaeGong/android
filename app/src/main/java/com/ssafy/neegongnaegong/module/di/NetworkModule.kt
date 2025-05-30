@@ -6,8 +6,10 @@ import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.CategoryApi
 import com.ssafy.neegongnaegong.data.remote.FileApi
+import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
 import com.ssafy.neegongnaegong.data.remote.S3Api
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
+import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import com.ssafy.neegongnaegong.data.remote.adapter.call.ConvertToResultAdapterFactory
@@ -50,15 +52,16 @@ object NetworkModule {
     fun provideAuthRetrofit(
         @AuthOkHttpClient okHttpClient: OkHttpClient,
         gson: Gson,
-    ): Retrofit = Retrofit
-        .Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addConverterFactory(ListQueryConverter())
-        .addConverterFactory(NullOnEmptyConverter())
-        .addCallAdapterFactory(ConvertToResultAdapterFactory())
-        .build()
+    ): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ListQueryConverter())
+            .addConverterFactory(NullOnEmptyConverter())
+            .addCallAdapterFactory(ConvertToResultAdapterFactory())
+            .build()
 
     @Provides
     @Singleton
@@ -66,91 +69,125 @@ object NetworkModule {
     fun provideSecureRetrofit(
         @SecureOkHttpClient okHttpClient: OkHttpClient,
         gson: Gson,
-    ): Retrofit = Retrofit
-        .Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addConverterFactory(ListQueryConverter())
-        .addConverterFactory(NullOnEmptyConverter())
-        .addCallAdapterFactory(ConvertToResultAdapterFactory())
-        .build()
+    ): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ListQueryConverter())
+            .addConverterFactory(NullOnEmptyConverter())
+            .addCallAdapterFactory(ConvertToResultAdapterFactory())
+            .build()
 
     @Provides
     @Singleton
     @S3Retrofit
     fun provideS3Retrofit(
         @S3OkHttpClient okHttpClient: OkHttpClient,
-    ): Retrofit = Retrofit
-        .Builder()
-        .baseUrl("https://dummy/")
-        .client(okHttpClient)
-        .build()
-
+    ): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl("https://dummy/")
+            .client(okHttpClient)
+            .build()
 
     @Provides
     @Singleton
     @AuthOkHttpClient
-    fun provideAuthOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        })
-        .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-        .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-        .build()
+    fun provideAuthOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                },
+            )
+            .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+            .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+            .build()
 
     @Singleton
     @Provides
     @SecureOkHttpClient
     fun provideSecureOkHttpClient(
         authInterceptor: AuthInterceptor,
-        reissueAuthenticator: ReissueAuthenticator
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(authInterceptor)
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        })
-        .authenticator(reissueAuthenticator)
-        .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-        .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-        .build()
+        reissueAuthenticator: ReissueAuthenticator,
+    ): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                },
+            )
+            .authenticator(reissueAuthenticator)
+            .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+            .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+            .build()
 
     @Singleton
     @Provides
     @S3OkHttpClient
-    fun provideS3OkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        })
-        .build()
-
-
-
-    @Provides
-    @Singleton
-    fun provideAuthApi(@AuthRetrofit retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
+    fun provideS3OkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                },
+            )
+            .build()
 
     @Provides
     @Singleton
-    fun provideUserApi(@SecureRetrofit retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
+    fun provideAuthApi(
+        @AuthRetrofit retrofit: Retrofit,
+    ): AuthApi = retrofit.create(AuthApi::class.java)
 
     @Provides
     @Singleton
-    fun provideUserCalendarApi(@SecureRetrofit retrofit: Retrofit): UserCalendarApi = retrofit.create(UserCalendarApi::class.java)
+    fun provideUserApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): UserApi = retrofit.create(UserApi::class.java)
 
     @Provides
     @Singleton
-    fun provideGroupApi(@SecureRetrofit retrofit: Retrofit): StudiesApi = retrofit.create(StudiesApi::class.java)
+    fun provideUserCalendarApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): UserCalendarApi = retrofit.create(UserCalendarApi::class.java)
 
     @Provides
     @Singleton
-    fun provideCategoryApi(@SecureRetrofit retrofit: Retrofit): CategoryApi = retrofit.create(CategoryApi::class.java)
+    fun provideGroupApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): StudiesApi = retrofit.create(StudiesApi::class.java)
 
     @Provides
     @Singleton
-    fun provideFileApi(@SecureRetrofit retrofit: Retrofit): FileApi = retrofit.create(FileApi::class.java)
+    fun provideStudyGroupApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): StudyGroupApi = retrofit.create(StudyGroupApi::class.java)
 
     @Provides
     @Singleton
-    fun provideS3Api(@S3Retrofit retrofit: Retrofit): S3Api = retrofit.create(S3Api::class.java)
+    fun provideLearningRecordApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): LearningRecordApi = retrofit.create(LearningRecordApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCategoryApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): CategoryApi = retrofit.create(CategoryApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFileApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): FileApi = retrofit.create(FileApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideS3Api(
+        @S3Retrofit retrofit: Retrofit,
+    ): S3Api = retrofit.create(S3Api::class.java)
 }

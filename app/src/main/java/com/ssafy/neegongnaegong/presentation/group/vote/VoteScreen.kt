@@ -13,32 +13,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,31 +40,44 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.group.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
+import com.ssafy.neegongnaegong.presentation.util.CustomDateTimeFormatter
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.collectLatest
-
 
 @Composable
 fun VoteRoute(
     popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
-    viewModel: VoteViewModel = hiltViewModel()
+    viewModel: VoteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
-    Scaffold(
-        topBar = {
-            VoteTopBar(
-                popBackStack,
-                onClickCompleteButton = { viewModel.setEvent(VoteContract.Event.OnClickCompleteButton) })
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
+    Column {
+        TopAppBar(
+            title = {
+                Text(
+                    style = NeeGongNaeGongTheme.typography.titleSmall,
+                    text = "투표 만들기",
+                )
+            },
+            onNavigationClick = { popBackStack() },
+            actionButtons = {
+                TextButton(onClick = {
+                    viewModel.setEvent(
+                        VoteContract.Event.OnClickCompleteButton,
+                    )
+                }) {
+                    Text(
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        text = "완료",
+                    )
+                }
+            },
+        )
 
         LaunchedEffect(viewModel.effect) {
             viewModel.effect.collectLatest { effect ->
@@ -84,9 +90,7 @@ fun VoteRoute(
         }
 
         VoteContent(
-            modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier.weight(1F),
             uiState,
             onClickAddVoteItemButton = { viewModel.setEvent(VoteContract.Event.OnClickAddVoteItemButton) },
             onClickMultipleSelectionOption = { viewModel.setEvent(VoteContract.Event.OnClickMultipleSelectionOption) },
@@ -97,16 +101,16 @@ fun VoteRoute(
             onVoteTitleChanged = { title ->
                 viewModel.setEvent(
                     VoteContract.Event.OnVoteTitleChanged(
-                        title
-                    )
+                        title,
+                    ),
                 )
             },
             onVoteItemChanged = { index, title ->
                 viewModel.setEvent(
                     VoteContract.Event.OnVoteItemChanged(
                         index,
-                        title
-                    )
+                        title,
+                    ),
                 )
             },
             onClickDateButton = { viewModel.setEvent(VoteContract.Event.OnClickDateButton) },
@@ -118,52 +122,12 @@ fun VoteRoute(
                 viewModel.setEvent(
                     VoteContract.Event.OnChangeTime(
                         hour,
-                        minute
-                    )
+                        minute,
+                    ),
                 )
             },
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun VoteTopBar(
-    popBackStack: () -> Boolean,
-    onClickCompleteButton: () -> Unit
-) {
-    // title을 가운데로 위치시켜주는 CenterAlignedTopAppBar
-    // https://stackoverflow.com/questions/67497414/how-to-align-title-at-layout-center-in-topappbar
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                style = NeeGongNaeGongTheme.typography.titleSmall,
-                text = "투표 만들기"
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { popBackStack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "뒤로 가기 버튼"
-                )
-            }
-        },
-        actions = {
-            TextButton(onClick = { popBackStack() }) {
-                Text(
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    text = "완료"
-                )
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = NeeGongNaeGongTheme.colorScheme.background,
-            titleContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            navigationIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            actionIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-        )
-    )
 }
 
 @Composable
@@ -178,14 +142,12 @@ fun VoteContent(
     onClickAlarmBeforeClosingOption: () -> Unit,
     onVoteTitleChanged: (String) -> Unit,
     onVoteItemChanged: (Int, String) -> Unit,
-
     onClickDateButton: () -> Unit,
     onClickTimeButton: () -> Unit,
     onDismissDateButton: () -> Unit,
     onDismissTimeButton: () -> Unit,
-
     onChangeDate: (Long) -> Unit,
-    onChangeTime: (Int, Int) -> Unit
+    onChangeTime: (Int, Int) -> Unit,
 ) {
     LoadDialog(
         uiState.isDateDialogVisible,
@@ -195,11 +157,12 @@ fun VoteContent(
         onDismissDateButton,
         onDismissTimeButton,
         onChangeDate,
-        onChangeTime
+        onChangeTime,
     )
 
     VoteScreen(
-        modifier, uiState,
+        modifier,
+        uiState,
         onClickAddVoteItemButton,
         onClickMultipleSelectionOption,
         onClickAnonymousVotingOption,
@@ -209,7 +172,7 @@ fun VoteContent(
         onVoteTitleChanged,
         onVoteItemChanged,
         onClickDateButton,
-        onClickTimeButton
+        onClickTimeButton,
     )
 }
 
@@ -232,7 +195,7 @@ fun VoteScreen(
         modifier
             .fillMaxSize()
             .background(NeeGongNaeGongTheme.colorScheme.background)
-            .padding(horizontal = 13.dp)
+            .padding(horizontal = 13.dp),
     ) {
         item {
             MainOption(
@@ -287,7 +250,7 @@ fun MainOption(
             .background(NeeGongNaeGongTheme.colorScheme.gray2)
             .padding(13.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         VoteList(
             voteTitle,
@@ -315,20 +278,22 @@ fun VoteList(
     onVoteTitleChanged: (String) -> Unit,
     onVoteItemChanged: (Int, String) -> Unit,
 ) {
-    val textFieldModifier = Modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(15.dp))
-        .background(NeeGongNaeGongTheme.colorScheme.background)
+    val textFieldModifier =
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(15.dp))
+            .background(NeeGongNaeGongTheme.colorScheme.background)
 
-    val textFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = NeeGongNaeGongTheme.colorScheme.background,
-        unfocusedContainerColor = NeeGongNaeGongTheme.colorScheme.background,
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent,
-        disabledIndicatorColor = Color.Transparent,
-        unfocusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-        focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-    )
+    val textFieldColors =
+        TextFieldDefaults.colors(
+            focusedContainerColor = NeeGongNaeGongTheme.colorScheme.background,
+            unfocusedContainerColor = NeeGongNaeGongTheme.colorScheme.background,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            unfocusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+            focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+        )
 
     TextField(
         modifier = textFieldModifier,
@@ -336,7 +301,7 @@ fun VoteList(
         singleLine = true,
         value = voteTitle,
         onValueChange = { title -> onVoteTitleChanged(title) },
-        placeholder = { Text("투표 제목") }
+        placeholder = { Text("투표 제목") },
     )
 
     voteItemList.mapIndexed { index, itemTitle ->
@@ -346,22 +311,23 @@ fun VoteList(
             singleLine = true,
             value = itemTitle,
             onValueChange = { title -> onVoteItemChanged(index, title) },
-            placeholder = { Text("항목 입력") }
+            placeholder = { Text("항목 입력") },
         )
     }
 
     IconButton(
         onClick = { onClickAddVoteItemButton() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(15.dp))
-            .background(NeeGongNaeGongTheme.colorScheme.background)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(15.dp))
+                .background(NeeGongNaeGongTheme.colorScheme.background),
     ) {
         Icon(
             Icons.Rounded.Add,
             modifier = Modifier.size(48.dp),
             contentDescription = "항목 추가",
-            tint = NeeGongNaeGongTheme.colorScheme.gray4
+            tint = NeeGongNaeGongTheme.colorScheme.gray4,
         )
     }
 }
@@ -378,11 +344,11 @@ fun VoteOption(
     Column(
         Modifier
             .fillMaxWidth()
-            .background(NeeGongNaeGongTheme.colorScheme.gray2)
+            .background(NeeGongNaeGongTheme.colorScheme.gray2),
     ) {
-        OptionButton(isMultipleSelectionEnabled, "복수선택") { onClickMultipleSelectionOption() }
-        OptionButton(isAnonymousVotingEnabled, "익명투표") { onClickAnonymousVotingOption() }
-        OptionButton(allowAddingSelection, "선택 항목 추가 허용") { onClickAllowAddingSelectionOption() }
+        OptionButton(isSelected = isMultipleSelectionEnabled, optionTitle = "복수선택") { onClickMultipleSelectionOption() }
+        OptionButton(isSelected = isAnonymousVotingEnabled, optionTitle = "익명투표") { onClickAnonymousVotingOption() }
+        OptionButton(isSelected = allowAddingSelection, optionTitle = "선택 항목 추가 허용") { onClickAllowAddingSelectionOption() }
     }
 }
 
@@ -401,23 +367,23 @@ fun EndOption(
         Modifier
             .fillMaxWidth()
             .background(NeeGongNaeGongTheme.colorScheme.gray2)
-            .padding(13.dp)
+            .padding(13.dp),
     ) {
-        OptionButton(isEndDateEnabled, "종료 시간") { onClickEndDateOption() }
+        OptionButton(isSelected = isEndDateEnabled, optionTitle = "종료 시간") { onClickEndDateOption() }
 
         Row(
             Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-
             TextButton(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(NeeGongNaeGongTheme.colorScheme.background)
-                    .padding(vertical = 2.dp, horizontal = 5.dp),
-                onClick = onClickDatePicker
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(NeeGongNaeGongTheme.colorScheme.background)
+                        .padding(vertical = 2.dp, horizontal = 5.dp),
+                onClick = onClickDatePicker,
             ) {
                 Text(
                     maxLines = 1,
@@ -425,18 +391,19 @@ fun EndOption(
                     softWrap = false,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     style = NeeGongNaeGongTheme.typography.labelMedium,
-                    text = date
+                    text = date,
                 )
             }
 
             Spacer(modifier = Modifier.padding(horizontal = 10.dp))
 
             TextButton(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(NeeGongNaeGongTheme.colorScheme.background)
-                    .padding(vertical = 2.dp, horizontal = 5.dp),
-                onClick = onClickTimePicker
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(NeeGongNaeGongTheme.colorScheme.background)
+                        .padding(vertical = 2.dp, horizontal = 5.dp),
+                onClick = onClickTimePicker,
             ) {
                 Text(
                     maxLines = 1,
@@ -444,14 +411,14 @@ fun EndOption(
                     softWrap = false,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     style = NeeGongNaeGongTheme.typography.labelMedium,
-                    text = time
+                    text = time,
                 )
             }
-
         }
         OptionButton(
-            isAlarmBeforeClosingEnabled,
-            "종료 30분 전 알림"
+            enable = isEndDateEnabled,
+            isSelected = isAlarmBeforeClosingEnabled,
+            optionTitle = "종료 30분 전 알림",
         ) { onClickAlarmBeforeClosingOption() }
     }
 }
@@ -466,41 +433,44 @@ fun LoadDialog(
     onDismissDateButton: () -> Unit,
     onDismissTimeButton: () -> Unit,
     onChangeDate: (Long) -> Unit,
-    onChangeTime: (Int, Int) -> Unit
+    onChangeTime: (Int, Int) -> Unit,
 ) {
-    val datePickerState = rememberDatePickerState(
-        selectableDates = object : SelectableDates {
-            // 오늘 이전 날짜는 선택할 수 없도록 설정
-            val today = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }.timeInMillis
+    val datePickerState =
+        rememberDatePickerState(
+            selectableDates =
+                object : SelectableDates {
+                    // 오늘 이전 날짜는 선택할 수 없도록 설정
+                    val today =
+                        Calendar.getInstance().apply {
+                            set(Calendar.HOUR_OF_DAY, 0)
+                            set(Calendar.MINUTE, 0)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }.timeInMillis
 
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        return utcTimeMillis >= today
+                    }
 
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= today
-            }
+                    override fun isSelectableYear(year: Int): Boolean {
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                        return year >= currentYear
+                    }
+                },
+            initialSelectedDateMillis =
+                CustomDateTimeFormatter.millisToUtc(
+                    CustomDateTimeFormatter.convertStringDateToMillis(
+                        date,
+                    ),
+                ),
+        )
 
-            override fun isSelectableYear(year: Int): Boolean {
-                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                return year >= currentYear
-            }
-        },
-        initialSelectedDateMillis = TimeFormatter.millisToUtc(
-            TimeFormatter.convertStringDateToMillis(
-                date
-            )
-        ),
-    )
-
-    val (hour, minute) = TimeFormatter.convertStringTimeToHourAndMinute(time)
-    val timePickerState = rememberTimePickerState(
-        initialHour = hour,
-        initialMinute = minute,
-    )
-
+    val (hour, minute) = CustomDateTimeFormatter.convertStringTimeToHourAndMinute(time)
+    val timePickerState =
+        rememberTimePickerState(
+            initialHour = hour,
+            initialMinute = minute,
+        )
 
     if (showDatePicker) {
         DatePickerDialog(
@@ -514,13 +484,14 @@ fun LoadDialog(
                 }) { Text("확인") }
             },
             dismissButton = { TextButton(onClick = onDismissDateButton) { Text("취소") } },
-            colors = DatePickerDefaults.colors(
-                containerColor = Color.White,
-            )
+            colors =
+                DatePickerDefaults.colors(
+                    containerColor = Color.White,
+                ),
         ) {
             DatePicker(
                 colors = DatePickerDefaults.colors(containerColor = Color.White),
-                state = datePickerState
+                state = datePickerState,
             )
         }
     }
@@ -535,18 +506,9 @@ fun LoadDialog(
         ) {
             TimeInput(
                 colors = TimePickerDefaults.colors(containerColor = Color.White),
-                state = timePickerState
+                state = timePickerState,
             )
         }
-    }
-}
-
-
-@NeeGongNaeGongPreviews
-@Composable
-fun PreviewTopAppBar() {
-    NeeGongNaeGongTheme {
-        VoteTopBar(popBackStack = { true }, {})
     }
 }
 
@@ -568,7 +530,7 @@ fun PreviewVoteScreen() {
                 "",
                 "",
                 isDateDialogVisible = false,
-                isTimeDialogVisible = false
+                isTimeDialogVisible = false,
             ),
             {},
             {},
@@ -616,7 +578,7 @@ fun PreviewEndOption() {
             onClickDatePicker = {},
             onClickTimePicker = {},
             date = "1",
-            time = "1"
+            time = "1",
         )
     }
 }

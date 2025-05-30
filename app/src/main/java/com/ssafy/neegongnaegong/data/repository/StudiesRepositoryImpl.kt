@@ -2,14 +2,15 @@ package com.ssafy.neegongnaegong.data.repository
 
 import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
+import com.ssafy.neegongnaegong.data.mapper.vote.VoteMapper.toCreateRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
-import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
+import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,11 +22,15 @@ import javax.inject.Inject
 class StudiesRepositoryImpl
     @Inject
     constructor(
-        private val api: StudiesApi,
         private val dataSource: NetworkStudiesDataSource,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : StudiesRepository {
-        override suspend fun getStudies(): List<Studies> = api.getStudiesDel()
+        override suspend fun getStudies(): List<Studies> = TODO()
+
+        override suspend fun createVote(
+            studyId: Int,
+            voteInfo: VoteInfo,
+        ): Flow<Unit> = dataSource.createVote(studyId, voteInfo.toCreateRequest())
 
         override suspend fun getStudiesList(
             cursorCreatedAt: String?,

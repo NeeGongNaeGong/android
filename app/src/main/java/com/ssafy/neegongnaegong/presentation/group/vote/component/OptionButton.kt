@@ -11,37 +11,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
 fun OptionButton(
+    modifier: Modifier = Modifier,
+    enable: Boolean = true,
     isSelected: Boolean,
     optionTitle: String,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
         Row(
-            modifier = modifier
-                .padding(0.dp)
-                .clickable {
-                    onClick()
-                },
+            modifier =
+                modifier
+                    .padding(0.dp)
+                    .clickable {
+                        if (enable) {
+                            onClick()
+                        }
+                    },
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             RadioButton(
+                enabled = enable,
                 selected = isSelected,
                 onClick = onClick,
             )
             Text(
                 style = NeeGongNaeGongTheme.typography.labelMedium,
                 text = optionTitle,
-                color = NeeGongNaeGongTheme.colorScheme.primaryText
+                color = if (enable) NeeGongNaeGongTheme.colorScheme.primaryText else NeeGongNaeGongTheme.colorScheme.gray4,
             )
         }
     }
@@ -51,6 +54,6 @@ fun OptionButton(
 @Composable
 fun PreviewOptionButton() {
     NeeGongNaeGongTheme {
-        OptionButton(false, "종료 시간") {}
+        OptionButton(isSelected = false, optionTitle = "종료 시간") {}
     }
 }

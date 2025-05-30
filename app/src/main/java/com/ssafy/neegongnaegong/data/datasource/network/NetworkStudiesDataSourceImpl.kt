@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
@@ -9,7 +10,9 @@ import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NetworkStudiesDataSourceImpl
     @Inject
     constructor(
@@ -46,6 +49,11 @@ class NetworkStudiesDataSourceImpl
             apiFlow {
                 studiesApi.deleteStudies(studyGroupId)
             }
+
+        override suspend fun createVote(
+            studyId: Int,
+            requestBody: CreateVoteRequest,
+        ): Flow<Unit> = apiFlow { studiesApi.createVote(studyId, requestBody) }
 
         override suspend fun applyStudies(studyGroupId: Long): Flow<Unit> =
             apiFlow {

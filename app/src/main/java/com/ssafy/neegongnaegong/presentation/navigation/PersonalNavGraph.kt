@@ -10,22 +10,31 @@ import com.ssafy.neegongnaegong.presentation.personal.edit.StudyRecordEditRoute
 
 fun NavGraphBuilder.personalNavGraph(navController: NavController) {
     navigation<AppNavigation.Tab.Personal>(
-        startDestination = AppNavigation.Screen.Personal.Main
+        startDestination = AppNavigation.Screen.Personal.Main,
     ) {
         composable<AppNavigation.Screen.Personal.Main> {
             PersonalRoute(
                 popBackStack = { navController.popBackStack() },
-                navigateToEditScreen = { navController.navigate(AppNavigation.Screen.Personal.Edit(it)) }
+                navigateToEditScreen = {
+                    navController.navigate(
+                        AppNavigation.Screen.Personal.Edit(
+                            it,
+                        ),
+                    )
+                },
+                navController = navController,
             )
         }
 
         composable<AppNavigation.Screen.Personal.Edit> { backStackEntry ->
             val route = backStackEntry.toRoute<AppNavigation.Screen.Personal.Edit>()
             StudyRecordEditRoute(
-                popBackStack = { navController.popBackStack() },
-                studyRecordId = route.studyRecordId
+                popBackStack = {
+                    navController.previousBackStackEntry?.savedStateHandle?.set("refreshNeeded", true)
+                    navController.popBackStack()
+                },
+                studyRecordId = route.studyRecordId,
             )
         }
-
     }
 }

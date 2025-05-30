@@ -23,7 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.neegongnaegong.domain.model.write.Tag
+import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -32,17 +33,17 @@ fun TagList(
     modifier: Modifier = Modifier,
     tags: List<Tag>,
     onTagPlusClicked: () -> Unit,
-    onTagEraseClicked: (Tag) -> Unit
+    onTagEraseClicked: (Tag) -> Unit,
 ) {
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         tags.forEach { tag ->
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = NeeGongNaeGongTheme.colorScheme.blue
+                color = NeeGongNaeGongTheme.colorScheme.blue,
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -55,32 +56,34 @@ fun TagList(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .clickable { onTagEraseClicked(tag) },
+                        modifier =
+                            Modifier
+                                .size(16.dp)
+                                .clickable { onTagEraseClicked(tag) },
                         imageVector = Icons.Default.Close,
                         contentDescription = "삭제",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
         }
 
         Surface(
-            modifier = Modifier
-                .size(32.dp)
-                .clickable { onTagPlusClicked() },
+            modifier =
+                Modifier
+                    .size(32.dp)
+                    .clickable { onTagPlusClicked() },
             shape = RoundedCornerShape(4.dp),
             color = NeeGongNaeGongTheme.colorScheme.blue,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp)
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "태그 추가",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
@@ -90,18 +93,10 @@ fun TagList(
 @Preview(showBackground = true)
 @Composable
 fun TagListPreview() {
-    val dummyTags = listOf(
-        Tag(koName = "운동", enName = "exercise"),
-        Tag(koName = "공부", enName = "study"),
-        Tag(koName = "자기계발", enName = "self_improvement"),
-        Tag(koName = "운동2", enName = "self_improvement"),
-        Tag(koName = "운동3", enName = "self_improvement")
-    )
-
     TagList(
         modifier = Modifier.padding(16.dp),
-        tags = dummyTags,
+        tags = PersonalPreviewDataProvider().getTags(),
         onTagPlusClicked = {},
-        onTagEraseClicked = {}
+        onTagEraseClicked = {},
     )
 }

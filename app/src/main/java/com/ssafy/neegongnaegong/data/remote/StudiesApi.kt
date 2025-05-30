@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
@@ -16,6 +17,14 @@ import retrofit2.http.Query
 
 interface StudiesApi {
     @GET("/studies")
+    suspend fun getStudies(): List<Studies>
+
+    @POST("/api/study-groups/{study-group-id}/posts/votes")
+    suspend fun createVote(
+        @Path("study-group-id") studyId: Int,
+        @Body requestBody: CreateVoteRequest,
+    ): Result<ApiResponse<Unit>>
+
     suspend fun getStudiesDel(): List<Studies> // TODO : 제거
 
     @GET("/api/study-groups/list")
