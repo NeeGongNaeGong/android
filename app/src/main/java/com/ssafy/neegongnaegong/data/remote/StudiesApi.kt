@@ -30,29 +30,29 @@ interface StudiesApi {
         @Body request: CreateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
-    @GET("/api/study-groups/{studyGroupId}")
+    @GET("/api/study-groups/{study-group-id}")
     suspend fun getStudies(
-        @Path("studyGroupId") studyGroupId: Long,
+        @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<StudiesResponse>>
 
-    @PUT("/api/study-groups/{studyGroupId}")
+    @PUT("/api/study-groups/{study-group-id}")
     suspend fun updateStudies(
-        @Path("studyGroupId") studyGroupId: Long,
+        @Path("study-group-id") studyGroupId: Long,
         @Body request: UpdateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/study-groups/{studyGroupId}")
+    @DELETE("/api/study-groups/{study-group-id}")
     suspend fun deleteStudies(
-        @Path("studyGroupId") studyGroupId: Int,
+        @Path("study-group-id") studyGroupId: Int,
     ): Result<ApiResponse<Unit>>
 
-    @POST("/api/study-groups/{studyGroupId}/applications")
+    @POST("/api/study-groups/{study-group-id}/applications")
     suspend fun applyStudies(
-        @Path("studyGroupId") studyGroupId: Int,
+        @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/study-groups/{studyGroupId}/applications")
+    @DELETE("/api/study-groups/{study-group-id}/applications")
     suspend fun cancelApplicationsStudies(
-        @Path("studyGroupId") studyGroupId: Int,
+        @Path("study-group-id") studyGroupId: Int,
     ): Result<ApiResponse<Unit>>
 }
