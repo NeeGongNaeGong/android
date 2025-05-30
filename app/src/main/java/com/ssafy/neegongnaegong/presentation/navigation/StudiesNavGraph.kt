@@ -20,13 +20,11 @@ import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
  * 모든 경로의 이름이 BottomNavigation.Screen.~~.route로 다 들어가 있기 때문에
  * 여기서 Profile 탭의 화면의 경로도 BottomNavigation으로 접근해서 사용할 수 있다.
  */
-// Study 탭의 Navigation을 설정하는 곳
-fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
+fun NavGraphBuilder.studiesNavGraph(navController: NavController) { // Study 탭의 Navigation을 설정하는 곳
     navigation<AppNavigation.Tab.Studies>(
         startDestination = AppNavigation.Screen.Studies.Main,
     ) {
         composable<AppNavigation.Screen.Studies.Main> {
-//            StudiesScreen()
             StudiesRoute(
                 modifier = Modifier,
                 popBackStack = { },
@@ -43,6 +41,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
             StudiesDetailRoute(
                 modifier = Modifier,
+                navBackStackEntry = backStackEntry,
                 studyGroupId = route.studyGroupId,
                 popBackStack = navController::popBackStack,
             )

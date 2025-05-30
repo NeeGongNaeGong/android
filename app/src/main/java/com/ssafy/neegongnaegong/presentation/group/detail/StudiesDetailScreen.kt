@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
@@ -28,17 +29,24 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
-private const val TAG = "StudiesDetailScreen"
-
 @Composable
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
-    viewModel: StudiesDetailViewModel = hiltViewModel(),
+    navBackStackEntry: NavBackStackEntry,
+//    viewModel: StudiesDetailViewModel = hiltViewModel(),
     studyGroupId: Long,
     popBackStack: () -> Unit = {},
 ) {
+    val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
     BackHandler {
-        popBackStack()
+        /* 드로어가 열려 있으면 드로어를 우선 닫음
+         * 드로어가 닫혀 있으면 popBackStack 실행
+         */
+        if (StudiesDrawerController.isOpen.value) {
+            StudiesDrawerController.close()
+        } else {
+            popBackStack()
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -52,7 +60,7 @@ fun StudiesDetailRoute(
 }
 
 @Composable
-fun StudiesContent(
+private fun StudiesContent(
     modifier: Modifier = Modifier,
     uiState: StudiesDetailContract.State,
 ) {
@@ -65,7 +73,7 @@ fun StudiesContent(
 }
 
 @Composable
-fun StudiesDetailScreen(
+private fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
     name: String,
     onProfileClick: (Long) -> Unit = {},
@@ -102,7 +110,7 @@ fun StudiesDetailScreen(
             ProfilesSection(modifier, profiles, onProfileClick)
 
             Spacer(modifier = Modifier.height(12.dp))
-            // 스터디 공지사항 카드
+            // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(
                 modifier = Modifier.padding(5.dp),
                 announcements =
@@ -130,7 +138,7 @@ fun StudiesDetailScreen(
 
 @NeeGongNaeGongPreviews
 @Composable
-fun PreviewStudiesDetailScreen() {
+private fun PreviewStudiesDetailScreen() {
     val previewProfiles =
         listOf(
             ProfileData(

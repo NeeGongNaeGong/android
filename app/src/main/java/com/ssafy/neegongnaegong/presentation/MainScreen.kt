@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,7 +32,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawer
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawerContent
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
@@ -88,9 +88,15 @@ fun MainScreen() {
         } ?: true
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
-    val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val studiesDrawerState = remember { DrawerState(initialValue = DrawerValue.Closed) }
 
     val context = LocalContext.current
+    LaunchedEffect(navBackStackEntry) {
+        // TODO : 드로어 상태 관리 임시 처리 -> 애니메이션 없이 닫기
+        if (navBackStackEntry != null) {
+            studiesDrawerState.snapTo(DrawerValue.Closed)
+        }
+    }
 
     LaunchedEffect(isStudiesDrawerOpen) {
         if (isStudiesDrawerOpen) {
@@ -125,16 +131,9 @@ fun MainScreen() {
         drawerState = studiesDrawerState,
         gesturesEnabled = enableGestures.value,
         drawerContent = {
-            StudiesDrawer(
-                headerImageUrl = null,
-                onGroupManagementClick = {},
-                onMemberManagementClick = {},
-                onScheduleManagementClick = {},
-                onStudyCreateClick = {},
-                onStudySearchClick = {},
-                onMyStudyClick = {},
-                onStudyItemClick = {},
-            )
+            navBackStackEntry?.let {
+                StudiesDrawerContent(it)
+            }
         },
     ) {
         Scaffold(

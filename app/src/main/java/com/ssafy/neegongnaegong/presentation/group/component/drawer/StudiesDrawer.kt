@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.component.drawer
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,14 +28,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
+private const val TAG = "StudiesDrawer"
+
 @Composable
-fun StudiesDrawer(
+fun StudiesDrawerContent(navBackStackEntry: NavBackStackEntry) {
+    val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
+    Log.d(TAG, "img : ${state.value.studies.studyInfo.profileImg}")
+    StudiesDrawer(
+        headerImageUrl = state.value.studies.studyInfo.profileImg,
+        name = state.value.studies.studyInfo.name,
+        description = state.value.studies.studyInfo.description,
+    )
+}
+
+@Composable
+private fun StudiesDrawer(
     modifier: Modifier = Modifier,
     headerImageUrl: String? = null,
+    name: String = "",
+    description: String = "",
     onGroupManagementClick: () -> Unit = {},
     onMemberManagementClick: () -> Unit = {},
     onScheduleManagementClick: () -> Unit = {},
@@ -54,8 +75,8 @@ fun StudiesDrawer(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(180.dp)
-                    .padding(horizontal = 0.dp),
+                    .height(240.dp)
+                    .background(NeeGongNaeGongTheme.colorScheme.gray3),
         ) {
             GlideImage(
                 imageModel = { headerImageUrl ?: R.drawable.img_main_character },
@@ -72,31 +93,24 @@ fun StudiesDrawer(
                     )
                 },
             )
-
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.4f)),
-            )
         }
         // 그룹 정보 부분
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = NeeGongNaeGongTheme.colorScheme.gray1),
+                    .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "취업 스터디",
-                    style = NeeGongNaeGongTheme.typography.bodyLarge,
+                    text = name,
+                    style = NeeGongNaeGongTheme.typography.titleMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
                 Text(
-                    text = "취업을 향해서...",
-                    style = NeeGongNaeGongTheme.typography.labelMedium,
+                    text = description,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
@@ -231,18 +245,24 @@ fun CircleIcon(
 
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun PreviewLightModeStudiesDrawer() {
+private fun PreviewLightModeStudiesDrawer() {
     NeeGongNaeGongTheme {
-        StudiesDrawer()
+        StudiesDrawer(
+            name = "화이트 스터디",
+            description = "하얗습니다.",
+        )
     }
 }
 
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun PreviewDarkModeStudiesDrawer() {
+private fun PreviewDarkModeStudiesDrawer() {
     NeeGongNaeGongTheme(
         darkTheme = true,
     ) {
-        StudiesDrawer()
+        StudiesDrawer(
+            name = "다크 스터디",
+            description = "어둡습니다.",
+        )
     }
 }
