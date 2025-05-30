@@ -29,5 +29,5 @@ interface NetworkStudiesDataSource {
 
     suspend fun applyStudies(studyGroupId: Long): Flow<Unit>
 
-    suspend fun cancelApplicationsStudies(studyGroupId: Int): Flow<Unit>
+    suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit>
 }

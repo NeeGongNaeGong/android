@@ -62,6 +62,6 @@ interface StudiesApi {
 
     @DELETE("/api/study-groups/{study-group-id}/applications")
     suspend fun cancelApplicationsStudies(
-        @Path("study-group-id") studyGroupId: Int,
+        @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 }

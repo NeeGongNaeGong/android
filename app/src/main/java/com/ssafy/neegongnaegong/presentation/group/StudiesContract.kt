@@ -38,6 +38,8 @@ class StudiesContract {
     sealed class Error : ErrorContext {
         data object GetStudiesListError : Error()
 
-        data object ApplyStudiesError : Error()
+        data class ApplyStudiesError(
+            val studyGroupId: Long,
+        ) : Error()
     }
 }

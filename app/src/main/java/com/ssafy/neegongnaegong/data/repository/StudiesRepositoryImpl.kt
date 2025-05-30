@@ -86,7 +86,8 @@ class StudiesRepositoryImpl
                 dataSource.applyStudies(studyGroupId)
             }
 
-        override suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit> {
-            TODO("Not yet implemented")
-        }
+        override suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.cancelApplicationsStudies(studyGroupId)
+            }
     }

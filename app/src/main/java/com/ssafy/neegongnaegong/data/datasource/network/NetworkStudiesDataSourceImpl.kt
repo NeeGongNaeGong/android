@@ -60,7 +60,7 @@ class NetworkStudiesDataSourceImpl
                 studiesApi.applyStudies(studyGroupId)
             }
 
-        override suspend fun cancelApplicationsStudies(studyGroupId: Int): Flow<Unit> =
+        override suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit> =
             apiFlow {
                 studiesApi.cancelApplicationsStudies(studyGroupId)
             }
