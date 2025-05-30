@@ -56,6 +56,7 @@ fun StudiesRoute(
         uiState = uiState,
         effect = viewModel.effect,
         onLoadStudies = { viewModel.setEvent(StudiesContract.Event.OnLoadStudies) },
+        onApplyStudies = { viewModel.setEvent(StudiesContract.Event.OnStudiesApplyClicked(it)) },
         navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
     )
@@ -67,6 +68,7 @@ fun StudiesContent(
     uiState: StudiesContract.State,
     effect: Flow<StudiesContract.Effect>,
     onLoadStudies: () -> Unit,
+    onApplyStudies: (Long) -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
 ) {
@@ -88,6 +90,7 @@ fun StudiesContent(
         studiesList = uiState.studiesList,
         isLoading = uiState.isLoading,
         onLoadStudies = onLoadStudies,
+        onApplyStudies = onApplyStudies,
         navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
     )
@@ -99,6 +102,7 @@ fun StudiesScreen(
     studiesList: List<Studies>,
     isLoading: Boolean,
     onLoadStudies: () -> Unit,
+    onApplyStudies: (Long) -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
 ) {
@@ -125,7 +129,8 @@ fun StudiesScreen(
                                 Modifier
                                     .noRippleClickable {
                                         navigateToStudiesManagement()
-                                    }.padding(8.dp),
+                                    }
+                                    .padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_studies_create),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -138,7 +143,8 @@ fun StudiesScreen(
                                 Modifier
                                     .noRippleClickable {
                                         navigateToStudiesDetail(-1) // TODO : 검색기능 구현 후 적용
-                                    }.padding(8.dp),
+                                    }
+                                    .padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_serach),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -156,9 +162,11 @@ fun StudiesScreen(
                 itemsIndexed(studiesList) { index, studies ->
                     StudiesCard(
                         modifier =
-                            Modifier.padding(bottom = 20.dp).noRippleClickable {
-                                navigateToStudiesDetail(studies.id)
-                            },
+                            Modifier
+                                .padding(bottom = 20.dp)
+                                .noRippleClickable {
+                                    navigateToStudiesDetail(studies.id)
+                                },
                         category = studies.studyInfo.category?.name ?: "없음",
                         name = studies.studyInfo.name,
                         targetStudyTime = studies.studyInfo.targetStudyTime,
@@ -168,6 +176,7 @@ fun StudiesScreen(
                         createdDate = studies.createdDate,
                         description = studies.studyInfo.description,
                         profileImageUrl = studies.studyInfo.profileImg,
+                        onApplyClick = { onApplyStudies(studies.id) },
                     )
 
                     if (index == studiesList.lastIndex) {
@@ -206,6 +215,7 @@ private fun PreviewStudiesScreen() {
             studiesList = StudiesPreviewDataProvider().getStudies(),
             isLoading = false,
             onLoadStudies = {},
+            onApplyStudies = {},
             navigateToStudiesDetail = {},
             navigateToStudiesManagement = {},
         )

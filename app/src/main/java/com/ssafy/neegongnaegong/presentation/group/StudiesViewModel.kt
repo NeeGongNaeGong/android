@@ -3,14 +3,13 @@ package com.ssafy.neegongnaegong.presentation.group
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.ApplyStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 private const val TAG = "StudiesViewModel"
@@ -21,6 +20,7 @@ class StudiesViewModel
     constructor(
         private val getStudiesUseCase: GetStudiesUseCase,
         private val getStudiesListUseCase: GetStudiesListUseCase,
+        private val applyStudiesUseCase: ApplyStudiesUseCase,
     ) : BaseViewModel<StudiesContract.Event, StudiesContract.State, StudiesContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -37,6 +37,13 @@ class StudiesViewModel
                         SnackbarManager.Action.retry { retry() },
                     )
                 }
+
+                StudiesContract.Error.ApplyStudiesError -> {
+                    showErrorMessage(
+                        "이미 신청된",
+                        SnackbarManager.Action.retry { retry() },
+                    )
+                }
             }
         }
 
@@ -47,6 +54,10 @@ class StudiesViewModel
                 is StudiesContract.Event.OnLoadStudies -> loadStudies()
                 is StudiesContract.Event.StudiesClicked -> {
                     setEffect { StudiesContract.Effect.NavigateToGroupDetail(event.studiesId) }
+                }
+
+                is StudiesContract.Event.OnStudiesApplyClicked -> {
+                    applyStudies(event.studiesId)
                 }
             }
         }
@@ -76,6 +87,16 @@ class StudiesViewModel
                         )
                     }
                 }
+            }
+        }
+
+        private fun applyStudies(studiesId: Long) {
+            viewModelScope.launch {
+                applyStudiesUseCase(studiesId)
+                    .withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect(StudiesContract.Error.ApplyStudiesError) { result ->
+                    }
             }
         }
     }

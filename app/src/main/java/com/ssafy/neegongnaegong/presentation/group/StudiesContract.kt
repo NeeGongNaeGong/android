@@ -13,6 +13,10 @@ class StudiesContract {
         data class StudiesClicked(
             val studiesId: Long,
         ) : Event()
+
+        data class OnStudiesApplyClicked(
+            val studiesId: Long,
+        ) : Event()
     }
 
     data class State(
@@ -33,5 +37,7 @@ class StudiesContract {
 
     sealed class Error : ErrorContext {
         data object GetStudiesListError : Error()
+
+        data object ApplyStudiesError : Error()
     }
 }
