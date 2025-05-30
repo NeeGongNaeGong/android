@@ -16,7 +16,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class StudiesRepositoryImpl
@@ -29,7 +28,7 @@ class StudiesRepositoryImpl
         override suspend fun getStudies(): List<Studies> = api.getStudiesDel()
 
         override suspend fun getStudiesList(
-            cursorCreatedAt: LocalDateTime?,
+            cursorCreatedAt: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<CursorStudiesPage> =

@@ -57,26 +57,8 @@ class StudiesViewModel
             }
 
             viewModelScope.launch {
-                // TODO : 로직 처리 필요
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
                 getStudiesListUseCase(
-                    cursorCreatedAt =
-                        uiState.value.cursorCreateAt?.let {
-                            runCatching {
-                                // 밀리초를 3자리 이하로 잘라냄
-                                val fixedDate =
-                                    if (it.contains('.')) {
-                                        val split = it.split('.')
-                                        val milli = split[1].take(3) // 밀리초만 가져와 잘라냄
-                                        "${split[0]}.$milli"
-                                    } else {
-                                        it
-                                    }
-                                LocalDateTime.parse(fixedDate, formatter)
-                            }.onFailure {
-                                Log.e(TAG, "Failed to parse date: $it", it)
-                            }.getOrNull()
-                        },
+                    cursorCreatedAt = uiState.value.cursorCreateAt,
                     cursorId = uiState.value.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }

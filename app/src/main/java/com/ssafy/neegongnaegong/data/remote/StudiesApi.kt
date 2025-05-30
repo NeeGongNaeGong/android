@@ -13,7 +13,6 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.LocalDateTime
 
 interface StudiesApi {
     @GET("/studies")
@@ -21,7 +20,7 @@ interface StudiesApi {
 
     @GET("/api/study-groups/list")
     suspend fun getStudiesList(
-        @Query("cursorCreatedAt") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-created-at") cursorCreatedAt: String?,
         @Query("cursorId") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceStudiesListResponse>>

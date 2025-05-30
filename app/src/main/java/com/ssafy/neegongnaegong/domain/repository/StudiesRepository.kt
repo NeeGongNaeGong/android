@@ -4,13 +4,12 @@ import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDateTime
 
 interface StudiesRepository {
     suspend fun getStudies(): List<Studies>
 
     suspend fun getStudiesList(
-        cursorCreatedAt: LocalDateTime?,
+        cursorCreatedAt: String?,
         cursorId: Long?,
         size: Int,
     ): Flow<CursorStudiesPage>
