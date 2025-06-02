@@ -7,7 +7,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -33,6 +35,13 @@ class DataStoreManager @Inject constructor(
             }
         }
     }
+
+    override fun <T> getDataFlow(key: String, clazz: Class<T>): Flow<T?> = context.dataStore.data
+        .map { preferences ->
+            preferences[stringPreferencesKey(key)]?.let { json ->
+                gson.fromJson(json, clazz)
+            }
+        }
 
     override fun removeData(key: String) {
         runBlocking {
