@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import com.ssafy.neegongnaegong.presentation.util.AuthManager
+import com.ssafy.neegongnaegong.presentation.util.FlowUtil.safeFlatMapLatest
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -192,6 +193,14 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             .onFailure { throwable: Throwable ->
                 _handleException<Result>(e = throwable, errorContext = errorContext, retry = retry)
             }
+    }
+
+    protected fun <T, R> Flow<T>.safeFlatMapLatest(
+        errorContext: ErrorContext? = null,
+        retry: () -> Unit = {},
+        transform: suspend (value: T) -> Flow<R>,
+    ) = safeFlatMapLatest(transform = transform) { throwable: Throwable ->
+        _handleException<T>(e = throwable, errorContext = errorContext, retry = retry)
     }
 
 
