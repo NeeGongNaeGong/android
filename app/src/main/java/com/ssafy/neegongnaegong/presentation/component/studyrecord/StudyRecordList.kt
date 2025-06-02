@@ -68,7 +68,7 @@ fun StudyRecordList(
                 .collect { lastVisibleItemIndex ->
                     val totalItemCount = listState.layoutInfo.totalItemsCount
                     if (hasNext && lastVisibleItemIndex == totalItemCount - 1) {
-//                        onLoadMore()
+                        onLoadMore()
                     }
                 }
         }

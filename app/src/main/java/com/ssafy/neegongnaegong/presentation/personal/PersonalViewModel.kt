@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordL
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -149,9 +150,7 @@ class PersonalViewModel
                         tag = uiState.value.tags.map { it.id },
                         cursorId = state.cursorId,
                         cursorCreatedAt = state.cursorCreatedAt,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { result ->
+                    ).safeCollect { result ->
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
@@ -171,9 +170,7 @@ class PersonalViewModel
                         targetDate = uiState.value.selectedDate,
                         cursorId = state.cursorId,
                         cursorCreatedAt = state.cursorCreatedAt,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { result ->
+                    ).safeCollect { result ->
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
