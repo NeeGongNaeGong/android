@@ -16,6 +16,7 @@ interface NotificationContract {
 
     data class State(
         val isLoading: Boolean = true,
+        val isModifying: Boolean = false,
     ) : UiState
 
     sealed class Effect : UiEffect {

@@ -20,7 +20,10 @@ fun NotificationList(
         modifier = modifier,
         state = listState
     ) {
-        items(notificationList.itemCount) { index: Int ->
+        items(
+            count = notificationList.itemCount,
+            key = { index: Int -> notificationList[index]?.id ?: index }
+        ) { index: Int ->
             val data: NotificationUiModel = notificationList[index] ?: return@items
             Notification(
                 modifier = Modifier.fillMaxWidth(),

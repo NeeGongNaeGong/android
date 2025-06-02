@@ -9,6 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.neegongnaegong.presentation.base.CollectSideEffects
+import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
@@ -53,4 +54,6 @@ fun NotificationRoute(viewModel: NotificationViewModel = hiltViewModel()) {
             viewModel.setEvent(event = event)
         }
     )
+
+    if (uiState.isModifying) LoadingDialog()
 }
