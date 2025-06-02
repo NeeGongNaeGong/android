@@ -6,16 +6,21 @@ import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import com.ssafy.neegongnaegong.presentation.util.AuthManager
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -178,6 +183,31 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     }
 
     /**
+     * 안전하게 suspend 블록을 실행하는 함수
+     * 성공 시 [onSuccess] 블록을 호출하고,
+     * 실패 시 [_handleException]로 공통 에러 로직 처리 후,
+     * [retry]를 통해 재시도 로직을 연결할 수 있음
+     *
+     * @param onSuccess suspend 블록 실행 성공 시 호출될 콜백
+     * @param errorContext ErrorContext – 에러 처리 컨텍스트
+     * @param retry 실패 시 재시도할 로직
+     * @param block 실행할 suspend 블록
+     */
+    protected open fun <Result> CoroutineScope.safeLaunch(
+        onSuccess: (Result) -> Unit = {},
+        errorContext: ErrorContext? = null,
+        retry: () -> Unit = {},
+        block: suspend () -> Result
+    ): Job = launch {
+        runCatching { block() }
+            .onSuccess { result: Result -> onSuccess(result) }
+            .onFailure { throwable: Throwable ->
+                _handleException<Result>(e = throwable, errorContext = errorContext, retry = retry)
+            }
+    }
+
+
+    /**
      * safeCollect 중 발생한 예외를 처리하는 함수
      * 공통 에러를 처리하고, 추가적인 에러 처리는 handleErrorContext에 전달
      *
@@ -221,6 +251,18 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     }
 
     /**
+     * Flow를 ViewModel에서 사용할 수 있는 StateFlow로 변환하는 확장 함수입니다.
+     *
+     * @param initValue 초기 상태 값입니다. 화면이 처음 구성될 때 사용할 기본 값입니다.
+     * @return ViewModel 범위(viewModelScope) 내에서 구독되는 StateFlow를 반환합니다.
+     */
+    protected fun <T> Flow<T>.toViewModelState(initValue: T): StateFlow<T> = stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = TIME_OUT),
+        initialValue = initValue
+    )
+
+    /**
      * ErrorContext에 따라 예외를 처리하는 함수
      * 상속 시 각 ViewModel에서 추가적인 에러 처리를 할 수 있음
      *
@@ -231,4 +273,8 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      * @param retry 재시도 콜백
      */
     open fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {}
+
+    companion object {
+        protected const val TIME_OUT: Long = 5_000L
+    }
 }

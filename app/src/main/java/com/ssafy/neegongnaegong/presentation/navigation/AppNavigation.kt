@@ -118,6 +118,9 @@ object AppNavigation {
             data class Main(
                 val userId: Int = -1,
             ) : Profile
+
+            @Serializable
+            data object Notification: Profile
         }
     }
 }
