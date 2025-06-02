@@ -12,6 +12,7 @@ import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,6 +23,8 @@ class UserRepositoryImpl @Inject constructor(
     private val networkUserDataSource: NetworkUserDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : UserRepository {
+    override fun getUserFlow(): Flow<User> = localUserDataSource.getUser().flowOn(ioDispatcher)
+
     override suspend fun getUser(): Flow<User> = withContext(ioDispatcher) {
         localUserDataSource.getUser()
     }
