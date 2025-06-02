@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
+    fun getUserFlow(): Flow<User>
     suspend fun getUser(): Flow<User>
     suspend fun getUser(id: Long): Flow<User>
     suspend fun validateNickname(nickname: String): Flow<Boolean>
