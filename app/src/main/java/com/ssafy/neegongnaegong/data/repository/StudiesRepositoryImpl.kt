@@ -77,9 +77,10 @@ class StudiesRepositoryImpl
                 )
             }
 
-        override suspend fun deleteStudies(studyGroupId: Long): Flow<Unit> {
-            TODO("Not yet implemented")
-        }
+        override suspend fun deleteStudies(studyGroupId: Long): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.deleteStudies(studyGroupId)
+            }
 
         override suspend fun applyStudies(studyGroupId: Long): Flow<Unit> =
             withContext(ioDispatcher) {

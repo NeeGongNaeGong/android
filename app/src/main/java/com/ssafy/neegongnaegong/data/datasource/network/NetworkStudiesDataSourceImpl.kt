@@ -45,7 +45,7 @@ class NetworkStudiesDataSourceImpl
                 studiesApi.updateStudies(studyGroupId, request)
             }
 
-        override suspend fun deleteStudies(studyGroupId: Int): Flow<Unit> =
+        override suspend fun deleteStudies(studyGroupId: Long): Flow<Unit> =
             apiFlow {
                 studiesApi.deleteStudies(studyGroupId)
             }

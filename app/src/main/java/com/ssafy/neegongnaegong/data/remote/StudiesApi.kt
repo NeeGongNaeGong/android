@@ -52,7 +52,7 @@ interface StudiesApi {
 
     @DELETE("/api/study-groups/{study-group-id}")
     suspend fun deleteStudies(
-        @Path("study-group-id") studyGroupId: Int,
+        @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 
     @POST("/api/study-groups/{study-group-id}/applications")
