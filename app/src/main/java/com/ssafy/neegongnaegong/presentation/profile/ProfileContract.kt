@@ -1,0 +1,35 @@
+package com.ssafy.neegongnaegong.presentation.profile
+
+import androidx.compose.runtime.Stable
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.base.UiEffect
+import com.ssafy.neegongnaegong.presentation.base.UiEvent
+import com.ssafy.neegongnaegong.presentation.base.UiState
+
+interface ProfileContract {
+
+    sealed class Event : UiEvent {
+        data object ClickNotification : Event()
+        data object ClickNotice : Event()
+        data object ClickPrivacyInfo : Event()
+        data object ClickDeleteAccount : Event()
+    }
+
+    @Stable
+    data class State(
+        val isInitial: Boolean = true,
+        val isModifying: Boolean = false
+    ) : UiState
+
+    sealed class Effect : UiEffect {
+        data class ShowErrorMessage(val message: String) : Effect()
+        data object NavigateToNotification : Effect()
+        data object NavigateToNotice : Effect()
+        data object NavigateToPrivacyInfo : Effect()
+        data object NavigateToLogout : Effect()
+    }
+
+    sealed class Error : ErrorContext {
+        data object ShowErrorMessage : Error()
+    }
+}
