@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import com.ssafy.neegongnaegong.presentation.util.AuthManager
+import com.ssafy.neegongnaegong.presentation.util.FlowUtil.safeFlatMapLatest
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -205,6 +206,30 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
                 _handleException<Result>(e = throwable, errorContext = errorContext, retry = retry)
             }
     }
+
+    /**
+     * 안전하게 flatMapLatest를 수행하는 확장 함수
+     *
+     * Flow에서 예외가 발생할 수 있는 flatMapLatest 연산을 수행할 때,
+     * 공통 에러 처리 로직 [_handleException]을 통해 예외를 처리하고,
+     * 필요 시 [retry] 블록을 통해 재시도 로직을 연결할 수 있음.
+     *
+     * @param errorContext ErrorContext – 에러 처리 컨텍스트
+     * @param retry 실패 시 재시도할 로직
+     * @param transform 변환할 suspend flatMapLatest 블록
+     *
+     * @return 안전하게 예외 처리가 적용된 Flow<R>
+     */
+    protected fun <T, R> Flow<T>.safeFlatMapLatest(
+        errorContext: ErrorContext? = null,
+        retry: () -> Unit = {},
+        transform: suspend (value: T) -> Flow<R>
+    ) = safeFlatMapLatest(
+        transform = transform,
+        catch = { throwable: Throwable ->
+            _handleException<T>(e = throwable, errorContext = errorContext, retry = retry)
+        }
+    )
 
 
     /**
