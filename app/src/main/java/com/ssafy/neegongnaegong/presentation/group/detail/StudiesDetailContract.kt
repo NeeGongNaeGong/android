@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.group.detail
 
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -20,6 +21,7 @@ class StudiesDetailContract {
     data class State(
         val isLoading: Boolean = false,
         val studies: Studies = Studies.empty(),
+        val members: List<StudiesMember> = emptyList(),
     ) : UiState
 
     sealed interface Effect : UiEffect

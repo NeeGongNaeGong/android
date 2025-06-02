@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesMembersUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.StudiesContract
@@ -19,6 +20,7 @@ class StudiesDetailViewModel
     constructor(
         private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
         private val deleteStudiesUseCase: DeleteStudiesUseCase,
+        private val getStudiesMembersUseCase: GetStudiesMembersUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -49,6 +51,12 @@ class StudiesDetailViewModel
                                 studies = studies,
                             )
                         }
+                    }
+                getStudiesMembersUseCase(studyGroupId)
+                    .withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { studiesMembers ->
+                        setState { copy(members = studiesMembers) }
                     }
             }
 

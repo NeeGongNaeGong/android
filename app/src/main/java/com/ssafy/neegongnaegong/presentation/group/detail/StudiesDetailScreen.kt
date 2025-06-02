@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.detail
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
@@ -33,7 +35,6 @@ import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
-//    viewModel: StudiesDetailViewModel = hiltViewModel(),
     studyGroupId: Long,
     popBackStack: () -> Unit = {},
 ) {
@@ -67,6 +68,7 @@ private fun StudiesContent(
     StudiesDetailScreen(
         modifier = modifier,
         name = uiState.studies.studyInfo.name,
+        members = uiState.members,
         onProfileClick = {},
         profiles = listOf(),
     )
@@ -76,6 +78,7 @@ private fun StudiesContent(
 private fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
     name: String,
+    members: List<StudiesMember> = emptyList(),
     onProfileClick: (Long) -> Unit = {},
     profiles: List<ProfileData> = emptyList(),
 ) {
@@ -106,9 +109,18 @@ private fun StudiesDetailScreen(
                 Modifier
                     .verticalScroll(scrollState),
         ) {
+            val memberProfileList: List<ProfileData> =
+                members.map { member ->
+                    ProfileData(
+                        id = member.userId,
+                        imageUrl = member.profileImg,
+                        name = member.name,
+                        progress = 0.7f,
+                    )
+                }
             // 프로필 아이콘 행
-            ProfilesSection(modifier, profiles, onProfileClick)
-
+            ProfilesSection(modifier, memberProfileList, onProfileClick)
+            Log.d("StudiesDetailScreen", "StudiesDetailScreen: $profiles") // TODO : profile 데이터 삭제 필요
             Spacer(modifier = Modifier.height(12.dp))
             // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(
