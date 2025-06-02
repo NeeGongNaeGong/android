@@ -108,9 +108,7 @@ object AppNavigation {
             // 여기에 Profile 탭에 있는 각 화면들 경로 등록하면 됩니당
             // Study Tab의 Main 화면의 경로
             @Serializable
-            data class Main(
-                val userId: Int = -1,
-            ) : Profile
+            data object Main : Profile
 
             @Serializable
             data object Notification: Profile
