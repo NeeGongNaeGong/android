@@ -15,20 +15,20 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LearningRecordApi {
-    @PUT("/api/records/{learningRecordId}")
+    @PUT("/api/records/{learning-record-id}")
     suspend fun updateLearningRecord(
-        @Path("learningRecordId") learningRecordId: Long,
+        @Path("learning-record-id") learningRecordId: Long,
         @Body request: UpdateLearningRecordRequest,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("api/records/{learningRecordId}")
+    @DELETE("api/records/{learning-record-id}")
     suspend fun deleteLearningRecord(
-        @Path("learningRecordId") learningRecordId: Long,
+        @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<DeleteLearningRecordResponse>>
 
-    @GET("/api/records/{learningRecordId}")
+    @GET("/api/records/{learning-record-id}")
     suspend fun getLearningRecord(
-        @Path("learningRecordId") learningRecordId: Long,
+        @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<GetLearningRecordResponse>>
 
     @POST("/api/records")
