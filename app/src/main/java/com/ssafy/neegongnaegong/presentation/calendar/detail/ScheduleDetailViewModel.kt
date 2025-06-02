@@ -5,8 +5,10 @@ import com.ssafy.neegongnaegong.domain.model.calendar.DeleteType
 import com.ssafy.neegongnaegong.domain.usecase.calendar.DeletePersonalSchedulesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.calendar.GetScheduleDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,23 +21,30 @@ class ScheduleDetailViewModel @Inject constructor(
 
     override fun handleEvent(event: ScheduleDetailContract.Event) {
         when (event) {
-            is ScheduleDetailContract.Event.OnLoad -> onLoad(event.scheduleId)
+            is ScheduleDetailContract.Event.OnLoad -> onLoad(event.scheduleId, event.date)
             ScheduleDetailContract.Event.OnEditClick -> navigateToEditScheduleScreen()
-            is ScheduleDetailContract.Event.OnDeleteClick -> deleteSchedule(event.type)
+            is ScheduleDetailContract.Event.OnDeleteClick -> setState { copy(isDeleteTypeSelectorShow = true) }
+            is ScheduleDetailContract.Event.OnFormClick -> navigateToEditScheduleScreen(event.focus)
+            is ScheduleDetailContract.Event.OnDeleteTypeSelected -> deleteSchedule(event.type)
+            ScheduleDetailContract.Event.OnDialogDismissed -> setState { copy(isDeleteTypeSelectorShow = false) }
         }
     }
 
-    private fun onLoad(scheduleId: Long) = viewModelScope.launch {
-        getScheduleDetailUseCase(scheduleId).withLoading {
+    private fun onLoad(scheduleId: Long, date: LocalDate) = viewModelScope.launch {
+        getScheduleDetailUseCase(scheduleId, date).withLoading {
             setState { copy(isLoading = it) }
         }.safeCollect { result ->
             setState { copy(schedule = result) }
         }
     }
 
-    private fun navigateToEditScheduleScreen() {
+    private fun navigateToEditScheduleScreen(
+        focus: ScheduleInputFormFocus = ScheduleInputFormFocus.None
+    ) {
         with(uiState.value) {
-            setEffect { ScheduleDetailContract.Effect.NavigateToEditScheduleScreen(schedule) }
+            setEffect {
+                ScheduleDetailContract.Effect.NavigateToEditScheduleScreen(schedule, focus)
+            }
         }
     }
 

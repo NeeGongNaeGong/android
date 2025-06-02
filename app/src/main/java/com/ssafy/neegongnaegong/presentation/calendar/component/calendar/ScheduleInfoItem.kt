@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,22 +21,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.getTextHeightDp
 import com.ssafy.neegongnaegong.presentation.util.getTextWidthDp
 import java.time.LocalDateTime
 
 @Composable
-fun ScheduleInfo(
+fun ScheduleInfoItem(
     modifier: Modifier = Modifier,
     schedule: Schedule,
     showPrefix: Boolean = true,
     onClick: (Schedule) -> Unit = {}
 ) {
-    ScheduleInfo(
+    ScheduleInfoItem(
         modifier = modifier,
         showPrefix = showPrefix,
         startTime = schedule.info.startAt,
@@ -50,7 +49,7 @@ fun ScheduleInfo(
 }
 
 @Composable
-fun ScheduleInfo(
+fun ScheduleInfoItem(
     modifier: Modifier = Modifier,
     startTime: LocalDateTime,
     endTime: LocalDateTime,
@@ -80,6 +79,7 @@ fun ScheduleInfo(
                     if (isAllDay || isOverNight) {
                         Icon(
                             Icons.Filled.Today,
+                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
                             contentDescription = "this is all day or overnight schedule",
                             modifier = Modifier.height(20.dp)
                         )
@@ -89,7 +89,7 @@ fun ScheduleInfo(
                                 startTime.hour,
                                 startTime.minute
                             ),
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                             style = NeeGongNaeGongTheme.typography.bodySmall
                         )
                     }
@@ -106,7 +106,7 @@ fun ScheduleInfo(
             Column {
                 Text(
                     text = title,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
@@ -127,7 +127,7 @@ fun ScheduleInfo(
                         endTime.hour,
                         endTime.minute
                     ),
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     style = NeeGongNaeGongTheme.typography.labelSmall
                 )
             }
@@ -135,26 +135,26 @@ fun ScheduleInfo(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
-fun ScheduleInfoPreview() {
+fun ScheduleInfoItemPreview() {
     NeeGongNaeGongTheme {
         Surface {
             Column {
-                ScheduleInfo(
+                ScheduleInfoItem(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
                     startTime = LocalDateTime.of(2024, 1, 1, 0, 0),
                     endTime = LocalDateTime.of(2024, 1, 2, 0, 0),
                     isAllDay = true,
                     title = "Test Schedule",
                     color = Color.Red
                 )
-                ScheduleInfo(
+                ScheduleInfoItem(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
                     startTime = LocalDateTime.of(2024, 1, 1, 0, 0),
                     endTime = LocalDateTime.of(2024, 1, 2, 1, 0),
                     isAllDay = false,
@@ -162,10 +162,10 @@ fun ScheduleInfoPreview() {
                     color = Color.Red,
                     showPrefix = false,
                 )
-                ScheduleInfo(
+                ScheduleInfoItem(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
                     startTime = LocalDateTime.of(2024, 1, 1, 0, 0),
                     endTime = LocalDateTime.of(2024, 1, 1, 1, 0),
                     isAllDay = false,

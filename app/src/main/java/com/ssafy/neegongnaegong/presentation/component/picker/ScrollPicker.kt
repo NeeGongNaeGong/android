@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,8 +24,8 @@ import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.pixelsToDp
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -55,15 +53,16 @@ fun <T> ScrollPicker(
         listScrollCount / 2
     }
 
-    val listStartIndex = remember(isInfinite, listScrollMiddle, visibleItemsMiddle, items, state.selectedItem) {
-        if (isInfinite) {
-            listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + items.indexOf(
-                state.selectedItem
-            )
-        } else {
-            items.indexOf(state.selectedItem)
+    val listStartIndex =
+        remember(isInfinite, listScrollMiddle, visibleItemsMiddle, items, state.selectedItem) {
+            if (isInfinite) {
+                listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + items.indexOf(
+                    state.selectedItem
+                )
+            } else {
+                items.indexOf(state.selectedItem)
+            }
         }
-    }
 
     fun getItem(index: Int) = items[index % items.size]
 
@@ -111,7 +110,7 @@ fun <T> ScrollPicker(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = NeeGongNaeGongTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
         }
         items(listScrollCount) { index ->
@@ -123,7 +122,7 @@ fun <T> ScrollPicker(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = NeeGongNaeGongTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
         }
         if (!isInfinite) items(visibleItemsCount / 2) {
@@ -135,7 +134,7 @@ fun <T> ScrollPicker(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = NeeGongNaeGongTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
         }
     }
@@ -149,37 +148,33 @@ private fun Modifier.fadingEdge(brush: Brush) = this
     }
 
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun NumberPickerPreview_Not_Infinite() {
     val items = listOf(1, 2, 3, 4, 5)
     val state = rememberScrollPickerState(initialValue = items[0])
 
     NeeGongNaeGongTheme {
-        Surface {
-            ScrollPicker(
-                modifier = Modifier.fillMaxWidth(),
-                state = state,
-                items = items,
-                isInfinite = false
-            )
-        }
+        ScrollPicker(
+            modifier = Modifier.fillMaxWidth(),
+            state = state,
+            items = items,
+            isInfinite = false
+        )
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun NumberPickerPreview_Infinite() {
     val items = listOf(1, 2, 3, 4, 5)
     val state = rememberScrollPickerState(initialValue = items[3])
 
     NeeGongNaeGongTheme {
-        Surface {
-            ScrollPicker(
-                modifier = Modifier.fillMaxWidth(),
-                state = state,
-                items = items,
-            )
-        }
+        ScrollPicker(
+            modifier = Modifier.fillMaxWidth(),
+            state = state,
+            items = items,
+        )
     }
 }

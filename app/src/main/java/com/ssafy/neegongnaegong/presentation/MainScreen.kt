@@ -24,7 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -154,10 +154,10 @@ fun MainScreen() {
             // 다른 화면의 Scaffold에서 사용된 값은 빼고서 계산해줌
             Box(
                 modifier =
-                    Modifier
-                        .padding(innerPadding)
-                        .consumeWindowInsets(innerPadding)
-                        .background(NeeGongNaeGongTheme.colorScheme.background),
+                Modifier
+                    .padding(innerPadding)
+                    .consumeWindowInsets(innerPadding)
+                    .background(NeeGongNaeGongTheme.colorScheme.background),
             ) {
                 MainNavigationGraph(navController = navController)
             }
@@ -206,7 +206,7 @@ fun ProfileScreen() {
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewMainScreen() {
     NeeGongNaeGongTheme {

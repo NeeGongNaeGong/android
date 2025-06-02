@@ -9,6 +9,7 @@ import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -141,11 +142,22 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
 
     /**
      * Flow에 맞춰 Loading 상태를 전달하는 함수
+     * 만약 collet가 delay 전에 종료된다면 loading을 true로 세팅하지 않습니다.
      *
+     * @param delay 편의를 위한 loading을 true로 설정하기까지의 최소한의 딜레이
      * @param setLoading onStart에 true를 전달하고, onCompletion에 false를 전달
      */
-    protected fun <T> Flow<T>.withLoading(setLoading: (Boolean) -> Unit = {}): Flow<T> {
-        return this.onStart { setLoading(true) }.onCompletion { setLoading(false) }
+    protected fun <T> Flow<T>.withLoading(delay: Long = 100L, setLoading: (Boolean) -> Unit = {}): Flow<T> {
+        var isFinished = false
+        return this.onStart {
+            viewModelScope.launch {
+                delay(delay)
+                if (!isFinished) setLoading(true)
+            }
+        }.onCompletion {
+            isFinished = true
+            setLoading(false)
+        }
     }
 
     /**
@@ -226,10 +238,15 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             }
 
             is ApiException.NetworkException -> viewModelScope.launch {
-                showErrorMessage(e.message)
+                showErrorMessage(
+                    e.message,
+                    SnackbarManager.Action.retry { viewModelScope.launch { retry() } }
+                )
             }
 
-            else -> errorContext?.let { handleException(e, it) { viewModelScope.launch { retry() } } }
+            else -> errorContext?.let {
+                handleException(e, it) { viewModelScope.launch { retry() } }
+            }
         }
     }
 

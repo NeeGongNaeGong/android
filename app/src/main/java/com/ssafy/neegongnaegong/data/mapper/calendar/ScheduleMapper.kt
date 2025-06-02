@@ -47,9 +47,9 @@ internal object ScheduleMapper {
         info = ScheduleInfo(
             title = title,
             content = content,
-            startAt = startDate,
-            endAt = endDate,
-            isAllDay = endDate.second == 59, // TODO: 추후 수정
+            startAt = startAt,
+            endAt = endAt,
+//            isAllDay = endDate.second == 59, // TODO: 추후 수정
             location = location,
             repeatRule = repeatRule?.toDomain(),
         ),
@@ -61,9 +61,9 @@ internal object ScheduleMapper {
         info = ScheduleInfo(
             title = title,
             content = content,
-            startAt = startDate,
-            endAt = endDate,
-            isAllDay = endDate.second == 59, // TODO: 추후 수정
+            startAt = startAt,
+            endAt = endAt,
+//            isAllDay = endDate.second == 59, // TODO: 추후 수정
             location = location,
             repeatRule = repeatRule?.toDomain()
         ),
@@ -77,7 +77,7 @@ internal object ScheduleMapper {
             content = content,
             startAt = startAt,
             endAt = endAt,
-            isAllDay = endAt.second == 59, // TODO: 추후 수정
+//            isAllDay = endAt.second == 59, // TODO: 추후 수정
             location = location,
             repeatRule = repeatRule?.toDomain()
         ),

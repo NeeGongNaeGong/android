@@ -8,19 +8,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.color
 import com.ssafy.neegongnaegong.presentation.util.getTextHeightDp
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 @Composable
 fun DateRangePickerCell(
@@ -40,7 +41,7 @@ fun DateRangePickerCell(
         isLeftEdge = date == startDate,
         isRightEdge = date == endDate,
         dateColor = when {
-            isSelected -> MaterialTheme.colorScheme.surface
+            isSelected -> NeeGongNaeGongTheme.colorScheme.background
             else -> date.dayOfWeek.color
         },
         onSelected = { onSelected(date) },
@@ -54,7 +55,7 @@ fun DateRangePickerCell(
     isSelected: Boolean = false,
     isLeftEdge: Boolean = false,
     isRightEdge: Boolean = false,
-    dateColor: Color = MaterialTheme.colorScheme.onBackground,
+    dateColor: Color = NeeGongNaeGongTheme.colorScheme.primaryText,
     onSelected: () -> Unit = {},
 ) {
     Row(
@@ -66,13 +67,13 @@ fun DateRangePickerCell(
         Box(
             Modifier
                 .weight(1f)
-                .background(if (!isLeftEdge && isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                .background(if (!isLeftEdge && isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent)
                 .height(height)
         )
         Text(
             modifier = Modifier
                 .background(
-                    if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    if (isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
                     shape = RoundedCornerShape(
                         topStart = if (!isLeftEdge) 0.dp else 10.dp,
                         bottomStart = if (!isLeftEdge) 0.dp else 10.dp,
@@ -89,26 +90,27 @@ fun DateRangePickerCell(
         Box(
             Modifier
                 .weight(1f)
-                .background(if (!isRightEdge && isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+                .background(if (!isRightEdge && isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent)
                 .height(height)
         )
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateRangePickerCellPreview() {
-    Row {
-        repeat(7) {
-            val date = it + 1
-            DateRangePickerCell(
-                modifier = Modifier.weight(1f),
-                date = date,
-                isLeftEdge = date == 2,
-                isRightEdge = date == 4,
-                isSelected = date in 2..4,
-                dateColor = Color.Unspecified
-            )
+    val sunday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+    NeeGongNaeGongTheme {
+        Row {
+            repeat(7) {
+                val date = sunday.plusDays(it.toLong())
+                DateRangePickerCell(
+                    modifier = Modifier.weight(1f),
+                    date = date,
+                    startDate = sunday.plusDays(2),
+                    endDate = sunday.plusDays(4),
+                )
+            }
         }
     }
 }
