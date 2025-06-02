@@ -39,9 +39,9 @@ interface LearningRecordApi {
     @GET("/api/records/list")
     suspend fun getLearningRecordList(
         @Query("tag") tag: List<Long>?,
-        @Query("target_date") targetDate: String?,
-        @Query("cursor_created_at") cursorCreatedAt: String?,
-        @Query("cursor_id") cursorId: Long?,
+        @Query("target-date") targetDate: String?,
+        @Query("cursor-created-at") cursorCreatedAt: String?,
+        @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceResponse>>
 }
