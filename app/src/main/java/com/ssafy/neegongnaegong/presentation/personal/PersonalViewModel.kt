@@ -20,15 +20,9 @@ class PersonalViewModel
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
-//        init {
-// //            println("확인 호출 init")
-//            // 이렇게 작성 하면 UnitTest 할때 단점이 있음
-//            loadLearningRecords()
-//        }
-
         override fun handleEvent(event: PersonalContract.Event) {
             when (event) {
-                // dropdown
+                // screen
                 is PersonalContract.Event.OnDateScreenSelected -> {
                     setState {
                         copy(
@@ -36,8 +30,6 @@ class PersonalViewModel
                             isDateScreen = true,
                         )
                     }
-//                    println("확인 호출 OnDateScreenSelected")
-//                    loadLearningRecords()
                 }
 
                 is PersonalContract.Event.OnTagScreenSelected -> {
@@ -47,13 +39,12 @@ class PersonalViewModel
                             isDateScreen = false,
                         )
                     }
-//                    println("확인 호출 OnTagScreenSelected")
                     loadLearningRecords()
                 }
+
                 // tag
                 is PersonalContract.Event.OnTagEraseClicked -> {
                     deleteTag(event.tag)
-                    // println("확인 호출 OnTagEraseClicked")
                     loadLearningRecords()
                 }
 
@@ -85,7 +76,6 @@ class PersonalViewModel
                     } else {
                         moveFromSelectedTagsToTags()
                         clearDialogTags()
-//                      println("확인 호출 OnDialogConfirmClicked")
                         loadLearningRecords()
                         setState { copy(isDialogShow = false) }
                     }
@@ -107,7 +97,6 @@ class PersonalViewModel
                 }
 
                 is PersonalContract.Event.OnRecordRefresh -> {
-//                    println("확인 호출 OnRecordRefresh")
                     loadLearningRecords()
                 }
             }
@@ -117,7 +106,6 @@ class PersonalViewModel
         private fun loadLearningRecords() {
             viewModelScope.launch {
                 if (uiState.value.isTagScreen) {
-//                    println("확인 태그 보냄 ${uiState.value.tags}")
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
                     ).withLoading {
@@ -133,7 +121,6 @@ class PersonalViewModel
                         }
                     }
                 } else {
-//                    println("확인 날짜 보냄 ${uiState.value.selectedDate}")
                     getLearningRecordListUseCase(
                         targetDate = uiState.value.selectedDate,
                     ).withLoading {
@@ -156,9 +143,6 @@ class PersonalViewModel
             val state = uiState.value
             if (!state.hasNext || state.isLoading) return
 
-            println("확인 아이템 더 출력")
-            println("확인 상태확인 ${state.cursorCreatedAt} ${state.cursorId}")
-
             viewModelScope.launch {
                 if (uiState.value.isTagScreen) {
                     getLearningRecordListUseCase(
@@ -168,7 +152,6 @@ class PersonalViewModel
                     ).withLoading {
                         setState { copy(isLoading = it) }
                     }.safeCollect { result ->
-                        println("확인 데이터 더 불러옴 ${result}")
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
@@ -214,7 +197,6 @@ class PersonalViewModel
                 copy(selectedDate = date)
             }
 
-//            println("확인 호출 filteringRecordByDate 함수")
             loadLearningRecords()
         }
 
