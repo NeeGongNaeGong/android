@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.repository
 
 import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
+import com.ssafy.neegongnaegong.data.mapper.studies.StudiesMemberMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.vote.VoteMapper.toCreateRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
@@ -9,6 +10,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
@@ -90,5 +92,12 @@ class StudiesRepositoryImpl
         override suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit> =
             withContext(ioDispatcher) {
                 dataSource.cancelApplicationsStudies(studyGroupId)
+            }
+
+        override suspend fun getStudiesMembers(studyGroupId: Long): Flow<List<StudiesMember>> =
+            withContext(ioDispatcher) {
+                dataSource
+                    .getStudiesMembers(studyGroupId)
+                    .map { dto -> dto.memberRespons.map { it.toDomain() } }
             }
     }

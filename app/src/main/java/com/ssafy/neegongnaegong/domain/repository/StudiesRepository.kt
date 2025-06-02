@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.domain.repository
 
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import kotlinx.coroutines.flow.Flow
@@ -34,4 +35,6 @@ interface StudiesRepository {
     suspend fun applyStudies(studyGroupId: Long): Flow<Unit>
 
     suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit>
+
+    suspend fun getStudiesMembers(studyGroupId: Long): Flow<List<StudiesMember>>
 }

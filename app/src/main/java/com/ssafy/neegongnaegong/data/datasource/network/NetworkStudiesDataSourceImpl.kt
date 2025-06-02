@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import kotlinx.coroutines.flow.Flow
@@ -63,5 +64,10 @@ class NetworkStudiesDataSourceImpl
         override suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit> =
             apiFlow {
                 studiesApi.cancelApplicationsStudies(studyGroupId)
+            }
+
+        override suspend fun getStudiesMembers(studyGroupId: Long): Flow<GetStudiesMemberListResponse> =
+            apiFlow {
+                studiesApi.getStudiesMembers(studyGroupId)
             }
     }

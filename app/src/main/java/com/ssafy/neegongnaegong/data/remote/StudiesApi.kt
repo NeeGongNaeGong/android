@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
@@ -64,4 +65,9 @@ interface StudiesApi {
     suspend fun cancelApplicationsStudies(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
+
+    @GET("/api/study-groups/{study-group-id}/users")
+    suspend fun getStudiesMembers(
+        @Path("study-group-id") studyGroupId: Long,
+    ): Result<ApiResponse<GetStudiesMemberListResponse>>
 }

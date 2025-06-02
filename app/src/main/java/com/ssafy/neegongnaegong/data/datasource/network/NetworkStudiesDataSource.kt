@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -30,4 +31,6 @@ interface NetworkStudiesDataSource {
     suspend fun applyStudies(studyGroupId: Long): Flow<Unit>
 
     suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit>
+
+    suspend fun getStudiesMembers(studyGroupId: Long): Flow<GetStudiesMemberListResponse>
 }

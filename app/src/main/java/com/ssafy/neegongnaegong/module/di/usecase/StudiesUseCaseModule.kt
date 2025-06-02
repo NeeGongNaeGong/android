@@ -9,6 +9,7 @@ import com.ssafy.neegongnaegong.domain.usecase.studies.CreateVoteUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesMembersUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.UpdateStudiesUseCase
 import dagger.Module
 import dagger.Provides
@@ -56,4 +57,9 @@ object StudiesUseCaseModule {
     @Singleton
     fun provideCancelApplicationsStudiesUseCase(studiesRepository: StudiesRepository): CancelApplicationsStudiesUseCase =
         CancelApplicationsStudiesUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetStudiesMembersUseCase(studiesRepository: StudiesRepository): GetStudiesMembersUseCase =
+        GetStudiesMembersUseCase(studiesRepository)
 }
