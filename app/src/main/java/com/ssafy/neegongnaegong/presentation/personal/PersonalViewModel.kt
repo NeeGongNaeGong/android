@@ -21,7 +21,7 @@ class PersonalViewModel
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
 //        init {
-////            println("확인 호출 init")
+// //            println("확인 호출 init")
 //            // 이렇게 작성 하면 UnitTest 할때 단점이 있음
 //            loadLearningRecords()
 //        }
@@ -116,7 +116,6 @@ class PersonalViewModel
         // api
         private fun loadLearningRecords() {
             viewModelScope.launch {
-                setState { copy(isLoading = true) }
                 if (uiState.value.isTagScreen) {
 //                    println("확인 태그 보냄 ${uiState.value.tags}")
                     getLearningRecordListUseCase(
@@ -130,7 +129,6 @@ class PersonalViewModel
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
-                                isLoading = false,
                             )
                         }
                     }
@@ -138,14 +136,15 @@ class PersonalViewModel
 //                    println("확인 날짜 보냄 ${uiState.value.selectedDate}")
                     getLearningRecordListUseCase(
                         targetDate = uiState.value.selectedDate,
-                    ).safeCollect { result ->
+                    ).withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
                         setState {
                             copy(
                                 selectedRecordsByDate = result.content.toDomain(),
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
-                                isLoading = false,
                             )
                         }
                     }
@@ -157,6 +156,9 @@ class PersonalViewModel
             val state = uiState.value
             if (!state.hasNext || state.isLoading) return
 
+            println("확인 아이템 더 출력")
+            println("확인 상태확인 ${state.cursorCreatedAt} ${state.cursorId}")
+
             viewModelScope.launch {
                 if (uiState.value.isTagScreen) {
                     getLearningRecordListUseCase(
@@ -166,9 +168,15 @@ class PersonalViewModel
                     ).withLoading {
                         setState { copy(isLoading = it) }
                     }.safeCollect { result ->
+                        println("확인 데이터 더 불러옴 ${result}")
                         setState {
+                            val newRecords = result.content.toDomain()
+                            val updatedList =
+                                (selectedRecordsByTag + newRecords)
+                                    .distinctBy { it.id }
+
                             copy(
-                                selectedRecordsByTag = selectedRecordsByTag + result.content.toDomain(),
+                                selectedRecordsByTag = updatedList,
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
@@ -184,8 +192,12 @@ class PersonalViewModel
                         setState { copy(isLoading = it) }
                     }.safeCollect { result ->
                         setState {
+                            val newRecords = result.content.toDomain()
+                            val updatedList =
+                                (selectedRecordsByDate + newRecords)
+                                    .distinctBy { it.id }
                             copy(
-                                selectedRecordsByDate = selectedRecordsByDate + result.content.toDomain(),
+                                selectedRecordsByDate = updatedList,
                                 hasNext = result.hasNext,
                                 cursorId = result.cursorId,
                                 cursorCreatedAt = result.cursorCreatedAt,
