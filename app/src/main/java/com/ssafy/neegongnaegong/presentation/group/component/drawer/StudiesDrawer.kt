@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailContract
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -41,12 +42,17 @@ private const val TAG = "StudiesDrawer"
 @Composable
 fun StudiesDrawerContent(navBackStackEntry: NavBackStackEntry) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
-    val state = viewModel.uiState.collectAsStateWithLifecycle()
-    Log.d(TAG, "img : ${state.value.studies.studyInfo.profileImg}")
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    Log.d(TAG, "img : ${uiState.value.studies.studyInfo.profileImg}")
     StudiesDrawer(
-        headerImageUrl = state.value.studies.studyInfo.profileImg,
-        name = state.value.studies.studyInfo.name,
-        description = state.value.studies.studyInfo.description,
+        headerImageUrl = uiState.value.studies.studyInfo.profileImg,
+        name = uiState.value.studies.studyInfo.name,
+        description = uiState.value.studies.studyInfo.description,
+        onStudyDeleteClick = {
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
+            )
+        },
     )
 }
 
@@ -63,6 +69,7 @@ private fun StudiesDrawer(
     onStudySearchClick: () -> Unit = {},
     onMyStudyClick: () -> Unit = {},
     onStudyItemClick: (Long) -> Unit = {},
+    onStudyDeleteClick: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -137,6 +144,13 @@ private fun StudiesDrawer(
             icon = R.drawable.ic_studies_drw_schedule_management,
             title = stringResource(R.string.studies_drw_schedule_management),
             onClick = onScheduleManagementClick,
+        )
+
+        // 스터디 삭제 버튼
+        DrawerMenuItem(
+            icon = R.drawable.ic_studies_drw_studies_delete,
+            title = stringResource(R.string.studies_drw_studies_delete),
+            onClick = onStudyDeleteClick,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -230,7 +244,8 @@ fun CircleIcon(
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = CircleShape,
-                ).clickable {
+                )
+                .clickable {
                     onClick()
                 },
         contentAlignment = Alignment.Center,

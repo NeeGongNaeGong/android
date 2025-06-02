@@ -11,6 +11,10 @@ class StudiesDetailContract {
         data class OnLoad(
             val studyGroupId: Long,
         ) : Event
+
+        data class OndDeleteStudies(
+            val studyGroupId: Long,
+        ) : Event
     }
 
     data class State(
