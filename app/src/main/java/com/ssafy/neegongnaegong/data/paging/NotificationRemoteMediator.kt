@@ -8,8 +8,8 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSource
 import com.ssafy.neegongnaegong.data.local.database.NeeGongNaeGongDatabase
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationDao
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationRemoteKeyDao
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationDataSource
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationRemoteKeyDataSource
 import com.ssafy.neegongnaegong.data.local.database.data.NotificationMapper.toEntity
 import com.ssafy.neegongnaegong.data.local.database.data.NotificationMapper.toKey
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationEntity
@@ -20,12 +20,14 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
 class NotificationRemoteMediator @Inject constructor(
-    private val notificationDataSource: NetworkNotificationDataSource,
+    private val networkNotificationDataSource: NetworkNotificationDataSource,
     private val database: NeeGongNaeGongDatabase
 ) : RemoteMediator<Int, NotificationEntity>() {
 
-    private val notificationDao: NotificationDao = database.notificationDao()
-    private val remoteKeyDao: NotificationRemoteKeyDao = database.notificationRemoteKeyDao()
+    private val localNotificationDataSource: LocalNotificationDataSource =
+        database.localNotificationDataSource()
+    private val remoteKeyDao: LocalNotificationRemoteKeyDataSource =
+        database.localNotificationRemoteKeyDataSource()
 
     override suspend fun load(
         loadType: LoadType,
@@ -45,7 +47,7 @@ class NotificationRemoteMediator @Inject constructor(
         }
 
         return runCatching {
-            val remotePager: NotificationPage = notificationDataSource.getNotifications(
+            val remotePager: NotificationPage = networkNotificationDataSource.getNotifications(
                 cursorId = cursor,
                 size = state.config.pageSize
             ).first()
@@ -54,11 +56,11 @@ class NotificationRemoteMediator @Inject constructor(
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     remoteKeyDao.clearAll()
-                    notificationDao.clearAll()
+                    localNotificationDataSource.clearAll()
                 }
 
                 remoteKeyDao.insertAll(keys = remotePager.content.toKey(cursorId = remotePager.cursorId))
-                notificationDao.insertAll(notifications = remotePager.content.toEntity())
+                localNotificationDataSource.insertAll(notifications = remotePager.content.toEntity())
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)

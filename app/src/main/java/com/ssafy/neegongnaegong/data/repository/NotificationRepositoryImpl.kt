@@ -5,7 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSource
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationDao
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationDataSource
 import com.ssafy.neegongnaegong.data.local.database.data.NotificationMapper.toNotification
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationEntity
 import com.ssafy.neegongnaegong.data.paging.NotificationRemoteMediator
@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(
-    private val notificationDataSource: NetworkNotificationDataSource,
+    private val networkNotificationDataSource: NetworkNotificationDataSource,
+    private val localNotificationDataSource: LocalNotificationDataSource,
     private val notificationRemoteMediator: NotificationRemoteMediator,
-    private val notificationDao: NotificationDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : NotificationRepository {
 
@@ -32,19 +32,19 @@ class NotificationRepositoryImpl @Inject constructor(
             enablePlaceholders = false
         ),
         remoteMediator = notificationRemoteMediator,
-        pagingSourceFactory = { notificationDao.getAllNotifications() }
+        pagingSourceFactory = { localNotificationDataSource.getAllNotifications() }
     ).flow.map { pagingData: PagingData<NotificationEntity> ->
         pagingData.toNotification()
     }.flowOn(context = ioDispatcher)
 
-    override fun deleteNotification(notificationId: Long): Flow<Unit> = notificationDataSource
+    override fun deleteNotification(notificationId: Long): Flow<Unit> = networkNotificationDataSource
         .deleteNotification(notificationId = notificationId)
-        .onEach { notificationDao.deleteById(notificationId = notificationId) }
+        .onEach { localNotificationDataSource.deleteById(notificationId = notificationId) }
         .flowOn(context = ioDispatcher)
 
-    override fun deleteAllNotifications(): Flow<Unit> = notificationDataSource
+    override fun deleteAllNotifications(): Flow<Unit> = networkNotificationDataSource
         .deleteAllNotifications()
-        .onEach { notificationDao.clearAll() }
+        .onEach { localNotificationDataSource.clearAll() }
         .flowOn(context = ioDispatcher)
 
     companion object {

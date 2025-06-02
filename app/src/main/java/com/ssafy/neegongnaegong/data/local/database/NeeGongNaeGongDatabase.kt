@@ -2,8 +2,8 @@ package com.ssafy.neegongnaegong.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationDao
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationRemoteKeyDao
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationDataSource
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationRemoteKeyDataSource
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationEntity
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKeyEntity
 
@@ -15,6 +15,6 @@ import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKey
     version = 1
 )
 abstract class NeeGongNaeGongDatabase : RoomDatabase() {
-    abstract fun notificationDao(): NotificationDao
-    abstract fun notificationRemoteKeyDao(): NotificationRemoteKeyDao
+    abstract fun localNotificationDataSource(): LocalNotificationDataSource
+    abstract fun localNotificationRemoteKeyDataSource(): LocalNotificationRemoteKeyDataSource
 }

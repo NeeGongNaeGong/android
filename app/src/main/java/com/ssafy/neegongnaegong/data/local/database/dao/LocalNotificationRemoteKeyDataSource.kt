@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKeyEntity
 
 @Dao
-interface NotificationRemoteKeyDao {
+interface LocalNotificationRemoteKeyDataSource {
     @Query("SELECT * FROM notification_remote_keys WHERE id = :id")
     suspend fun getRemoteKey(id: Long): NotificationRemoteKeyEntity?
 

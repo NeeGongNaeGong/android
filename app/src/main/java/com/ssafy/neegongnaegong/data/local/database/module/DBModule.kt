@@ -3,8 +3,8 @@ package com.ssafy.neegongnaegong.data.local.database.module
 import android.content.Context
 import androidx.room.Room
 import com.ssafy.neegongnaegong.data.local.database.NeeGongNaeGongDatabase
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationDao
-import com.ssafy.neegongnaegong.data.local.database.dao.NotificationRemoteKeyDao
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationDataSource
+import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationRemoteKeyDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,12 +30,14 @@ object DBModule {
 
     @Singleton
     @Provides
-    fun providesNotificationDao(neeGongNaeGongDatabase: NeeGongNaeGongDatabase): NotificationDao =
-        neeGongNaeGongDatabase.notificationDao()
+    fun providesLocalNotificationDataSource(
+        neeGongNaeGongDatabase: NeeGongNaeGongDatabase
+    ): LocalNotificationDataSource = neeGongNaeGongDatabase.localNotificationDataSource()
 
     @Singleton
     @Provides
-    fun providesNotificationRemoteKeyDao(neeGongNaeGongDatabase: NeeGongNaeGongDatabase): NotificationRemoteKeyDao =
-        neeGongNaeGongDatabase.notificationRemoteKeyDao()
+    fun providesLocalNotificationRemoteKeyDataSource(
+        neeGongNaeGongDatabase: NeeGongNaeGongDatabase
+    ): LocalNotificationRemoteKeyDataSource = neeGongNaeGongDatabase.localNotificationRemoteKeyDataSource()
 
 }

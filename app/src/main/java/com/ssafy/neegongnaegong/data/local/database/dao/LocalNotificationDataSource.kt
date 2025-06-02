@@ -8,7 +8,7 @@ import androidx.room.Query
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationEntity
 
 @Dao
-interface NotificationDao {
+interface LocalNotificationDataSource {
     @Query("SELECT * FROM notifications ORDER BY createdAt DESC")
     fun getAllNotifications(): PagingSource<Int, NotificationEntity>
 
