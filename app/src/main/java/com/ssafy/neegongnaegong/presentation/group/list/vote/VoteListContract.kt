@@ -4,7 +4,7 @@ import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 
-class VoteContract {
+class VoteListContract {
     sealed interface Event : UiEvent {
         // Record Screen의 인자가 제대로 들어오지 않은 경우
         data object InvalidAccess : Event
