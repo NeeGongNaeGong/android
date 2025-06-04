@@ -25,13 +25,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.LocalDateTime
 
 @Composable
-fun NoticeListRoute(lazyItems: Flow<PagingData<NoticeHistoryInfo>>) {
+fun NoticeListRoute(
+    lazyItems: Flow<PagingData<NoticeHistoryInfo>>,
+    onClickNoticeItem: (Long) -> Unit,
+) {
     val pagingItem = lazyItems.collectAsLazyPagingItems()
-    NoticeListScreen(lazyItems = pagingItem)
+    NoticeListScreen(lazyItems = pagingItem, onClick = onClickNoticeItem)
 }
 
 @Composable
-fun NoticeListScreen(lazyItems: LazyPagingItems<NoticeHistoryInfo>) {
+fun NoticeListScreen(
+    lazyItems: LazyPagingItems<NoticeHistoryInfo>,
+    onClick: (Long) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -44,7 +50,7 @@ fun NoticeListScreen(lazyItems: LazyPagingItems<NoticeHistoryInfo>) {
                     createdAt = item.createdAt,
                     title = item.title,
                     writer = item.writer,
-                    onClick = {},
+                    onClick = onClick,
                 )
             }
         }
@@ -96,6 +102,6 @@ fun PreviewNoticeListScreen() {
     val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
 
     NeeGongNaeGongTheme {
-        NoticeListScreen(lazyItems = lazyItems)
+        NoticeListScreen(lazyItems = lazyItems, {})
     }
 }
