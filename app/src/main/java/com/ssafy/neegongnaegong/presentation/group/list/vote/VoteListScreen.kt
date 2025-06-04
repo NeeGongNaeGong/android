@@ -2,12 +2,11 @@ package com.ssafy.neegongnaegong.presentation.group.list.vote
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -20,34 +19,20 @@ import com.ssafy.neegongnaegong.presentation.group.list.component.NoDataItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.VoteCard
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 
 @Composable
-fun VoteListRoute(
-    backStackEntry: NavBackStackEntry,
-    viewModel: VoteListViewModel = hiltViewModel(backStackEntry),
-    popBackStack: () -> Boolean,
-) {
-    val lazyItems = viewModel.voteListFlow.collectAsLazyPagingItems()
-
-    LaunchedEffect(viewModel.effect) {
-        viewModel.effect.collectLatest {
-            when (it) {
-                VoteListContract.Effect.NavigateToBackStack -> {
-                    popBackStack()
-                }
-            }
-        }
-    }
-
-    VoteListScreen(lazyItems = lazyItems)
+fun VoteListRoute(lazyItems: Flow<PagingData<VoteHistoryInfo>>) {
+    val pagingItem = lazyItems.collectAsLazyPagingItems()
+    VoteListScreen(lazyItems = pagingItem)
 }
 
 @Composable
 fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
     LazyColumn(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(bottom = 12.dp),
     ) {

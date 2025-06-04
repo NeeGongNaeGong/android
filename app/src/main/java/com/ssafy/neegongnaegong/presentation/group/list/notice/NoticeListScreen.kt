@@ -2,12 +2,11 @@ package com.ssafy.neegongnaegong.presentation.group.list.notice
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -19,37 +18,22 @@ import com.ssafy.neegongnaegong.presentation.group.list.component.From
 import com.ssafy.neegongnaegong.presentation.group.list.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoDataItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoticeCard
-import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeListContract.Effect.NavigateToBackStack
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 
 @Composable
-fun NoticeListRoute(
-    backStackEntry: NavBackStackEntry,
-    viewModel: NoticeListViewModel = hiltViewModel(backStackEntry),
-    popBackStack: () -> Boolean,
-) {
-    val lazyItems = viewModel.voteListFlow.collectAsLazyPagingItems()
-
-    LaunchedEffect(viewModel.effect) {
-        viewModel.effect.collectLatest {
-            when (it) {
-                NavigateToBackStack -> {
-                    popBackStack()
-                }
-            }
-        }
-    }
-
-    NoticeListScreen(lazyItems = lazyItems)
+fun NoticeListRoute(lazyItems: Flow<PagingData<NoticeHistoryInfo>>) {
+    val pagingItem = lazyItems.collectAsLazyPagingItems()
+    NoticeListScreen(lazyItems = pagingItem)
 }
 
 @Composable
 fun NoticeListScreen(lazyItems: LazyPagingItems<NoticeHistoryInfo>) {
     LazyColumn(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(bottom = 12.dp),
     ) {
