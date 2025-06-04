@@ -80,10 +80,10 @@ object AppNavigation {
                 @Serializable
                 sealed interface Screen : List {
                     @Serializable
-                    data class NoticeDetail(val groupId: Long) : Screen
+                    data class NoticeDetail(val groupId: Long, val noticeId: Long) : Screen
 
                     @Serializable
-                    data class VoteDetail(val groupId: Long) : Screen
+                    data class VoteDetail(val groupId: Long, val voteId: Long) : Screen
                 }
             }
         }

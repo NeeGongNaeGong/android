@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -9,6 +10,7 @@ import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
@@ -75,7 +77,44 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 title = title,
                 startTabIdx = startTabIndex,
                 groupId = groupId,
+                navigateToNoticeDetail = {
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.List.Screen.NoticeDetail(groupId, it),
+                    ) {
+                        popUpTo<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
+                            inclusive = true
+                        }
+                    }
+                },
+                navigateToVoteDetail = {
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.List.Screen.VoteDetail(groupId, it),
+                    ) {
+                        popUpTo<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
+                            inclusive = true
+                        }
+                    }
+                },
             )
+        }
+
+        composable<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
+            NoticeDetailRoute(
+                backStackEntry = it,
+                viewModel = hiltViewModel(it),
+            ) {
+                navController.popBackStack()
+            }
+        }
+
+        composable<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
+//            VoteDetailRoute(
+//                backStackEntry = it,
+//                viewModel = hiltViewModel(it),
+//            ) {
+//                val result = navController.popBackStack()
+//                result
+//            }
         }
     }
 }
