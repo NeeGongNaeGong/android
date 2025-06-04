@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -142,11 +143,22 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
 
     /**
      * Flow에 맞춰 Loading 상태를 전달하는 함수
+     * 만약 collet가 delay 전에 종료된다면 loading을 true로 세팅하지 않습니다.
      *
+     * @param delay 편의를 위한 loading을 true로 설정하기까지의 최소한의 딜레이
      * @param setLoading onStart에 true를 전달하고, onCompletion에 false를 전달
      */
-    protected fun <T> Flow<T>.withLoading(setLoading: (Boolean) -> Unit = {}): Flow<T> {
-        return this.onStart { setLoading(true) }.onCompletion { setLoading(false) }
+    protected fun <T> Flow<T>.withLoading(delay: Long = 100L, setLoading: (Boolean) -> Unit = {}): Flow<T> {
+        var isFinished = false
+        return this.onStart {
+            viewModelScope.launch {
+                delay(delay)
+                if (!isFinished) setLoading(true)
+            }
+        }.onCompletion {
+            isFinished = true
+            setLoading(false)
+        }
     }
 
     /**
@@ -195,13 +207,29 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             }
     }
 
+    /**
+     * 안전하게 flatMapLatest를 수행하는 확장 함수
+     *
+     * Flow에서 예외가 발생할 수 있는 flatMapLatest 연산을 수행할 때,
+     * 공통 에러 처리 로직 [_handleException]을 통해 예외를 처리하고,
+     * 필요 시 [retry] 블록을 통해 재시도 로직을 연결할 수 있음.
+     *
+     * @param errorContext ErrorContext – 에러 처리 컨텍스트
+     * @param retry 실패 시 재시도할 로직
+     * @param transform 변환할 suspend flatMapLatest 블록
+     *
+     * @return 안전하게 예외 처리가 적용된 Flow<R>
+     */
     protected fun <T, R> Flow<T>.safeFlatMapLatest(
         errorContext: ErrorContext? = null,
         retry: () -> Unit = {},
-        transform: suspend (value: T) -> Flow<R>,
-    ) = safeFlatMapLatest(transform = transform) { throwable: Throwable ->
-        _handleException<T>(e = throwable, errorContext = errorContext, retry = retry)
-    }
+        transform: suspend (value: T) -> Flow<R>
+    ) = safeFlatMapLatest(
+        transform = transform,
+        catch = { throwable: Throwable ->
+            _handleException<T>(e = throwable, errorContext = errorContext, retry = retry)
+        }
+    )
 
 
     /**
@@ -235,10 +263,15 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             }
 
             is ApiException.NetworkException -> viewModelScope.launch {
-                showErrorMessage(e.message)
+                showErrorMessage(
+                    e.message,
+                    SnackbarManager.Action.retry { viewModelScope.launch { retry() } }
+                )
             }
 
-            else -> errorContext?.let { handleException(e, it) { viewModelScope.launch { retry() } } }
+            else -> errorContext?.let {
+                handleException(e, it) { viewModelScope.launch { retry() } }
+            }
         }
     }
 

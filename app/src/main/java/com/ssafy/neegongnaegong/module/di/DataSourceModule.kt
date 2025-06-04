@@ -10,6 +10,8 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourc
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
@@ -56,4 +58,10 @@ internal interface DataSourceModule {
     fun bindNetworkLearningRecordDataSource(
         networkLearningRecordDataSourceImpl: NetworkLearningRecordDataSourceImpl,
     ): NetworkLearningRecordDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkNotificationDataSource(
+        networkNotificationDataSourceImpl: NetworkNotificationDataSourceImpl
+    ): NetworkNotificationDataSource
 }

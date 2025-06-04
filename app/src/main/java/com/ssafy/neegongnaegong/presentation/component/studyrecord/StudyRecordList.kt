@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,6 +22,7 @@ import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDat
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toDateString
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun StudyRecordList(
@@ -42,13 +45,30 @@ fun StudyRecordList(
             )
         }
     } else {
+        val listState = rememberLazyListState()
+
         val groupedRecords =
             learningRecords
                 .sortedByDescending { it.startAt }
                 .groupBy { it.startAt.toDateString() }
 
+        LaunchedEffect(listState) {
+            snapshotFlow {
+                listState.layoutInfo.visibleItemsInfo
+                    .lastOrNull()
+                    ?.index
+            }.distinctUntilChanged()
+                .collect { lastVisibleItemIndex ->
+                    val totalItemCount = listState.layoutInfo.totalItemsCount
+                    if (hasNext && lastVisibleItemIndex == totalItemCount - 1) {
+                        onLoadMore()
+                    }
+                }
+        }
+
         LazyColumn(
             modifier = modifier,
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             groupedRecords.forEach { (date, recordsForDate) ->
@@ -60,14 +80,8 @@ fun StudyRecordList(
                     )
                 }
 
-                itemsIndexed(recordsForDate) { index, record ->
+                items(recordsForDate) { record ->
                     StudyRecordItem(record = record, onClick = onClick)
-
-                    if (index == recordsForDate.lastIndex && hasNext) {
-                        LaunchedEffect(Unit) {
-                            onLoadMore()
-                        }
-                    }
                 }
             }
             item {

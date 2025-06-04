@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -23,9 +24,10 @@ class NetworkCalendarDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getPersonalSchedule(
-        scheduleId: Long
+        scheduleId: Long,
+        date: LocalDate,
     ): Flow<ScheduleResponse> = apiFlow {
-        api.getPersonalSchedule(scheduleId)
+        api.getPersonalSchedule(scheduleId, date)
     }
 
     override suspend fun createPersonalSchedule(

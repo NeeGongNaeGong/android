@@ -80,6 +80,8 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun getSchedules(month: YearMonth) = viewModelScope.launch {
+        setState { copy(selectedMonth = month) }
+
         getUserSchedulesUseCase(month).withLoading {
             setState { copy(isLoading = it) }
         }.safeCollect(CalendarContract.Error.GetSchedulesError) { result ->
@@ -106,7 +108,6 @@ class CalendarViewModel @Inject constructor(
                     content = "",
                     startAt = LocalDateTime.of(date, LocalTime.MIN),
                     endAt = LocalDateTime.of(date, LocalTime.MAX),
-                    isAllDay = true,
                     location = null,
                     repeatRule = null
                 )
@@ -130,7 +131,7 @@ class CalendarViewModel @Inject constructor(
         setState {
             copy(
                 selectedDate = date,
-                isCalendarDialogShow = uiState.value.schedules[date]?.isNotEmpty() ?: false
+                isCalendarDialogShow = uiState.value.schedules[date]?.isNotEmpty() ?: uiState.value.isCalendarDialogShow
             )
         }
     }

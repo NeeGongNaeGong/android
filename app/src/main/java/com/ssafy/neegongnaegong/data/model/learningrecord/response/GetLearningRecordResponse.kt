@@ -9,4 +9,8 @@ data class GetLearningRecordResponse(
     val startAt: LocalDateTime,
     val endAt: LocalDateTime,
     val tags: List<TagResponse>,
+    val learningRecordCreatedAt: LocalDateTime,
+    val learningRecordModifiedAt: LocalDateTime,
+    val cursorCreatedAt: LocalDateTime,
+    val cursorId: Long,
 )
