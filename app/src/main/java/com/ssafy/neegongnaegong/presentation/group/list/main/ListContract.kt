@@ -10,14 +10,18 @@ class ListContract {
 
         // Record Screen의 인자가 제대로 들어오지 않은 경우
         data object InvalidAccess : Event
+
+        data class OnClickNoticeItem(val noticeId: Long) : Event
+
+        data class OnClickVoteItem(val voteId: Long) : Event
     }
 
     sealed interface Effect : UiEffect {
         data object NavigateToBackStack : Effect
 
-        data object NavigateToNoticeDetailScreen : Effect
+        data class NavigateToNoticeDetailScreen(val noticeId: Long) : Effect
 
-        data object NavigateToVoteDetailScreen : Effect
+        data class NavigateToVoteDetailScreen(val voteId: Long) : Effect
     }
 
     data class State(

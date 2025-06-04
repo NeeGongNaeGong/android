@@ -41,9 +41,17 @@ class ListViewModel
                     }
                 }
 
-                // Record Screen의 인자가 제대로 들어오지 않은 경우
+                // groupId인자 or startTab 인자가 제대로 들어오지 않은 경우
                 ListContract.Event.InvalidAccess -> {
                     setEffect { ListContract.Effect.NavigateToBackStack }
+                }
+
+                is ListContract.Event.OnClickNoticeItem -> {
+                    setEffect { ListContract.Effect.NavigateToNoticeDetailScreen(event.noticeId) }
+                }
+
+                is ListContract.Event.OnClickVoteItem -> {
+                    setEffect { ListContract.Effect.NavigateToNoticeDetailScreen(event.voteId) }
                 }
             }
         }

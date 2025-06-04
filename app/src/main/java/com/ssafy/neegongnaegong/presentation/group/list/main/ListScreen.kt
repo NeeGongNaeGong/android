@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
@@ -35,7 +34,6 @@ import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Event
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Index
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteListRoute
-import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.Dispatchers
@@ -50,13 +48,13 @@ fun ListRoute(
     popBackStack: () -> Unit,
     title: String,
     startTabIdx: Int,
-    groupId: Long,
     viewModel: ListViewModel = hiltViewModel(),
+    navigateToNoticeDetail: (Long) -> Unit,
+//    navigateToVoteDetail: (Long) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val pagerState =
         rememberPagerState(pageCount = { Index.entries.size }, initialPage = startTabIdx)
-    val navController = rememberNavController()
     val effect = viewModel.effect
 
     // ViewModel에서 stateHandler에서 NavArg 받아서 세팅하는 동안 LoadingDialog 생성
@@ -68,24 +66,12 @@ fun ListRoute(
                 when (it) {
                     Effect.NavigateToBackStack -> popBackStack()
 
-                    Effect.NavigateToNoticeDetailScreen -> {
-                        navController.navigate(
-                            AppNavigation.Screen.Studies.List.Screen.NoticeDetail(groupId),
-                        ) {
-                            popUpTo<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
-                                inclusive = true
-                            }
-                        }
+                    is Effect.NavigateToNoticeDetailScreen -> {
+                        navigateToNoticeDetail(it.noticeId)
                     }
 
-                    Effect.NavigateToVoteDetailScreen -> {
-                        navController.navigate(
-                            AppNavigation.Screen.Studies.List.Screen.VoteDetail(groupId),
-                        ) {
-                            popUpTo<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
-                                inclusive = true
-                            }
-                        }
+                    is Effect.NavigateToVoteDetailScreen -> {
+                        navigateToNoticeDetail(it.voteId)
                     }
                 }
             }
@@ -116,6 +102,8 @@ fun ListRoute(
                 pagerState = pagerState,
                 viewModel.noticeListFlow,
                 viewModel.voteListFlow,
+                { noticeId -> viewModel.setEvent(Event.OnClickNoticeItem(noticeId)) },
+                { voteId -> viewModel.setEvent(Event.OnClickVoteItem(voteId)) },
             )
         }
     }
@@ -127,10 +115,12 @@ private fun ListContent(
     pagerState: PagerState,
     noticeListFlow: Flow<PagingData<NoticeHistoryInfo>>,
     voteListFlow: Flow<PagingData<VoteHistoryInfo>>,
+    onClickNoticeItem: (Long) -> Unit,
+    onClickVoteItem: (Long) -> Unit,
 ) {
     Column {
         ListTab(modifier, pagerState)
-        ListScreen(pagerState, noticeListFlow, voteListFlow)
+        ListScreen(pagerState, noticeListFlow, voteListFlow, onClickNoticeItem, onClickVoteItem)
     }
 }
 
@@ -184,14 +174,16 @@ private fun ListScreen(
     pagerState: PagerState,
     noticeListFlow: Flow<PagingData<NoticeHistoryInfo>>,
     voteListFlow: Flow<PagingData<VoteHistoryInfo>>,
+    onClickNoticeItem: (Long) -> Unit,
+    onClickVoteItem: (Long) -> Unit,
 ) {
     HorizontalPager(
         modifier = Modifier.fillMaxSize(),
         state = pagerState,
     ) { pageIndex ->
         when (pageIndex) {
-            0 -> NoticeListRoute(noticeListFlow)
-            1 -> VoteListRoute(voteListFlow)
+            Index.Notice.index -> NoticeListRoute(noticeListFlow, onClickNoticeItem)
+            Index.Vote.index -> VoteListRoute(voteListFlow, onClickVoteItem)
         }
     }
 }
