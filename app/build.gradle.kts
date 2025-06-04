@@ -123,4 +123,8 @@ dependencies {
     implementation(libs.paging3.compose)
     // fcm
     implementation(libs.firebase.messaging.ktx)
+
+    // Room
+    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
 }

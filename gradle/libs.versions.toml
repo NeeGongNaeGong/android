@@ -39,6 +39,8 @@ paging3 = "3.3.2"
 ktlint = "12.2.0"
 #detekt
 detekt = "1.23.8"
+#room
+roomPaging = "2.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -97,6 +99,10 @@ paging3-compose = { group = "androidx.paging", name = "paging-compose", version.
 
 #detekt
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+#room
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomPaging" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomPaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
