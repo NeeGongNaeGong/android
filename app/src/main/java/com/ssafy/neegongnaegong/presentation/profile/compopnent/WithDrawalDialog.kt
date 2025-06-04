@@ -25,19 +25,19 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 private val Red = Color(0xFFEF4444)
@@ -47,7 +47,7 @@ fun WithdrawalDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    var isConfirmed by rememberSaveable { mutableStateOf(false) }
+    val (isConfirmed, setConfirmed) = rememberSaveable { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -83,7 +83,7 @@ fun WithdrawalDialog(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = "경고",
+                        contentDescription = stringResource(id = R.string.common_warning),
                         tint = Red,
                         modifier = Modifier.size(32.dp)
                     )
@@ -93,7 +93,7 @@ fun WithdrawalDialog(
 
                 // 제목
                 Text(
-                    text = "정말로 탈퇴하시겠습니까?",
+                    text = stringResource(id = R.string.withdrawal_dialog_title),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText
@@ -102,7 +102,7 @@ fun WithdrawalDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "회원탈퇴를 진행하시면 다음과 같은 정보들이 영구적으로 삭제됩니다",
+                    text = stringResource(id = R.string.withdrawal_warning_description),
                     style = NeeGongNaeGongTheme.typography.bodySmall,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
@@ -117,13 +117,13 @@ fun WithdrawalDialog(
                     ),
                 ) {
                     Column(modifier = Modifier.padding(vertical = 16.dp)) {
-                        DeletionItem("회원 정보 및 프로필")
-                        DeletionItem("활동 내역 및 게시글")
+                        DeletionItem(text = stringResource(id = R.string.withdrawal_info_profile))
+                        DeletionItem(text = stringResource(id = R.string.withdrawal_info_activity))
                     }
                 }
 
                 Text(
-                    text = "탈퇴 후에는 복구가 불가능하며, 동일한 이메일로 재가입 시에도 기존 정보는 복원되지 않습니다.",
+                    text = stringResource(id = R.string.withdrawal_no_recovery_notice),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -139,14 +139,14 @@ fun WithdrawalDialog(
                 ) {
                     Checkbox(
                         checked = isConfirmed,
-                        onCheckedChange = { isConfirmed = it },
+                        onCheckedChange = setConfirmed,
                         colors = CheckboxDefaults.colors(checkedColor = Red)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Text(
-                        text = "위 내용을 모두 확인했으며, 회원탈퇴에 동의합니다.",
+                        text = stringResource(id = R.string.withdrawal_confirm_checkbox_text),
                         style = NeeGongNaeGongTheme.typography.bodySmall,
                         fontSize = 14.sp,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -169,7 +169,7 @@ fun WithdrawalDialog(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "취소",
+                            text = stringResource(id = R.string.common_cancel),
                             color = Color(0xFF374151),
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(vertical = 4.dp)
@@ -187,7 +187,7 @@ fun WithdrawalDialog(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "회원탈퇴",
+                            text = stringResource(id = R.string.withdrawal_confirm_button),
                             color = if (isConfirmed) Color.White else Color(0xFF9CA3AF),
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(vertical = 4.dp)
@@ -198,7 +198,7 @@ fun WithdrawalDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "탈퇴를 원하지 않으시면 언제든지 취소하실 수 있습니다.",
+                    text = stringResource(id = R.string.withdrawal_footer_notice),
                     style = NeeGongNaeGongTheme.typography.bodySmall,
                     fontSize = 12.sp,
                     color = NeeGongNaeGongTheme.colorScheme.secondaryText,
