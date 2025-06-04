@@ -2,11 +2,11 @@ package com.ssafy.neegongnaegong.presentation.group.list.component
 
 import android.icu.text.DecimalFormatSymbols
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -24,11 +24,11 @@ fun VoteCard(
     onClick: () -> Unit,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
         modifier =
             Modifier.clickable {
                 id
             },
+        horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2),
     ) {
         Text(
             text = "Q",
@@ -45,6 +45,7 @@ fun VoteCard(
             )
             Text(
                 text = "${participationMember}명 참여ㆍ${if (voted) "참여" else "미참여"}",
+                overflow = TextOverflow.Ellipsis,
                 color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                 style = NeeGongNaeGongTheme.typography.bodySmall,
             )
@@ -63,6 +64,7 @@ fun VoteCard(
                         DecimalFormatSymbols.getInstance().infinity
                     },
                 color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                overflow = TextOverflow.Ellipsis,
                 style = NeeGongNaeGongTheme.typography.bodySmall,
             )
         }
