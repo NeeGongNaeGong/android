@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.datasource.network
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
@@ -39,6 +40,15 @@ class NetworkStudyGroupDataSourceImpl
             api.getStudyGroupVoteList(
                 studyGroupId = request.studyGroupId,
                 cursorTime = request.cursorTime,
+                cursorId = request.cursorId,
+                size = request.size,
+            )
+
+        override suspend fun getStudyGroupNoticeList(
+            request: StudyGroupVoteListInfo,
+        ): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>> =
+            api.getStudyGroupNoticeList(
+                studyGroupId = request.studyGroupId,
                 cursorId = request.cursorId,
                 size = request.size,
             )
