@@ -14,6 +14,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 import com.ssafy.neegongnaegong.presentation.group.list.component.ErrorItem
+import com.ssafy.neegongnaegong.presentation.group.list.component.From
 import com.ssafy.neegongnaegong.presentation.group.list.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoDataItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.VoteCard
@@ -80,7 +81,7 @@ fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
 
             lazyItems.itemCount == 0 ->
                 item {
-                    NoDataItem()
+                    NoDataItem(From.Vote)
                 }
         }
     }

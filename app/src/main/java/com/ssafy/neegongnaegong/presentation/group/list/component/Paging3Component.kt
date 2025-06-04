@@ -32,10 +32,10 @@ fun ErrorItem(
 }
 
 @Composable
-fun NoDataItem() {
+fun NoDataItem(from: From) {
     Box(Modifier.fillMaxSize(), Alignment.Center) {
         Text(
-            text = "아직 기록이 없습니다!",
+            text = "아직 등록된 ${from.route}가 없습니다!",
             color = NeeGongNaeGongTheme.colorScheme.primaryText,
             style = NeeGongNaeGongTheme.typography.bodyMedium,
         )
@@ -62,6 +62,11 @@ fun PreviewErrorItem() {
 @NeeGongNaeGongPreviews
 fun PreviewNoDataItem() {
     NeeGongNaeGongTheme {
-        NoDataItem()
+        NoDataItem(From.Notice)
     }
+}
+
+enum class From(val route: String) {
+    Notice("공지"),
+    Vote("투표"),
 }
