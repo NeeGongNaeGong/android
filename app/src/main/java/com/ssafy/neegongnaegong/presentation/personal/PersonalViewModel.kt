@@ -154,7 +154,6 @@ class PersonalViewModel
                         cursorId = state.tagCursorId,
                         cursorCreatedAt = state.tagCursorCreatedAt,
                     ).safeCollect { result ->
-                        delay(500)
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
@@ -175,7 +174,6 @@ class PersonalViewModel
                         cursorId = state.dateCursorId,
                         cursorCreatedAt = state.dateCursorCreatedAt,
                     ).safeCollect { result ->
-                        delay(500)
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
