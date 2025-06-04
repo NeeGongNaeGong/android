@@ -11,10 +11,3 @@ data class StudyGroupNoticeHistoryResponse(
     val modifiedAt: LocalDateTime,
     val writer: Writer,
 )
-
-data class Writer(
-    val userId: Long,
-    val name: String,
-    val profileImg: String,
-    val groupRole: String,
-)
