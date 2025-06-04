@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import retrofit2.http.GET
@@ -51,4 +52,9 @@ interface StudyGroupApi {
         @Path("study-group-id") studyGroupId: Long,
         @Path("notices-id") noticeId: Long,
     ): Result<ApiResponse<StudyGroupNoticeDetailResponse>>
+
+    @GET("$PREFIX/vote/details/{vote-id}")
+    suspend fun getVoteDetail(
+        @Path("vote-id") voteId: Long,
+    ): Result<ApiResponse<StudyGroupVoteDetailResponse>>
 }

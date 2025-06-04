@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
@@ -63,6 +64,13 @@ class NetworkStudyGroupDataSourceImpl
                 api.getNoticeDetail(
                     studyGroupId = studyGroupId,
                     noticeId = noticeId,
+                )
+            }
+
+        override fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse> =
+            apiFlow {
+                api.getVoteDetail(
+                    voteId = voteId,
                 )
             }
     }

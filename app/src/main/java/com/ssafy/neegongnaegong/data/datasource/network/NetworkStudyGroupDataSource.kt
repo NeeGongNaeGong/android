@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
@@ -25,4 +26,6 @@ interface NetworkStudyGroupDataSource {
         studyGroupId: Long,
         noticeId: Long,
     ): Flow<StudyGroupNoticeDetailResponse>
+
+    fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse>
 }
