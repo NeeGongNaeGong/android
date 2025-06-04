@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import retrofit2.http.GET
@@ -36,4 +37,11 @@ interface StudyGroupApi {
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
+
+    @GET("$PREFIX/{study-group-id}/notices")
+    suspend fun getStudyGroupNoticeList(
+        @Path("study-group-id") studyGroupId: Long,
+        @Query("cursor-id") cursorId: Long?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
 }
