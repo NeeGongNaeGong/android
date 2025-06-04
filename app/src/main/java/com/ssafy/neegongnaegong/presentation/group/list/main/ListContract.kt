@@ -12,15 +12,29 @@ class ListContract {
         data object InvalidAccess : Event
     }
 
-    data class State(
-        val groupId: Long,
-    ) : UiState
-
     sealed interface Effect : UiEffect {
         data object NavigateToBackStack : Effect
 
         data object NavigateToNoticeDetailScreen : Effect
 
         data object NavigateToVoteDetailScreen : Effect
+    }
+
+    data class State(
+        val groupId: Long,
+    ) : UiState
+
+    enum class Index(
+        val index: Int,
+        val title: String,
+    ) {
+        Notice(
+            index = 0,
+            title = "공지",
+        ),
+        Vote(
+            index = 1,
+            title = "투표",
+        ),
     }
 }

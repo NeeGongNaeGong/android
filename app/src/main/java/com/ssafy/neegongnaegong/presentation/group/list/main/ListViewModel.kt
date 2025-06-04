@@ -9,7 +9,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetNoticeListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetVoteListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
-import com.ssafy.neegongnaegong.presentation.navigation.Index
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Index
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

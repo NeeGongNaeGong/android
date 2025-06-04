@@ -30,10 +30,12 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Effect
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Event
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Index
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteListRoute
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
-import com.ssafy.neegongnaegong.presentation.navigation.Index
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +54,6 @@ fun ListRoute(
     viewModel: ListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    // PagerState: 현재 선택된 탭 인덱스를 기억하고, 스와이프 애니메이션을 관리
     val pagerState =
         rememberPagerState(pageCount = { Index.entries.size }, initialPage = startTabIdx)
     val navController = rememberNavController()
@@ -65,9 +66,9 @@ fun ListRoute(
         LaunchedEffect(effect) {
             effect.collectLatest {
                 when (it) {
-                    ListContract.Effect.NavigateToBackStack -> popBackStack()
+                    Effect.NavigateToBackStack -> popBackStack()
 
-                    ListContract.Effect.NavigateToNoticeDetailScreen -> {
+                    Effect.NavigateToNoticeDetailScreen -> {
                         navController.navigate(
                             AppNavigation.Screen.Studies.List.Screen.NoticeDetail(groupId),
                         ) {
@@ -77,7 +78,7 @@ fun ListRoute(
                         }
                     }
 
-                    ListContract.Effect.NavigateToVoteDetailScreen -> {
+                    Effect.NavigateToVoteDetailScreen -> {
                         navController.navigate(
                             AppNavigation.Screen.Studies.List.Screen.VoteDetail(groupId),
                         ) {
@@ -101,7 +102,7 @@ fun ListRoute(
                 onNavigationClick = popBackStack,
                 actionButtons = {
                     IconButton(onClick = {
-                        viewModel.setEvent(ListContract.Event.OnClickAddContent(pagerState.currentPage))
+                        viewModel.setEvent(Event.OnClickAddContent(pagerState.currentPage))
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Create,
