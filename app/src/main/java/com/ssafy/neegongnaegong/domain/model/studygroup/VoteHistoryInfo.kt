@@ -1,10 +1,10 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class VoteHistoryInfo(
     val title: String,
-    val endTime: LocalDate?,
+    val endTime: LocalDateTime?,
     val participationMember: Int,
     val voted: Boolean,
 )
