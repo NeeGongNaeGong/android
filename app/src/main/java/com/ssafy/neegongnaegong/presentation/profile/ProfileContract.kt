@@ -12,13 +12,16 @@ interface ProfileContract {
         data object ClickNotification : Event()
         data object ClickNotice : Event()
         data object ClickPrivacyInfo : Event()
+        data object ClickLogout: Event()
         data object ClickDeleteAccount : Event()
+        data class ChangeNickName(val text: String): Event()
     }
 
     @Stable
     data class State(
         val isInitial: Boolean = true,
-        val isModifying: Boolean = false
+        val isModifying: Boolean = false,
+        val isEditing: Boolean = false
     ) : UiState
 
     sealed class Effect : UiEffect {

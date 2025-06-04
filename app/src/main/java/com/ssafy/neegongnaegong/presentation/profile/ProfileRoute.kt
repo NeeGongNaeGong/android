@@ -59,6 +59,11 @@ fun ProfileRoute(
     else ProfileScreen(
         profileImg = uiModel.profileImg,
         nickname = uiModel.nickname,
+        isEditing = uiState.isEditing,
+        onChangeNickName = { text: String ->
+            val event = ProfileContract.Event.ChangeNickName(text = text)
+            viewModel.setEvent(event = event)
+        },
         onClickNotification = {
             val event = ProfileContract.Event.ClickNotification
             viewModel.setEvent(event = event)
@@ -69,6 +74,10 @@ fun ProfileRoute(
         },
         onClickPrivacyInfo = {
             val event = ProfileContract.Event.ClickPrivacyInfo
+            viewModel.setEvent(event = event)
+        },
+        onClickLogout = {
+            val event = ProfileContract.Event.ClickLogout
             viewModel.setEvent(event = event)
         },
         onClickDeleteAccount = {

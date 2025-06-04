@@ -43,7 +43,9 @@ class ProfileViewModel @Inject constructor(
         ProfileContract.Event.ClickNotification -> handleNotification()
         ProfileContract.Event.ClickNotice -> handleNotice()
         ProfileContract.Event.ClickPrivacyInfo -> handlePrivacyInfo()
+        ProfileContract.Event.ClickLogout -> handleLogout()
         ProfileContract.Event.ClickDeleteAccount -> handleDeleteAccount()
+        is ProfileContract.Event.ChangeNickName -> handleChangeNickName(event.text)
     }
 
     private fun handleNotification() {
@@ -61,12 +63,27 @@ class ProfileViewModel @Inject constructor(
         setEffect { sideEffect }
     }
 
+    private fun handleLogout() {
+        viewModelScope.safeLaunch {
+            // TODO("계정 로그아웃")
+            delay(1000)
+            val sideEffect = ProfileContract.Effect.NavigateToLogout
+            setEffect { sideEffect }
+        }
+    }
+
     private fun handleDeleteAccount() {
         viewModelScope.safeLaunch {
             // TODO("계정 삭제")
             delay(1000)
             val sideEffect = ProfileContract.Effect.NavigateToLogout
             setEffect { sideEffect }
+        }
+    }
+
+    private fun handleChangeNickName(text: String) {
+        viewModelScope.safeLaunch {
+            // TODO("닉넴 변경")
         }
     }
 
