@@ -1,13 +1,15 @@
 package com.ssafy.neegongnaegong.presentation.profile
 
 import android.content.Context
-import androidx.browser.customtabs.CustomTabsIntent
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent.Builder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.base.CollectSideEffects
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
@@ -29,6 +31,16 @@ fun ProfileRoute(
                 SnackbarManager.showErrorMessage(message = effect.message)
             }
 
+            ProfileContract.Effect.ShowDuplicatedNicknameErrorMessage -> {
+                val message: String = context.getString(R.string.already_use_nickname)
+                SnackbarManager.showErrorMessage(message = message)
+            }
+
+            ProfileContract.Effect.ShowInvalidNicknameErrorMessage -> {
+                val message: String = context.getString(R.string.invalid_nickname)
+                SnackbarManager.showErrorMessage(message = message)
+            }
+
             ProfileContract.Effect.NavigateToNotification -> {
                 navigateToNotification()
             }
@@ -36,7 +48,7 @@ fun ProfileRoute(
             ProfileContract.Effect.NavigateToNotice -> {
                 // TODO ("주소 변경 필요!")
                 val url = "https://www.naver.com"
-                CustomTabsIntent.Builder()
+                Builder()
                     .build()
                     .launchUrl(context, url.toUri())
             }
@@ -44,7 +56,7 @@ fun ProfileRoute(
             ProfileContract.Effect.NavigateToPrivacyInfo -> {
                 // TODO ("주소 변경 필요!")
                 val url = "https://www.google.com"
-                CustomTabsIntent.Builder()
+                Builder()
                     .build()
                     .launchUrl(context, url.toUri())
             }
@@ -52,16 +64,29 @@ fun ProfileRoute(
             ProfileContract.Effect.NavigateToLogout -> {
                 navigateToAuth()
             }
+
         }
     }
 
-    if (uiState.isInitial or uiState.isModifying) LoadingDialog()
+    if (uiState.isInitial) LoadingDialog()
     else ProfileScreen(
         profileImg = uiModel.profileImg,
         nickname = uiModel.nickname,
         isEditing = uiState.isEditing,
         onChangeNickName = { text: String ->
             val event = ProfileContract.Event.ChangeNickName(text = text)
+            viewModel.setEvent(event = event)
+        },
+        onClickEdit = {
+            val event = ProfileContract.Event.ClickEdit
+            viewModel.setEvent(event = event)
+        },
+        onClickEditCancel = {
+            val event = ProfileContract.Event.ClickEditCancel
+            viewModel.setEvent(event = event)
+        },
+        onImageSelected = { uri: Uri ->
+            val event = ProfileContract.Event.ChangeImage(uri = uri)
             viewModel.setEvent(event = event)
         },
         onClickNotification = {
@@ -85,4 +110,6 @@ fun ProfileRoute(
             viewModel.setEvent(event = event)
         },
     )
+
+    if (uiState.isModifying) LoadingDialog()
 }

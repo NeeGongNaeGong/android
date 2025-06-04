@@ -1,8 +1,12 @@
 package com.ssafy.neegongnaegong.presentation.profile
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
+import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileMapper.toUiModel
@@ -13,13 +17,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val getMyProfileUseCase: GetMyProfileUseCase
+    val getMyProfileUseCase: GetMyProfileUseCase,
+    val updateNicknameUseCase: UpdateNicknameUseCase,
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -45,7 +51,10 @@ class ProfileViewModel @Inject constructor(
         ProfileContract.Event.ClickPrivacyInfo -> handlePrivacyInfo()
         ProfileContract.Event.ClickLogout -> handleLogout()
         ProfileContract.Event.ClickDeleteAccount -> handleDeleteAccount()
+        ProfileContract.Event.ClickEdit -> handleEdit(isEditing = true)
+        ProfileContract.Event.ClickEditCancel -> handleEdit(isEditing = false)
         is ProfileContract.Event.ChangeNickName -> handleChangeNickName(event.text)
+        is ProfileContract.Event.ChangeImage -> handleChangeProfileImage(event.uri)
     }
 
     private fun handleNotification() {
@@ -63,9 +72,13 @@ class ProfileViewModel @Inject constructor(
         setEffect { sideEffect }
     }
 
+    private fun handleEdit(isEditing: Boolean) {
+        setState { copy(isEditing = isEditing) }
+    }
+
     private fun handleLogout() {
         viewModelScope.safeLaunch {
-            // TODO("계정 로그아웃")
+            // TODO("계정 로그아웃 API 추가되면 수정")
             delay(1000)
             val sideEffect = ProfileContract.Effect.NavigateToLogout
             setEffect { sideEffect }
@@ -74,7 +87,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleDeleteAccount() {
         viewModelScope.safeLaunch {
-            // TODO("계정 삭제")
+            // TODO("계정 삭제 API 추가되면 수정")
             delay(1000)
             val sideEffect = ProfileContract.Effect.NavigateToLogout
             setEffect { sideEffect }
@@ -82,21 +95,39 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleChangeNickName(text: String) {
-        viewModelScope.safeLaunch {
-            // TODO("닉넴 변경")
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+            updateNicknameUseCase(nickname = text).withLoading { isModifying ->
+                setState { copy(isModifying = isModifying) }
+            }.firstOrNull()
+
+            setState { copy(isEditing = false) }
+        }
+    }
+
+    private fun handleChangeProfileImage(uri: Uri) {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+            // TODO("형선이형 브랜치에서 사용되는 S3 이미지 업로드 UseCase 결함 예정")
         }
     }
 
     override fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {
         endLoad()
 
-        val message: String = e.message ?: return
-        val sideEffect = ProfileContract.Effect.ShowErrorMessage(message)
-        setEffect { sideEffect }
-    }
+        val sideEffect: ProfileContract.Effect = when (e) {
+            is DuplicateNicknameException -> {
+                ProfileContract.Effect.ShowDuplicatedNicknameErrorMessage
+            }
 
-    private fun setModify() {
-        setState { copy(isModifying = true) }
+            is InvalidNicknameException -> {
+                ProfileContract.Effect.ShowInvalidNicknameErrorMessage
+            }
+
+            else -> {
+                val message: String = e.message ?: return
+                ProfileContract.Effect.ShowErrorMessage(message)
+            }
+        }
+        setEffect { sideEffect }
     }
 
     private fun endLoad() {

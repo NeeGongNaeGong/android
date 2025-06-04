@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.profile
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,9 @@ fun ProfileScreen(
     nickname: String,
     isEditing: Boolean,
     onChangeNickName: (String) -> Unit,
+    onClickEdit: () -> Unit,
+    onClickEditCancel: () -> Unit,
+    onImageSelected: (Uri) -> Unit,
     onClickNotification: () -> Unit,
     onClickNotice: () -> Unit,
     onClickPrivacyInfo: () -> Unit,
@@ -51,14 +55,19 @@ fun ProfileScreen(
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape),
-            profileImg = profileImg
+            profileImg = profileImg,
+            onImageSelected = onImageSelected
         )
 
         ProfileNickname(
-            modifier = Modifier.padding(top = 12.dp),
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .padding(horizontal = 16.dp),
             isEditing = isEditing,
             text = nickname,
-            onEditText = onChangeNickName
+            onClickEdit = onClickEdit,
+            onClickEditCancel = onClickEditCancel,
+            onClickEditDone = onChangeNickName
         )
 
         Spacer(modifier = Modifier.height(18.dp))
@@ -100,5 +109,18 @@ fun ProfileScreen(
 @Composable
 @NeeGongNaeGongPreviews
 fun ProfileScreenPreview() {
-
+    ProfileScreen(
+        profileImg = "",
+        nickname = "닉네임",
+        isEditing = false,
+        onChangeNickName = {},
+        onClickEdit = {},
+        onClickEditCancel = {},
+        onImageSelected = {},
+        onClickNotification = {},
+        onClickNotice = {},
+        onClickPrivacyInfo = {},
+        onClickLogout = {},
+        onClickDeleteAccount = {},
+    )
 }

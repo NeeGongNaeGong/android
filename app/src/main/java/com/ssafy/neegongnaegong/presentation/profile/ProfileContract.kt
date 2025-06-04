@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.profile
 
+import android.net.Uri
 import androidx.compose.runtime.Stable
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
@@ -12,9 +13,12 @@ interface ProfileContract {
         data object ClickNotification : Event()
         data object ClickNotice : Event()
         data object ClickPrivacyInfo : Event()
-        data object ClickLogout: Event()
+        data object ClickLogout : Event()
         data object ClickDeleteAccount : Event()
-        data class ChangeNickName(val text: String): Event()
+        data object ClickEdit : Event()
+        data object ClickEditCancel : Event()
+        data class ChangeImage(val uri: Uri) : Event()
+        data class ChangeNickName(val text: String) : Event()
     }
 
     @Stable
@@ -26,6 +30,8 @@ interface ProfileContract {
 
     sealed class Effect : UiEffect {
         data class ShowErrorMessage(val message: String) : Effect()
+        data object ShowInvalidNicknameErrorMessage : Effect()
+        data object ShowDuplicatedNicknameErrorMessage : Effect()
         data object NavigateToNotification : Effect()
         data object NavigateToNotice : Effect()
         data object NavigateToPrivacyInfo : Effect()
