@@ -7,8 +7,8 @@ import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameRespons
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkUserDataSource {
+    fun updateUser(request: UpdateUserRequest): Flow<Unit>
+    fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse>
     suspend fun getUser(id: Long): Flow<UserDetailResponse>
-    suspend fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse>
-    suspend fun updateUser(request: UpdateUserRequest): Flow<Unit>
     suspend fun updateFcmToken(request: UpdateFcmTokenRequest): Flow<Unit>
 }

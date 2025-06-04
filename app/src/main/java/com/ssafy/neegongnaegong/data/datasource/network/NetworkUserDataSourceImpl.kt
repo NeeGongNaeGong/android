@@ -16,11 +16,11 @@ class NetworkUserDataSourceImpl @Inject constructor(
         userApi.getUser(id)
     }
 
-    override suspend fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse> = apiFlow {
+    override fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse> = apiFlow {
         userApi.validateNickname(nickname)
     }
 
-    override suspend fun updateUser(request: UpdateUserRequest): Flow<Unit> = apiFlow {
+    override fun updateUser(request: UpdateUserRequest): Flow<Unit> = apiFlow {
         userApi.updateUser(request)
     }
 
