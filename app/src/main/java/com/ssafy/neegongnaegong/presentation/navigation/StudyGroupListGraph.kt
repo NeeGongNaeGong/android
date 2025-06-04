@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteListRoute
 
 fun NavGraphBuilder.studyGroupListNavGraph(
@@ -15,6 +16,13 @@ fun NavGraphBuilder.studyGroupListNavGraph(
         startDestination = AppNavigation.Screen.Studies.List.Screen.NoticeList(groupId),
     ) {
         composable<AppNavigation.Screen.Studies.List.Screen.NoticeList> {
+            NoticeListRoute(
+                backStackEntry = it,
+                viewModel = hiltViewModel(it),
+            ) {
+                val result = navController.popBackStack()
+                result
+            }
         }
         composable<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
         }
