@@ -10,7 +10,7 @@ import javax.inject.Inject
 class LocalUserDataSourceImpl @Inject constructor(
     private val localStorageManager: LocalStorageManager
 ) : LocalUserDataSource {
-    override suspend fun saveUser(user: User): Flow<Boolean> = flow {
+    override fun saveUser(user: User): Flow<Boolean> = flow {
         runCatching { localStorageManager.saveData("user", user) }.fold(
             onSuccess = { emit(true) },
             onFailure = { emit(false) }
