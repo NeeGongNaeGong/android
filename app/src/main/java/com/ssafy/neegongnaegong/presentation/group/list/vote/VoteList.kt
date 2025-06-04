@@ -22,7 +22,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun VoteListRoute(
@@ -56,6 +56,8 @@ fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
                 VoteCard(
                     title = item.title,
                     participationMember = item.participationMember,
+                    voted = item.voted,
+                    endTime = item.endTime,
                     onClick = {},
                 )
             }
@@ -91,7 +93,7 @@ fun PreviewVoteListScreen() {
                 add(
                     VoteHistoryInfo(
                         title = "테스트 공지입니다",
-                        endTime = LocalDate.now(),
+                        endTime = LocalDateTime.now(),
                         participationMember = 1,
                         voted = true,
                     ),
