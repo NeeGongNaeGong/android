@@ -33,7 +33,7 @@ fun PersonalByDateScreen(
     navigateToEditScreen: (Long) -> Unit,
     // Paging3
     onLoadMore: () -> Unit,
-    hasNext: Boolean,
+    hasDateDataNext: Boolean,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DatePicker(
@@ -69,7 +69,7 @@ fun PersonalByDateScreen(
                 learningRecords = selectedRecordsByDate,
                 onClick = navigateToEditScreen,
                 onLoadMore = onLoadMore,
-                hasNext = hasNext,
+                hasNext = hasDateDataNext,
             )
         }
     }
@@ -86,7 +86,7 @@ fun PersonalByDateScreenPreview() {
             onDateSelected = {},
             navigateToEditScreen = {},
             onLoadMore = {},
-            hasNext = false,
+            hasDateDataNext = false,
         )
     }
 }

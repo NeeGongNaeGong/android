@@ -159,7 +159,8 @@ fun PersonalContent(
         navigateToEditScreen = navigateToEditScreen,
         // paging
         onLoadMore = onLoadMore,
-        hasNext = uiState.hasNext,
+        hasTagDataNext = uiState.hasTagDataNext,
+        hasDateDataNext = uiState.hasDateDataNext,
     )
 
     if (uiState.isLoading) {
@@ -183,7 +184,8 @@ fun PersonalScreen(
     navigateToEditScreen: (Long) -> Unit,
     // Paging3
     onLoadMore: () -> Unit,
-    hasNext: Boolean,
+    hasTagDataNext: Boolean,
+    hasDateDataNext: Boolean,
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -252,7 +254,7 @@ fun PersonalScreen(
                         onTagEraseClicked = onTagEraseClicked,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
-                        hasNext = hasNext,
+                        hasTagDataNext = hasTagDataNext,
                     )
                 }
 
@@ -265,7 +267,7 @@ fun PersonalScreen(
                         selectedDate = selectedDate,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
-                        hasNext = hasNext,
+                        hasDateDataNext = hasDateDataNext,
                     )
                 }
             }
@@ -288,6 +290,7 @@ fun PersonalScreenPreview() {
         selectedDate = "2024-01-01",
         selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords(),
         onLoadMore = {},
-        hasNext = false,
+        hasTagDataNext = false,
+        hasDateDataNext = false
     )
 }

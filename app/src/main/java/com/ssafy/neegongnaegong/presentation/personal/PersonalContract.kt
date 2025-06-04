@@ -65,9 +65,14 @@ class PersonalContract {
         val selectedRecordsByDate: List<LearningRecord> = emptyList(),
         // api
         val isLoading: Boolean = false,
-        val cursorId: Long? = null,
-        val cursorCreatedAt: String? = null,
-        val hasNext: Boolean = true,
+        // api tag
+        val hasTagDataNext: Boolean = false,
+        val tagCursorId: Long? = null,
+        val tagCursorCreatedAt: String? = null,
+        // api date
+        val hasDateDataNext: Boolean = false,
+        val dateCursorId: Long? = null,
+        val dateCursorCreatedAt: String? = null,
     ) : UiState
 
     sealed class Effect : UiEffect {

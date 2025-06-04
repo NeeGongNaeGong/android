@@ -29,8 +29,6 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toDateString
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-// 날짜별 화면 갔다 돌아왔을때 무한로딩
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StudyRecordList(
