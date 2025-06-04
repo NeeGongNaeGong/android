@@ -151,6 +151,7 @@ class PersonalViewModel
                         cursorId = state.cursorId,
                         cursorCreatedAt = state.cursorCreatedAt,
                     ).safeCollect { result ->
+                        delay(500)
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
@@ -171,6 +172,7 @@ class PersonalViewModel
                         cursorId = state.cursorId,
                         cursorCreatedAt = state.cursorCreatedAt,
                     ).safeCollect { result ->
+                        delay(500)
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =

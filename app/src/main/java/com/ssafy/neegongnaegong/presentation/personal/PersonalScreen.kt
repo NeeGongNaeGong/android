@@ -37,6 +37,7 @@ import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDat
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -193,7 +194,7 @@ fun PersonalScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 8.dp, vertical = 16.dp),
     ) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
@@ -244,6 +245,7 @@ fun PersonalScreen(
             when (page) {
                 0 -> {
                     PersonalByTagScreen(
+                        modifier = modifier.padding(horizontal = 8.dp),
                         tags = tags,
                         learningRecords = selectedRecordsByTag,
                         onTagPlusClicked = onTagPlusClicked,
@@ -256,6 +258,7 @@ fun PersonalScreen(
 
                 1 -> {
                     PersonalByDateScreen(
+                        modifier = modifier.padding(horizontal = 8.dp),
                         datePickerState = datePickerState,
                         onDateSelected = onDateSelected,
                         selectedRecordsByDate = selectedRecordsByDate,
@@ -270,7 +273,7 @@ fun PersonalScreen(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PersonalScreenPreview() {
     PersonalScreen(
