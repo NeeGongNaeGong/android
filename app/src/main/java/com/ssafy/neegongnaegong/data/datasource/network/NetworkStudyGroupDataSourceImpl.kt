@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteLis
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
@@ -45,7 +46,7 @@ class NetworkStudyGroupDataSourceImpl
             )
 
         override suspend fun getStudyGroupNoticeList(
-            request: StudyGroupVoteListInfo,
+            request: StudyGroupNoticeListInfo,
         ): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>> =
             api.getStudyGroupNoticeList(
                 studyGroupId = request.studyGroupId,

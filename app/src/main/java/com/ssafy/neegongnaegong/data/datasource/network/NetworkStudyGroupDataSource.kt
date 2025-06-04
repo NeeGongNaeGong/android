@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeL
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
@@ -17,5 +18,5 @@ interface NetworkStudyGroupDataSource {
 
     suspend fun getStudyGroupVoteList(request: StudyGroupVoteListInfo): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
 
-    suspend fun getStudyGroupNoticeList(request: StudyGroupVoteListInfo): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
+    suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListInfo): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
 }
