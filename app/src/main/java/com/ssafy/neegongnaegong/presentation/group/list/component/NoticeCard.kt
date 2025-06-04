@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,14 +20,11 @@ fun NoticeCard(
     title: String,
     createdAt: LocalDateTime,
     writer: Writer,
-    onClick: () -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     Column(
         modifier =
-            Modifier.clickable {
-                id
-                onClick()
-            },
+            Modifier.fillMaxWidth().clickable { onClick(id) },
     ) {
         Text(
             text = title,
