@@ -19,7 +19,7 @@ import com.ssafy.neegongnaegong.presentation.group.list.component.From
 import com.ssafy.neegongnaegong.presentation.group.list.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoDataItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoticeCard
-import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeContract.Effect.NavigateToBackStack
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeListContract.Effect.NavigateToBackStack
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ import java.time.LocalDateTime
 @Composable
 fun NoticeListRoute(
     backStackEntry: NavBackStackEntry,
-    viewModel: NoticeViewModel = hiltViewModel(backStackEntry),
+    viewModel: NoticeListViewModel = hiltViewModel(backStackEntry),
     popBackStack: () -> Boolean,
 ) {
     val lazyItems = viewModel.voteListFlow.collectAsLazyPagingItems()

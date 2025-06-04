@@ -27,7 +27,7 @@ import java.time.LocalDateTime
 @Composable
 fun VoteListRoute(
     backStackEntry: NavBackStackEntry,
-    viewModel: VoteViewModel = hiltViewModel(backStackEntry),
+    viewModel: VoteListViewModel = hiltViewModel(backStackEntry),
     popBackStack: () -> Boolean,
 ) {
     val lazyItems = viewModel.voteListFlow.collectAsLazyPagingItems()
@@ -35,7 +35,7 @@ fun VoteListRoute(
     LaunchedEffect(viewModel.effect) {
         viewModel.effect.collectLatest {
             when (it) {
-                VoteContract.Effect.NavigateToBackStack -> {
+                VoteListContract.Effect.NavigateToBackStack -> {
                     popBackStack()
                 }
             }
