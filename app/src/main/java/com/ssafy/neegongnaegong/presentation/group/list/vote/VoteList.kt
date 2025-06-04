@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
@@ -54,6 +53,7 @@ fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
         items(lazyItems.itemCount) { idx ->
             lazyItems[idx]?.let { item ->
                 VoteCard(
+                    id = item.id,
                     title = item.title,
                     participationMember = item.participationMember,
                     voted = item.voted,
@@ -71,11 +71,13 @@ fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
                     val e = lazyItems.loadState.refresh as LoadState.Error
                     ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
                 }
+
             lazyItems.loadState.append is LoadState.Error ->
                 item {
                     val e = lazyItems.loadState.append as LoadState.Error
                     ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
                 }
+
             lazyItems.itemCount == 0 ->
                 item {
                     NoDataItem()
@@ -92,6 +94,7 @@ fun PreviewVoteListScreen() {
             repeat(4) {
                 add(
                     VoteHistoryInfo(
+                        id = 0,
                         title = "테스트 공지입니다",
                         endTime = LocalDateTime.now(),
                         participationMember = 1,

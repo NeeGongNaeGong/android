@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 internal object StudyGroupVoteHistoryInfoMapper {
     fun StudyGroupVoteHistoryResponse.toDomain() =
         VoteHistoryInfo(
+            id,
             title,
             endTime,
             participationMember,

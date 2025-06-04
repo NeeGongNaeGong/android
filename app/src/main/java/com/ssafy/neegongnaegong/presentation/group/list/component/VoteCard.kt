@@ -16,13 +16,20 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun VoteCard(
+    id: Long,
     title: String,
     participationMember: Int,
     voted: Boolean,
     endTime: LocalDateTime?,
     onClick: () -> Unit,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier =
+            Modifier.clickable {
+                id
+            },
+    ) {
         Text(
             text = "Q",
             color = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -65,5 +72,5 @@ fun VoteCard(
 @Composable
 @NeeGongNaeGongPreviews
 fun PreviewVoteCard() {
-    VoteCard("테스트 투표입니다", 1, false, LocalDateTime.now()) {}
+    VoteCard(0, "테스트 투표입니다", 1, false, LocalDateTime.now()) {}
 }
