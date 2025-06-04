@@ -4,5 +4,5 @@ import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import javax.inject.Inject
 
 class GetMyProfileUseCase @Inject constructor(private val userRepository: UserRepository) {
-    operator fun invoke() = userRepository.getUserFlow()
+    operator fun invoke() = userRepository.getUser()
 }
