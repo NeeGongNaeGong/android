@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.domain.repository
 
 import androidx.paging.PagingData
+import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
@@ -13,4 +14,6 @@ interface StudyGroupRepository {
     fun getMemberStudyContents(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>>
 
     fun getVoteList(request: Long): Flow<PagingData<VoteHistoryInfo>>
+
+    fun getNoticeList(request: Long): Flow<PagingData<NoticeHistoryInfo>>
 }

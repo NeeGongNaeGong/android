@@ -6,7 +6,9 @@ import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyLogByTagInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.paging.MemberStudyContentsPagingSource
+import com.ssafy.neegongnaegong.data.paging.StudyGroupNoticeListPagingSource
 import com.ssafy.neegongnaegong.data.paging.StudyGroupVoteListPagingSource
+import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
@@ -41,6 +43,17 @@ class StudyGroupRepositoryImpl
                 config = PagingConfig(pageSize = 20, enablePlaceholders = false),
                 pagingSourceFactory = {
                     StudyGroupVoteListPagingSource(
+                        dataSource,
+                        request,
+                    )
+                },
+            ).flow
+
+        override fun getNoticeList(request: Long): Flow<PagingData<NoticeHistoryInfo>> =
+            Pager(
+                config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+                pagingSourceFactory = {
+                    StudyGroupNoticeListPagingSource(
                         dataSource,
                         request,
                     )
