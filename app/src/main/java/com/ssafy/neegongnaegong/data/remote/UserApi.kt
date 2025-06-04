@@ -8,7 +8,7 @@ import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameRespons
 import com.ssafy.neegongnaegong.domain.model.pagable.PageableData
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.PATCH
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -25,10 +25,10 @@ interface UserApi {
         @Query("sort") sort: List<String>
     ): Result<ApiResponse<PageableData<UserDetailResponse>>>
 
-    @GET("/api/users/nickname/validate")
+    @GET("/api/users/validate-nickname")
     suspend fun validateNickname(@Query("nickname") nickname: String): Result<ApiResponse<ValidateNicknameResponse>>
 
-    @POST("/api/users")
+    @PATCH("/api/users/me")
     suspend fun updateUser(@Body request: UpdateUserRequest): Result<ApiResponse<Unit>>
 
     @PUT("/token/fcm/refresh")
