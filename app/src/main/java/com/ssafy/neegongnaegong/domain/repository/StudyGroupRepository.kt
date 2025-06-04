@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.domain.repository
 import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
@@ -16,4 +17,9 @@ interface StudyGroupRepository {
     fun getVoteList(request: Long): Flow<PagingData<VoteHistoryInfo>>
 
     fun getNoticeList(request: Long): Flow<PagingData<NoticeHistoryInfo>>
+
+    fun getNoticeDetail(
+        studyGroupId: Long,
+        noticeId: Long,
+    ): Flow<StudyGroupNoticeDetailInfo>
 }

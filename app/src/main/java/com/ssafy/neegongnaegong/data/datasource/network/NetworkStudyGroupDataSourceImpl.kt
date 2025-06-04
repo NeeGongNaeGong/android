@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.datasource.network
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
@@ -53,4 +54,15 @@ class NetworkStudyGroupDataSourceImpl
                 cursorId = request.cursorId,
                 size = request.size,
             )
+
+        override fun getStudyGroupNoticeDetail(
+            studyGroupId: Long,
+            noticeId: Long,
+        ): Flow<StudyGroupNoticeDetailResponse> =
+            apiFlow {
+                api.getNoticeDetail(
+                    studyGroupId = studyGroupId,
+                    noticeId = noticeId,
+                )
+            }
     }
