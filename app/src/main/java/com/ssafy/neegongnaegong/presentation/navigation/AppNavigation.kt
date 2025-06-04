@@ -75,27 +75,12 @@ object AppNavigation {
             @Serializable
             sealed interface List : Studies {
                 @Serializable
-                data class Main(val startTab: Int = Index.Notice.index, val title: String, val groupId: Long)
-
-                @Serializable
-                sealed interface Tab : List {
-                    @Serializable
-                    data object Notice : Tab
-
-                    @Serializable
-                    data object Vote : Tab
-                }
+                data class Main(val startTab: Int = Index.Notice.index, val title: String, val groupId: Long) : List
 
                 @Serializable
                 sealed interface Screen : List {
                     @Serializable
-                    data class NoticeList(val groupId: Long) : Screen
-
-                    @Serializable
                     data class NoticeDetail(val groupId: Long) : Screen
-
-                    @Serializable
-                    data class VoteList(val groupId: Long) : Screen
 
                     @Serializable
                     data class VoteDetail(val groupId: Long) : Screen
