@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.domain.repository
 
+import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -12,4 +13,5 @@ interface UserRepository {
     suspend fun updateProfileImage(profileImage: String): Flow<Unit>
     suspend fun updateFcmToken(fcmToken: String? = null)
     suspend fun checkUpdateFcmTokenState(): Boolean
+    fun searchUser(userName: String): Flow<PagingData<User>>
 }
