@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
 import com.ssafy.neegongnaegong.data.model.user.response.UserDetailResponse
+import com.ssafy.neegongnaegong.data.model.user.response.UserPage
 import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameResponse
 import com.ssafy.neegongnaegong.domain.model.pagable.PageableData
 import retrofit2.http.Body
@@ -33,4 +34,12 @@ interface UserApi {
 
     @PUT("/token/fcm/refresh")
     suspend fun updateFcmToken(@Body request: UpdateFcmTokenRequest): Result<ApiResponse<Unit>>
+
+    @GET("/api/users/list")
+    suspend fun findUsers(
+        @Query("cursor-time") time: String?,
+        @Query("cursor-id") cursorId: Long?,
+        @Query("size") size: Int,
+        @Query("user-name") userName: String,
+    ): Result<ApiResponse<UserPage>>
 }

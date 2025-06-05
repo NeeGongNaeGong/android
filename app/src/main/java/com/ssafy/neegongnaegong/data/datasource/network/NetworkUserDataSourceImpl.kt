@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
 import com.ssafy.neegongnaegong.data.model.user.response.UserDetailResponse
+import com.ssafy.neegongnaegong.data.model.user.response.UserPage
 import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameResponse
 import com.ssafy.neegongnaegong.data.remote.UserApi
 import kotlinx.coroutines.flow.Flow
@@ -26,5 +27,19 @@ class NetworkUserDataSourceImpl @Inject constructor(
 
     override suspend fun updateFcmToken(request: UpdateFcmTokenRequest): Flow<Unit> = apiFlow {
         userApi.updateFcmToken(request)
+    }
+
+    override fun searchUsers(
+        time: String?,
+        cursorId: Long?,
+        size: Int,
+        userName: String
+    ): Flow<UserPage> = apiFlow {
+        userApi.findUsers(
+            time = time,
+            cursorId = cursorId,
+            size = size,
+            userName = userName
+        )
     }
 }
