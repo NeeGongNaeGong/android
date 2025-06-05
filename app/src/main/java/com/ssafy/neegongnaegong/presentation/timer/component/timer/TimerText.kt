@@ -6,7 +6,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.formatElapsedTime
 
 @Composable
@@ -14,11 +13,12 @@ fun TimerText(elapsedTime: Long) {
     val formattedTime = remember(elapsedTime) { formatElapsedTime(elapsedTime) }
     Text(
         text = formattedTime,
-        style = NeeGongNaeGongTheme.typography.bodyLarge.copy(
-            fontFeatureSettings = "tnum",
-        ),
+        style =
+            NeeGongNaeGongTheme.typography.bodyLarge.copy(
+                fontFeatureSettings = "tnum",
+            ),
         fontSize = 64.sp,
-        color = NeeGongNaeGongTheme.colorScheme.primaryText
+        color = NeeGongNaeGongTheme.colorScheme.primaryText,
     )
 }
 
