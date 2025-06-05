@@ -15,7 +15,7 @@ interface StudiesApi {
 
     @POST("/api/study-groups/{study-group-id}/posts/votes")
     suspend fun createVote(
-        @Path("study-group-id") studyId: Int,
+        @Path("study-group-id") studyGroupId: Long,
         @Body requestBody: CreateVoteRequest,
     ): Result<ApiResponse<Unit>>
 

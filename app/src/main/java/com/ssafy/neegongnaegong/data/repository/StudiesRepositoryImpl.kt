@@ -17,9 +17,9 @@ class StudiesRepositoryImpl
         override suspend fun getStudies(): List<Studies> = TODO()
 
         override suspend fun createVote(
-            studyId: Int,
+            studyGroupId: Long,
             voteInfo: VoteInfo,
-        ): Flow<Unit> = dataSource.createVote(studyId, voteInfo.toCreateRequest())
+        ): Flow<Unit> = dataSource.createVote(studyGroupId, voteInfo.toCreateRequest())
 
         override fun createNotice(
             studyGroupId: Long,

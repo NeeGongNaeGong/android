@@ -15,9 +15,9 @@ class NetworkStudiesDataSourceImpl
         private val studiesApi: StudiesApi,
     ) : NetworkStudiesDataSource {
         override suspend fun createVote(
-            studyId: Int,
+            studyGroupId: Long,
             requestBody: CreateVoteRequest,
-        ): Flow<Unit> = apiFlow { studiesApi.createVote(studyId, requestBody) }
+        ): Flow<Unit> = apiFlow { studiesApi.createVote(studyGroupId, requestBody) }
 
         override fun createNotice(
             studyGroupId: Long,

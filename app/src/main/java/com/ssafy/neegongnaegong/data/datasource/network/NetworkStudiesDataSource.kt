@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NetworkStudiesDataSource {
     suspend fun createVote(
-        studyId: Int,
+        studyGroupId: Long,
         requestBody: CreateVoteRequest,
     ): Flow<Unit>
 

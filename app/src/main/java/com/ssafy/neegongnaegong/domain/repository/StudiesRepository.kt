@@ -8,7 +8,7 @@ interface StudiesRepository {
     suspend fun getStudies(): List<Studies>
 
     suspend fun createVote(
-        studyId: Int,
+        studyGroupId: Long,
         voteInfo: VoteInfo,
     ): Flow<Unit>
 
