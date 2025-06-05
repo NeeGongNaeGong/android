@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun NoticeRoute(
     modifier: Modifier = Modifier,
-    popBackStackInclusive: (Int, String, Long) -> Unit,
+    popBackStackInclusive: (Int, Long) -> Unit,
     popBackStack: () -> Boolean,
     viewModel: NoticeViewModel = hiltViewModel(),
 ) {
@@ -63,7 +63,6 @@ fun NoticeRoute(
                     is NoticeContract.Effect.NavigateToBackStackInclusive ->
                         popBackStackInclusive(
                             effect.startIndex,
-                            effect.title,
                             effect.studyGroupId,
                         )
                 }

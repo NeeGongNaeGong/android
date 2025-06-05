@@ -21,7 +21,6 @@ class NoticeContract {
 
         data class NavigateToBackStackInclusive(
             val startIndex: Int,
-            val title: String,
             val studyGroupId: Long,
         ) : Effect()
     }

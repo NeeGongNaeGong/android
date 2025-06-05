@@ -13,6 +13,7 @@ import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
+import com.ssafy.neegongnaegong.presentation.group.notice.NoticeRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
 
@@ -58,7 +59,32 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
 
         composable<AppNavigation.Screen.Studies.MakeVote> {
             VoteRoute(
-                popBackStack = { navController.popBackStack() },
+                navigateToMain = { startTab, groupId ->
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.List.Main(
+                            startTab,
+                            groupId,
+                        ),
+                    ) {
+                        popUpTo<AppNavigation.Screen.Studies.Main> {
+                            inclusive = false
+                        }
+                    }
+                },
+                popBackStack = navController::popBackStack,
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.MakeNotice> {
+            NoticeRoute(
+                popBackStackInclusive = { startTab, groupId ->
+                    navController.navigate(AppNavigation.Screen.Studies.List.Main(startTab, groupId)) {
+                        popUpTo<AppNavigation.Screen.Studies.Main> {
+                            inclusive = true
+                        }
+                    }
+                },
+                popBackStack = navController::popBackStack,
             )
         }
 
@@ -67,22 +93,21 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             RecordRoute(
                 groupId = groupId,
                 memberId = memberId,
-                popBackStack = { navController.popBackStack() },
+                popBackStack = navController::popBackStack,
             )
         }
 
         composable<AppNavigation.Screen.Studies.List.Main> { backStackEntry ->
-            val (startTabIndex, title, groupId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.List.Main>()
+            val (startTabIndex, groupId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.List.Main>()
             ListRoute(
-                popBackStack = { navController.popBackStack() },
-                title = title,
+                popBackStack = navController::popBackStack,
                 startTabIdx = startTabIndex,
                 navigateToNoticeDetail = {
                     navController.navigate(
                         AppNavigation.Screen.Studies.List.Screen.NoticeDetail(groupId, it),
                     ) {
                         popUpTo<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
-                            inclusive = true
+                            inclusive = false
                         }
                     }
                 },
@@ -91,7 +116,16 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                         AppNavigation.Screen.Studies.List.Screen.VoteDetail(groupId, it),
                     ) {
                         popUpTo<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
-                            inclusive = true
+                            inclusive = false
+                        }
+                    }
+                },
+                navigateToMakeNotice = {
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.MakeNotice(groupId),
+                    ) {
+                        popUpTo<AppNavigation.Screen.Studies.MakeNotice> {
+                            inclusive = false
                         }
                     }
                 },
@@ -99,7 +133,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                     navController.navigate(
                         AppNavigation.Screen.Studies.MakeVote(groupId),
                     ) {
-                        popUpTo<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
+                        popUpTo<AppNavigation.Screen.Studies.MakeVote> {
                             inclusive = false
                         }
                     }

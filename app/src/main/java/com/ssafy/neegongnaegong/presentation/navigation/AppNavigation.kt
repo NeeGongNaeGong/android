@@ -70,12 +70,15 @@ object AppNavigation {
             data class MakeVote(val studyGroupId: Long) : Studies
 
             @Serializable
+            data class MakeNotice(val studyGroupId: Long) : Studies
+
+            @Serializable
             data class Record(val groupId: Long, val memberId: Long) : Studies
 
             @Serializable
             sealed interface List : Studies {
                 @Serializable
-                data class Main(val startTab: Int, val title: String, val groupId: Long) : List
+                data class Main(val startTab: Int, val groupId: Long) : List
 
                 @Serializable
                 sealed interface Screen : List {

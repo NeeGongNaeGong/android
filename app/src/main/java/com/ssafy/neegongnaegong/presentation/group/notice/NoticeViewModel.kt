@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateNoticeUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -58,8 +59,7 @@ class NoticeViewModel
                             ).safeCollect {
                                 setEffect {
                                     NoticeContract.Effect.NavigateToBackStackInclusive(
-                                        0,
-                                        "",
+                                        ListContract.Index.Notice.index,
                                         studyGroupId,
                                     )
                                 }
