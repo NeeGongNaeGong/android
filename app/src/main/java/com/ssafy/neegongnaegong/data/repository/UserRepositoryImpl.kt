@@ -76,10 +76,9 @@ class UserRepositoryImpl @Inject constructor(
     override fun searchUser(userName: String): Flow<PagingData<User>> = Pager(
         config = PagingConfig(pageSize = USER_PAGING_SIZE),
         pagingSourceFactory = { pagingSourceFactory.create(userName = userName) }
-    ).flow.flowOn(context = ioDispatcher)
-        .map { pagingData: PagingData<UserResponse> ->
-            pagingData.toDomain()
-        }
+    ).flow.flowOn(context = ioDispatcher).map { pagingData: PagingData<UserResponse> ->
+        pagingData.toDomain()
+    }
 
     companion object {
         private const val USER_PAGING_SIZE = 30
