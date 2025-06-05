@@ -37,19 +37,20 @@ fun StudyRecordItem(
     onClick: (Long) -> Unit = {},
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(4.dp, RoundedCornerShape(8.dp))
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .clickable(onClick = { onClick(record.id) })
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .shadow(4.dp, RoundedCornerShape(8.dp))
+                .background(Color.White, RoundedCornerShape(8.dp))
+                .clickable(onClick = { onClick(record.id) })
+                .padding(16.dp),
     ) {
         Column {
             // 제목 + 시간
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -66,13 +67,13 @@ fun StudyRecordItem(
 
                 Text(
                     text = "$start ~ $end",
-                    style =  NeeGongNaeGongTheme.typography.bodySmall.copy(
-                        fontSize = 10.sp,
-                        color = Color.Gray
-                    )
+                    style =
+                        NeeGongNaeGongTheme.typography.bodySmall.copy(
+                            fontSize = 10.sp,
+                            color = Color.Gray,
+                        ),
                 )
             }
-
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -81,9 +82,8 @@ fun StudyRecordItem(
                 text = record.content.ifBlank { "내용을 설정해주세요" },
                 style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp),
                 maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -106,4 +106,3 @@ fun StudyRecordItem(
 fun StudyRecordItemPreview() {
     StudyRecordItem(record = PersonalPreviewDataProvider().getStudyRecord())
 }
-

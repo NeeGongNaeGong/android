@@ -37,6 +37,7 @@ import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDat
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -158,7 +159,8 @@ fun PersonalContent(
         navigateToEditScreen = navigateToEditScreen,
         // paging
         onLoadMore = onLoadMore,
-        hasNext = uiState.hasNext,
+        hasTagDataNext = uiState.hasTagDataNext,
+        hasDateDataNext = uiState.hasDateDataNext,
     )
 
     if (uiState.isLoading) {
@@ -182,7 +184,8 @@ fun PersonalScreen(
     navigateToEditScreen: (Long) -> Unit,
     // Paging3
     onLoadMore: () -> Unit,
-    hasNext: Boolean,
+    hasTagDataNext: Boolean,
+    hasDateDataNext: Boolean,
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -193,7 +196,7 @@ fun PersonalScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 8.dp, vertical = 16.dp),
     ) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
@@ -244,25 +247,27 @@ fun PersonalScreen(
             when (page) {
                 0 -> {
                     PersonalByTagScreen(
+                        modifier = modifier.padding(horizontal = 8.dp),
                         tags = tags,
                         learningRecords = selectedRecordsByTag,
                         onTagPlusClicked = onTagPlusClicked,
                         onTagEraseClicked = onTagEraseClicked,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
-                        hasNext = hasNext,
+                        hasTagDataNext = hasTagDataNext,
                     )
                 }
 
                 1 -> {
                     PersonalByDateScreen(
+                        modifier = modifier.padding(horizontal = 8.dp),
                         datePickerState = datePickerState,
                         onDateSelected = onDateSelected,
                         selectedRecordsByDate = selectedRecordsByDate,
                         selectedDate = selectedDate,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
-                        hasNext = hasNext,
+                        hasDateDataNext = hasDateDataNext,
                     )
                 }
             }
@@ -270,7 +275,7 @@ fun PersonalScreen(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PersonalScreenPreview() {
     PersonalScreen(
@@ -285,6 +290,7 @@ fun PersonalScreenPreview() {
         selectedDate = "2024-01-01",
         selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords(),
         onLoadMore = {},
-        hasNext = false,
+        hasTagDataNext = false,
+        hasDateDataNext = false
     )
 }

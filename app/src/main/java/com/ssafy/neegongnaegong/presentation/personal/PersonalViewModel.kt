@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordL
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -39,7 +40,9 @@ class PersonalViewModel
                             isDateScreen = false,
                         )
                     }
-                    loadLearningRecords()
+                    if (uiState.value.selectedRecordsByTag.isEmpty()) {
+                        loadLearningRecords()
+                    }
                 }
 
                 // tag
@@ -114,9 +117,9 @@ class PersonalViewModel
                         setState {
                             copy(
                                 selectedRecordsByTag = result.content.toDomain(),
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
+                                hasTagDataNext = result.hasNext,
+                                tagCursorId = result.cursorId,
+                                tagCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
@@ -129,9 +132,9 @@ class PersonalViewModel
                         setState {
                             copy(
                                 selectedRecordsByDate = result.content.toDomain(),
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
+                                hasDateDataNext = result.hasNext,
+                                dateCursorId = result.cursorId,
+                                dateCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
@@ -141,17 +144,16 @@ class PersonalViewModel
 
         private fun loadNextRecords() {
             val state = uiState.value
-            if (!state.hasNext || state.isLoading) return
+            if (state.isTagScreen && (!state.hasTagDataNext || state.isLoading)) return
+            if (state.isDateScreen && (!state.hasDateDataNext || state.isLoading)) return
 
             viewModelScope.launch {
                 if (uiState.value.isTagScreen) {
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
-                        cursorId = state.cursorId,
-                        cursorCreatedAt = state.cursorCreatedAt,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { result ->
+                        cursorId = state.tagCursorId,
+                        cursorCreatedAt = state.tagCursorCreatedAt,
+                    ).safeCollect { result ->
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
@@ -160,20 +162,18 @@ class PersonalViewModel
 
                             copy(
                                 selectedRecordsByTag = updatedList,
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
+                                hasTagDataNext = result.hasNext,
+                                tagCursorId = result.cursorId,
+                                tagCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
                 } else {
                     getLearningRecordListUseCase(
                         targetDate = uiState.value.selectedDate,
-                        cursorId = state.cursorId,
-                        cursorCreatedAt = state.cursorCreatedAt,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { result ->
+                        cursorId = state.dateCursorId,
+                        cursorCreatedAt = state.dateCursorCreatedAt,
+                    ).safeCollect { result ->
                         setState {
                             val newRecords = result.content.toDomain()
                             val updatedList =
@@ -181,9 +181,9 @@ class PersonalViewModel
                                     .distinctBy { it.id }
                             copy(
                                 selectedRecordsByDate = updatedList,
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
+                                hasDateDataNext = result.hasNext,
+                                dateCursorId = result.cursorId,
+                                dateCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
