@@ -1,15 +1,23 @@
 package com.ssafy.neegongnaegong.presentation.group.notice
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.usecase.studies.CreateNoticeUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NoticeViewModel
     @Inject
-    constructor() : BaseViewModel<NoticeContract.Event, NoticeContract.State, NoticeContract.Effect>() {
+    constructor(
+        private val createNoticeUseCase: CreateNoticeUseCase,
+        private val savedStateHandle: SavedStateHandle,
+    ) : BaseViewModel<NoticeContract.Event, NoticeContract.State, NoticeContract.Effect>() {
         override fun createInitialState(): NoticeContract.State = NoticeContract.State("", "")
 
         override fun handleException(
@@ -39,7 +47,28 @@ class NoticeViewModel
                     setState { copy(title = event.title) }
                 }
 
-                NoticeContract.Event.OnClickCompleteButton -> TODO()
+                NoticeContract.Event.OnClickCompleteButton -> {
+                    val studyGroupId = savedStateHandle.get<Long>("studyGroupId")
+                    if (studyGroupId != null) {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            createNoticeUseCase(
+                                studyGroupId,
+                                uiState.value.title,
+                                uiState.value.content,
+                            ).safeCollect {
+                                setEffect {
+                                    NoticeContract.Effect.NavigateToBackStackInclusive(
+                                        0,
+                                        "",
+                                        studyGroupId,
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        showErrorMessage("접근이 잘못되었습니다!")
+                    }
+                }
             }
         }
     }

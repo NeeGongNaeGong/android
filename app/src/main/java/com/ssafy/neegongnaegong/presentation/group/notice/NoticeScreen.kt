@@ -26,8 +26,9 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun NoticeRoute(
-    popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
+    popBackStackInclusive: (Int, String, Long) -> Unit,
+    popBackStack: () -> Boolean,
     viewModel: NoticeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -47,6 +48,7 @@ fun NoticeRoute(
                     )
                 }) {
                     Text(
+                        style = NeeGongNaeGongTheme.typography.bodyMedium,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         text = "완료",
                     )
@@ -58,12 +60,20 @@ fun NoticeRoute(
             viewModel.effect.collectLatest { effect ->
                 when (effect) {
                     NoticeContract.Effect.NavigateToBackStack -> popBackStack()
+                    is NoticeContract.Effect.NavigateToBackStackInclusive ->
+                        popBackStackInclusive(
+                            effect.startIndex,
+                            effect.title,
+                            effect.studyGroupId,
+                        )
                 }
             }
         }
 
         NoticeContent(
-            modifier.fillMaxSize().padding(horizontal = NeeGongNaeGongTheme.paddingScheme.sp3),
+            modifier
+                .fillMaxSize()
+                .padding(horizontal = NeeGongNaeGongTheme.paddingScheme.sp3),
             title = uiState.title,
             content = uiState.content,
             onChangeTitle = { viewModel.setEvent(NoticeContract.Event.OnChangeTitle(it)) },
@@ -118,7 +128,8 @@ fun NoticeContent(
             onValueChange = onChangeContent,
             modifier =
                 Modifier
-                    .fillMaxWidth().weight(1F)
+                    .fillMaxWidth()
+                    .weight(1F)
                     .padding(0.dp),
             // 여기선 Text 자체 padding 조절
             textStyle = NeeGongNaeGongTheme.typography.bodyMedium,

@@ -18,6 +18,12 @@ class NoticeContract {
 
     sealed class Effect : UiEffect {
         data object NavigateToBackStack : Effect()
+
+        data class NavigateToBackStackInclusive(
+            val startIndex: Int,
+            val title: String,
+            val studyGroupId: Long,
+        ) : Effect()
     }
 
     sealed interface Error : ErrorContext {
