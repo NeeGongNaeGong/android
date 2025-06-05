@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -129,7 +130,10 @@ fun TimerScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(NeeGongNaeGongTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(screenHeight * 0.1f))
