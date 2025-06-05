@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,11 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -49,7 +52,7 @@ fun BottomNavigationBar(
     navController: NavHostController,
     onFabClick: () -> Unit = {},
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(modifier = modifier.fillMaxWidth().height(60.dp)) {
         NavigationBar(
             modifier =
                 Modifier
@@ -79,6 +82,7 @@ fun BottomNavigationBar(
                     interactionSource = NoRippleInteractionSource,
                     icon = {
                         Icon(
+                            modifier = Modifier.size(24.dp),
                             painter =
                                 painterResource(
                                     id = if (selected) screen.iconSelected else screen.icon,
@@ -93,13 +97,18 @@ fun BottomNavigationBar(
                         )
                     },
                     label = {
+                        val labelDp: Dp = 10.dp
+                        val labelSp: TextUnit =
+                            with(LocalDensity.current) {
+                                labelDp.toSp()
+                            }
                         Text(
                             text = stringResource(id = screen.title),
                             style =
                                 if (selected) {
-                                    NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 10.sp)
+                                    NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = labelSp)
                                 } else {
-                                    NeeGongNaeGongTheme.typography.labelSmall.copy(fontSize = 10.sp)
+                                    NeeGongNaeGongTheme.typography.labelSmall.copy(fontSize = labelSp)
                                 },
                             color =
                                 if (selected) {
@@ -142,7 +151,7 @@ fun BottomNavigationBar(
                 tint = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.9f),
                 modifier =
                     Modifier
-                        .size(64.dp)
+                        .size(56.dp)
                         .padding(4.dp),
             )
         }
