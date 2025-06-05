@@ -4,6 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.formatElapsedTime
@@ -16,6 +17,15 @@ fun TimerText(elapsedTime: Long) {
         style = NeeGongNaeGongTheme.typography.bodyLarge.copy(
             fontFeatureSettings = "tnum",
         ),
-        fontSize = 64.sp
+        fontSize = 64.sp,
+        color = NeeGongNaeGongTheme.colorScheme.primaryText
     )
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun TimerTextPreview() {
+    NeeGongNaeGongTheme {
+        TimerText(elapsedTime = 1000L)
+    }
 }
