@@ -50,7 +50,8 @@ fun ListRoute(
     startTabIdx: Int,
     viewModel: ListViewModel = hiltViewModel(),
     navigateToNoticeDetail: (Long) -> Unit,
-//    navigateToVoteDetail: (Long) -> Unit,
+    navigateToVoteDetail: (Long) -> Unit,
+    navigateToMakeVote: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val pagerState =
@@ -71,7 +72,12 @@ fun ListRoute(
                     }
 
                     is Effect.NavigateToVoteDetailScreen -> {
-                        navigateToNoticeDetail(it.voteId)
+                        navigateToVoteDetail(it.voteId)
+                    }
+
+                    is Effect.NavigateToMakeNotice -> TODO()
+                    is Effect.NavigateToMakeVote -> {
+                        navigateToMakeVote()
                     }
                 }
             }

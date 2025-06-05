@@ -22,6 +22,10 @@ class ListContract {
         data class NavigateToNoticeDetailScreen(val noticeId: Long) : Effect
 
         data class NavigateToVoteDetailScreen(val voteId: Long) : Effect
+
+        data object NavigateToMakeNotice : Effect
+
+        data object NavigateToMakeVote : Effect
     }
 
     data class State(

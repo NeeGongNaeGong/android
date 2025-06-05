@@ -9,6 +9,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetNoticeListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetVoteListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Effect
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Index
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -32,11 +33,11 @@ class ListViewModel
                 is ListContract.Event.OnClickAddContent -> {
                     when (event.currentPage) {
                         Index.Notice.index -> {
-                            TODO("공지 생성 화면으로 이동")
+                            setEffect { Effect.NavigateToMakeNotice }
                         }
 
                         Index.Vote.index -> {
-                            TODO("투표 생성 화면으로 이동")
+                            setEffect { Effect.NavigateToMakeVote }
                         }
                     }
                 }

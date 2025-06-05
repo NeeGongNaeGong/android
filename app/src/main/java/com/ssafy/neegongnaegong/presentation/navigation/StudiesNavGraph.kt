@@ -11,6 +11,7 @@ import com.ssafy.neegongnaegong.presentation.group.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailRoute
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
@@ -76,7 +77,6 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 popBackStack = { navController.popBackStack() },
                 title = title,
                 startTabIdx = startTabIndex,
-                groupId = groupId,
                 navigateToNoticeDetail = {
                     navController.navigate(
                         AppNavigation.Screen.Studies.List.Screen.NoticeDetail(groupId, it),
@@ -95,6 +95,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                         }
                     }
                 },
+                navigateToMakeVote = {
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.MakeVote(groupId),
+                    ) {
+                        popUpTo<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
+                            inclusive = false
+                        }
+                    }
+                },
             )
         }
 
@@ -108,13 +117,12 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         }
 
         composable<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
-//            VoteDetailRoute(
-//                backStackEntry = it,
-//                viewModel = hiltViewModel(it),
-//            ) {
-//                val result = navController.popBackStack()
-//                result
-//            }
+            VoteDetailRoute(
+                backStackEntry = it,
+                viewModel = hiltViewModel(it),
+            ) {
+                navController.popBackStack()
+            }
         }
     }
 }

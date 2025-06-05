@@ -67,7 +67,7 @@ object AppNavigation {
             data object Management : Studies
 
             @Serializable
-            data class MakeVote(val studyGroupId: Int) : Studies
+            data class MakeVote(val studyGroupId: Long) : Studies
 
             @Serializable
             data class Record(val groupId: Long, val memberId: Long) : Studies
