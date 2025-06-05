@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,7 +18,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.material3.FloatingActionButtonElevation as FloatingActionButtonElevation1
 
 @Composable
 fun GradientFloatingActionButton(
@@ -26,7 +26,7 @@ fun GradientFloatingActionButton(
     shape: Shape = CircleShape,
     containerColor: Color = Color.Transparent,
     brushColor: Brush,
-    elevation: FloatingActionButtonElevation1,
+    elevation: FloatingActionButtonElevation,
     content: @Composable () -> Unit,
 ) {
     // 회전 적용
