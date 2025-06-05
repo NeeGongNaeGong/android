@@ -7,5 +7,14 @@ import kotlinx.coroutines.flow.Flow
 interface StudiesRepository {
     suspend fun getStudies(): List<Studies>
 
-    suspend fun createVote(studyId: Int, voteInfo: VoteInfo): Flow<Unit>
+    suspend fun createVote(
+        studyId: Int,
+        voteInfo: VoteInfo,
+    ): Flow<Unit>
+
+    fun createNotice(
+        studyGroupId: Long,
+        title: String,
+        content: String,
+    ): Flow<Unit>
 }
