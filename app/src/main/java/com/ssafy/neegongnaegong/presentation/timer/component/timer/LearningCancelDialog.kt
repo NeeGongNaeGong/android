@@ -40,10 +40,13 @@ fun LearningCancelDialog(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                    .background(NeeGongNaeGongTheme.colorScheme.background, shape = RoundedCornerShape(12.dp)),
         ) {
             Column(
-                modifier = Modifier.padding(top = 20.dp, start = 10.dp, end = 10.dp),
+                modifier =
+                    Modifier
+                        .background(NeeGongNaeGongTheme.colorScheme.background)
+                        .padding(top = 20.dp, start = 10.dp, end = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -63,7 +66,7 @@ fun LearningCancelDialog(
                         },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -71,7 +74,7 @@ fun LearningCancelDialog(
                 Text(
                     text = "여기서 공부를 취소하면 기록이 남지 않아요!",
                     fontSize = 14.sp,
-                    color = Color.Gray,
+                    color = NeeGongNaeGongTheme.colorScheme.gray4,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
