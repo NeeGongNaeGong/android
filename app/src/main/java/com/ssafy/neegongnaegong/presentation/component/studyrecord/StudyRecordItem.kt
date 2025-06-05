@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.component.studyrecord
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toHourMinuteString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
@@ -41,7 +42,7 @@ fun StudyRecordItem(
             Modifier
                 .fillMaxWidth()
                 .shadow(4.dp, RoundedCornerShape(8.dp))
-                .background(Color.White, RoundedCornerShape(8.dp))
+                .background(NeeGongNaeGongTheme.colorScheme.recordBackground, RoundedCornerShape(8.dp))
                 .clickable(onClick = { onClick(record.id) })
                 .padding(16.dp),
     ) {
@@ -58,6 +59,7 @@ fun StudyRecordItem(
                     style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 20.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -83,6 +85,7 @@ fun StudyRecordItem(
                 style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp),
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
+                color = NeeGongNaeGongTheme.colorScheme.secondaryText,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -93,7 +96,7 @@ fun StudyRecordItem(
                     Text(
                         text = "#${tag.koName}",
                         fontSize = 12.sp,
-                        color = Color.Black,
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                 }
             }
@@ -101,8 +104,10 @@ fun StudyRecordItem(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun StudyRecordItemPreview() {
-    StudyRecordItem(record = PersonalPreviewDataProvider().getStudyRecord())
+    NeeGongNaeGongTheme {
+        StudyRecordItem(record = PersonalPreviewDataProvider().getStudyRecord())
+    }
 }
