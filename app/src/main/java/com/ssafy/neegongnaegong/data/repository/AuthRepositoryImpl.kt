@@ -14,6 +14,7 @@ import com.ssafy.neegongnaegong.domain.repository.AuthRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -73,6 +74,8 @@ class AuthRepositoryImpl @Inject constructor(
                 with(response.createJwt) {
                     tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
                     tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
+                    localUserDataSource.saveUser(response.userDetailedInquiryResponse.toDomain())
+                        .first()
                 }
                 emit(true)
             }

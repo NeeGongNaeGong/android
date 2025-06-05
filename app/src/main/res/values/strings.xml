@@ -15,4 +15,22 @@
     <string name="notification">알람</string>
     <string name="delete_all">전체 삭제</string>
 
+    <!--    Profile Screen-->
+    <string name="notice">공지 사항</string>
+    <string name="privacy_policy">개인 정보 처리 방침</string>
+    <string name="logout">로그 아웃</string>
+    <string name="account_delete">회원 탈퇴</string>
+    <string name="withdrawal_dialog_title">정말로 탈퇴하시겠습니까?</string>
+    <string name="withdrawal_warning_description">회원 탈퇴를 진행하시면 다음과 같은 정보들이 영구적으로 삭제됩니다</string>
+    <string name="withdrawal_info_profile">회원 정보 및 프로필</string>
+    <string name="withdrawal_info_activity">활동 내역 및 게시글</string>
+    <string name="withdrawal_no_recovery_notice">탈퇴 후에는 복구가 불가능하며, 동일한 이메일로 재가입 시에도 기존 정보는 복원되지 않습니다.</string>
+    <string name="withdrawal_confirm_checkbox_text">위 내용을 모두 확인했으며, 회원탈퇴에 동의합니다.</string>
+    <string name="common_cancel">취소</string>
+    <string name="withdrawal_confirm_button">회원 탈퇴</string>
+    <string name="withdrawal_footer_notice">탈퇴를 원하지 않으시면 언제든지 취소하실 수 있습니다.</string>
+    <string name="common_warning">경고</string>
+    <string name="invalid_nickname">닉네임은 한글, 영어, 숫자만 사용할 수 있습니다</string>
+    <string name="already_use_nickname">중복된 닉네임입니다</string>
+
 </resources>

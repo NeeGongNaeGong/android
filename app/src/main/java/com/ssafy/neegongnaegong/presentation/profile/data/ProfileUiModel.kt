@@ -1,14 +1,15 @@
-package com.ssafy.neegongnaegong.domain.model
+package com.ssafy.neegongnaegong.presentation.profile.data
 
-data class User(
-    val id: Long,
+import androidx.compose.runtime.Stable
+
+@Stable
+data class ProfileUiModel(
     val email: String,
     val nickname: String,
     val profileImg: String,
 ) {
     companion object {
-        fun default() = User(
-            id = 0L,
+        fun default() = ProfileUiModel(
             email = "",
             nickname = "",
             profileImg = ""

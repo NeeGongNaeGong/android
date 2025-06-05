@@ -196,16 +196,6 @@ fun CalendarScreen() {
     }
 }
 
-@Composable
-fun ProfileScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = "마이페이지 화면",
-            style = NeeGongNaeGongTheme.typography.titleMedium,
-        )
-    }
-}
-
 @NeeGongNaeGongPreviews
 @Composable
 fun PreviewMainScreen() {
