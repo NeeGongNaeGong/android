@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,11 +39,16 @@ fun PauseDialog(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(NeeGongNaeGongTheme.colorScheme.background, shape = RoundedCornerShape(12.dp)),
+                    .background(
+                        NeeGongNaeGongTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
         ) {
             Column(
-                modifier = Modifier.padding(top = 20.dp, start = 10.dp, end = 10.dp)
-                    .background(NeeGongNaeGongTheme.colorScheme.background),
+                modifier =
+                    Modifier
+                        .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
