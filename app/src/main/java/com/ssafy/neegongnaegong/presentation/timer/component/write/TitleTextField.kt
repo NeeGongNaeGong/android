@@ -7,23 +7,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun TitleTextField(
     modifier: Modifier = Modifier,
     title: String,
-    onTitleChanged: (String) -> Unit
+    onTitleChanged: (String) -> Unit,
 ) {
     TextField(
         modifier = modifier,
         value = title,
         onValueChange = onTitleChanged,
-        textStyle = NeeGongNaeGongTheme.typography.bodySmall.copy(
-            fontSize = 30.sp,
-            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-            fontFeatureSettings = "tnum",
-        ),
+        textStyle =
+            NeeGongNaeGongTheme.typography.bodySmall.copy(
+                fontSize = 30.sp,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                fontFeatureSettings = "tnum",
+            ),
         placeholder = {
             Text(
                 text = "제목을 입력하세요",
@@ -33,13 +35,22 @@ fun TitleTextField(
             )
         },
         singleLine = true,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent,
-            focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
-            unfocusedIndicatorColor = Color.Gray,
-            disabledIndicatorColor = Color.LightGray
-        ),
+        colors =
+            TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                unfocusedIndicatorColor = Color.Gray,
+                disabledIndicatorColor = Color.LightGray,
+            ),
     )
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun TitleTextFieldPreview() {
+    NeeGongNaeGongTheme {
+        TitleTextField(title = "", onTitleChanged = {})
+    }
 }

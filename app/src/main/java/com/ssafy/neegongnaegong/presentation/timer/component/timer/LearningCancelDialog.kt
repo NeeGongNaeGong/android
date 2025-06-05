@@ -127,9 +127,11 @@ fun LearningCancelDialog(
 @NeeGongNaeGongPreviews
 @Composable
 fun LearningCancelDialogPreview() {
-    LearningCancelDialog(
-        onCancel = {},
-        onDismiss = {},
-        onConfirm = {},
-    )
+    NeeGongNaeGongTheme {
+        LearningCancelDialog(
+            onCancel = {},
+            onDismiss = {},
+            onConfirm = {},
+        )
+    }
 }

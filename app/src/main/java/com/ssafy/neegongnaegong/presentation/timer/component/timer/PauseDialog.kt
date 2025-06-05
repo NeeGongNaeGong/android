@@ -116,9 +116,11 @@ fun PauseDialog(
 @NeeGongNaeGongPreviews
 @Composable
 fun PauseDialogPreview() {
-    PauseDialog(
-        onCancel = {},
-        onDismiss = {},
-        onConfirm = {},
-    )
+    NeeGongNaeGongTheme {
+        PauseDialog(
+            onCancel = {},
+            onDismiss = {},
+            onConfirm = {},
+        )
+    }
 }
