@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
@@ -70,4 +71,11 @@ interface StudiesApi {
     suspend fun getStudiesMembers(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<GetStudiesMemberListResponse>>
+
+    @GET("/api/study-groups/{study-group-id}/applications")
+    suspend fun getStudiesApplications(
+        @Path("study-group-id") studyGroupId: Long,
+        @Query("cursor-id") cursorId: Long?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<GetStudiesApplicationsMembersResponse>>
 }

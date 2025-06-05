@@ -3,9 +3,11 @@ package com.ssafy.neegongnaegong.data.datasource.network
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplicationsMembersRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
@@ -69,5 +71,16 @@ class NetworkStudiesDataSourceImpl
         override suspend fun getStudiesMembers(studyGroupId: Long): Flow<GetStudiesMemberListResponse> =
             apiFlow {
                 studiesApi.getStudiesMembers(studyGroupId)
+            }
+
+        override suspend fun getStudiesApplications(
+            request: GetStudiesApplicationsMembersRequest,
+        ): Flow<GetStudiesApplicationsMembersResponse> =
+            apiFlow {
+                studiesApi.getStudiesApplications(
+                    studyGroupId = request.studyGroupId,
+                    cursorId = request.cursorId,
+                    size = request.size,
+                )
             }
     }

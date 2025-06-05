@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.domain.repository
 
+import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesApplications
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
@@ -37,4 +38,10 @@ interface StudiesRepository {
     suspend fun cancelApplicationsStudies(studyGroupId: Long): Flow<Unit>
 
     suspend fun getStudiesMembers(studyGroupId: Long): Flow<List<StudiesMember>>
+
+    suspend fun getStudiesApplications(
+        studyGroupId: Long,
+        cursorId: Long?,
+        size: Int,
+    ): Flow<CursorStudiesApplications>
 }
