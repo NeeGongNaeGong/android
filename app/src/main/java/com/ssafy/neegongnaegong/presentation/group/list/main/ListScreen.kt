@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.main
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -46,12 +47,12 @@ import okhttp3.internal.toImmutableList
 fun ListRoute(
     modifier: Modifier = Modifier,
     popBackStack: () -> Unit,
-    title: String,
     startTabIdx: Int,
     viewModel: ListViewModel = hiltViewModel(),
     navigateToNoticeDetail: (Long) -> Unit,
     navigateToVoteDetail: (Long) -> Unit,
     navigateToMakeVote: () -> Unit,
+    navigateToMakeNotice: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val pagerState =
@@ -75,10 +76,8 @@ fun ListRoute(
                         navigateToVoteDetail(it.voteId)
                     }
 
-                    is Effect.NavigateToMakeNotice -> TODO()
-                    is Effect.NavigateToMakeVote -> {
-                        navigateToMakeVote()
-                    }
+                    is Effect.NavigateToMakeNotice -> navigateToMakeNotice()
+                    is Effect.NavigateToMakeVote -> navigateToMakeVote()
                 }
             }
         }
@@ -86,7 +85,7 @@ fun ListRoute(
             TopAppBar(
                 title = {
                     Text(
-                        text = title,
+                        text = "게시판",
                         style = NeeGongNaeGongTheme.typography.titleSmall,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
@@ -184,7 +183,14 @@ private fun ListScreen(
     onClickVoteItem: (Long) -> Unit,
 ) {
     HorizontalPager(
-        modifier = Modifier.fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    start = NeeGongNaeGongTheme.paddingScheme.sp3,
+                    end = NeeGongNaeGongTheme.paddingScheme.sp3,
+                    top = NeeGongNaeGongTheme.paddingScheme.sp3,
+                ),
         state = pagerState,
     ) { pageIndex ->
         when (pageIndex) {
