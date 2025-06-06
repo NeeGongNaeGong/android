@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
+import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -14,11 +15,12 @@ import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     val getMyProfileUseCase: GetMyProfileUseCase,
     val updateNicknameUseCase: UpdateNicknameUseCase,
+    val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,11 +39,21 @@ class ProfileViewModel @Inject constructor(
             uiState.isInitial
         }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
             getMyProfileUseCase()
-        }.map { user: User ->
-            user.toUiModel()
+        }.combine(hasUnReadNotification) { user: User, hasUnReadNotification: Boolean ->
+            user.toUiModel(hasUnReadNotification = hasUnReadNotification)
         }.onEach {
             endLoad()
         }.toViewModelState(ProfileUiModel.default())
+    }
+
+    private val hasUnReadNotification: Flow<Boolean> by lazy {
+        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.filter { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
+            checkUnReadNotificationUseCase()
+        }
     }
 
     override fun createInitialState(): ProfileContract.State = ProfileContract.State()
