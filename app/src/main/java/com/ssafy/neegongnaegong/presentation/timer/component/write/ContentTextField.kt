@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.timer.component.write
 
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -43,6 +44,11 @@ fun ContentTextField(
                 focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
                 unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
                 disabledIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                cursorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                selectionColors = TextSelectionColors(
+                    handleColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                    backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3
+                )
             ),
     )
 }
