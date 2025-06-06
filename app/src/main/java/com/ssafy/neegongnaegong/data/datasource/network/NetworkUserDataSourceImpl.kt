@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.datasource.network
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
+import com.ssafy.neegongnaegong.data.model.user.response.UnReadNotificationResponse
 import com.ssafy.neegongnaegong.data.model.user.response.UserDetailResponse
 import com.ssafy.neegongnaegong.data.model.user.response.UserPage
 import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameResponse
@@ -41,5 +42,9 @@ class NetworkUserDataSourceImpl @Inject constructor(
             size = size,
             userName = userName
         )
+    }
+
+    override fun findUnReadNotification(): Flow<UnReadNotificationResponse> = apiFlow {
+        userApi.findUnReadNotification()
     }
 }
