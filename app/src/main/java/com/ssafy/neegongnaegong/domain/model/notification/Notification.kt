@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.domain.model.notification
 
-import com.ssafy.neegongnaegong.data.local.database.data.NotificationType
 import java.time.LocalDateTime
 
 data class Notification(

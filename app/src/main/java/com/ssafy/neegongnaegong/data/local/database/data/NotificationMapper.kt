@@ -7,6 +7,7 @@ import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKey
 import com.ssafy.neegongnaegong.data.model.notification.GetNotificationResponse
 import com.ssafy.neegongnaegong.data.model.notification.NotificationRemoteType
 import com.ssafy.neegongnaegong.domain.model.notification.Notification
+import com.ssafy.neegongnaegong.domain.model.notification.NotificationType
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -43,7 +44,7 @@ internal object NotificationMapper {
         cursorId = cursorId,
         receiverId = receiverId,
         senderId = senderId,
-        notificationType = notificationType,
+        notificationType = notificationType.toNotificationType(),
         senderType = senderType,
         displayName = displayName,
         profileImg = profileImg,
@@ -56,7 +57,7 @@ internal object NotificationMapper {
         it.toNotification()
     }
 
-    fun NotificationRemoteType.toNotificationType() = NotificationType.valueOf(name)
+    fun NotificationRemoteType.toNotificationType() = NotificationLocalType.valueOf(name)
 
     fun LocalDateTime.toEpochMilli(): Long {
         val zoneId = ZoneId.systemDefault()
@@ -68,4 +69,6 @@ internal object NotificationMapper {
         val zoneId = ZoneId.systemDefault()
         return Instant.ofEpochMilli(this).atZone(zoneId).toLocalDateTime()
     }
+
+    fun NotificationLocalType.toNotificationType() = NotificationType.valueOf(name)
 }

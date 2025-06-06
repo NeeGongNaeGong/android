@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.ssafy.neegongnaegong.data.local.database.NeeGongNaeGongDatabase
 import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationDataSource
 import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationRemoteKeyDataSource
+import com.ssafy.neegongnaegong.data.local.database.migration.MigrationFrom1To2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,9 @@ object DBModule {
             context = context,
             klass = NeeGongNaeGongDatabase::class.java,
             name = "neegongnaegong.db"
-        ).build()
+        )
+        .addMigrations(MigrationFrom1To2)
+        .build()
 
 
     @Singleton
@@ -38,6 +41,7 @@ object DBModule {
     @Provides
     fun providesLocalNotificationRemoteKeyDataSource(
         neeGongNaeGongDatabase: NeeGongNaeGongDatabase
-    ): LocalNotificationRemoteKeyDataSource = neeGongNaeGongDatabase.localNotificationRemoteKeyDataSource()
+    ): LocalNotificationRemoteKeyDataSource =
+        neeGongNaeGongDatabase.localNotificationRemoteKeyDataSource()
 
 }

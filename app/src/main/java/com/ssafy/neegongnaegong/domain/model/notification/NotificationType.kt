@@ -1,6 +1,6 @@
-package com.ssafy.neegongnaegong.data.model.notification
+package com.ssafy.neegongnaegong.domain.model.notification
 
-enum class NotificationRemoteType {
+enum class NotificationType {
     GROUP_JOIN_REQUEST_EXPIRED,
     GROUP_JOIN_REQUEST,
     GROUP_JOIN_APPROVE,

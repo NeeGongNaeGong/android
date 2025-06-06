@@ -12,7 +12,7 @@ import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKey
         NotificationEntity::class,
         NotificationRemoteKeyEntity::class
     ],
-    version = 1
+    version = 2
 )
 abstract class NeeGongNaeGongDatabase : RoomDatabase() {
     abstract fun localNotificationDataSource(): LocalNotificationDataSource

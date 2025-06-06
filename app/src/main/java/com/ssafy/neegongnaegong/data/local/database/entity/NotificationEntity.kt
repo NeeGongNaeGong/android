@@ -2,7 +2,7 @@ package com.ssafy.neegongnaegong.data.local.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ssafy.neegongnaegong.data.local.database.data.NotificationType
+import com.ssafy.neegongnaegong.data.local.database.data.NotificationLocalType
 
 @Entity(tableName = "notifications")
 data class NotificationEntity(
@@ -11,7 +11,7 @@ data class NotificationEntity(
     val cursorId: Long,
     val receiverId: Long,
     val senderId: Long,
-    val notificationType: NotificationType,
+    val notificationType: NotificationLocalType,
     val senderType: String,
     val displayName: String,
     val profileImg: String,
