@@ -19,31 +19,31 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 interface UserCalendarApi {
-    @GET("/api/user/calendar/schedules")
+    @GET("/api/calendar/schedules")
     suspend fun getUserSchedules(
         @Query("month") month: YearMonth
     ): Result<ApiResponse<GetUserScheduleResponse>>
 
-    @GET("/api/user/calendar/schedules/{scheduleId}")
+    @GET("/api/calendar/schedules/{schedule-id}")
     suspend fun getPersonalSchedule(
-        @Path("scheduleId") scheduleId: Long,
+        @Path("schedule-id") scheduleId: Long,
         @Query("date") date: LocalDate
     ): Result<ApiResponse<ScheduleResponse>>
 
-    @POST("/api/user/calendar/schedules")
+    @POST("/api/calendar/schedules")
     suspend fun createPersonalSchedule(
         @Body request: CreatePersonalScheduleRequest
     ): Result<ApiResponse<CreatePersonalScheduleResponse>>
 
-    @PUT("/api/user/calendar/schedules/{scheduleId}")
+    @PUT("/api/calendar/schedules/{schedule-id}")
     suspend fun updatePersonalSchedule(
-        @Path("scheduleId") scheduleId: Long,
+        @Path("schedule-id") scheduleId: Long,
         @Body request: UpdatePersonalScheduleRequest
     ): Result<ApiResponse<UpdatePersonalScheduleResponse>>
 
-    @HTTP(method = "DELETE", path = "/api/user/calendar/schedules/{scheduleId}", hasBody = true)
+    @HTTP(method = "DELETE", path = "/api/calendar/schedules/{schedule-id}", hasBody = true)
     suspend fun deletePersonalSchedule(
-        @Path("scheduleId") scheduleId: Long,
+        @Path("schedule-id") scheduleId: Long,
         @Body request: DeletePersonalScheduleRequest
     ): Result<ApiResponse<Unit>>
 }
