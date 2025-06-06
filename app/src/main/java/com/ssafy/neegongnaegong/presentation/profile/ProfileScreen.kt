@@ -11,8 +11,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +42,7 @@ fun ProfileScreen(
     onClickLogout: () -> Unit,
     onClickDeleteAccount: () -> Unit
 ) {
-    val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -94,13 +96,16 @@ fun ProfileScreen(
 
         ProfileContent(
             title = stringResource(id = R.string.account_delete),
-            onClick = { setShowDialog(true) }
+            onClick = { showDialog = true }
         )
 
         if (showDialog) {
             WithdrawalDialog(
-                onDismiss = { setShowDialog(false) },
-                onConfirm = onClickDeleteAccount
+                onDismiss = { showDialog = false },
+                onConfirm = {
+                    showDialog = false
+                    onClickDeleteAccount()
+                }
             )
         }
     }
