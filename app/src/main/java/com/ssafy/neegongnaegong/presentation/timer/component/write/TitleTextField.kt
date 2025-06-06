@@ -45,10 +45,11 @@ fun TitleTextField(
                 unfocusedIndicatorColor = Color.Gray,
                 disabledIndicatorColor = Color.LightGray,
                 cursorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                selectionColors = TextSelectionColors(
-                    handleColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3
-                )
+                selectionColors =
+                    TextSelectionColors(
+                        handleColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                    ),
             ),
     )
 }

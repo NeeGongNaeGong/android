@@ -45,10 +45,11 @@ fun ContentTextField(
                 unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
                 disabledIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
                 cursorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                selectionColors = TextSelectionColors(
-                    handleColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3
-                )
+                selectionColors =
+                    TextSelectionColors(
+                        handleColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                    ),
             ),
     )
 }
