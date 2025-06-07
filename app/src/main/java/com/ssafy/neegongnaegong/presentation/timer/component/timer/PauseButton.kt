@@ -17,28 +17,43 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
-fun PauseButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun PauseButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     val interactionSource = remember { MutableInteractionSource() }
 
     OutlinedButton(
-        modifier = modifier
-            .size(88.dp),
+        modifier =
+            modifier
+                .size(88.dp),
         onClick = onClick,
         shape = CircleShape,
-        border = BorderStroke(4.dp, Color.Black),
+        border = BorderStroke(4.dp, NeeGongNaeGongTheme.colorScheme.primaryText),
         contentPadding = PaddingValues(0.dp),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Color.Transparent
-        ),
-        interactionSource = interactionSource
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                containerColor = Color.Transparent,
+            ),
+        interactionSource = interactionSource,
     ) {
         Icon(
             imageVector = Icons.Default.Pause,
             contentDescription = stringResource(R.string.txt_timer_pause),
             modifier = Modifier.size(40.dp),
-            tint = Color.Black
+            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun PauseButtonPreview() {
+    NeeGongNaeGongTheme {
+        PauseButton(onClick = {})
     }
 }

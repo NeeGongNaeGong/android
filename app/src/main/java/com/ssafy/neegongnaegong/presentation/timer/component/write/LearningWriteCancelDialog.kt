@@ -40,10 +40,16 @@ fun LearningWriteCancelDialog(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                    .background(
+                        NeeGongNaeGongTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
         ) {
             Column(
-                modifier = Modifier.padding(top = 20.dp, start = 10.dp, end = 10.dp),
+                modifier =
+                    Modifier
+                        .background(NeeGongNaeGongTheme.colorScheme.background)
+                        .padding(top = 20.dp, start = 10.dp, end = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -63,7 +69,7 @@ fun LearningWriteCancelDialog(
                         },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -71,7 +77,7 @@ fun LearningWriteCancelDialog(
                 Text(
                     text = "취소해도 기록은 남아서 수정할 수 있어요!",
                     fontSize = 14.sp,
-                    color = Color.Gray,
+                    color = NeeGongNaeGongTheme.colorScheme.gray4,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -124,9 +130,11 @@ fun LearningWriteCancelDialog(
 @NeeGongNaeGongPreviews
 @Composable
 fun LearningWriteCancelDialogPreview() {
-    LearningWriteCancelDialog(
-        onCancel = {},
-        onDismiss = {},
-        onConfirm = {},
-    )
+    NeeGongNaeGongTheme {
+        LearningWriteCancelDialog(
+            onCancel = {},
+            onDismiss = {},
+            onConfirm = {},
+        )
+    }
 }
