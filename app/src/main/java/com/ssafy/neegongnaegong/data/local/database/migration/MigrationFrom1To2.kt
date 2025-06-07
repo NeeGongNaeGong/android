@@ -3,7 +3,7 @@ package com.ssafy.neegongnaegong.data.local.database.migration
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-object MigrationFrom1To2 : Migration(1, 2) {
+class MigrationFrom1To2 : Migration(1, 2) {
 
     /**
      * 이번 마이그레이션에서는 두 개의 컬럼이 새로 추가되었습니다.

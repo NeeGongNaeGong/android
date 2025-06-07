@@ -27,7 +27,7 @@ object DBModule {
             klass = NeeGongNaeGongDatabase::class.java,
             name = "neegongnaegong.db"
         )
-        .addMigrations(MigrationFrom1To2)
+        .addMigrations(MigrationFrom1To2())
         .build()
 
 
