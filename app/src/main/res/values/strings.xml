@@ -14,7 +14,11 @@
     <!--    Notification Screen-->
     <string name="notification">알람</string>
     <string name="delete_all">전체 삭제</string>
-
+    <string name="accept">수락</string>
+    <string name="reject">거절</string>
+    <string name="help_group_join">→ 밀어서 수락/거절</string>
+    <string name="invalid_group_id">유효하지 않은 그룹 입니다</string>
+    
     <!--    Profile Screen-->
     <string name="notice">공지 사항</string>
     <string name="privacy_policy">개인 정보 처리 방침</string>
