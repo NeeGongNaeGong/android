@@ -40,7 +40,10 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 private const val TAG = "StudiesDrawer"
 
 @Composable
-fun StudiesDrawerContent(navBackStackEntry: NavBackStackEntry) {
+fun StudiesDrawerContent(
+    navBackStackEntry: NavBackStackEntry,
+    navigateToStudiesApplications: () -> Unit,
+) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     Log.d(TAG, "img : ${uiState.value.studies.studyInfo.profileImg}")
@@ -53,6 +56,7 @@ fun StudiesDrawerContent(navBackStackEntry: NavBackStackEntry) {
                 StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
             )
         },
+        navigateToStudiesApplications = navigateToStudiesApplications,
     )
 }
 
@@ -70,6 +74,7 @@ private fun StudiesDrawer(
     onMyStudyClick: () -> Unit = {},
     onStudyItemClick: (Long) -> Unit = {},
     onStudyDeleteClick: () -> Unit = {},
+    navigateToStudiesApplications: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -151,6 +156,13 @@ private fun StudiesDrawer(
             icon = R.drawable.ic_studies_drw_studies_delete,
             title = stringResource(R.string.studies_drw_studies_delete),
             onClick = onStudyDeleteClick,
+        )
+
+        // 스터디 가입신청 현황
+        DrawerMenuItem(
+            icon = R.drawable.ic_studies_drw_studies_applications,
+            title = stringResource(R.string.studies_drw_studies_application),
+            onClick = navigateToStudiesApplications,
         )
 
         Spacer(modifier = Modifier.height(10.dp))

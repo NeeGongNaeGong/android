@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,6 +31,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawerContent
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
@@ -88,7 +89,7 @@ fun MainScreen() {
         } ?: true
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
-    val studiesDrawerState = remember { DrawerState(initialValue = DrawerValue.Closed) }
+    val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val context = LocalContext.current
     LaunchedEffect(navBackStackEntry) {
@@ -131,8 +132,22 @@ fun MainScreen() {
         drawerState = studiesDrawerState,
         gesturesEnabled = enableGestures.value,
         drawerContent = {
-            navBackStackEntry?.let {
-                StudiesDrawerContent(it)
+            navBackStackEntry?.let { entry ->
+                val isStudiesDetail =
+                    entry.destination.hierarchy.any {
+                        it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
+                    }
+                StudiesDrawerContent(
+                    navBackStackEntry = entry,
+                    navigateToStudiesApplications = {
+                        if (isStudiesDetail) {
+                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                            navController.navigate(
+                                AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
+                            )
+                        }
+                    },
+                )
             }
         },
     ) {

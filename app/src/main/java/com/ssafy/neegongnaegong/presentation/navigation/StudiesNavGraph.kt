@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailRoute
+import com.ssafy.neegongnaegong.presentation.group.join.StudiesWaitingToJoinRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
@@ -42,6 +43,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) { // Study 탭
             StudiesDetailRoute(
                 modifier = Modifier,
                 navBackStackEntry = backStackEntry,
+                studyGroupId = route.studyGroupId,
+                popBackStack = navController::popBackStack,
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.StudiesApplication> { backStackEntry ->
+            val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesApplication>()
+            StudiesWaitingToJoinRoute(
+                modifier = Modifier,
                 studyGroupId = route.studyGroupId,
                 popBackStack = navController::popBackStack,
             )
