@@ -11,7 +11,12 @@ internal object NotificationUiMapper {
         image = profileImg,
         user = displayName,
         content = content,
-        isRead = read
+        isRead = read,
+
+        type = notificationType,
+        senderId = senderId,
+        studyGroupId = null,
+        studyGroupName = null
     )
 
     fun PagingData<Notification>.toUiModel(): PagingData<NotificationUiModel> = map {
