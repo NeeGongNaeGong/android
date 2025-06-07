@@ -2,8 +2,10 @@ package com.ssafy.neegongnaegong.domain.model.preview.studies
 
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesApplicationsMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.StudyMember
+import com.ssafy.neegongnaegong.presentation.group.join.component.StudiesJoinApplicationStatus
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 
 class StudiesPreviewDataProvider {
@@ -83,6 +85,34 @@ class StudiesPreviewDataProvider {
                             ),
                         tags = listOf(),
                     ),
+            ),
+        )
+
+    fun getStudiesApplications(): List<StudiesApplicationsMember> =
+        listOf(
+            StudiesApplicationsMember(
+                status = StudiesJoinApplicationStatus.PENDING,
+                memberId = 11,
+                userId = 1,
+                name = "공부하는 호랑이 12",
+                profileImageUrl = "",
+                cursorId = 8377,
+            ),
+            StudiesApplicationsMember(
+                status = StudiesJoinApplicationStatus.APPROVED,
+                memberId = 22,
+                userId = 2,
+                name = "방황하는 사자 3",
+                profileImageUrl = "",
+                cursorId = 8377,
+            ),
+            StudiesApplicationsMember(
+                status = StudiesJoinApplicationStatus.REJECTED,
+                memberId = 33,
+                userId = 3,
+                name = "졸린 병아리 39",
+                profileImageUrl = "",
+                cursorId = 8377,
             ),
         )
 }

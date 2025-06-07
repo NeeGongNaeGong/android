@@ -4,10 +4,12 @@ import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicatio
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesApplicationsMemberResponse
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesApplications
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesApplicationsMember
+import com.ssafy.neegongnaegong.presentation.group.join.component.StudiesJoinApplicationStatus
 
 internal object StudiesApplicationsMapper {
     fun StudiesApplicationsMemberResponse.toDomain() =
         StudiesApplicationsMember(
+            status = StudiesJoinApplicationStatus.PENDING,
             memberId = memberId,
             userId = userId,
             name = name,
