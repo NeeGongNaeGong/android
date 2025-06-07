@@ -12,7 +12,7 @@
     <string name="txt_dialog_close">종료</string>
 
     <!--    Notification Screen-->
-    <string name="notification">알람</string>
+    <string name="notification">알림</string>
     <string name="delete_all">전체 삭제</string>
     <string name="accept">수락</string>
     <string name="reject">거절</string>
