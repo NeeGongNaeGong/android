@@ -34,12 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -58,19 +58,26 @@ fun TagSelectDialog(
 
     Dialog(onDismissRequest = { onCancel() }) {
         Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(Color.White, shape = RoundedCornerShape(12.dp))
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .background(
+                        NeeGongNaeGongTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
         ) {
             Column(
-                modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .background(NeeGongNaeGongTheme.colorScheme.background)
+                        .padding(top = 20.dp, start = 16.dp, end = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "태그 선택",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -85,7 +92,8 @@ fun TagSelectDialog(
                     placeholder = {
                         Text(
                             text = "검색어를 입력해주세요",
-                            style = NeeGongNaeGongTheme.typography.labelLarge
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
+                            color = NeeGongNaeGongTheme.colorScheme.gray4,
                         )
                     },
                     singleLine = true,
@@ -94,19 +102,24 @@ fun TagSelectDialog(
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = "검색",
-                                tint = Color.Gray
+                                tint = Color.Gray,
                             )
                         }
                     },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.LightGray,
-                        unfocusedIndicatorColor = Color.LightGray,
-                        disabledIndicatorColor = Color.LightGray,
-                    ),
-                    textStyle = NeeGongNaeGongTheme.typography.labelLarge.copy(fontSize = 18.sp)
+                    colors =
+                        TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.LightGray,
+                            unfocusedIndicatorColor = Color.LightGray,
+                            disabledIndicatorColor = Color.LightGray,
+                        ),
+                    textStyle =
+                        NeeGongNaeGongTheme.typography.labelLarge.copy(
+                            fontSize = 18.sp,
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        ),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -114,35 +127,47 @@ fun TagSelectDialog(
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     (selectedTags + unSelectedTags).forEach { tag ->
                         val isSelected = tag in selectedTags
                         FilterChip(
                             selected = isSelected,
                             onClick = {
-                                if (isSelected) onTagDeselected(tag)
-                                else onTagSelected(tag)
+                                if (isSelected) {
+                                    onTagDeselected(tag)
+                                } else {
+                                    onTagSelected(tag)
+                                }
                                 onSearchQueryChanged(query)
                             },
-                            label = { Text(tag.koName) },
-                            leadingIcon = if (isSelected) {
-                                {
-                                    Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                    )
-                                }
-                            } else null,
-                            colors = FilterChipDefaults.filterChipColors(
-                                labelColor = Color.Black,
-                                iconColor = Color.Black,
-                                selectedContainerColor =NeeGongNaeGongTheme.colorScheme.blue,
-                                selectedLabelColor = Color.White,
-                                // 컬러 Transparent로 하면 마우스 갖다 덌을때 색 영역이 다르게 표시됨
-                                containerColor = Color.White
-                            )
+                            label = {
+                                Text(
+                                    tag.koName,
+                                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                )
+                            },
+                            leadingIcon =
+                                if (isSelected) {
+                                    {
+                                        Icon(
+                                            Icons.Default.Check,
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                        )
+                                    }
+                                } else {
+                                    null
+                                },
+                            colors =
+                                FilterChipDefaults.filterChipColors(
+                                    labelColor = Color.Black,
+                                    iconColor = Color.Black,
+                                    selectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                                    selectedLabelColor = Color.White,
+                                    // 컬러 Transparent로 하면 마우스 갖다 덌을때 색 영역이 다르게 표시됨
+                                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                                ),
                         )
                     }
                 }
@@ -152,40 +177,42 @@ fun TagSelectDialog(
                 HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TextButton(
                         onClick = onCancel,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             text = "취소",
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = NeeGongNaeGongTheme.colorScheme.peach
+                            color = NeeGongNaeGongTheme.colorScheme.peach,
                         )
                     }
 
                     VerticalDivider(
                         thickness = 0.5.dp,
                         color = NeeGongNaeGongTheme.colorScheme.gray4,
-                        modifier = Modifier
-                            .height(50.dp)
+                        modifier =
+                            Modifier
+                                .height(50.dp),
                     )
 
                     TextButton(
                         onClick = onConfirm,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             text = "확인",
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = NeeGongNaeGongTheme.colorScheme.blue
+                            color = NeeGongNaeGongTheme.colorScheme.blue,
                         )
                     }
                 }
@@ -194,7 +221,7 @@ fun TagSelectDialog(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun TagSelectDialogPreview() {
     NeeGongNaeGongTheme(dynamicColor = false) {
@@ -206,8 +233,7 @@ fun TagSelectDialogPreview() {
             onConfirm = {},
             onSearchQueryChanged = {},
             onTagSelected = {},
-            onTagDeselected = {}
+            onTagDeselected = {},
         )
     }
-
 }

@@ -19,8 +19,6 @@ import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
 
-enum class TopAppBarNavigationType { Back, Menu, None }
-
 /**
  * 커스텀 `TopAppBar` 컴포넌트
  *
@@ -37,7 +35,7 @@ fun TopAppBar(
     navigationType: TopAppBarNavigationType = TopAppBarNavigationType.Back,
     actionButtons: @Composable () -> Unit = {},
     onNavigationClick: () -> Unit = {},
-    iconColor: Color = MaterialTheme.colorScheme.onSurface,
+    iconColor: Color = NeeGongNaeGongTheme.colorScheme.primaryText,
 ) {
     Box(
         modifier =
@@ -98,3 +96,5 @@ fun PreviewTopAppBar() {
         )
     }
 }
+
+enum class TopAppBarNavigationType { Back, Menu, None }
