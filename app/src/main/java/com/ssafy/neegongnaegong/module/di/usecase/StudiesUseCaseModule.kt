@@ -11,6 +11,8 @@ import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesApplicationsUse
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesMembersUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.PatchApproveStudiesApplicationsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.PatchRejectStudiesApplicationsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.UpdateStudiesUseCase
 import dagger.Module
 import dagger.Provides
@@ -68,4 +70,14 @@ object StudiesUseCaseModule {
     @Singleton
     fun provideGetStudiesApplicationsUseCase(studiesRepository: StudiesRepository): GetStudiesApplicationsUseCase =
         GetStudiesApplicationsUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun providePatchApproveStudiesApplicationUseCase(studiesRepository: StudiesRepository): PatchApproveStudiesApplicationsUseCase =
+        PatchApproveStudiesApplicationsUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun providePatchRejectStudiesApplicationUseCase(studiesRepository: StudiesRepository): PatchRejectStudiesApplicationsUseCase =
+        PatchRejectStudiesApplicationsUseCase(studiesRepository)
 }

@@ -83,4 +83,30 @@ class NetworkStudiesDataSourceImpl
                     size = request.size,
                 )
             }
+
+        override suspend fun patchApproveStudiesApplications(
+            studyGroupId: Long,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.patchApproveStudiesApplications(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    notificationId = notificationId,
+                )
+            }
+
+        override suspend fun patchRejectStudiesApplications(
+            studyGroupId: Long,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.patchRejectStudiesApplications(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    notificationId = notificationId,
+                )
+            }
     }

@@ -44,4 +44,16 @@ interface StudiesRepository {
         cursorId: Long?,
         size: Int,
     ): Flow<CursorStudiesApplications>
+
+    suspend fun patchApproveStudiesApplications(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
+
+    suspend fun patchRejectStudiesApplications(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
 }

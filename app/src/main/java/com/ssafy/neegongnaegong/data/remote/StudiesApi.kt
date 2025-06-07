@@ -12,6 +12,7 @@ import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -78,4 +79,18 @@ interface StudiesApi {
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesApplicationsMembersResponse>>
+
+    @PATCH("/api/study-groups/{study-group-id}/applications/{user-id}/approve")
+    suspend fun patchApproveStudiesApplications(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("notification-id") notificationId: Long?,
+    ): Result<ApiResponse<Unit>>
+
+    @PATCH("/api/study-groups/{study-group-id}/applications/{user-id}/reject")
+    suspend fun patchRejectStudiesApplications(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("notification-id") notificationId: Long?,
+    ): Result<ApiResponse<Unit>>
 }

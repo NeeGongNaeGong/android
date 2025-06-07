@@ -119,4 +119,30 @@ class StudiesRepositoryImpl
                         ),
                 )
             }.map { it.toDomain() }
+
+        override suspend fun patchApproveStudiesApplications(
+            studyGroupId: Long,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.patchApproveStudiesApplications(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    notificationId = notificationId,
+                )
+            }
+
+        override suspend fun patchRejectStudiesApplications(
+            studyGroupId: Long,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.patchRejectStudiesApplications(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    notificationId = notificationId,
+                )
+            }
     }

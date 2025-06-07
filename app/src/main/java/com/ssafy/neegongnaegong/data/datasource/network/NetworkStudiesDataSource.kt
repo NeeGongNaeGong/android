@@ -37,4 +37,16 @@ interface NetworkStudiesDataSource {
     suspend fun getStudiesMembers(studyGroupId: Long): Flow<GetStudiesMemberListResponse>
 
     suspend fun getStudiesApplications(request: GetStudiesApplicationsMembersRequest): Flow<GetStudiesApplicationsMembersResponse>
+
+    suspend fun patchApproveStudiesApplications(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
+
+    suspend fun patchRejectStudiesApplications(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
 }
