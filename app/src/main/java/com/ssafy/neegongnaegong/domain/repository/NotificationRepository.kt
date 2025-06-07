@@ -8,7 +8,11 @@ interface NotificationRepository {
 
     fun getNotifications(): Flow<PagingData<Notification>>
 
+   fun getNotification(notificationId: Long): Flow<Notification>
+
     fun deleteNotification(notificationId: Long): Flow<Unit>
 
     fun deleteAllNotifications(): Flow<Unit>
+
+    fun readNotification(notificationId: Long): Flow<Unit>
 }
