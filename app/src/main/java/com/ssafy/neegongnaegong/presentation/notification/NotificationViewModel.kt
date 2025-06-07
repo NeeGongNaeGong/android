@@ -3,10 +3,15 @@ package com.ssafy.neegongnaegong.presentation.notification
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.ssafy.neegongnaegong.domain.exception.InvalidGroupIdException
 import com.ssafy.neegongnaegong.domain.model.notification.Notification
+import com.ssafy.neegongnaegong.domain.model.notification.NotificationType
 import com.ssafy.neegongnaegong.domain.usecase.notification.DeleteAllNotificationsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.notification.DeleteNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.notification.GetNotificationUseCase
+import com.ssafy.neegongnaegong.domain.usecase.notification.ReadNotificationUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.ApproveStudyGroupJoinUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.RejectStudyGroupJoinUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiMapper.toUiModel
@@ -26,6 +31,9 @@ class NotificationViewModel @Inject constructor(
     private val getNotificationUseCase: GetNotificationUseCase,
     private val deleteNotificationUseCase: DeleteNotificationUseCase,
     private val deleteAllNotificationUseCase: DeleteAllNotificationsUseCase,
+    private val readNotificationUseCase: ReadNotificationUseCase,
+    private val approveStudyGroupJoinUseCase: ApproveStudyGroupJoinUseCase,
+    private val rejectStudyGroupJoinUseCase: RejectStudyGroupJoinUseCase
 ) : BaseViewModel<NotificationContract.Event, NotificationContract.State, NotificationContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -51,6 +59,8 @@ class NotificationViewModel @Inject constructor(
         NotificationContract.Event.DeleteAllNotification -> handleDeleteAllNotification()
         is NotificationContract.Event.DeleteNotification -> handleDeleteNotification(data = event.data)
         is NotificationContract.Event.MoveNotification -> handleMoveNotification(data = event.data)
+        is NotificationContract.Event.AcceptGroupJoinRequest -> handleAcceptGroupJoin(data = event.data)
+        is NotificationContract.Event.RejectGroupJoinRequest -> handleRejectGroupJoin(data = event.data)
     }
 
     private fun endLoad() {
@@ -82,8 +92,65 @@ class NotificationViewModel @Inject constructor(
 
     private fun handleMoveNotification(data: NotificationUiModel) {
         viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
-            TODO("알람으로 이동합니다. ${data.id}")
-            // TODO(알림 읽음 처리, 화면 전환, 수락,거절 로직이 추가될 예정입니다.)
+            handleNotification(data = data)
+        }
+    }
+
+    private fun handleAcceptGroupJoin(data: NotificationUiModel) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+            approveStudyGroupJoinUseCase(
+                studyGroupId = data.studyGroupId,
+                userId = data.senderId,
+                notificationId = data.id
+            ).firstOrNull()
+        }
+    }
+
+    private fun handleRejectGroupJoin(data: NotificationUiModel) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+            rejectStudyGroupJoinUseCase(
+                studyGroupId = data.studyGroupId,
+                userId = data.senderId,
+                notificationId = data.id
+            ).firstOrNull()
+        }
+    }
+
+    /**
+     * 1. 그룹 가입 요청을 제외한 모든 내용은 "읽음 처리"를 수행합니다.
+     * 2. 화면 이동이 필요한 타입은 다음과 같습니다:
+     * - [NotificationType.GROUP_JOIN_APPROVE]
+     * - [NotificationType.NOTICE_POSTED]
+     * - [NotificationType.VOTE_CREATED]
+     * - [NotificationType.VOTE_ENDED]
+     */
+    private suspend fun handleNotification(data: NotificationUiModel) {
+        if (data.type != NotificationType.GROUP_JOIN_REQUEST && !data.isRead) {
+            readNotificationUseCase(notificationId = data.id).firstOrNull()
+        }
+
+        when (data.type) {
+            NotificationType.GROUP_JOIN_APPROVE -> {
+                val effect = NotificationContract.Effect.NavigateToGroup(groupId = data.senderId)
+                setEffect { effect }
+            }
+
+            NotificationType.NOTICE_POSTED -> {
+                val effect = NotificationContract.Effect.NavigateToNotice(noticeId = data.senderId)
+                setEffect { effect }
+            }
+
+            NotificationType.VOTE_CREATED -> {
+                val effect = NotificationContract.Effect.NavigateToVote(voteId = data.senderId)
+                setEffect { effect }
+            }
+
+            NotificationType.VOTE_ENDED -> {
+                val effect = NotificationContract.Effect.NavigateToVote(voteId = data.senderId)
+                setEffect { effect }
+            }
+
+            else -> Unit
         }
     }
 
@@ -94,8 +161,16 @@ class NotificationViewModel @Inject constructor(
     ) {
         endLoad()
 
-        val message: String = e.message ?: return
-        val sideEffect = NotificationContract.Effect.ShowErrorMessage(message)
+        val sideEffect: NotificationContract.Effect = when (e) {
+            is InvalidGroupIdException -> {
+                NotificationContract.Effect.ShowInvalidGroupIdErrorMessage
+            }
+
+            else -> {
+                val message: String = e.message ?: return
+                NotificationContract.Effect.ShowErrorMessage(message)
+            }
+        }
         setEffect { sideEffect }
     }
 }
