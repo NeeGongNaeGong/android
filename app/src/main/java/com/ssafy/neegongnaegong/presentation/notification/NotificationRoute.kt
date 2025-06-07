@@ -1,20 +1,29 @@
 package com.ssafy.neegongnaegong.presentation.notification
 
+import android.content.Context
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.base.CollectSideEffects
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
 @Composable
-fun NotificationRoute(viewModel: NotificationViewModel = hiltViewModel()) {
+fun NotificationRoute(
+    viewModel: NotificationViewModel = hiltViewModel(),
+    navigateToGroup: (groupId: Long) -> Unit,
+    navigateToNotice: (noticeId: Long) -> Unit,
+    navigateToVote: (voteId: Long) -> Unit,
+) {
+    val context: Context = LocalContext.current
     val listState: LazyListState = rememberLazyListState()
     val uiState: NotificationContract.State by viewModel.uiState.collectAsStateWithLifecycle()
     val notificationList: LazyPagingItems<NotificationUiModel> = viewModel
@@ -29,6 +38,23 @@ fun NotificationRoute(viewModel: NotificationViewModel = hiltViewModel()) {
 
             is NotificationContract.Effect.ScrollToFirstPosition -> {
                 listState.animateScrollToItem(0)
+            }
+
+            is NotificationContract.Effect.NavigateToGroup -> {
+                navigateToGroup(effect.groupId)
+            }
+
+            is NotificationContract.Effect.NavigateToNotice -> {
+                navigateToNotice(effect.noticeId)
+            }
+
+            is NotificationContract.Effect.NavigateToVote -> {
+                navigateToVote(effect.voteId)
+            }
+
+            NotificationContract.Effect.ShowInvalidGroupIdErrorMessage -> {
+                val message: String = context.getString(R.string.invalid_group_id)
+                SnackbarManager.showErrorMessage(message = message)
             }
         }
     }
@@ -45,12 +71,20 @@ fun NotificationRoute(viewModel: NotificationViewModel = hiltViewModel()) {
             val event = NotificationContract.Event.DeleteAllNotification
             viewModel.setEvent(event = event)
         },
-        onDeleteNotification = { notificationUiModel: NotificationUiModel ->
-            val event = NotificationContract.Event.DeleteNotification(data = notificationUiModel)
+        onDeleteNotification = { uiModel: NotificationUiModel ->
+            val event = NotificationContract.Event.DeleteNotification(data = uiModel)
             viewModel.setEvent(event = event)
         },
-        onMoveNotification = { notificationUiModel: NotificationUiModel ->
-            val event = NotificationContract.Event.MoveNotification(data = notificationUiModel)
+        onMoveNotification = { uiModel: NotificationUiModel ->
+            val event = NotificationContract.Event.MoveNotification(data = uiModel)
+            viewModel.setEvent(event = event)
+        },
+        onAcceptGroupJoinRequest = { uiModel: NotificationUiModel ->
+            val event = NotificationContract.Event.AcceptGroupJoinRequest(data = uiModel)
+            viewModel.setEvent(event = event)
+        },
+        onRejectGroupJoinRequest = { uiModel: NotificationUiModel ->
+            val event = NotificationContract.Event.RejectGroupJoinRequest(data = uiModel)
             viewModel.setEvent(event = event)
         }
     )

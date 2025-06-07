@@ -21,6 +21,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.domain.model.notification.NotificationType
 import com.ssafy.neegongnaegong.presentation.component.refresh.DefaultRefreshBox
 import com.ssafy.neegongnaegong.presentation.notification.component.NotificationList
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
@@ -37,7 +38,9 @@ fun NotificationScreen(
     onRefresh: () -> Unit,
     onDeleteAll: () -> Unit,
     onDeleteNotification: (NotificationUiModel) -> Unit,
-    onMoveNotification: (NotificationUiModel) -> Unit
+    onMoveNotification: (NotificationUiModel) -> Unit,
+    onAcceptGroupJoinRequest: (NotificationUiModel) -> Unit,
+    onRejectGroupJoinRequest: (NotificationUiModel) -> Unit
 ) {
     DefaultRefreshBox(
         isRefreshing = isRefresh,
@@ -84,7 +87,9 @@ fun NotificationScreen(
                 listState = listState,
                 notificationList = notificationList,
                 onDeleteNotification = onDeleteNotification,
-                onMoveNotification = onMoveNotification
+                onMoveNotification = onMoveNotification,
+                onAcceptGroupJoinRequest = onAcceptGroupJoinRequest,
+                onRejectGroupJoinRequest = onRejectGroupJoinRequest
             )
         }
     }
@@ -99,7 +104,12 @@ fun NotificationPreviewScreen() {
         image = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
         user = "홍길동",
         content = "님이 ㅋㅋㅋ 게시글에 답글을 추가했습니다.",
-        isRead = true
+        isRead = true,
+
+        type = NotificationType.SYSTEM,
+        senderId = 0,
+        studyGroupId = null,
+        studyGroupName = null
     )
     val testList = List<NotificationUiModel>(500) { testModel }
     val fakeFlow = flowOf(PagingData.from(testList)).collectAsLazyPagingItems()
@@ -111,6 +121,8 @@ fun NotificationPreviewScreen() {
         onRefresh = {},
         onDeleteAll = {},
         onDeleteNotification = {},
-        onMoveNotification = {}
+        onMoveNotification = {},
+        onAcceptGroupJoinRequest = {},
+        onRejectGroupJoinRequest = {}
     )
 }
