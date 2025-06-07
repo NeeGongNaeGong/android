@@ -188,8 +188,8 @@ fun Notification(
                 )
                 .draggableToRevealAction(
                     offsetState = offsetX,
-                    maxSlideDistancePx = rightDistancePx,
-                    groupJoinSlideDistancePx = leftDistancePx,
+                    rightDistancePx = rightDistancePx,
+                    leftDistancePx = leftDistancePx,
                     isGroupJoinRequest = isGroupJoinRequest
                 ),
             image = image,
@@ -271,8 +271,8 @@ private fun buildText(user: String, content: String): AnnotatedString = buildAnn
 
 private fun Modifier.draggableToRevealAction(
     offsetState: MutableState<Float>,
-    maxSlideDistancePx: Float,
-    groupJoinSlideDistancePx: Float,
+    rightDistancePx: Float,
+    leftDistancePx: Float,
     isGroupJoinRequest: Boolean
 ): Modifier = pointerInput(Unit) {
     detectHorizontalDragGestures(
@@ -280,14 +280,14 @@ private fun Modifier.draggableToRevealAction(
             val newOffset = if (isGroupJoinRequest) {
                 // 그룹 가입 요청인 경우 양방향 드래그 지원
                 when {
-                    offsetState.value > groupJoinSlideDistancePx / 2 -> groupJoinSlideDistancePx
-                    offsetState.value < -maxSlideDistancePx / 2 -> -maxSlideDistancePx
+                    offsetState.value > leftDistancePx / 2 -> leftDistancePx
+                    offsetState.value < -rightDistancePx / 2 -> -rightDistancePx
                     else -> 0f
                 }
             } else {
                 // 일반 알림인 경우 오른쪽으로만 드래그 (삭제)
-                if (offsetState.value < -maxSlideDistancePx / 2) {
-                    -maxSlideDistancePx
+                if (offsetState.value < -rightDistancePx / 2) {
+                    -rightDistancePx
                 } else {
                     0f
                 }
@@ -297,10 +297,10 @@ private fun Modifier.draggableToRevealAction(
     ) { _, dragAmount ->
         val newOffset = if (isGroupJoinRequest) {
             // 그룹 가입 요청인 경우: 양방향 드래그 허용
-            (offsetState.value + dragAmount).coerceIn(-maxSlideDistancePx, groupJoinSlideDistancePx)
+            (offsetState.value + dragAmount).coerceIn(-rightDistancePx, leftDistancePx)
         } else {
             // 일반 알림인 경우: 왼쪽으로만 드래그 허용 (삭제)
-            (offsetState.value + dragAmount).coerceIn(-maxSlideDistancePx, 0f)
+            (offsetState.value + dragAmount).coerceIn(-rightDistancePx, 0f)
         }
         offsetState.value = newOffset
     }
