@@ -34,7 +34,9 @@ internal object NotificationMapper {
         profileImg = profileImg,
         content = content,
         createdAt = createdAt.toEpochMilli(),
-        read = read
+        read = read,
+        studyGroupId = studyGroupId,
+        studyGroupName = studyGroupName,
     )
 
     fun List<GetNotificationResponse>.toEntity(): List<NotificationEntity> = map { it.toEntity() }
@@ -50,7 +52,9 @@ internal object NotificationMapper {
         profileImg = profileImg,
         content = content,
         createdAt = createdAt.toLocalDateTime(),
-        read = read
+        read = read,
+        studyGroupId = studyGroupId,
+        studyGroupName = studyGroupName,
     )
 
     fun PagingData<NotificationEntity>.toNotification(): PagingData<Notification> = map {

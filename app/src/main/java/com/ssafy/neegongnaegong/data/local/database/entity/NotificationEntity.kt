@@ -17,5 +17,8 @@ data class NotificationEntity(
     val profileImg: String,
     val content: String,
     val createdAt: Long,
-    val read: Boolean
+    val read: Boolean,
+
+    val studyGroupId: Long?,
+    val studyGroupName: String?
 )
