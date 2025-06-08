@@ -4,9 +4,11 @@ import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.ApplyStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CancelApplicationsStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.ChangeRoleStudiesMemberUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateVoteUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.ExpelStudiesMemberUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesApplicationsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
@@ -80,4 +82,14 @@ object StudiesUseCaseModule {
     @Singleton
     fun providePatchRejectStudiesApplicationUseCase(studiesRepository: StudiesRepository): PatchRejectStudiesApplicationsUseCase =
         PatchRejectStudiesApplicationsUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideChangeRoleStudiesMemberUseCase(studiesRepository: StudiesRepository): ChangeRoleStudiesMemberUseCase =
+        ChangeRoleStudiesMemberUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideExpelStudiesMemberUseCase(studiesRepository: StudiesRepository): ExpelStudiesMemberUseCase =
+        ExpelStudiesMemberUseCase(studiesRepository)
 }

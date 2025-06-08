@@ -93,4 +93,17 @@ interface StudiesApi {
         @Path("user-id") userId: Long,
         @Query("notification-id") notificationId: Long?,
     ): Result<ApiResponse<Unit>>
+
+    @PUT("/api/study-groups/{study-group-id}/users/{user-id}")
+    suspend fun changeRoleStudiesMember(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("changeRole") changeRole: String,
+    ): Result<ApiResponse<Unit>>
+
+    @DELETE("/api/study-groups/{study-group-id}/users/{user-id}")
+    suspend fun expelStudiesMember(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+    ): Result<ApiResponse<Unit>>
 }

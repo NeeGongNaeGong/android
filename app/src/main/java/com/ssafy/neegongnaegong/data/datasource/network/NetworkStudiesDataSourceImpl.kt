@@ -109,4 +109,28 @@ class NetworkStudiesDataSourceImpl
                     notificationId = notificationId,
                 )
             }
+
+        override suspend fun changeRoleStudiesMember(
+            studyGroupId: Long,
+            userId: Long,
+            changeRole: String,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.changeRoleStudiesMember(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    changeRole = changeRole,
+                )
+            }
+
+        override suspend fun expelStudiesMember(
+            studyGroupId: Long,
+            userId: Long,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.expelStudiesMember(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                )
+            }
     }

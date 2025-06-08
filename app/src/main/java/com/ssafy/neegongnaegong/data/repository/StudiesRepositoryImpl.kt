@@ -18,6 +18,7 @@ import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
+import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -143,6 +144,30 @@ class StudiesRepositoryImpl
                     studyGroupId = studyGroupId,
                     userId = userId,
                     notificationId = notificationId,
+                )
+            }
+
+        override suspend fun changeRoleStudiesMember(
+            studyGroupId: Long,
+            userId: Long,
+            changeRole: StudiesMemberRole,
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.changeRoleStudiesMember(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    changeRole = changeRole.name,
+                )
+            }
+
+        override suspend fun expelStudiesMember(
+            studyGroupId: Long,
+            userId: Long,
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.expelStudiesMember(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
                 )
             }
     }

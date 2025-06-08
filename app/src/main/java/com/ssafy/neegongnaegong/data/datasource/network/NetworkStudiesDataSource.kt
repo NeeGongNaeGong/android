@@ -49,4 +49,15 @@ interface NetworkStudiesDataSource {
         userId: Long,
         notificationId: Long?,
     ): Flow<Unit>
+
+    suspend fun changeRoleStudiesMember(
+        studyGroupId: Long,
+        userId: Long,
+        changeRole: String,
+    ): Flow<Unit>
+
+    suspend fun expelStudiesMember(
+        studyGroupId: Long,
+        userId: Long,
+    ): Flow<Unit>
 }

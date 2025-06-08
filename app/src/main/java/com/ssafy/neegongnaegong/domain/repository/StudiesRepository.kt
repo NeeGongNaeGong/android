@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
+import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import kotlinx.coroutines.flow.Flow
 
 interface StudiesRepository {
@@ -55,5 +56,16 @@ interface StudiesRepository {
         studyGroupId: Long,
         userId: Long,
         notificationId: Long?,
+    ): Flow<Unit>
+
+    suspend fun changeRoleStudiesMember(
+        studyGroupId: Long,
+        userId: Long,
+        changeRole: StudiesMemberRole,
+    ): Flow<Unit>
+
+    suspend fun expelStudiesMember(
+        studyGroupId: Long,
+        userId: Long,
     ): Flow<Unit>
 }
