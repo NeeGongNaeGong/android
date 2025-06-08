@@ -20,12 +20,12 @@ class UserSearchViewModel
                 }
 
                 is UserSearchContract.Event.OnClickSearch -> {
-                    handleOnClickSearch(event.keyword)
+                    handleOnClickSearch()
                 }
             }
         }
 
         private fun handleOnTypingSearch(searchWord: String) {}
 
-        private fun handleOnClickSearch(searchWord: String) {}
+        private fun handleOnClickSearch() {}
     }

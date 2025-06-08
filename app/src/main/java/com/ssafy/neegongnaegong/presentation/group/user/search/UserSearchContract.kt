@@ -8,13 +8,11 @@ import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class UserSearchContract {
     sealed class Event : UiEvent {
-        data class OnClickSearch(
-            val keyword: String,
-        ) : Event()
-
         data class OnTypingSearch(
             val keyword: String,
         ) : Event()
+
+        data object OnClickSearch : Event()
     }
 
     data class State(
@@ -22,11 +20,11 @@ class UserSearchContract {
         val isLoading: Boolean = false,
         // user
         val userList: List<User> = emptyList(),
+        // search
+        val searchKeyword: String = "",
     ) : UiState
 
-    sealed class Effect : UiEffect {
-        data object NavigateToStudiesScreen : Effect()
-    }
+    sealed class Effect : UiEffect
 
     sealed class Error : ErrorContext {
         data object GetUserListError : Error()
