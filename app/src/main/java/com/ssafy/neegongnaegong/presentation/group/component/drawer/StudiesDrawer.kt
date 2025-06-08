@@ -42,6 +42,7 @@ private const val TAG = "StudiesDrawer"
 @Composable
 fun StudiesDrawerContent(
     navBackStackEntry: NavBackStackEntry,
+    navigateToStudiesMembersRole: () -> Unit,
     navigateToStudiesApplications: () -> Unit,
 ) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
@@ -56,6 +57,7 @@ fun StudiesDrawerContent(
                 StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
             )
         },
+        navigateToStudiesMembersRole = navigateToStudiesMembersRole,
         navigateToStudiesApplications = navigateToStudiesApplications,
     )
 }
@@ -67,13 +69,13 @@ private fun StudiesDrawer(
     name: String = "",
     description: String = "",
     onGroupManagementClick: () -> Unit = {},
-    onMemberManagementClick: () -> Unit = {},
     onScheduleManagementClick: () -> Unit = {},
     onStudyCreateClick: () -> Unit = {},
     onStudySearchClick: () -> Unit = {},
     onMyStudyClick: () -> Unit = {},
     onStudyItemClick: (Long) -> Unit = {},
     onStudyDeleteClick: () -> Unit = {},
+    navigateToStudiesMembersRole: () -> Unit = {},
     navigateToStudiesApplications: () -> Unit = {},
 ) {
     Column(
@@ -141,7 +143,7 @@ private fun StudiesDrawer(
         DrawerMenuItem(
             icon = R.drawable.ic_studies_drw_member_management,
             title = stringResource(R.string.studies_drw_member_management),
-            onClick = onMemberManagementClick,
+            onClick = navigateToStudiesMembersRole,
         )
 
         // 일정 관리 섹션

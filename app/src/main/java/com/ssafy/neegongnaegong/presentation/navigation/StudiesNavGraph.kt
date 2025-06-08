@@ -11,6 +11,7 @@ import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.join.StudiesWaitingToJoinRoute
 import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
+import com.ssafy.neegongnaegong.presentation.group.role.StudiesMemberRoleRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
 
 /**
@@ -51,6 +52,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) { // Study 탭
         composable<AppNavigation.Screen.Studies.StudiesApplication> { backStackEntry ->
             val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesApplication>()
             StudiesWaitingToJoinRoute(
+                modifier = Modifier,
+                studyGroupId = route.studyGroupId,
+                popBackStack = navController::popBackStack,
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.StudiesMembersRole> { backStackEntry ->
+            val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesMembersRole>()
+            StudiesMemberRoleRoute(
                 modifier = Modifier,
                 studyGroupId = route.studyGroupId,
                 popBackStack = navController::popBackStack,
