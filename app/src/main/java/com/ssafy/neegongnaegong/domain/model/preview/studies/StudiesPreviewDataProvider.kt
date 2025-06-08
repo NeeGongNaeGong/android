@@ -3,9 +3,11 @@ package com.ssafy.neegongnaegong.domain.model.preview.studies
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesApplicationsMember
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.StudyMember
 import com.ssafy.neegongnaegong.presentation.group.join.component.StudiesJoinApplicationStatus
+import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 
 class StudiesPreviewDataProvider {
@@ -113,6 +115,28 @@ class StudiesPreviewDataProvider {
                 name = "졸린 병아리 39",
                 profileImageUrl = "",
                 cursorId = 8377,
+            ),
+        )
+
+    fun getStudiesMembers(): List<StudiesMember> =
+        listOf(
+            StudiesMember(
+                userId = 1,
+                name = "공부하는 사자 1",
+                profileImg = "",
+                groupRole = StudiesMemberRole.TEAM_LEADER,
+            ),
+            StudiesMember(
+                userId = 2,
+                name = "자습하는 당나귀 2",
+                profileImg = "",
+                groupRole = StudiesMemberRole.TEAM_MANAGER,
+            ),
+            StudiesMember(
+                userId = 3,
+                name = "이제 깨어난 병어라 3",
+                profileImg = "",
+                groupRole = StudiesMemberRole.TEAM_MEMBER,
             ),
         )
 }
