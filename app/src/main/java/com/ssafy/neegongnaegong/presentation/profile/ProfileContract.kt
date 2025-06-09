@@ -37,6 +37,11 @@ interface ProfileContract {
     }
 
     sealed class Error : ErrorContext {
-        data object ShowErrorMessage : Error()
+        data object CantAccessMyInfoError: Error()
+        data object CantAccessUnReadNotificationInfoError: Error()
+        data object LogoutError : Error()
+        data object DeleteAccountError: Error()
+        data object ChangeNicknameError: Error()
+        data object ChangeProfileImgError: Error()
     }
 }

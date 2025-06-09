@@ -15,10 +15,8 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileMapper.toUiModel
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -42,7 +40,7 @@ class ProfileViewModel @Inject constructor(
             uiState.isInitial
         }.filter { uiState: ProfileContract.State ->
             uiState.isInitial
-        }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        }.safeFlatMapLatest(errorContext = ProfileContract.Error.CantAccessMyInfoError) {
             getMyProfileUseCase()
         }.combine(hasUnReadNotification) { user: User, hasUnReadNotification: Boolean ->
             user.toUiModel(hasUnReadNotification = hasUnReadNotification)
@@ -56,7 +54,7 @@ class ProfileViewModel @Inject constructor(
             uiState.isInitial
         }.filter { uiState: ProfileContract.State ->
             uiState.isInitial
-        }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        }.safeFlatMapLatest(errorContext = ProfileContract.Error.CantAccessUnReadNotificationInfoError) {
             checkUnReadNotificationUseCase()
         }
     }
@@ -89,7 +87,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleLogout() {
-        viewModelScope.safeLaunch {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.LogoutError) {
             logoutUseCase().withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -100,7 +98,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleDeleteAccount() {
-        viewModelScope.safeLaunch {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.DeleteAccountError) {
             withdrawUseCase().withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -111,7 +109,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleChangeNickName(text: String) {
-        viewModelScope.safeLaunch {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeNicknameError) {
             updateNicknameUseCase(nickname = text).withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -121,7 +119,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleChangeProfileImage(uri: Uri) {
-        viewModelScope.safeLaunch {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImgError) {
             // TODO("형선이형 브랜치에서 사용되는 S3 이미지 업로드 UseCase 결함 예정")
         }
     }
@@ -148,11 +146,5 @@ class ProfileViewModel @Inject constructor(
 
     private fun endLoad() {
         setState { copy(isInitial = false, isModifying = false) }
-    }
-
-    private fun CoroutineScope.safeLaunch(
-        block: suspend () -> Unit
-    ): Job = safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
-        block()
     }
 }
