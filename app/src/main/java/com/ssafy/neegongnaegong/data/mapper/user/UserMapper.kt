@@ -11,14 +11,14 @@ internal object UserMapper {
         id = id,
         email = email,
         nickname = nickname,
-        profileImg = profileImg
+        profileImg = profileImg ?: ""
     )
 
     fun UserResponse.toDomain() = User(
         id = id,
         email = email,
         nickname = nickName,
-        profileImg = profileImg
+        profileImg = profileImg ?: ""
     )
 
     fun PagingData<UserResponse>.toDomain(): PagingData<User> = map { it.toDomain() }
