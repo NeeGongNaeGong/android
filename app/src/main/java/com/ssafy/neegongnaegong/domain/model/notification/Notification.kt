@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.domain.model.notification
 
-import com.ssafy.neegongnaegong.data.local.database.data.NotificationType
 import java.time.LocalDateTime
 
 data class Notification(
@@ -15,4 +14,7 @@ data class Notification(
     val content: String,
     val createdAt: LocalDateTime,
     val read: Boolean,
+
+    val studyGroupId: Long?,
+    val studyGroupName: String?
 )

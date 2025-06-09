@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
+import com.ssafy.neegongnaegong.domain.model.notification.NotificationType
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
 
 @Composable
@@ -14,7 +15,9 @@ fun NotificationList(
     listState: LazyListState,
     notificationList: LazyPagingItems<NotificationUiModel>,
     onDeleteNotification: (NotificationUiModel) -> Unit,
-    onMoveNotification: (NotificationUiModel) -> Unit
+    onMoveNotification: (NotificationUiModel) -> Unit,
+    onAcceptGroupJoinRequest: (NotificationUiModel) -> Unit,
+    onRejectGroupJoinRequest: (NotificationUiModel) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -31,8 +34,11 @@ fun NotificationList(
                 user = data.user,
                 content = data.content,
                 isRead = data.isRead,
+                isGroupJoinRequest = data.type == NotificationType.GROUP_JOIN_REQUEST,
                 onDelete = { onDeleteNotification(data) },
-                onMove = { onMoveNotification(data) }
+                onMove = { onMoveNotification(data) },
+                onAccept = { onAcceptGroupJoinRequest(data) },
+                onReject = { onRejectGroupJoinRequest(data) }
             )
         }
     }

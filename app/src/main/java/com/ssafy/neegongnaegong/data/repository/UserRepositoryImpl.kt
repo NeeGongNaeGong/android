@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.mapper.user.UserMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
+import com.ssafy.neegongnaegong.data.model.user.response.UnReadNotificationResponse
 import com.ssafy.neegongnaegong.data.model.user.response.UserResponse
 import com.ssafy.neegongnaegong.data.paging.UserPagingSource
 import com.ssafy.neegongnaegong.domain.model.User
@@ -83,6 +84,11 @@ class UserRepositoryImpl @Inject constructor(
     ).flow.flowOn(context = ioDispatcher).map { pagingData: PagingData<UserResponse> ->
         pagingData.toDomain()
     }
+
+    override fun findUnReadNotification(): Flow<Boolean> = networkUserDataSource
+        .findUnReadNotification()
+        .map { response: UnReadNotificationResponse -> response.hasUnread }
+        .flowOn(context = ioDispatcher)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun logout(): Flow<Unit> = networkUserDataSource.logout().onEach {

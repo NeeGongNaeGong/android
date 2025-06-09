@@ -27,7 +27,19 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
         }
 
         composable<AppNavigation.Screen.Profile.Notification> {
-            NotificationRoute()
+            // TODO(다른 화면들과 결합되면 수정해야 합니다.)
+            NotificationRoute(
+                navigateToGroup = { groupId: Long ->
+                    val group = AppNavigation.Screen.Studies.StudiesDetail
+                    navController.navigate(route = group)
+                },
+                navigateToNotice = { groupId: Long, noticeId: Long ->
+
+                },
+                navigateToVote = { groupId: Long, voteId: Long ->
+
+                }
+            )
         }
     }
 }

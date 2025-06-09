@@ -1,6 +1,8 @@
 package com.ssafy.neegongnaegong.presentation.profile
 
 import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
@@ -32,6 +35,7 @@ fun ProfileScreen(
     profileImg: String,
     nickname: String,
     isEditing: Boolean,
+    hasUnReadNotification: Boolean,
     onChangeNickName: (String) -> Unit,
     onClickEdit: () -> Unit,
     onClickEditCancel: () -> Unit,
@@ -75,7 +79,17 @@ fun ProfileScreen(
 
         ProfileContent(
             title = stringResource(id = R.string.notification),
-            onClick = onClickNotification
+            onClick = onClickNotification,
+            icon = {
+                if (hasUnReadNotification) {
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(8.dp)
+                            .background(Color.Red, shape = CircleShape)
+                    )
+                }
+            }
         )
 
         ProfileContent(
@@ -112,6 +126,7 @@ fun ProfileScreenPreview() {
         profileImg = "",
         nickname = "닉네임",
         isEditing = false,
+        hasUnReadNotification = false,
         onChangeNickName = {},
         onClickEdit = {},
         onClickEditCancel = {},

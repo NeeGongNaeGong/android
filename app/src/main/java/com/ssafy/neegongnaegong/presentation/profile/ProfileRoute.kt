@@ -64,6 +64,7 @@ fun ProfileRoute(
     else ProfileScreen(
         profileImg = uiModel.profileImg,
         nickname = uiModel.nickname,
+        hasUnReadNotification = uiModel.hasUnReadNotification,
         isEditing = uiState.isEditing,
         onChangeNickName = { text: String ->
             val event = ProfileContract.Event.ChangeNickName(text = text)
