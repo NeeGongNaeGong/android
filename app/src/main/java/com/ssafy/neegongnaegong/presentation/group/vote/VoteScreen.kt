@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -67,14 +68,23 @@ fun VoteRoute(
             },
             onNavigationClick = { popBackStack() },
             actionButtons = {
-                TextButton(onClick = {
-                    viewModel.setEvent(
-                        VoteContract.Event.OnClickCompleteButton,
-                    )
-                }) {
+                TextButton(
+                    enabled = uiState.voteTitle.isNotEmpty() && uiState.voteItemList.filter { it.isNotEmpty() }.isNotEmpty(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray4,
+                        ),
+                    onClick = {
+                        viewModel.setEvent(
+                            VoteContract.Event.OnClickCompleteButton,
+                        )
+                    },
+                ) {
                     Text(
                         style = NeeGongNaeGongTheme.typography.bodyMedium,
-                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         text = "완료",
                     )
                 }

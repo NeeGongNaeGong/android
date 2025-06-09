@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,14 +44,23 @@ fun NoticeRoute(
             },
             onNavigationClick = { popBackStack() },
             actionButtons = {
-                TextButton(onClick = {
-                    viewModel.setEvent(
-                        NoticeContract.Event.OnClickCompleteButton,
-                    )
-                }) {
+                TextButton(
+                    enabled = uiState.title.isNotEmpty() && uiState.content.isNotEmpty(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray4,
+                        ),
+                    onClick = {
+                        viewModel.setEvent(
+                            NoticeContract.Event.OnClickCompleteButton,
+                        )
+                    },
+                ) {
                     Text(
                         style = NeeGongNaeGongTheme.typography.bodyMedium,
-                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         text = "완료",
                     )
                 }
