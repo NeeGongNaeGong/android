@@ -1,7 +1,6 @@
-package com.ssafy.neegongnaegong.presentation.group.management
+package com.ssafy.neegongnaegong.presentation.group.create
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.file.UploadPathType
 import com.ssafy.neegongnaegong.domain.model.studies.Category
@@ -18,10 +17,8 @@ import kotlinx.coroutines.launch
 import okhttp3.RequestBody
 import javax.inject.Inject
 
-private const val TAG = "StudiesManagementViewModel"
-
 @HiltViewModel
-class StudiesManagementViewModel
+class StudiesCreateViewModel
     @Inject
     constructor(
         private val createStudiesUseCase: CreateStudiesUseCase,
@@ -29,33 +26,51 @@ class StudiesManagementViewModel
         private val getTagsUseCase: GetTagsUseCase,
         private val issuePresignedUrlUseCase: IssuePresignedUrlUseCase,
         private val uploadImageToS3UseCase: UploadImageToS3UseCase,
-    ) : BaseViewModel<StudiesManagementContract.Event, StudiesManagementContract.State, StudiesManagementContract.Effect>() {
-        override fun createInitialState(): StudiesManagementContract.State = StudiesManagementContract.State()
+    ) : BaseViewModel<StudiesCreateContract.Event, StudiesCreateContract.State, StudiesCreateContract.Effect>() {
+        override fun createInitialState(): StudiesCreateContract.State = StudiesCreateContract.State()
 
-        override fun handleEvent(event: StudiesManagementContract.Event) {
+        override fun handleEvent(event: StudiesCreateContract.Event) {
             when (event) {
-                is StudiesManagementContract.Event.OnLoad -> onLoad()
-                is StudiesManagementContract.Event.OnNameChanged -> setStudyInfo(name = event.name)
-                is StudiesManagementContract.Event.OnIsPublicChanged -> setStudyInfo(isPublic = event.isPublic)
-                is StudiesManagementContract.Event.OnTargetStudyTimeChanged ->
-                    setStudyInfo(
-                        targetStudyTime = event.targetStudyTime,
-                    )
+                is StudiesCreateContract.Event.OnLoad -> onLoad()
+                is StudiesCreateContract.Event.OnNameChanged -> {
+                    setStudyInfo(name = event.name)
+                    validateCreateStudies()
+                }
 
-                is StudiesManagementContract.Event.OnMaxMembersChanged -> setStudyInfo(maxMembers = event.maxMembers)
-                is StudiesManagementContract.Event.OnSelectedCategory -> selectedCategory(event.category)
-                is StudiesManagementContract.Event.OnTagSelected -> selectedTag(event.tag)
-                is StudiesManagementContract.Event.OnTagUnSelected -> unSelectedTag(event.tag)
-                is StudiesManagementContract.Event.OnDescriptionChanged -> setStudyInfo(description = event.description)
-                is StudiesManagementContract.Event.OnProfileImgChanged -> setStudyInfo(profileImg = event.profileImg)
-                is StudiesManagementContract.Event.OnSelectedImage ->
+                is StudiesCreateContract.Event.OnIsPublicChanged -> setStudyInfo(isPublic = event.isPublic)
+                is StudiesCreateContract.Event.OnTargetStudyTimeChanged ->
+                    setStudyInfo(targetStudyTime = event.targetStudyTime)
+
+                is StudiesCreateContract.Event.OnMaxMembersChanged -> setStudyInfo(maxMembers = event.maxMembers)
+                is StudiesCreateContract.Event.OnSelectedCategory -> {
+                    selectedCategory(event.category)
+                    validateCreateStudies()
+                }
+
+                is StudiesCreateContract.Event.OnTagSelected -> {
+                    selectedTag(event.tag)
+                    validateCreateStudies()
+                }
+
+                is StudiesCreateContract.Event.OnTagUnSelected -> {
+                    unSelectedTag(event.tag)
+                    validateCreateStudies()
+                }
+
+                is StudiesCreateContract.Event.OnDescriptionChanged -> {
+                    setStudyInfo(description = event.description)
+                    validateCreateStudies()
+                }
+
+                is StudiesCreateContract.Event.OnProfileImgChanged -> setStudyInfo(profileImg = event.profileImg)
+                is StudiesCreateContract.Event.OnSelectedImage ->
                     issuePresignedUrl(
                         event.imageUri,
                         event.extension,
                     )
 
-                is StudiesManagementContract.Event.OnSelectedImageRequest -> setImageRequest(event.requestImage)
-                is StudiesManagementContract.Event.OnCreateStudiesClicked -> createStudies()
+                is StudiesCreateContract.Event.OnSelectedImageRequest -> setImageRequest(event.requestImage)
+                is StudiesCreateContract.Event.OnCreateStudiesClicked -> createStudies()
             }
         }
 
@@ -78,14 +93,11 @@ class StudiesManagementViewModel
                 return
             }
             viewModelScope.launch {
-                Log.d(TAG, "issuePresignedUrl: $imageUri")
                 issuePresignedUrlUseCase(
                     uploadPathType = UploadPathType.PROFILE_STUDY_TEMP.path,
                     imageExtension = extension,
                 ).withLoading {
-                    Log.d(TAG, "issuePresignedUrl: $it")
                 }.safeCollect { result ->
-                    Log.d(TAG, "issuePresignedUrl: $result")
                     setState { copy(presignedUrl = result.presignedUrl) }
                     setStudyInfo(profileImg = result.imageUrl)
                     if (uiState.value.presignedUrl != null && uiState.value.requestImage != null) {
@@ -159,6 +171,30 @@ class StudiesManagementViewModel
             }
         }
 
+        private fun validateCreateStudies() {
+            if (uiState.value.studyInfo.name
+                    .isBlank()
+            ) {
+                setState { copy(validateCreateStudies = false) }
+                return
+            }
+            if (uiState.value.studyInfo.description
+                    .isBlank()
+            ) {
+                setState { copy(validateCreateStudies = false) }
+                return
+            }
+            if (uiState.value.selectedCategory == null) {
+                setState { copy(validateCreateStudies = false) }
+                return
+            }
+            if (uiState.value.selectedTags.isEmpty()) {
+                setState { copy(validateCreateStudies = false) }
+                return
+            }
+            setState { copy(validateCreateStudies = true) }
+        }
+
         private fun createStudies() =
             viewModelScope.launch {
                 setStudyInfo(
@@ -171,7 +207,7 @@ class StudiesManagementViewModel
                     ).withLoading {
                         setState { copy(isOnCreate = it) }
                     }.safeCollect {
-                        setEffect { StudiesManagementContract.Effect.NavigateToBack }
+                        setEffect { StudiesCreateContract.Effect.NavigateToBack }
                     }
                 }
             }

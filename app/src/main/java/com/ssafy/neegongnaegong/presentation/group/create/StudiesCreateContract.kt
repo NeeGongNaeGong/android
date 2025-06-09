@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group.management
+package com.ssafy.neegongnaegong.presentation.group.create
 
 import android.net.Uri
 import com.ssafy.neegongnaegong.domain.model.studies.Category
@@ -10,7 +10,7 @@ import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 import okhttp3.RequestBody
 
-class StudiesManagementContract {
+class StudiesCreateContract {
     sealed class Event : UiEvent {
         data object OnLoad : Event()
 
@@ -73,6 +73,7 @@ class StudiesManagementContract {
         val selectedImageUri: Uri? = null,
         val presignedUrl: String? = null,
         val requestImage: RequestBody? = null,
+        val validateCreateStudies: Boolean = false,
         val studyInfo: StudyInfo = StudyInfo.empty(),
     ) : UiState
 

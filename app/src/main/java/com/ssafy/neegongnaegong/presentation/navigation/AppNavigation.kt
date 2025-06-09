@@ -70,7 +70,10 @@ object AppNavigation {
             data class StudiesMembersRole(val studyGroupId: Long) : Studies
 
             @Serializable
-            data object Management : Studies
+            data object Create : Studies
+
+            @Serializable
+            data class Edit(val studyGroupId: Long) : Studies
 
             @Serializable
             data class MakeVote(val studyGroupId: Int) : Studies

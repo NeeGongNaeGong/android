@@ -7,9 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
+import com.ssafy.neegongnaegong.presentation.group.create.StudiesCreateRoute
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailRoute
+import com.ssafy.neegongnaegong.presentation.group.edit.StudiesEditRoute
 import com.ssafy.neegongnaegong.presentation.group.join.StudiesWaitingToJoinRoute
-import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.role.StudiesMemberRoleRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
@@ -34,7 +35,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) { // Study 탭
                     navController.navigate(AppNavigation.Screen.Studies.StudiesDetail(it))
                 },
                 navigateToStudiesManagement = {
-                    navController.navigate(AppNavigation.Screen.Studies.Management)
+                    navController.navigate(AppNavigation.Screen.Studies.Create)
                 },
             )
         }
@@ -66,9 +67,18 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) { // Study 탭
                 popBackStack = navController::popBackStack,
             )
         }
-        composable<AppNavigation.Screen.Studies.Management> {
-            StudiesManagementRoute(
+        composable<AppNavigation.Screen.Studies.Create> {
+            StudiesCreateRoute(
                 modifier = Modifier,
+                popBackStack = navController::popBackStack,
+            )
+        }
+
+        composable<AppNavigation.Screen.Studies.Edit> { backStackEntry ->
+            val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.Edit>()
+            StudiesEditRoute(
+                modifier = Modifier,
+                studyGroupId = route.studyGroupId,
                 popBackStack = navController::popBackStack,
             )
         }

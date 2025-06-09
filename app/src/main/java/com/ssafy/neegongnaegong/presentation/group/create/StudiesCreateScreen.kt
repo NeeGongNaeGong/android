@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group.management
+package com.ssafy.neegongnaegong.presentation.group.create
 
 import android.net.Uri
 import android.util.Log
@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -89,9 +90,9 @@ import okhttp3.RequestBody
 private const val TAG = "StudiesManagementScreen"
 
 @Composable
-fun StudiesManagementRoute(
+fun StudiesCreateRoute(
     modifier: Modifier = Modifier,
-    viewModel: StudiesManagementViewModel = hiltViewModel(),
+    viewModel: StudiesCreateViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
 ) {
     BackHandler {
@@ -101,59 +102,54 @@ fun StudiesManagementRoute(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(StudiesManagementContract.Event.OnLoad)
+        viewModel.setEvent(StudiesCreateContract.Event.OnLoad)
     }
 
-    StudiesManagementContent(
+    StudiesCreateContent(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
-        onNameChanged = { viewModel.setEvent(StudiesManagementContract.Event.OnNameChanged(it)) },
+        onNameChanged = { viewModel.setEvent(StudiesCreateContract.Event.OnNameChanged(it)) },
         onIsPublicChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnIsPublicChanged(it),
+                StudiesCreateContract.Event.OnIsPublicChanged(it),
             )
         },
         onTargetStudyTimeChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnTargetStudyTimeChanged(it),
+                StudiesCreateContract.Event.OnTargetStudyTimeChanged(it),
             )
         },
         onMaxMembersChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnMaxMembersChanged(it),
+                StudiesCreateContract.Event.OnMaxMembersChanged(it),
             )
         },
         onCategorySelected = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnSelectedCategory(it),
+                StudiesCreateContract.Event.OnSelectedCategory(it),
             )
         },
-        onTagSelected = { viewModel.setEvent(StudiesManagementContract.Event.OnTagSelected(it)) },
-        onTagUnSelected = { viewModel.setEvent(StudiesManagementContract.Event.OnTagUnSelected(it)) },
+        onTagSelected = { viewModel.setEvent(StudiesCreateContract.Event.OnTagSelected(it)) },
+        onTagUnSelected = { viewModel.setEvent(StudiesCreateContract.Event.OnTagUnSelected(it)) },
         onDescriptionChanged = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnDescriptionChanged(it),
-            )
-        },
-        onProfileImgChanged = {
-            viewModel.setEvent(
-                StudiesManagementContract.Event.OnProfileImgChanged(it),
+                StudiesCreateContract.Event.OnDescriptionChanged(it),
             )
         },
         onSelectedImage = { uri, ext ->
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnSelectedImage(imageUri = uri, extension = ext),
+                StudiesCreateContract.Event.OnSelectedImage(imageUri = uri, extension = ext),
             )
         },
         onSelectedImageRequest = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnSelectedImageRequest(it),
+                StudiesCreateContract.Event.OnSelectedImageRequest(it),
             )
         },
         onCreateStudies = {
             viewModel.setEvent(
-                StudiesManagementContract.Event.OnCreateStudiesClicked,
+                StudiesCreateContract.Event.OnCreateStudiesClicked,
             )
         },
         popBackStack = popBackStack,
@@ -161,10 +157,10 @@ fun StudiesManagementRoute(
 }
 
 @Composable
-fun StudiesManagementContent(
+private fun StudiesCreateContent(
     modifier: Modifier = Modifier,
-    effect: Flow<StudiesManagementContract.Effect>,
-    uiState: StudiesManagementContract.State,
+    effect: Flow<StudiesCreateContract.Effect>,
+    uiState: StudiesCreateContract.State,
     onNameChanged: (String) -> Unit,
     onIsPublicChanged: (Boolean) -> Unit,
     onTargetStudyTimeChanged: (Int) -> Unit,
@@ -173,7 +169,6 @@ fun StudiesManagementContent(
     onTagSelected: (Tag) -> Unit,
     onTagUnSelected: (Tag) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onProfileImgChanged: (String?) -> Unit,
     onSelectedImage: (Uri, String?) -> Unit,
     onSelectedImageRequest: (RequestBody?) -> Unit,
     onCreateStudies: () -> Unit,
@@ -184,11 +179,11 @@ fun StudiesManagementContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                StudiesManagementContract.Effect.NavigateToBack -> backDispatcher?.onBackPressed()
+                StudiesCreateContract.Effect.NavigateToBack -> backDispatcher?.onBackPressed()
             }
         }
     }
-    StudiesManagementScreen(
+    StudiesCreateScreen(
         modifier = modifier,
         name = uiState.studyInfo.name,
         isPublic = uiState.studyInfo.isPublic,
@@ -199,6 +194,7 @@ fun StudiesManagementContent(
         selectedTags = uiState.selectedTags,
         tags = uiState.tags,
         description = uiState.studyInfo.description,
+        validateCreateStudies = uiState.validateCreateStudies,
         onNameChanged = onNameChanged,
         onIsPublicChanged = onIsPublicChanged,
         onTargetStudyTimeChanged = onTargetStudyTimeChanged,
@@ -209,7 +205,6 @@ fun StudiesManagementContent(
         onDescriptionChanged = onDescriptionChanged,
         onSelectedImage = onSelectedImage,
         onSelectedImageRequest = onSelectedImageRequest,
-        onProfileImgChanged = onProfileImgChanged,
         onCreateStudies = onCreateStudies,
         popBackStack = popBackStack,
     )
@@ -219,7 +214,7 @@ fun StudiesManagementContent(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun StudiesManagementScreen(
+private fun StudiesCreateScreen(
     modifier: Modifier = Modifier,
     name: String,
     isPublic: Boolean,
@@ -230,6 +225,7 @@ fun StudiesManagementScreen(
     selectedTags: List<Tag>,
     tags: List<Tag>,
     description: String,
+    validateCreateStudies: Boolean,
     onNameChanged: (String) -> Unit,
     onIsPublicChanged: (Boolean) -> Unit,
     onTargetStudyTimeChanged: (Int) -> Unit,
@@ -240,7 +236,6 @@ fun StudiesManagementScreen(
     onDescriptionChanged: (String) -> Unit,
     onSelectedImage: (Uri, String?) -> Unit,
     onSelectedImageRequest: (RequestBody?) -> Unit,
-    onProfileImgChanged: (String?) -> Unit,
     onCreateStudies: () -> Unit,
     popBackStack: () -> Unit = {},
 ) {
@@ -273,7 +268,7 @@ fun StudiesManagementScreen(
             title = {
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    text = stringResource(R.string.studies_management_title),
+                    text = stringResource(R.string.studies_create_title),
                     style = NeeGongNaeGongTheme.typography.titleMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
@@ -290,14 +285,18 @@ fun StudiesManagementScreen(
             // 스터디명 섹션
             Text(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = stringResource(R.string.studies_management_study_name),
+                text = stringResource(R.string.studies_create_study_name),
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
-
+            val nameMaxLength = 20
             OutlinedTextField(
                 value = name,
-                onValueChange = { onNameChanged(it) },
+                onValueChange = {
+                    if (it.length <= nameMaxLength) {
+                        onNameChanged(it)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -307,6 +306,18 @@ fun StudiesManagementScreen(
                     )
                 },
                 singleLine = true,
+                supportingText = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                    ) {
+                        Text(
+                            text = "${name.length} / $nameMaxLength",
+                            style = NeeGongNaeGongTheme.typography.bodySmall,
+                            color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                        )
+                    }
+                },
                 colors =
                     OutlinedTextFieldDefaults.colors(
                         focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -331,7 +342,7 @@ fun StudiesManagementScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.studies_management_public_private),
+                    text = stringResource(R.string.studies_create_public_private),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
@@ -363,7 +374,7 @@ fun StudiesManagementScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.studies_management_study_time),
+                    text = stringResource(R.string.studies_create_study_time),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
@@ -437,7 +448,7 @@ fun StudiesManagementScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.studies_management_max_members),
+                    text = stringResource(R.string.studies_create_max_members),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
@@ -487,7 +498,7 @@ fun StudiesManagementScreen(
                                 .heightIn(max = 200.dp)
                                 .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
                     ) {
-                        for (memberCount in 1..30) {
+                        for (memberCount in 2..30) {
                             DropdownMenuItem(
                                 text = { Text("$memberCount 명") },
                                 onClick = {
@@ -511,7 +522,6 @@ fun StudiesManagementScreen(
                         .padding(vertical = 10.dp),
                 color = NeeGongNaeGongTheme.colorScheme.gray3,
             )
-            // TODO : 임시 카테고리
             // 카테고리 선택
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -520,7 +530,7 @@ fun StudiesManagementScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = stringResource(R.string.studies_management_select_category),
+                    text = stringResource(R.string.studies_create_select_category),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
@@ -590,7 +600,7 @@ fun StudiesManagementScreen(
             // 태그 선택
             Text(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = stringResource(R.string.studies_management_select_tags),
+                text = stringResource(R.string.studies_create_select_tags),
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
@@ -658,18 +668,22 @@ fun StudiesManagementScreen(
             // 스터디 설명
             Text(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = stringResource(R.string.studies_management_description),
+                text = stringResource(R.string.studies_create_description),
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
-
+            val descriptionMaxLength = 200
             OutlinedTextField(
                 value = description,
-                onValueChange = { onDescriptionChanged(it) },
+                onValueChange = {
+                    if (it.length <= descriptionMaxLength) {
+                        onDescriptionChanged(it)
+                    }
+                },
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(80.dp),
+                        .wrapContentHeight(),
                 placeholder = {
                     Text(
                         text = "스터디 설명을 입력하세요",
@@ -678,8 +692,19 @@ fun StudiesManagementScreen(
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                maxLines = 3,
                 textStyle = NeeGongNaeGongTheme.typography.bodySmall,
+                supportingText = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                    ) {
+                        Text(
+                            text = "${description.length} / $descriptionMaxLength",
+                            style = NeeGongNaeGongTheme.typography.bodySmall,
+                            color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                        )
+                    }
+                },
                 colors =
                     OutlinedTextFieldDefaults.colors(
                         focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -703,7 +728,7 @@ fun StudiesManagementScreen(
 
             Text(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = stringResource(R.string.studies_management_add_photo),
+                text = stringResource(R.string.studies_create_add_photo),
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
@@ -799,7 +824,7 @@ fun StudiesManagementScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.studies_management_add_photo),
+                            contentDescription = stringResource(R.string.studies_create_add_photo),
                             tint = NeeGongNaeGongTheme.colorScheme.background,
                             modifier = Modifier.size(64.dp),
                         )
@@ -812,20 +837,23 @@ fun StudiesManagementScreen(
             // 생성하기 버튼
             Button(
                 onClick = onCreateStudies,
+                enabled = validateCreateStudies,
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp),
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = NeeGongNaeGongTheme.colorScheme.mintBlue,
+                        containerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                        contentColor = NeeGongNaeGongTheme.colorScheme.background,
+                        disabledContainerColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                        disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray3,
                     ),
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.studies_management_create),
-                    style = NeeGongNaeGongTheme.typography.labelMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                    text = stringResource(R.string.studies_create_create),
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                 )
             }
 
@@ -836,9 +864,9 @@ fun StudiesManagementScreen(
 
 @NeeGongNaeGongPreviews
 @Composable
-private fun PreviewStudiesComponentScreen() {
+private fun PreviewStudiesManagementScreen() {
     NeeGongNaeGongTheme {
-        StudiesManagementScreen(
+        StudiesCreateScreen(
             modifier = Modifier,
             name = "",
             isPublic = true,
@@ -849,18 +877,18 @@ private fun PreviewStudiesComponentScreen() {
             selectedTags = emptyList(),
             tags = emptyList(),
             description = "",
+            validateCreateStudies = true,
             onNameChanged = {},
             onIsPublicChanged = {},
             onTargetStudyTimeChanged = {},
             onMaxMembersChanged = {},
-            onCategorySelected = { },
-            onTagSelected = { },
+            onCategorySelected = {},
+            onTagSelected = {},
             onTagUnSelected = {},
             onDescriptionChanged = {},
             onSelectedImage = { _, _ -> },
             onSelectedImageRequest = {},
-            onProfileImgChanged = {},
-            onCreateStudies = { },
+            onCreateStudies = {},
             popBackStack = {},
         )
     }
