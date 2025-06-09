@@ -61,6 +61,7 @@ private val GROUP_JOIN_SLIDE_DISTANCE = 110.dp
 private val AcceptColor = Color(0xFF4CAF50)
 private val RejectColor = Color(0xFFFF5252)
 
+// TODO(추후 형선이형 파트인 그룹 내 수락/거절 컴포넌트로 결합하겠습니다.)
 @Composable
 fun Notification(
     modifier: Modifier = Modifier,
