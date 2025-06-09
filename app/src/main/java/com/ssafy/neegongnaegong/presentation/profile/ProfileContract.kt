@@ -35,7 +35,7 @@ interface ProfileContract {
         data object NavigateToNotification : Effect()
         data object NavigateToNotice : Effect()
         data object NavigateToPrivacyInfo : Effect()
-        data object NavigateToLogout : Effect()
+        data object NavigateToAuth : Effect()
     }
 
     sealed class Error : ErrorContext {

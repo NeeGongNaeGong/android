@@ -15,6 +15,9 @@ import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
+private const val PRIVACY_INFO_URL = "https://www.notion.so/2082fdb33c0980419574e74d7ee3dcaf"
+private const val NOTICE_URL = "https://www.naver.com"
+
 @Composable
 fun ProfileRoute(
     viewModel: ProfileViewModel = hiltViewModel(),
@@ -46,22 +49,18 @@ fun ProfileRoute(
             }
 
             ProfileContract.Effect.NavigateToNotice -> {
-                // TODO ("주소 변경 필요!")
-                val url = "https://www.naver.com"
                 Builder()
                     .build()
-                    .launchUrl(context, url.toUri())
+                    .launchUrl(context, NOTICE_URL.toUri())
             }
 
             ProfileContract.Effect.NavigateToPrivacyInfo -> {
-                // TODO ("주소 변경 필요!")
-                val url = "https://www.google.com"
                 Builder()
                     .build()
-                    .launchUrl(context, url.toUri())
+                    .launchUrl(context, PRIVACY_INFO_URL.toUri())
             }
 
-            ProfileContract.Effect.NavigateToLogout -> {
+            ProfileContract.Effect.NavigateToAuth -> {
                 navigateToAuth()
             }
 

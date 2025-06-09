@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
+import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -12,8 +14,9 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileMapper.toUiModel
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -24,8 +27,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val getMyProfileUseCase: GetMyProfileUseCase,
-    val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val logoutUseCase: LogoutUseCase,
+    private val withdrawUseCase: WithdrawUseCase,
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -78,24 +83,28 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleLogout() {
         viewModelScope.safeLaunch {
-            // TODO("계정 로그아웃 API 추가되면 수정")
-            delay(1000)
-            val sideEffect = ProfileContract.Effect.NavigateToLogout
+            logoutUseCase().withLoading { isModifying ->
+                setState { copy(isModifying = isModifying) }
+            }.firstOrNull()
+
+            val sideEffect = ProfileContract.Effect.NavigateToAuth
             setEffect { sideEffect }
         }
     }
 
     private fun handleDeleteAccount() {
         viewModelScope.safeLaunch {
-            // TODO("계정 삭제 API 추가되면 수정")
-            delay(1000)
-            val sideEffect = ProfileContract.Effect.NavigateToLogout
+            withdrawUseCase().withLoading { isModifying ->
+                setState { copy(isModifying = isModifying) }
+            }.firstOrNull()
+
+            val sideEffect = ProfileContract.Effect.NavigateToAuth
             setEffect { sideEffect }
         }
     }
 
     private fun handleChangeNickName(text: String) {
-        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch {
             updateNicknameUseCase(nickname = text).withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -105,7 +114,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleChangeProfileImage(uri: Uri) {
-        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch {
             // TODO("형선이형 브랜치에서 사용되는 S3 이미지 업로드 UseCase 결함 예정")
         }
     }
@@ -132,5 +141,11 @@ class ProfileViewModel @Inject constructor(
 
     private fun endLoad() {
         setState { copy(isInitial = false, isModifying = false) }
+    }
+
+    private fun CoroutineScope.safeLaunch(
+        block: suspend () -> Unit
+    ): Job = safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        block()
     }
 }
