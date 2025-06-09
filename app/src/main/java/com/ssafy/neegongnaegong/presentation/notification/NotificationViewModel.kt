@@ -136,17 +136,29 @@ class NotificationViewModel @Inject constructor(
             }
 
             NotificationType.NOTICE_POSTED -> {
-                val effect = NotificationContract.Effect.NavigateToNotice(noticeId = data.senderId)
+                if (data.studyGroupId == null) throw InvalidGroupIdException()
+                val effect = NotificationContract.Effect.NavigateToNotice(
+                    groupId = data.studyGroupId,
+                    noticeId = data.senderId
+                )
                 setEffect { effect }
             }
 
             NotificationType.VOTE_CREATED -> {
-                val effect = NotificationContract.Effect.NavigateToVote(voteId = data.senderId)
+                if (data.studyGroupId == null) throw InvalidGroupIdException()
+                val effect = NotificationContract.Effect.NavigateToVote(
+                    groupId = data.studyGroupId,
+                    voteId = data.senderId
+                )
                 setEffect { effect }
             }
 
             NotificationType.VOTE_ENDED -> {
-                val effect = NotificationContract.Effect.NavigateToVote(voteId = data.senderId)
+                if (data.studyGroupId == null) throw InvalidGroupIdException()
+                val effect = NotificationContract.Effect.NavigateToVote(
+                    groupId = data.studyGroupId,
+                    voteId = data.senderId
+                )
                 setEffect { effect }
             }
 

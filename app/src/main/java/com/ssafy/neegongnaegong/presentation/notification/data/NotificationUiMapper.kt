@@ -15,8 +15,8 @@ internal object NotificationUiMapper {
 
         type = notificationType,
         senderId = senderId,
-        studyGroupId = null,
-        studyGroupName = null
+        studyGroupId = studyGroupId,
+        studyGroupName = studyGroupName
     )
 
     fun PagingData<Notification>.toUiModel(): PagingData<NotificationUiModel> = map {

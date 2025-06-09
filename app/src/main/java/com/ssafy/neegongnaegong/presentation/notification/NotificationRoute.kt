@@ -20,8 +20,8 @@ import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 fun NotificationRoute(
     viewModel: NotificationViewModel = hiltViewModel(),
     navigateToGroup: (groupId: Long) -> Unit,
-    navigateToNotice: (noticeId: Long) -> Unit,
-    navigateToVote: (voteId: Long) -> Unit,
+    navigateToNotice: (groupId: Long, noticeId: Long) -> Unit,
+    navigateToVote: (groupId: Long, voteId: Long) -> Unit,
 ) {
     val context: Context = LocalContext.current
     val listState: LazyListState = rememberLazyListState()
@@ -45,11 +45,11 @@ fun NotificationRoute(
             }
 
             is NotificationContract.Effect.NavigateToNotice -> {
-                navigateToNotice(effect.noticeId)
+                navigateToNotice(effect.groupId, effect.noticeId)
             }
 
             is NotificationContract.Effect.NavigateToVote -> {
-                navigateToVote(effect.voteId)
+                navigateToVote(effect.groupId, effect.voteId)
             }
 
             NotificationContract.Effect.ShowInvalidGroupIdErrorMessage -> {
