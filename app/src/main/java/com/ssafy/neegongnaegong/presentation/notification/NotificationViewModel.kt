@@ -42,7 +42,7 @@ class NotificationViewModel @Inject constructor(
             uiState.isLoading
         }.filter { uiState: NotificationContract.State ->
             uiState.isLoading
-        }.safeFlatMapLatest(errorContext = NotificationContract.Error.ShowErrorMessage) {
+        }.safeFlatMapLatest(errorContext = NotificationContract.Error.CantAccessNotificationError) {
             getNotificationUseCase()
         }.map { pagingData: PagingData<Notification> ->
             pagingData.toUiModel()
@@ -75,7 +75,7 @@ class NotificationViewModel @Inject constructor(
     }
 
     private fun handleDeleteAllNotification() {
-        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.CantDeleteAllNotificationError) {
             deleteAllNotificationUseCase().withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -83,7 +83,7 @@ class NotificationViewModel @Inject constructor(
     }
 
     private fun handleDeleteNotification(data: NotificationUiModel) {
-        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.CantDeleteNotificationError) {
             deleteNotificationUseCase(notificationId = data.id).withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -91,13 +91,13 @@ class NotificationViewModel @Inject constructor(
     }
 
     private fun handleMoveNotification(data: NotificationUiModel) {
-        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.CantMoveNotificationError) {
             handleNotification(data = data)
         }
     }
 
     private fun handleAcceptGroupJoin(data: NotificationUiModel) {
-        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.CantAcceptGroupJoinError) {
             approveStudyGroupJoinUseCase(
                 studyGroupId = data.studyGroupId,
                 userId = data.senderId,
@@ -107,7 +107,7 @@ class NotificationViewModel @Inject constructor(
     }
 
     private fun handleRejectGroupJoin(data: NotificationUiModel) {
-        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = NotificationContract.Error.CantRejectGroupJoinError) {
             rejectStudyGroupJoinUseCase(
                 studyGroupId = data.studyGroupId,
                 userId = data.senderId,
