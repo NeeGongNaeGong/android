@@ -24,9 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -39,6 +39,7 @@ import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
 import com.ssafy.neegongnaegong.presentation.personal.PersonalContract
 import com.ssafy.neegongnaegong.presentation.personal.PersonalViewModel
 import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
@@ -74,18 +75,23 @@ fun MainScreen() {
 
     val showBottomNavigationBar =
         currentDestination?.let { destination ->
-            val isAuthTab =
-                destination.hierarchy.any {
-                    it.hasRoute(AppNavigation.Tab.Auth::class)
+            val isAuthTab: Boolean = destination.hierarchy
+                .any { navDestination: NavDestination ->
+                    navDestination.hasRoute(AppNavigation.Tab.Auth::class)
                 }
 
-            val isEditScreen =
-                destination.hierarchy.any {
-                    it.hasRoute(AppNavigation.Screen.Personal.Edit::class)
+            val isEditScreen: Boolean = destination.hierarchy
+                .any { navDestination: NavDestination ->
+                    navDestination.hasRoute(AppNavigation.Screen.Personal.Edit::class)
                 }
 
-            !isAuthTab && !isEditScreen
-        } ?: true
+            val isNotificationScreen: Boolean = destination.hierarchy
+                .any { navDestination: NavDestination ->
+                    navDestination.hasRoute(AppNavigation.Screen.Profile.Notification::class)
+                }
+
+            !isAuthTab && !isEditScreen && !isNotificationScreen
+        } != false
 
     val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -157,10 +163,10 @@ fun MainScreen() {
             // 다른 화면의 Scaffold에서 사용된 값은 빼고서 계산해줌
             Box(
                 modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
-                    .background(NeeGongNaeGongTheme.colorScheme.background),
+                    Modifier
+                        .padding(innerPadding)
+                        .consumeWindowInsets(innerPadding)
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
             ) {
                 MainNavigationGraph(navController = navController)
             }
