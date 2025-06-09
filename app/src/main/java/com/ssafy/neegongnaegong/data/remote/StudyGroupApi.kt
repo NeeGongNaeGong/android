@@ -1,13 +1,16 @@
 package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemsRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
@@ -53,8 +56,15 @@ interface StudyGroupApi {
         @Path("notices-id") noticeId: Long,
     ): Result<ApiResponse<StudyGroupNoticeDetailResponse>>
 
-    @GET("$PREFIX/vote/details/{vote-id}")
+    @GET("$PREFIX/vote/detail/{vote-id}")
     suspend fun getVoteDetail(
         @Path("vote-id") voteId: Long,
+    ): Result<ApiResponse<StudyGroupVoteDetailResponse>>
+
+    @POST("$PREFIX/{study-group-id}/posts/votes/participation/{vote-id}")
+    suspend fun castVote(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("vote-id") voteId: Long,
+        @Body voteItems: VoteItemsRequest,
     ): Result<ApiResponse<StudyGroupVoteDetailResponse>>
 }
