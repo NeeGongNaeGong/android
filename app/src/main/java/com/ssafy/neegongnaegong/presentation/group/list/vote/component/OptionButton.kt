@@ -39,7 +39,7 @@ fun OptionButton(
     isSelected: Boolean,
     optionTitle: String,
     votedUsers: List<StudyGroupVoteStatusInfo.VotedMemberInfo>,
-    editMode: Boolean,
+    castMode: Boolean,
     onClick: () -> Unit,
     onClickPersonList: () -> Unit,
 ) {
@@ -48,11 +48,11 @@ fun OptionButton(
             modifier
                 .fillMaxWidth()
                 .padding(0.dp)
-                .clickable { if (editMode) onClick() },
+                .clickable { if (castMode) onClick() },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (editMode) {
+        if (castMode) {
             Box(contentAlignment = Alignment.Center) {
                 val iconModifier = Modifier.size(40.dp)
                 Icon(
@@ -79,7 +79,7 @@ fun OptionButton(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(modifier = Modifier.weight(1F)) {
-                    if (!editMode && isSelected) {
+                    if (!castMode && isSelected) {
                         val iconSizeDp: Dp =
                             with(LocalDensity.current) {
                                 NeeGongNaeGongTheme.typography
@@ -166,7 +166,7 @@ fun PreviewOptionButton() {
             isAnonymous = false,
             votedUsers = listOf(StudyGroupVoteStatusInfo.VotedMemberInfo(0, ",", "")),
             optionTitle = "종료 시간",
-            editMode = false,
+            castMode = false,
             onClick = {},
         ) {}
     }
@@ -183,7 +183,7 @@ fun PreviewOptionButtonEditMode() {
             isAnonymous = false,
             votedUsers = listOf(StudyGroupVoteStatusInfo.VotedMemberInfo(0, ",", "")),
             optionTitle = "종료 시간",
-            editMode = true,
+            castMode = true,
             onClick = {},
         ) {}
     }

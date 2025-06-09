@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.vote
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,19 +12,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -91,7 +99,9 @@ fun VoteDetailRoute(
             voteOptions = state.voteOptions,
             voteItems = state.voteItems,
             voteValues = state.voteValues,
-            editMode = state.editMode,
+            castMode = state.castMode,
+            addOptionMode = state.addOptionMode,
+            newOptionTitle = state.newOption,
             onClickOption = { optionId, optionName ->
                 viewModel.setEvent(
                     VoteDetailContract.Event.SelectOption(
@@ -110,13 +120,19 @@ fun VoteDetailRoute(
             },
             onCastVote = {
                 viewModel.setEvent(
-                    if (state.editMode) {
+                    if (state.castMode) {
                         VoteDetailContract.Event.CastVote
                     } else {
-                        VoteDetailContract.Event.ToggleEditMode
+                        VoteDetailContract.Event.ToggleCastMode
                     },
                 )
             },
+            onClickAddOption = {
+                viewModel.setEvent(VoteDetailContract.Event.OnClickAddOption)
+            },
+            onChangeNewOption = { viewModel.setEvent(VoteDetailContract.Event.OnChangeNewOption(it)) },
+            onCancelNewOption = { viewModel.setEvent(VoteDetailContract.Event.OnCancelAddOption) },
+            onConfirmNewOption = { viewModel.setEvent(VoteDetailContract.Event.OnConfirmAddOption) },
         )
     }
 }
@@ -131,10 +147,16 @@ fun VoteDetailScreen(
     voteOptions: PersistentList<VoteOptions>,
     voteItems: PersistentList<StudyGroupVoteStatusInfo>,
     voteValues: PersistentList<StudyGroupVoteDetailInfo.VoteValue>,
-    editMode: Boolean,
+    castMode: Boolean,
+    addOptionMode: Boolean,
+    newOptionTitle: String,
     onClickOption: (Long, String) -> Unit,
     onClickShowPersonList: (String, List<StudyGroupVoteStatusInfo.VotedMemberInfo>) -> Unit,
     onCastVote: () -> Unit,
+    onClickAddOption: () -> Unit,
+    onChangeNewOption: (String) -> Unit,
+    onCancelNewOption: () -> Unit,
+    onConfirmNewOption: () -> Unit,
 ) {
     Column(
         modifier =
@@ -198,6 +220,7 @@ fun VoteDetailScreen(
                         .fillMaxWidth()
                         .padding(NeeGongNaeGongTheme.paddingScheme.sp3),
                 verticalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp4),
+                horizontalAlignment = Alignment.End,
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -251,7 +274,7 @@ fun VoteDetailScreen(
                                 selected.find { voteItem.voteItemId == it.voteItemId }
                                     ?.let { true } ?: false,
                             optionTitle = voteItem.voteItemName,
-                            editMode = editMode,
+                            castMode = castMode,
                             onClick = { onClickOption(voteItem.voteItemId, voteItem.voteItemName) },
                             onClickPersonList = {
                                 onClickShowPersonList(
@@ -262,28 +285,110 @@ fun VoteDetailScreen(
                         )
                     }
                 }
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp),
-                    enabled = !(selected.isEmpty() && voteValues.isEmpty()),
-                    onClick = onCastVote,
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = NeeGongNaeGongTheme.colorScheme.yellow,
-                            contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            disabledContainerColor = NeeGongNaeGongTheme.colorScheme.gray3,
-                            disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray4,
-                        ),
-                ) {
-                    Text(
-                        text =
-                            if (voteValues.isEmpty()) {
-                                "투표하기"
-                            } else {
-                                "다시 투표하기"
+
+                if (!addOptionMode) {
+                    if (voteOptions.contains(VoteOptions.IS_CHOSEN)) {
+                        Row(
+                            modifier =
+                                Modifier
+                                    .wrapContentSize()
+                                    .clickable {
+                                        onClickAddOption()
+                                    },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                tint = NeeGongNaeGongTheme.colorScheme.gray4,
+                                contentDescription = "더하기 버튼",
+                            )
+                            Text(
+                                text = "항목 추가",
+                                color = NeeGongNaeGongTheme.colorScheme.gray4,
+                                style = NeeGongNaeGongTheme.typography.labelLarge,
+                            )
+                        }
+                    }
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        enabled = !(selected.isEmpty() && voteValues.isEmpty()),
+                        onClick = onCastVote,
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = NeeGongNaeGongTheme.colorScheme.yellow,
+                                contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                disabledContainerColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                                disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray4,
+                            ),
+                    ) {
+                        Text(
+                            text =
+                                if (voteValues.isEmpty()) {
+                                    "투표하기"
+                                } else {
+                                    "다시 투표하기"
+                                },
+                            style = NeeGongNaeGongTheme.typography.labelLarge,
+                        )
+                    }
+                } else {
+                    Column {
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            placeholder = {
+                                Text(
+                                    "항목 입력",
+                                    style = NeeGongNaeGongTheme.typography.labelSmall,
+                                )
                             },
-                        style = NeeGongNaeGongTheme.typography.labelLarge,
-                    )
+                            value = newOptionTitle,
+                            onValueChange = onChangeNewOption,
+                            colors =
+                                TextFieldDefaults.colors(
+                                    focusedContainerColor = NeeGongNaeGongTheme.colorScheme.gray2,
+                                    unfocusedContainerColor = NeeGongNaeGongTheme.colorScheme.gray2,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    disabledIndicatorColor = Color.Transparent,
+                                    unfocusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    focusedTextColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                ),
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2)) {
+                            val buttonColors =
+                                ButtonDefaults.buttonColors(
+                                    containerColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                                    contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    disabledContainerColor = NeeGongNaeGongTheme.colorScheme.gray2,
+                                    disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray4,
+                                )
+                            Button(
+                                modifier = Modifier.weight(1F),
+                                shape = RoundedCornerShape(5.dp),
+                                colors = buttonColors,
+                                onClick = onCancelNewOption,
+                            ) {
+                                Text(
+                                    text = "취소",
+                                    style = NeeGongNaeGongTheme.typography.labelMedium,
+                                )
+                            }
+
+                            Button(
+                                modifier = Modifier.weight(1F),
+                                enabled = newOptionTitle.isNotEmpty(),
+                                shape = RoundedCornerShape(5.dp),
+                                colors = buttonColors,
+                                onClick = onConfirmNewOption,
+                            ) {
+                                Text(
+                                    text = "확인",
+                                    style = NeeGongNaeGongTheme.typography.labelMedium,
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -318,24 +423,35 @@ fun PreviewVoteDetailScreen() {
                 ),
             voteValues = persistentListOf(),
             selected = persistentListOf(),
-            editMode = false,
+            castMode = false,
+            newOptionTitle = "",
             onCastVote = {},
             onClickShowPersonList = { _, _ -> },
             onClickOption = { _, _ -> },
+            onClickAddOption = {},
+            addOptionMode = false,
+            onChangeNewOption = {},
+            onCancelNewOption = {},
+            onConfirmNewOption = {},
         )
     }
 }
 
 @Composable
 @NeeGongNaeGongPreviews
-fun PreviewVoteDetailScreenEditMode() {
+fun PreviewVoteDetailScreenCastMode() {
     NeeGongNaeGongTheme {
         VoteDetailScreen(
             userName = "",
             userProfileImg = "",
             progressTime = "",
             voteTitle = "가능한 날",
-            voteOptions = persistentListOf(VoteOptions.IS_SECRET, VoteOptions.IS_MULTIPLE),
+            voteOptions =
+                persistentListOf(
+                    VoteOptions.IS_SECRET,
+                    VoteOptions.IS_MULTIPLE,
+                    VoteOptions.IS_CHOSEN,
+                ),
             voteItems =
                 persistentListOf(
                     StudyGroupVoteStatusInfo(
@@ -354,10 +470,16 @@ fun PreviewVoteDetailScreenEditMode() {
                 ),
             voteValues = persistentListOf(),
             selected = persistentListOf(),
-            editMode = true,
+            castMode = true,
+            newOptionTitle = "",
             onCastVote = {},
             onClickShowPersonList = { _, _ -> },
             onClickOption = { _, _ -> },
+            onClickAddOption = {},
+            addOptionMode = true,
+            onChangeNewOption = {},
+            onCancelNewOption = {},
+            onConfirmNewOption = {},
         )
     }
 }

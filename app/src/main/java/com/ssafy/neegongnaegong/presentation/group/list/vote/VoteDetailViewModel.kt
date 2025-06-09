@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.vote
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.AddNewVoteOptionUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.CastVoteUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetVoteDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -23,6 +24,7 @@ class VoteDetailViewModel
     constructor(
         savedStateHandle: SavedStateHandle,
         getVoteDetailUseCase: GetVoteDetailUseCase,
+        private val addNewVoteOptionUseCase: AddNewVoteOptionUseCase,
         private val castVoteUseCase: CastVoteUseCase,
     ) :
     BaseViewModel<Event, State, Effect>() {
@@ -36,7 +38,9 @@ class VoteDetailViewModel
                 selected = persistentListOf(),
                 voteItems = persistentListOf(),
                 voteValues = persistentListOf(),
-                editMode = false,
+                castMode = false,
+                addOptionMode = false,
+                newOption = "",
             )
 
         override fun handleEvent(event: Event) {
@@ -96,7 +100,7 @@ class VoteDetailViewModel
                                 setEvent(Event.InvalidAccess)
                             }
                         } else {
-                            setState { copy(editMode = false) }
+                            setState { copy(castMode = false) }
                         }
                     }
                 }
@@ -105,7 +109,23 @@ class VoteDetailViewModel
                     setEffect { Effect.NavigateToVotedPersonList(event.title, event.votedMemberInfo) }
                 }
 
-                Event.ToggleEditMode -> setState { copy(editMode = !editMode) }
+                Event.ToggleCastMode -> setState { copy(castMode = !castMode) }
+
+                Event.OnClickAddOption -> setState { copy(addOptionMode = true) }
+
+                is Event.OnChangeNewOption -> setState { copy(newOption = event.optionTitle) }
+
+                Event.OnCancelAddOption -> setState { copy(addOptionMode = false, newOption = "") }
+
+                Event.OnConfirmAddOption -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        if (groupId != null && voteId != null) {
+                            addNewVoteOptionUseCase(groupId, voteId, uiState.value.newOption).safeCollect {
+                                setVoteState(it)
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -137,11 +157,13 @@ class VoteDetailViewModel
                         voteDetailInfo.voteOptions.mapNotNull { option ->
                             VoteOptions.from(option)
                         }
-                            .filter { it != VoteOptions.IS_OPEN && it != VoteOptions.IS_CHOSEN }
+                            .filter { it != VoteOptions.IS_OPEN }
                             .toPersistentList(),
                     voteItems = voteDetailInfo.voteItems.toPersistentList(),
                     voteValues = voteDetailInfo.voteValues.toPersistentList(),
-                    editMode = voteDetailInfo.voteValues.isEmpty(),
+                    castMode = voteDetailInfo.voteValues.isEmpty(),
+                    addOptionMode = false,
+                    newOption = "",
                 )
             }
         }

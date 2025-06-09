@@ -16,19 +16,27 @@ class VoteDetailContract {
 
         data object CastVote : Event
 
-        data object ToggleEditMode : Event
+        data object ToggleCastMode : Event
 
         data class OnClickVotedPersonList(
             val title: String,
             val votedMemberInfo: List<StudyGroupVoteStatusInfo.VotedMemberInfo>,
         ) : Event
+
+        data object OnClickAddOption : Event
+
+        data class OnChangeNewOption(val optionTitle: String) : Event
+
+        data object OnCancelAddOption : Event
+
+        data object OnConfirmAddOption : Event
     }
 
     enum class VoteOptions(val option: String, val description: String) {
         IS_SECRET("IS_SECRET", "익명 투표"),
         IS_OPEN("IS_OPEN", "진행 중"),
         IS_MULTIPLE("IS_MULTIPLE", "복수 선택"),
-        IS_CHOSEN("IS_CHOSEN", "선택 항목 추가"),
+        IS_CHOSEN("IS_CHOSEN", "추가 항목 허용"),
         ;
 
         companion object {
@@ -45,7 +53,9 @@ class VoteDetailContract {
         val voteOptions: PersistentList<VoteOptions>,
         val voteItems: PersistentList<StudyGroupVoteStatusInfo>,
         val voteValues: PersistentList<StudyGroupVoteDetailInfo.VoteValue>,
-        val editMode: Boolean,
+        val castMode: Boolean,
+        val addOptionMode: Boolean,
+        val newOption: String,
     ) : UiState
 
     sealed interface Effect : UiEffect {
