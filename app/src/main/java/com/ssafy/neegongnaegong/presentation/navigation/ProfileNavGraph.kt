@@ -33,10 +33,10 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
                     val group = AppNavigation.Screen.Studies.StudiesDetail
                     navController.navigate(route = group)
                 },
-                navigateToNotice = { noticeId: Long ->
+                navigateToNotice = { groupId: Long, noticeId: Long ->
 
                 },
-                navigateToVote = { voteId: Long ->
+                navigateToVote = { groupId: Long, voteId: Long ->
 
                 }
             )
