@@ -28,7 +28,7 @@ fun NotificationList(
             key = { index: Int -> notificationList[index]?.id ?: index }
         ) { index: Int ->
             val data: NotificationUiModel = notificationList[index] ?: return@items
-            Notification(
+            Notification2(
                 modifier = Modifier.fillMaxWidth(),
                 image = data.image,
                 user = data.user,
