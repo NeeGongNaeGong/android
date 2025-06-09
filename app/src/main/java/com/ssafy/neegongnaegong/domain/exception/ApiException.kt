@@ -13,6 +13,8 @@ sealed class ApiException(override val message: String) : IOException(message) {
 
     class ClientException(message: String? = null) : ApiException(message ?: CLIENT_ERROR)
 
+    class ConflictException(message: String? = null) : ApiException(message ?: CLIENT_ERROR)
+
     companion object {
         const val UNKNOWN_ERROR = "알수 없는 에러 발생"
         const val NETWORK_ERROR = "네트워크 에러 발생"
@@ -21,6 +23,7 @@ sealed class ApiException(override val message: String) : IOException(message) {
         const val CLIENT_ERROR = "잘못된 요청입니다"
 
         fun fromCode(code: Int, message: String? = null): ApiException = when (code) {
+            409 -> ConflictException(message)
             in 400..499 -> ClientException(message)
             in 500..599 -> ServerException(message)
             else -> UnknownException(message)

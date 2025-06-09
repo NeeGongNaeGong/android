@@ -25,8 +25,10 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +49,7 @@ fun WithdrawalDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    val (isConfirmed, setConfirmed) = rememberSaveable { mutableStateOf(false) }
+    var isConfirmed: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -139,7 +141,7 @@ fun WithdrawalDialog(
                 ) {
                     Checkbox(
                         checked = isConfirmed,
-                        onCheckedChange = setConfirmed,
+                        onCheckedChange = { isConfirmed = it },
                         colors = CheckboxDefaults.colors(checkedColor = Red)
                     )
 

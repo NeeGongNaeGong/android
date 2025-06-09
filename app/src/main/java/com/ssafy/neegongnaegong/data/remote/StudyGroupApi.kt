@@ -3,8 +3,8 @@ package com.ssafy.neegongnaegong.data.remote
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
-import kotlinx.collections.immutable.PersistentList
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
@@ -28,4 +28,19 @@ interface StudyGroupApi {
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
+
+    @PATCH("$PREFIX/{study-group-id}/applications/{user-id}/approve")
+    suspend fun approveStudyGroupJoin(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("notification-id") notificationId: Long?
+    ): Result<ApiResponse<Unit>>
+
+
+    @PATCH("$PREFIX/{study-group-id}/applications/{user-id}/reject")
+    suspend fun rejectStudyGroupJoin(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("notification-id") notificationId: Long?
+    ): Result<ApiResponse<Unit>>
 }

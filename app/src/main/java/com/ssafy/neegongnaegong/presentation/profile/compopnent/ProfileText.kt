@@ -11,8 +11,10 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -57,15 +59,15 @@ private fun ProfileEditText(
     onClickEditCancel: () -> Unit,
     onClickEditDone: (String) -> Unit
 ) {
-    val (value, onValueChange) = rememberSaveable { mutableStateOf(text) }
+    var textValue by rememberSaveable { mutableStateOf(text) }
     val focusManager = LocalFocusManager.current
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         PlainEditText(
             modifier = Modifier.weight(1f),
-            value = value,
+            value = textValue,
             onValueChange = { newValue: String ->
-                if (newValue.length <= MaxNickNameLength) onValueChange(newValue)
+                if (newValue.length <= MaxNickNameLength) textValue = newValue
             },
             singleLine = true,
         )
@@ -75,7 +77,7 @@ private fun ProfileEditText(
             iconSize = IconSize + 2.dp,
             onClick = {
                 focusManager.clearFocus(force = true)
-                onClickEditDone(value)
+                onClickEditDone(textValue)
             }
         )
 
