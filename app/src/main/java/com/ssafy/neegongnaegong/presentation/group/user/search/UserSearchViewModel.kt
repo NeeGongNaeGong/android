@@ -5,9 +5,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.ssafy.neegongnaegong.domain.usecase.user.SearchUserUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
+import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModelMapper.toUiModel
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
@@ -19,6 +20,23 @@ class UserSearchViewModel
     constructor(
         private val searchUserUseCase: SearchUserUseCase,
     ) : BaseViewModel<UserSearchContract.Event, UserSearchContract.State, UserSearchContract.Effect>() {
+        override fun handleException(
+            e: Throwable,
+            errorContext: ErrorContext,
+            retry: () -> Unit,
+        ) {
+            val error = errorContext as? UserSearchContract.Error ?: return
+
+            when (error) {
+                is UserSearchContract.Error.GetUserListError -> {
+                    showErrorMessage(
+                        message = "검색을 하지 못했습니다 네트워크 환경확인 후 재시도 해주세요",
+                        action = SnackbarManager.Action.retry { retry() },
+                    )
+                }
+            }
+        }
+
         @OptIn(FlowPreview::class)
         val searchUserList by lazy {
             uiState
