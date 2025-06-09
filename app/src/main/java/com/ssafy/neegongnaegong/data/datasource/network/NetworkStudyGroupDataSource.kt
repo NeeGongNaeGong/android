@@ -34,4 +34,10 @@ interface NetworkStudyGroupDataSource {
         voteId: Long,
         voteItems: List<String>,
     ): Flow<StudyGroupVoteDetailResponse>
+
+    fun addNewVoteOption(
+        studyGroupId: Long,
+        voteId: Long,
+        voteItem: String,
+    ): Flow<StudyGroupVoteDetailResponse>
 }

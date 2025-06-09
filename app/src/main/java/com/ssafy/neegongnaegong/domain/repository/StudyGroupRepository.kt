@@ -31,4 +31,10 @@ interface StudyGroupRepository {
         voteId: Long,
         voteItems: List<String>,
     ): Flow<StudyGroupVoteDetailInfo>
+
+    fun addNewVoteOption(
+        studyGroupId: Long,
+        voteId: Long,
+        voteItem: String,
+    ): Flow<StudyGroupVoteDetailInfo>
 }

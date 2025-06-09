@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.apiFlow
+import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemsRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
@@ -82,5 +83,14 @@ class NetworkStudyGroupDataSourceImpl
         ): Flow<StudyGroupVoteDetailResponse> =
             apiFlow {
                 api.castVote(studyGroupId, voteId, VoteItemsRequest(voteItems))
+            }
+
+        override fun addNewVoteOption(
+            studyGroupId: Long,
+            voteId: Long,
+            voteItem: String,
+        ): Flow<StudyGroupVoteDetailResponse> =
+            apiFlow {
+                api.addNewVoteOption(studyId = studyGroupId, voteId = voteId, voteItem = VoteItemRequest(voteItem))
             }
     }
