@@ -10,8 +10,6 @@ class UserSearchContract {
         data class OnTypingSearch(
             val keyword: String,
         ) : Event()
-
-        data object OnClickSearch : Event()
     }
 
     data class State(

@@ -40,10 +40,6 @@ class UserSearchViewModel
                 is UserSearchContract.Event.OnTypingSearch -> {
                     handleOnTypingSearch(event.keyword)
                 }
-
-                is UserSearchContract.Event.OnClickSearch -> {
-                    handleOnClickSearch()
-                }
             }
         }
 
@@ -51,8 +47,5 @@ class UserSearchViewModel
             setState {
                 copy(searchKeyword = searchWord)
             }
-        }
-
-        private fun handleOnClickSearch() {
         }
     }

@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.group.user.search.component
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -68,6 +69,12 @@ fun UserSearchTextField(
                 focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
                 unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
                 disabledIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                cursorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                selectionColors =
+                    TextSelectionColors(
+                        handleColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                    ),
             ),
     )
 }
