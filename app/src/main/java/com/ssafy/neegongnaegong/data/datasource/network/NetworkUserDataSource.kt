@@ -13,4 +13,6 @@ interface NetworkUserDataSource {
     suspend fun getUser(id: Long): Flow<UserDetailResponse>
     suspend fun updateFcmToken(request: UpdateFcmTokenRequest): Flow<Unit>
     fun searchUsers(time: String?, cursorId: Long?, size: Int, userName: String): Flow<UserPage>
+    fun logout(): Flow<Unit>
+    fun withdraw(): Flow<Unit>
 }

@@ -42,4 +42,12 @@ class NetworkUserDataSourceImpl @Inject constructor(
             userName = userName
         )
     }
+
+    override fun logout(): Flow<Unit> = apiFlow {
+        userApi.logout()
+    }
+
+    override fun withdraw(): Flow<Unit> = apiFlow {
+        userApi.withdraw()
+    }
 }
