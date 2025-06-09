@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.group.user.search
 
-import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -18,8 +17,6 @@ class UserSearchContract {
     data class State(
         // api
         val isLoading: Boolean = false,
-        // user
-        val userList: List<User> = emptyList(),
         // search
         val searchKeyword: String = "",
     ) : UiState

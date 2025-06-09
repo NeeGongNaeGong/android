@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.neegongnaegong.presentation.group.user.search.component.SearchTopBar
 import com.ssafy.neegongnaegong.presentation.group.user.search.component.UserSearchTextField
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -28,6 +29,13 @@ fun UserSearchRoute(
     popBackStack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val userSearchList = viewModel.searchUserList.collectAsLazyPagingItems()
+
+    if(userSearchList.loadState.refresh is androidx.paging.LoadState.Loading){
+        if(userSearchList.loadState.append is androidx.paging.LoadState.Loading){
+
+        }
+    }
 
     BackHandler { popBackStack() }
 
