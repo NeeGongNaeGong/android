@@ -54,6 +54,7 @@ fun UserItem(user: UserUiModel) {
                 style =
                     NeeGongNaeGongTheme.typography.titleMedium.copy(
                         fontSize = 20.sp,
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     ),
             )
             Text(
@@ -61,6 +62,7 @@ fun UserItem(user: UserUiModel) {
                 style =
                     NeeGongNaeGongTheme.typography.bodySmall.copy(
                         fontSize = 16.sp,
+                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                     ),
             )
         }
