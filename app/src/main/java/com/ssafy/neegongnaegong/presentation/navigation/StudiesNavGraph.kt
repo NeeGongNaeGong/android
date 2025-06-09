@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
+import VotedPersonListRoute
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -7,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
 import com.ssafy.neegongnaegong.presentation.group.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
@@ -16,6 +18,7 @@ import com.ssafy.neegongnaegong.presentation.group.management.StudiesManagementR
 import com.ssafy.neegongnaegong.presentation.group.notice.NoticeRoute
 import com.ssafy.neegongnaegong.presentation.group.record.RecordRoute
 import com.ssafy.neegongnaegong.presentation.group.vote.VoteRoute
+import kotlinx.serialization.json.Json
 
 /**
  * startDestination은 여기 Graph에서 최초로 띄울 화면의 경로
@@ -61,13 +64,13 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             VoteRoute(
                 navigateToMain = { startTab, groupId ->
                     navController.navigate(
-                        AppNavigation.Screen.Studies.List.Main(
+                        AppNavigation.Screen.Studies.SubTab.Main(
                             startTab,
                             groupId,
                         ),
                     ) {
-                        popUpTo<AppNavigation.Screen.Studies.Main> {
-                            inclusive = false
+                        popUpTo<AppNavigation.Screen.Studies.SubTab.Main> {
+                            inclusive = true
                         }
                     }
                 },
@@ -78,8 +81,13 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         composable<AppNavigation.Screen.Studies.MakeNotice> {
             NoticeRoute(
                 popBackStackInclusive = { startTab, groupId ->
-                    navController.navigate(AppNavigation.Screen.Studies.List.Main(startTab, groupId)) {
-                        popUpTo<AppNavigation.Screen.Studies.Main> {
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.SubTab.Main(
+                            startTab,
+                            groupId,
+                        ),
+                    ) {
+                        popUpTo<AppNavigation.Screen.Studies.SubTab.Main> {
                             inclusive = true
                         }
                     }
@@ -97,25 +105,25 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             )
         }
 
-        composable<AppNavigation.Screen.Studies.List.Main> { backStackEntry ->
-            val (startTabIndex, groupId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.List.Main>()
+        composable<AppNavigation.Screen.Studies.SubTab.Main> { backStackEntry ->
+            val (startTabIndex, groupId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.SubTab.Main>()
             ListRoute(
                 popBackStack = navController::popBackStack,
                 startTabIdx = startTabIndex,
                 navigateToNoticeDetail = {
                     navController.navigate(
-                        AppNavigation.Screen.Studies.List.Screen.NoticeDetail(groupId, it),
+                        AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(groupId, it),
                     ) {
-                        popUpTo<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
+                        popUpTo<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail> {
                             inclusive = false
                         }
                     }
                 },
                 navigateToVoteDetail = {
                     navController.navigate(
-                        AppNavigation.Screen.Studies.List.Screen.VoteDetail(groupId, it),
+                        AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(groupId, it),
                     ) {
-                        popUpTo<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
+                        popUpTo<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> {
                             inclusive = false
                         }
                     }
@@ -141,7 +149,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             )
         }
 
-        composable<AppNavigation.Screen.Studies.List.Screen.NoticeDetail> {
+        composable<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail> {
             NoticeDetailRoute(
                 backStackEntry = it,
                 viewModel = hiltViewModel(it),
@@ -150,10 +158,37 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             }
         }
 
-        composable<AppNavigation.Screen.Studies.List.Screen.VoteDetail> {
+        composable<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> {
             VoteDetailRoute(
                 backStackEntry = it,
                 viewModel = hiltViewModel(it),
+                navigateToVotedPersonList = { title, votedPersonList ->
+                    val json = Json.encodeToString(votedPersonList)
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson(title, json),
+                    )
+                },
+            ) {
+                navController.popBackStack()
+            }
+        }
+
+        composable<AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson> { backStackEntry ->
+            val (title, votedPersonList) =
+                backStackEntry.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson>()
+                    .let {
+                        Pair(
+                            it.title,
+                            it.votedPersonList.let { jsonPersonList ->
+                                Json.decodeFromString<List<StudyGroupVoteStatusInfo.VotedMemberInfo>>(
+                                    jsonPersonList,
+                                )
+                            },
+                        )
+                    }
+            VotedPersonListRoute(
+                title,
+                votedPersonList,
             ) {
                 navController.popBackStack()
             }
