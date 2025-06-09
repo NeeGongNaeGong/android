@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +39,7 @@ fun NotificationScreen(
     isRefresh: Boolean,
     listState: LazyListState,
     notificationList: LazyPagingItems<NotificationUiModel>,
+    onNavigateUp: () -> Unit,
     onRefresh: () -> Unit,
     onDeleteAll: () -> Unit,
     onDeleteNotification: (NotificationUiModel) -> Unit,
@@ -51,11 +56,20 @@ fun NotificationScreen(
                 .fillMaxSize()
                 .padding(top = 20.dp)
         ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 16.dp)
+                        .size(22.dp)
+                        .clickable(onClick = onNavigateUp),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                    contentDescription = null
+                )
+
                 Text(
+                    modifier = Modifier.align(Alignment.Center),
                     text = stringResource(id = R.string.notification),
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText
@@ -118,6 +132,7 @@ fun NotificationPreviewScreen() {
         isRefresh = false,
         listState = rememberLazyListState(),
         notificationList = fakeFlow,
+        onNavigateUp = {},
         onRefresh = {},
         onDeleteAll = {},
         onDeleteNotification = {},
