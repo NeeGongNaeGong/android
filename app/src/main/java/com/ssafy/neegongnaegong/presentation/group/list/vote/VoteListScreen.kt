@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.vote
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +17,7 @@ import com.ssafy.neegongnaegong.presentation.group.list.component.ErrorItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.From
 import com.ssafy.neegongnaegong.presentation.group.list.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoDataItem
-import com.ssafy.neegongnaegong.presentation.group.list.component.VoteCard
+import com.ssafy.neegongnaegong.presentation.group.list.vote.component.VoteCard
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
@@ -24,13 +25,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.LocalDateTime
 
 @Composable
-fun VoteListRoute(lazyItems: Flow<PagingData<VoteHistoryInfo>>) {
+fun VoteListRoute(
+    lazyItems: Flow<PagingData<VoteHistoryInfo>>,
+    onClickVoteItem: (Long) -> Unit,
+) {
     val pagingItem = lazyItems.collectAsLazyPagingItems()
-    VoteListScreen(lazyItems = pagingItem)
+    VoteListScreen(lazyItems = pagingItem, onClickVoteItem)
 }
 
 @Composable
-fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
+fun VoteListScreen(
+    lazyItems: LazyPagingItems<VoteHistoryInfo>,
+    onClick: (Long) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -39,12 +46,13 @@ fun VoteListScreen(lazyItems: LazyPagingItems<VoteHistoryInfo>) {
         items(lazyItems.itemCount) { idx ->
             lazyItems[idx]?.let { item ->
                 VoteCard(
+                    modifier = Modifier.fillMaxWidth(),
                     id = item.id,
                     title = item.title,
                     participationMember = item.participationMember,
                     voted = item.voted,
                     endTime = item.endTime,
-                    onClick = {},
+                    onClick = onClick,
                 )
             }
         }
@@ -94,6 +102,6 @@ fun PreviewVoteListScreen() {
     val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
 
     NeeGongNaeGongTheme {
-        VoteListScreen(lazyItems = lazyItems)
+        VoteListScreen(lazyItems = lazyItems, {})
     }
 }

@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.notice
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +18,7 @@ import com.ssafy.neegongnaegong.presentation.group.list.component.ErrorItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.From
 import com.ssafy.neegongnaegong.presentation.group.list.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.NoDataItem
-import com.ssafy.neegongnaegong.presentation.group.list.component.NoticeCard
+import com.ssafy.neegongnaegong.presentation.group.list.notice.component.NoticeCard
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +47,7 @@ fun NoticeListScreen(
         items(lazyItems.itemCount) { idx ->
             lazyItems[idx]?.let { item ->
                 NoticeCard(
+                    modifier = Modifier.fillMaxWidth(),
                     id = item.id,
                     createdAt = item.createdAt,
                     title = item.title,
