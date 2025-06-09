@@ -25,4 +25,10 @@ interface StudyGroupRepository {
     ): Flow<StudyGroupNoticeDetailInfo>
 
     fun getVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailInfo>
+
+    fun castVote(
+        studyGroupId: Long,
+        voteId: Long,
+        voteItems: List<String>,
+    ): Flow<StudyGroupVoteDetailInfo>
 }

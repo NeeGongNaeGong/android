@@ -71,4 +71,10 @@ class StudyGroupRepositoryImpl
 
         override fun getVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailInfo> =
             dataSource.getStudyGroupVoteDetail(voteId).map { it.toDomain() }
+
+        override fun castVote(
+            studyGroupId: Long,
+            voteId: Long,
+            voteItems: List<String>,
+        ): Flow<StudyGroupVoteDetailInfo> = dataSource.castVote(studyGroupId, voteId, voteItems).map { it.toDomain() }
     }
