@@ -28,4 +28,10 @@ interface NetworkStudyGroupDataSource {
     ): Flow<StudyGroupNoticeDetailResponse>
 
     fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse>
+
+    fun castVote(
+        studyGroupId: Long,
+        voteId: Long,
+        voteItems: List<String>,
+    ): Flow<StudyGroupVoteDetailResponse>
 }
