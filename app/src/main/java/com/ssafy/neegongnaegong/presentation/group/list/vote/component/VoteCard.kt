@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group.list.component
+package com.ssafy.neegongnaegong.presentation.group.list.vote.component
 
 import android.icu.text.DecimalFormatSymbols
 import androidx.compose.foundation.clickable
@@ -16,18 +16,17 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun VoteCard(
+    modifier: Modifier = Modifier,
     id: Long,
     title: String,
     participationMember: Int,
     voted: Boolean,
     endTime: LocalDateTime?,
-    onClick: () -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     Row(
         modifier =
-            Modifier.clickable {
-                id
-            },
+            modifier.clickable { onClick(id) },
         horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2),
     ) {
         Text(
@@ -35,7 +34,7 @@ fun VoteCard(
             color = NeeGongNaeGongTheme.colorScheme.primaryText,
             style = NeeGongNaeGongTheme.typography.titleLarge,
         )
-        Column(modifier = Modifier.clickable { onClick() }) {
+        Column {
             Text(
                 text = title,
                 maxLines = 1,
@@ -74,5 +73,5 @@ fun VoteCard(
 @Composable
 @NeeGongNaeGongPreviews
 fun PreviewVoteCard() {
-    VoteCard(0, "테스트 투표입니다", 1, false, LocalDateTime.now()) {}
+    VoteCard(id  = 0, title = "테스트 투표입니다", participationMember = 1, voted = false, endTime = LocalDateTime.now()) {}
 }

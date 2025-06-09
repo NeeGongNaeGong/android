@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group.list.component
+package com.ssafy.neegongnaegong.presentation.group.list.notice.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import java.util.Locale
 
 @Composable
 fun NoticeCard(
+    modifier: Modifier = Modifier,
     id: Long,
     title: String,
     createdAt: LocalDateTime,
@@ -51,5 +52,5 @@ fun NoticeCard(
 @Composable
 @NeeGongNaeGongPreviews
 fun PreviewNoticeCard() {
-    NoticeCard(0, "테스트 투표입니다", LocalDateTime.now(), Writer(0, "누구누구", "", "")) {}
+    NoticeCard(id = 0, title = "테스트 투표입니다", createdAt = LocalDateTime.now(), writer = Writer(0, "누구누구", "", "")) {}
 }
