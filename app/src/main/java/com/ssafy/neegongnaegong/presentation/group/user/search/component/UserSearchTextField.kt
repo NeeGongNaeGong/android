@@ -1,10 +1,12 @@
 package com.ssafy.neegongnaegong.presentation.group.user.search.component
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -66,9 +68,9 @@ fun UserSearchTextField(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
-                focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
-                unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray4,
-                disabledIndicatorColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
                 cursorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
                 selectionColors =
                     TextSelectionColors(
@@ -76,6 +78,15 @@ fun UserSearchTextField(
                         backgroundColor = NeeGongNaeGongTheme.colorScheme.gray3,
                     ),
             ),
+    )
+
+    HorizontalDivider(
+        modifier =
+            Modifier
+                .padding(bottom = 2.dp, start = 12.dp, end = 12.dp)
+                .fillMaxWidth(),
+        thickness = 1.dp,
+        color = NeeGongNaeGongTheme.colorScheme.gray4,
     )
 }
 

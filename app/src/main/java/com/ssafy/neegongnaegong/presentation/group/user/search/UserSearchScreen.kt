@@ -85,16 +85,16 @@ fun UserSearchScreen(
     Column(
         modifier =
             modifier
-                .fillMaxSize()
-                .padding(horizontal = 12.dp),
+                .fillMaxSize(),
+//                .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(12.dp))
 
-        SearchTopBar { popBackStack() }
+        SearchTopBar{ popBackStack() }
 
         UserSearchTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
             content = query,
             onContentChanged = onTypeSearch,
         )

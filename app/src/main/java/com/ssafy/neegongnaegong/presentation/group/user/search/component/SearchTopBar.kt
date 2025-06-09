@@ -23,7 +23,7 @@ fun SearchTopBar(popBackStack: () -> Unit) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(top = 12.dp, bottom = 12.dp, start = 12.dp),
     ) {
         Box(
             modifier =

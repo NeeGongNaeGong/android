@@ -19,7 +19,7 @@ class UserSearchViewModel
     constructor(
         private val searchUserUseCase: SearchUserUseCase,
     ) : BaseViewModel<UserSearchContract.Event, UserSearchContract.State, UserSearchContract.Effect>() {
-        @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+        @OptIn(FlowPreview::class)
         val searchUserList by lazy {
             uiState
                 .map { it.searchKeyword }
