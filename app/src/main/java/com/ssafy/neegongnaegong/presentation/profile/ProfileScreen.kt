@@ -37,7 +37,6 @@ fun ProfileScreen(
     onClickEditCancel: () -> Unit,
     onImageSelected: (Uri) -> Unit,
     onClickNotification: () -> Unit,
-    onClickNotice: () -> Unit,
     onClickPrivacyInfo: () -> Unit,
     onClickLogout: () -> Unit,
     onClickDeleteAccount: () -> Unit
@@ -80,11 +79,6 @@ fun ProfileScreen(
         )
 
         ProfileContent(
-            title = stringResource(id = R.string.notice),
-            onClick = onClickNotice
-        )
-
-        ProfileContent(
             title = stringResource(id = R.string.privacy_policy),
             onClick = onClickPrivacyInfo
         )
@@ -123,7 +117,6 @@ fun ProfileScreenPreview() {
         onClickEditCancel = {},
         onImageSelected = {},
         onClickNotification = {},
-        onClickNotice = {},
         onClickPrivacyInfo = {},
         onClickLogout = {},
         onClickDeleteAccount = {},

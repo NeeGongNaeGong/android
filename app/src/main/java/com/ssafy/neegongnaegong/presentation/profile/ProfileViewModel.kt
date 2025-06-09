@@ -52,7 +52,6 @@ class ProfileViewModel @Inject constructor(
 
     override fun handleEvent(event: ProfileContract.Event) = when (event) {
         ProfileContract.Event.ClickNotification -> handleNotification()
-        ProfileContract.Event.ClickNotice -> handleNotice()
         ProfileContract.Event.ClickPrivacyInfo -> handlePrivacyInfo()
         ProfileContract.Event.ClickLogout -> handleLogout()
         ProfileContract.Event.ClickDeleteAccount -> handleDeleteAccount()
@@ -64,11 +63,6 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleNotification() {
         val sideEffect = ProfileContract.Effect.NavigateToNotification
-        setEffect { sideEffect }
-    }
-
-    private fun handleNotice() {
-        val sideEffect = ProfileContract.Effect.NavigateToNotice
         setEffect { sideEffect }
     }
 

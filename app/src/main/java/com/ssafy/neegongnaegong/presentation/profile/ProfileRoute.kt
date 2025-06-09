@@ -16,7 +16,6 @@ import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
 private const val PRIVACY_INFO_URL = "https://www.notion.so/2082fdb33c0980419574e74d7ee3dcaf"
-private const val NOTICE_URL = "https://www.naver.com"
 
 @Composable
 fun ProfileRoute(
@@ -46,12 +45,6 @@ fun ProfileRoute(
 
             ProfileContract.Effect.NavigateToNotification -> {
                 navigateToNotification()
-            }
-
-            ProfileContract.Effect.NavigateToNotice -> {
-                Builder()
-                    .build()
-                    .launchUrl(context, NOTICE_URL.toUri())
             }
 
             ProfileContract.Effect.NavigateToPrivacyInfo -> {
@@ -90,10 +83,6 @@ fun ProfileRoute(
         },
         onClickNotification = {
             val event = ProfileContract.Event.ClickNotification
-            viewModel.setEvent(event = event)
-        },
-        onClickNotice = {
-            val event = ProfileContract.Event.ClickNotice
             viewModel.setEvent(event = event)
         },
         onClickPrivacyInfo = {
