@@ -29,9 +29,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val getMyProfileUseCase: GetMyProfileUseCase,
-    val updateNicknameUseCase: UpdateNicknameUseCase,
-    val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase
+    private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val withdrawUseCase: WithdrawUseCase,
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
