@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
+import com.ssafy.neegongnaegong.domain.usecase.user.CheckShowProfileImageWarningUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
@@ -26,28 +27,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val getMyProfileUseCase: GetMyProfileUseCase,
-    val updateNicknameUseCase: UpdateNicknameUseCase,
-    val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase
+    private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase,
+    private val checkShowProfileImageWarningUseCase: CheckShowProfileImageWarningUseCase
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiModel: StateFlow<ProfileUiModel> by lazy {
+        combine(
+            myInfo,
+            hasUnReadNotification,
+            showProfileImageWarning
+        ) { user: User, hasUnReadNotification: Boolean, showProfileImageWarning: Boolean ->
+            user.toUiModel(
+                hasUnReadNotification = hasUnReadNotification,
+                shouldShowProfileImageWarningInfo = showProfileImageWarning
+            )
+        }.onEach {
+            endLoad()
+        }.toViewModelState(ProfileUiModel.default())
+    }
+
+    private val myInfo: Flow<User> by lazy {
         uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
             uiState.isInitial
         }.filter { uiState: ProfileContract.State ->
             uiState.isInitial
         }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
             getMyProfileUseCase()
-        }.combine(hasUnReadNotification) { user: User, hasUnReadNotification: Boolean ->
-            // TODO("결합 예정")
-            user.toUiModel(
-                hasUnReadNotification = hasUnReadNotification,
-                shouldShowProfileImageWarningInfo = true
-            )
-        }.onEach {
-            endLoad()
-        }.toViewModelState(ProfileUiModel.default())
+        }
     }
 
     private val hasUnReadNotification: Flow<Boolean> by lazy {
@@ -57,6 +66,16 @@ class ProfileViewModel @Inject constructor(
             uiState.isInitial
         }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
             checkUnReadNotificationUseCase()
+        }
+    }
+
+    private val showProfileImageWarning: Flow<Boolean> by lazy {
+        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.filter { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
+            checkShowProfileImageWarningUseCase()
         }
     }
 
