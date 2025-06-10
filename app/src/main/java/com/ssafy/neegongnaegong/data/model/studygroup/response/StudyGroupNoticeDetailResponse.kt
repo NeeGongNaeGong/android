@@ -8,6 +8,6 @@ data class StudyGroupNoticeDetailResponse(
     val content: String,
     val createdAt: LocalDateTime,
     val modifiedAt: LocalDateTime,
-    val userProfileImage: String?,
+    val userProfileImage: String,
     val writer: Writer,
 )
