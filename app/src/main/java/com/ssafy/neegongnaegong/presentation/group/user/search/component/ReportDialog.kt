@@ -136,7 +136,13 @@ fun ReportDialog(
                     ) {
                         reportReasons.forEach { reason ->
                             DropdownMenuItem(
-                                text = { Text(reason) },
+                                text = {
+                                    Text(
+                                        text = reason,
+                                        style = NeeGongNaeGongTheme.typography.labelMedium,
+                                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    )
+                                },
                                 onClick = {
                                     selectedReason = reason
                                     expanded = false
