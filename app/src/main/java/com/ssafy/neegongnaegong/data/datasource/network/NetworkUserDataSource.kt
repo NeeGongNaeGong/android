@@ -20,4 +20,8 @@ interface NetworkUserDataSource {
     fun searchUsers(time: String?, cursorId: Long?, size: Int, userName: String): Flow<UserPage>
 
     fun findUnReadNotification(): Flow<UnReadNotificationResponse>
+
+    fun logout(): Flow<Unit>
+
+    fun withdraw(): Flow<Unit>
 }

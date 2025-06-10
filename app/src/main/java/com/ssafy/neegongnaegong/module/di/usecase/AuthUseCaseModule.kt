@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.module.di.usecase
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
 import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import com.ssafy.neegongnaegong.domain.usecase.auth.LoginUseCase
-import com.ssafy.neegongnaegong.domain.usecase.auth.LogoutUseCase
 import com.ssafy.neegongnaegong.domain.usecase.auth.RegisterUseCase
 import com.ssafy.neegongnaegong.domain.usecase.auth.ReissueUseCase
 import dagger.Module
@@ -18,10 +17,6 @@ object AuthUseCaseModule {
     @Provides
     @Singleton
     fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase = LoginUseCase(authRepository)
-
-    @Provides
-    @Singleton
-    fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase = LogoutUseCase(authRepository)
 
     @Provides
     @Singleton

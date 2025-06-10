@@ -31,6 +31,11 @@ interface NotificationContract {
     }
 
     sealed class Error : ErrorContext {
-        data object ShowErrorMessage : Error()
+        data object CantAccessNotificationError : Error()
+        data object CantDeleteAllNotificationError : Error()
+        data object CantDeleteNotificationError : Error()
+        data object CantMoveNotificationError : Error()
+        data object CantAcceptGroupJoinError : Error()
+        data object CantRejectGroupJoinError : Error()
     }
 }

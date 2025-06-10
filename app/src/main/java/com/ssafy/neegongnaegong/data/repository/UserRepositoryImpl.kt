@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkUserDataSource
+import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.mapper.user.UserMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
@@ -16,12 +17,14 @@ import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -30,6 +33,7 @@ class UserRepositoryImpl @Inject constructor(
     private val localFcmDataSource: LocalFcmDataSource,
     private val networkUserDataSource: NetworkUserDataSource,
     private val pagingSourceFactory: UserPagingSource.Factory,
+    private val tokenManager: TokenManager,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
 
@@ -48,7 +52,7 @@ class UserRepositoryImpl @Inject constructor(
         networkUserDataSource.updateUser(request = userRequest).firstOrNull()
 
         val updatedUser = user.copy(nickname = nickname)
-        localUserDataSource.saveUser(user = updatedUser).firstOrNull()
+        localUserDataSource.saveUser(user = updatedUser)
     }
 
     override suspend fun getUser(id: Long): Flow<User> = withContext(ioDispatcher) {
@@ -85,6 +89,18 @@ class UserRepositoryImpl @Inject constructor(
         .findUnReadNotification()
         .map { response: UnReadNotificationResponse -> response.hasUnread }
         .flowOn(context = ioDispatcher)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun logout(): Flow<Unit> = networkUserDataSource.logout().onEach {
+        tokenManager.clearToken()
+        localUserDataSource.clearUser()
+    }.flowOn(context = ioDispatcher)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun withdraw(): Flow<Unit> = networkUserDataSource.withdraw().onEach {
+        tokenManager.clearToken()
+        localUserDataSource.clearUser()
+    }.flowOn(context = ioDispatcher)
 
     companion object {
         private const val USER_PAGING_SIZE = 30
