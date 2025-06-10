@@ -5,7 +5,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkStudiesDataSource {
-    suspend fun createVote(
+    fun createVote(
         studyGroupId: Long,
         requestBody: CreateVoteRequest,
     ): Flow<Unit>

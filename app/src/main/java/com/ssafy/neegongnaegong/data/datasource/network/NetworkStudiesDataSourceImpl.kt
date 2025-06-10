@@ -14,7 +14,7 @@ class NetworkStudiesDataSourceImpl
     constructor(
         private val studiesApi: StudiesApi,
     ) : NetworkStudiesDataSource {
-        override suspend fun createVote(
+        override fun createVote(
             studyGroupId: Long,
             requestBody: CreateVoteRequest,
         ): Flow<Unit> = apiFlow { studiesApi.createVote(studyGroupId, requestBody) }
