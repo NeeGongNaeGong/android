@@ -107,7 +107,6 @@ fun UserSearchScreen(
         modifier =
             modifier
                 .fillMaxSize(),
-//                .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(12.dp))
