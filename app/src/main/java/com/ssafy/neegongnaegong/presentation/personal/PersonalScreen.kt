@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.personal
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +39,7 @@ import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDat
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -158,7 +161,8 @@ fun PersonalContent(
         navigateToEditScreen = navigateToEditScreen,
         // paging
         onLoadMore = onLoadMore,
-        hasNext = uiState.hasNext,
+        hasTagDataNext = uiState.hasTagDataNext,
+        hasDateDataNext = uiState.hasDateDataNext,
     )
 
     if (uiState.isLoading) {
@@ -182,7 +186,8 @@ fun PersonalScreen(
     navigateToEditScreen: (Long) -> Unit,
     // Paging3
     onLoadMore: () -> Unit,
-    hasNext: Boolean,
+    hasTagDataNext: Boolean,
+    hasDateDataNext: Boolean,
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -193,11 +198,19 @@ fun PersonalScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 8.dp, vertical = 16.dp),
     ) {
         TabRow(
+            modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
             selectedTabIndex = pagerState.currentPage,
             containerColor = NeeGongNaeGongTheme.colorScheme.background,
+            indicator = { tabPositions ->
+                SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    height = 3.dp,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            },
         ) {
             tabTitles.forEachIndexed { index, title ->
                 val isSelected = pagerState.currentPage == index
@@ -214,7 +227,7 @@ fun PersonalScreen(
                             style =
                                 MaterialTheme.typography.labelLarge.copy(
                                     fontSize = 18.sp,
-                                    color = if (isSelected) Color.Black else Color.Gray,
+                                    color = if (isSelected) NeeGongNaeGongTheme.colorScheme.primaryText else Color.Gray,
                                 ),
                         )
                     },
@@ -244,25 +257,27 @@ fun PersonalScreen(
             when (page) {
                 0 -> {
                     PersonalByTagScreen(
+                        modifier = modifier.padding(horizontal = 8.dp),
                         tags = tags,
                         learningRecords = selectedRecordsByTag,
                         onTagPlusClicked = onTagPlusClicked,
                         onTagEraseClicked = onTagEraseClicked,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
-                        hasNext = hasNext,
+                        hasTagDataNext = hasTagDataNext,
                     )
                 }
 
                 1 -> {
                     PersonalByDateScreen(
+                        modifier = modifier.padding(horizontal = 8.dp),
                         datePickerState = datePickerState,
                         onDateSelected = onDateSelected,
                         selectedRecordsByDate = selectedRecordsByDate,
                         selectedDate = selectedDate,
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
-                        hasNext = hasNext,
+                        hasDateDataNext = hasDateDataNext,
                     )
                 }
             }
@@ -270,21 +285,24 @@ fun PersonalScreen(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PersonalScreenPreview() {
-    PersonalScreen(
-        tags = PersonalPreviewDataProvider().getTags(),
-        onTagScreenSelected = {},
-        onDateScreenSelected = {},
-        onTagPlusClicked = {},
-        onTagEraseClicked = {},
-        onDateSelected = {},
-        selectedRecordsByDate = PersonalPreviewDataProvider().getStudyRecords(),
-        navigateToEditScreen = {},
-        selectedDate = "2024-01-01",
-        selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords(),
-        onLoadMore = {},
-        hasNext = false,
-    )
+    NeeGongNaeGongTheme {
+        PersonalScreen(
+            tags = PersonalPreviewDataProvider().getTags(),
+            onTagScreenSelected = {},
+            onDateScreenSelected = {},
+            onTagPlusClicked = {},
+            onTagEraseClicked = {},
+            onDateSelected = {},
+            selectedRecordsByDate = PersonalPreviewDataProvider().getStudyRecords(),
+            navigateToEditScreen = {},
+            selectedDate = "2024-01-01",
+            selectedRecordsByTag = PersonalPreviewDataProvider().getStudyRecords(),
+            onLoadMore = {},
+            hasTagDataNext = false,
+            hasDateDataNext = false,
+        )
+    }
 }

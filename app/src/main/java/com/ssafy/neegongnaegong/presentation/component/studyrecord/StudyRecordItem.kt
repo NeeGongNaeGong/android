@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.component.studyrecord
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.toHourMinuteString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
@@ -37,19 +38,20 @@ fun StudyRecordItem(
     onClick: (Long) -> Unit = {},
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(4.dp, RoundedCornerShape(8.dp))
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .clickable(onClick = { onClick(record.id) })
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .shadow(4.dp, RoundedCornerShape(8.dp))
+                .background(NeeGongNaeGongTheme.colorScheme.recordBackground, RoundedCornerShape(8.dp))
+                .clickable(onClick = { onClick(record.id) })
+                .padding(16.dp),
     ) {
         Column {
             // 제목 + 시간
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -57,6 +59,7 @@ fun StudyRecordItem(
                     style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 20.sp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -66,13 +69,13 @@ fun StudyRecordItem(
 
                 Text(
                     text = "$start ~ $end",
-                    style =  NeeGongNaeGongTheme.typography.bodySmall.copy(
-                        fontSize = 10.sp,
-                        color = Color.Gray
-                    )
+                    style =
+                        NeeGongNaeGongTheme.typography.bodySmall.copy(
+                            fontSize = 10.sp,
+                            color = Color.Gray,
+                        ),
                 )
             }
-
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -81,9 +84,9 @@ fun StudyRecordItem(
                 text = record.content.ifBlank { "내용을 설정해주세요" },
                 style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp),
                 maxLines = 4,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = NeeGongNaeGongTheme.colorScheme.secondaryText,
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -93,7 +96,7 @@ fun StudyRecordItem(
                     Text(
                         text = "#${tag.koName}",
                         fontSize = 12.sp,
-                        color = Color.Black,
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                 }
             }
@@ -101,9 +104,10 @@ fun StudyRecordItem(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun StudyRecordItemPreview() {
-    StudyRecordItem(record = PersonalPreviewDataProvider().getStudyRecord())
+    NeeGongNaeGongTheme {
+        StudyRecordItem(record = PersonalPreviewDataProvider().getStudyRecord())
+    }
 }
-

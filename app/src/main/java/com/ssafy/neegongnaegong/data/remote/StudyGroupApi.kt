@@ -13,6 +13,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
@@ -76,4 +78,19 @@ interface StudyGroupApi {
         @Path("voteId") voteId: Long,
         @Body voteItem: VoteItemRequest,
     ): Result<ApiResponse<StudyGroupVoteDetailResponse>>
+  
+    @PATCH("$PREFIX/{study-group-id}/applications/{user-id}/approve")
+    suspend fun approveStudyGroupJoin(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("notification-id") notificationId: Long?
+    ): Result<ApiResponse<Unit>>
+
+
+    @PATCH("$PREFIX/{study-group-id}/applications/{user-id}/reject")
+    suspend fun rejectStudyGroupJoin(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("user-id") userId: Long,
+        @Query("notification-id") notificationId: Long?
+    ): Result<ApiResponse<Unit>>
 }

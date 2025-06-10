@@ -1,9 +1,12 @@
 package com.ssafy.neegongnaegong.data.remote.authenticator
 
+import com.google.gson.Gson
 import com.ssafy.neegongnaegong.data.local.TokenManager
 import com.ssafy.neegongnaegong.data.local.TokenType
+import com.ssafy.neegongnaegong.data.model.ErrorResponse
 import com.ssafy.neegongnaegong.data.model.auth.request.RefreshRequest
 import com.ssafy.neegongnaegong.data.remote.AuthApi
+import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -17,9 +20,13 @@ class ReissueAuthenticator @Inject constructor(
     private val authApi: AuthApi
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request {
-        // TODO: token 401인지 확인하기
+        val data = Gson().fromJson(response.body?.string(), ErrorResponse::class.java)
+
+        if (data.errorCode.split("-").first() != "AUTH") throw ApiException.ClientException(data.message)
+
         synchronized(this) {
-            val newAccessToken = runBlocking { fetchNewAccessToken() } ?: throw AuthException.InvalidTokenException()
+            val newAccessToken = runBlocking { fetchNewAccessToken() }
+                ?: throw AuthException.InvalidTokenException()
 
             return response.request.newBuilder()
                 .header("Authorization", "Bearer $newAccessToken")

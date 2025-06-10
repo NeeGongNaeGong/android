@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
+import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -119,10 +120,16 @@ object AppNavigation {
             }
 
             @Serializable
-            data class Detail(val scheduleId: Long) : Calendar
+            data class Detail(val scheduleId: Long, val date: String) : Calendar {
+                constructor(scheduleId: Long, date: LocalDate) : this(scheduleId, DateTimeFormatter.ISO_LOCAL_DATE.format(date))
+                fun date() : LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+            }
 
             @Serializable
-            data class Edit(val scheduleId: Long) : Calendar
+            data class Edit(val scheduleId: Long, val date: String, val focus: ScheduleInputFormFocus) : Calendar {
+                constructor(scheduleId: Long, date: LocalDate, focus: ScheduleInputFormFocus) : this(scheduleId, DateTimeFormatter.ISO_LOCAL_DATE.format(date), focus)
+                fun date() : LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+            }
         }
 
         @Serializable
@@ -130,9 +137,10 @@ object AppNavigation {
             // 여기에 Profile 탭에 있는 각 화면들 경로 등록하면 됩니당
             // Study Tab의 Main 화면의 경로
             @Serializable
-            data class Main(
-                val userId: Int = -1,
-            ) : Profile
+            data object Main : Profile
+
+            @Serializable
+            data object Notification: Profile
         }
     }
 }

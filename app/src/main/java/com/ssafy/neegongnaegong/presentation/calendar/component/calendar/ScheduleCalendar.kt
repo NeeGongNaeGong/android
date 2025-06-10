@@ -1,11 +1,9 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component.calendar
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,20 +19,14 @@ import java.time.YearMonth
 @Composable
 fun ScheduleCalendar(
     modifier: Modifier = Modifier,
-    initialDate: LocalDate = LocalDate.now(),
-    initialMonth: YearMonth = YearMonth.now(),
-    minMonth: YearMonth = YearMonth.of(1900, 1),
-    maxMonth: YearMonth = YearMonth.of(2100, 12),
-    onMonthChanged: (YearMonth) -> Unit = {},
-    onDateSelected: (LocalDate) -> Unit = {},
+    state: CalendarState,
+    onMonthChanged: (YearMonth) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
     schedules: Map<LocalDate, List<Schedule>> = emptyMap()
 ) {
     Calendar(
         modifier = modifier,
-        initialDate = initialDate,
-        initialMonth = initialMonth,
-        minMonth = minMonth,
-        maxMonth = maxMonth,
+        state = state,
         onMonthChanged = onMonthChanged,
         onDateSelected = onDateSelected,
     ) { date ->
@@ -58,6 +50,7 @@ fun ScheduleCalendar(
 @Preview
 @Composable
 fun ScheduleCalendarPreview() {
+    val state = rememberCalendarState()
     val schedules = mutableMapOf<LocalDate, List<Schedule>>()
     schedules[LocalDate.now()] = listOf(
         Schedule(
@@ -68,7 +61,6 @@ fun ScheduleCalendarPreview() {
                 content = "Meeting",
                 startAt = LocalDateTime.now(),
                 endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
             )
         ),
         Schedule(
@@ -79,16 +71,16 @@ fun ScheduleCalendarPreview() {
                 content = "Lunch",
                 startAt = LocalDateTime.now(),
                 endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
             )
         ),
     )
 
     NeeGongNaeGongTheme {
         ScheduleCalendar(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+            modifier = Modifier.fillMaxSize(),
+            state = state,
+            onDateSelected = {},
+            onMonthChanged = {},
             schedules = schedules,
         )
     }

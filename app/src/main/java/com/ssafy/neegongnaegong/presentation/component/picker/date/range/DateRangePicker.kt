@@ -6,19 +6,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarHeader
+import com.ssafy.neegongnaegong.presentation.component.LaunchedEffectAfterFirst
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePickerBody
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
@@ -62,7 +62,7 @@ fun DateRangePicker(
      * pagerState.currentPage가 변경될 때마다
      * selectedMonth 업데이트
      */
-    LaunchedEffect(pagerState.currentPage) {
+    LaunchedEffectAfterFirst(pagerState.currentPage) {
         selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
     }
 
@@ -71,7 +71,7 @@ fun DateRangePicker(
      * 해당하는 달로 pagerState.currentPage 업데이트
      * onStartDateSelected 호출
      */
-    LaunchedEffect(state.startDate) {
+    LaunchedEffectAfterFirst(state.startDate) {
         if (selectedMonth != YearMonth.from(state.startDate)) {
             pagerState.animateScrollToPage(
                 ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
@@ -85,7 +85,7 @@ fun DateRangePicker(
      * 해당하는 달로 pagerState.currentPage 업데이트
      * onEndDateSelected 호출
      */
-    LaunchedEffect(state.endDate) {
+    LaunchedEffectAfterFirst(state.endDate) {
         if (selectedMonth != YearMonth.from(state.endDate)) {
             pagerState.animateScrollToPage(
                 ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
@@ -126,7 +126,7 @@ fun DateRangePicker(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateRangePickerPreview() {
     val state = rememberDateRangePickerState().apply {
@@ -134,7 +134,7 @@ private fun DateRangePickerPreview() {
         updateDate(now)
         updateDate(now.plusDays(1))
     }
-    Surface {
+    NeeGongNaeGongTheme {
         DateRangePicker(state = state)
     }
 }

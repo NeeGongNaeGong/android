@@ -12,16 +12,16 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class LocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+class LocalDateTimeAdapter :
+    JsonSerializer<LocalDateTime>,
+    JsonDeserializer<LocalDateTime> {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
 
     override fun serialize(
         src: LocalDateTime,
         typeOfSrc: Type,
         context: JsonSerializationContext,
-    ): JsonElement {
-        return JsonPrimitive(src.format(formatter))
-    }
+    ): JsonElement = JsonPrimitive(src.format(formatter))
 
     override fun deserialize(
         json: JsonElement,
@@ -30,6 +30,7 @@ class LocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<Loc
     ): LocalDateTime {
         val formatter =
             listOf(
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"), // 마이크로초
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"), // 마이크로초
@@ -41,5 +42,4 @@ class LocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<Loc
             }
         }
         throw JsonParseException("Unparseable date: ${json.asString}")
-    }
 }

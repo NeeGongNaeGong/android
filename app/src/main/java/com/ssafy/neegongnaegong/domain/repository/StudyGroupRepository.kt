@@ -37,4 +37,16 @@ interface StudyGroupRepository {
         voteId: Long,
         voteItem: String,
     ): Flow<StudyGroupVoteDetailInfo>
+
+    fun approveStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?
+    ): Flow<Unit>
+
+    fun rejectStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?
+    ): Flow<Unit>
 }

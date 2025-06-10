@@ -32,9 +32,10 @@ class CalendarRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getScheduleDetail(
-        id: Long
+        id: Long,
+        date: LocalDate
     ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.getPersonalSchedule(id).map { it.toDomain() }
+        dataSource.getPersonalSchedule(id, date).map { it.toDomain() }
     }
 
     override suspend fun createPersonalSchedule(

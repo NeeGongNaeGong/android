@@ -18,6 +18,7 @@ interface NetworkStudyGroupDataSource {
 
     suspend fun getMemberStudyContents(request: MemberStudyContentsInfo): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
 
+
     suspend fun getStudyGroupVoteList(request: StudyGroupVoteListInfo): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
 
     suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListInfo): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
@@ -40,4 +41,16 @@ interface NetworkStudyGroupDataSource {
         voteId: Long,
         voteItem: String,
     ): Flow<StudyGroupVoteDetailResponse>
+
+    fun approveStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?
+    ): Flow<Unit>
+
+    fun rejectStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?
+    ): Flow<Unit>
 }

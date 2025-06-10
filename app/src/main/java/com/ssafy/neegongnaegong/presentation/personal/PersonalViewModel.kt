@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordL
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -20,15 +21,9 @@ class PersonalViewModel
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
-//        init {
-////            println("확인 호출 init")
-//            // 이렇게 작성 하면 UnitTest 할때 단점이 있음
-//            loadLearningRecords()
-//        }
-
         override fun handleEvent(event: PersonalContract.Event) {
             when (event) {
-                // dropdown
+                // screen
                 is PersonalContract.Event.OnDateScreenSelected -> {
                     setState {
                         copy(
@@ -36,8 +31,6 @@ class PersonalViewModel
                             isDateScreen = true,
                         )
                     }
-//                    println("확인 호출 OnDateScreenSelected")
-//                    loadLearningRecords()
                 }
 
                 is PersonalContract.Event.OnTagScreenSelected -> {
@@ -47,13 +40,14 @@ class PersonalViewModel
                             isDateScreen = false,
                         )
                     }
-//                    println("확인 호출 OnTagScreenSelected")
-                    loadLearningRecords()
+                    if (uiState.value.selectedRecordsByTag.isEmpty()) {
+                        loadLearningRecords()
+                    }
                 }
+
                 // tag
                 is PersonalContract.Event.OnTagEraseClicked -> {
                     deleteTag(event.tag)
-                    // println("확인 호출 OnTagEraseClicked")
                     loadLearningRecords()
                 }
 
@@ -85,7 +79,6 @@ class PersonalViewModel
                     } else {
                         moveFromSelectedTagsToTags()
                         clearDialogTags()
-//                      println("확인 호출 OnDialogConfirmClicked")
                         loadLearningRecords()
                         setState { copy(isDialogShow = false) }
                     }
@@ -107,7 +100,6 @@ class PersonalViewModel
                 }
 
                 is PersonalContract.Event.OnRecordRefresh -> {
-//                    println("확인 호출 OnRecordRefresh")
                     loadLearningRecords()
                 }
             }
@@ -116,9 +108,7 @@ class PersonalViewModel
         // api
         private fun loadLearningRecords() {
             viewModelScope.launch {
-                setState { copy(isLoading = true) }
                 if (uiState.value.isTagScreen) {
-//                    println("확인 태그 보냄 ${uiState.value.tags}")
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
                     ).withLoading {
@@ -127,25 +117,24 @@ class PersonalViewModel
                         setState {
                             copy(
                                 selectedRecordsByTag = result.content.toDomain(),
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
-                                isLoading = false,
+                                hasTagDataNext = result.hasNext,
+                                tagCursorId = result.cursorId,
+                                tagCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
                 } else {
-//                    println("확인 날짜 보냄 ${uiState.value.selectedDate}")
                     getLearningRecordListUseCase(
                         targetDate = uiState.value.selectedDate,
-                    ).safeCollect { result ->
+                    ).withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
                         setState {
                             copy(
                                 selectedRecordsByDate = result.content.toDomain(),
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
-                                isLoading = false,
+                                hasDateDataNext = result.hasNext,
+                                dateCursorId = result.cursorId,
+                                dateCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
@@ -155,40 +144,46 @@ class PersonalViewModel
 
         private fun loadNextRecords() {
             val state = uiState.value
-            if (!state.hasNext || state.isLoading) return
+            if (state.isTagScreen && (!state.hasTagDataNext || state.isLoading)) return
+            if (state.isDateScreen && (!state.hasDateDataNext || state.isLoading)) return
 
             viewModelScope.launch {
                 if (uiState.value.isTagScreen) {
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
-                        cursorId = state.cursorId,
-                        cursorCreatedAt = state.cursorCreatedAt,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { result ->
+                        cursorId = state.tagCursorId,
+                        cursorCreatedAt = state.tagCursorCreatedAt,
+                    ).safeCollect { result ->
                         setState {
+                            val newRecords = result.content.toDomain()
+                            val updatedList =
+                                (selectedRecordsByTag + newRecords)
+                                    .distinctBy { it.id }
+
                             copy(
-                                selectedRecordsByTag = selectedRecordsByTag + result.content.toDomain(),
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
+                                selectedRecordsByTag = updatedList,
+                                hasTagDataNext = result.hasNext,
+                                tagCursorId = result.cursorId,
+                                tagCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
                 } else {
                     getLearningRecordListUseCase(
                         targetDate = uiState.value.selectedDate,
-                        cursorId = state.cursorId,
-                        cursorCreatedAt = state.cursorCreatedAt,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { result ->
+                        cursorId = state.dateCursorId,
+                        cursorCreatedAt = state.dateCursorCreatedAt,
+                    ).safeCollect { result ->
                         setState {
+                            val newRecords = result.content.toDomain()
+                            val updatedList =
+                                (selectedRecordsByDate + newRecords)
+                                    .distinctBy { it.id }
                             copy(
-                                selectedRecordsByDate = selectedRecordsByDate + result.content.toDomain(),
-                                hasNext = result.hasNext,
-                                cursorId = result.cursorId,
-                                cursorCreatedAt = result.cursorCreatedAt,
+                                selectedRecordsByDate = updatedList,
+                                hasDateDataNext = result.hasNext,
+                                dateCursorId = result.cursorId,
+                                dateCursorCreatedAt = result.cursorCreatedAt,
                             )
                         }
                     }
@@ -202,7 +197,6 @@ class PersonalViewModel
                 copy(selectedDate = date)
             }
 
-//            println("확인 호출 filteringRecordByDate 함수")
             loadLearningRecords()
         }
 

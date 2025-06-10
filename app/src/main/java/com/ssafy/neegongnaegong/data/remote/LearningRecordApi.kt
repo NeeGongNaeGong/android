@@ -15,20 +15,20 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LearningRecordApi {
-    @PUT("/api/records/{learningRecordId}")
+    @PUT("/api/records/{learning-record-id}")
     suspend fun updateLearningRecord(
-        @Path("learningRecordId") learningRecordId: Long,
+        @Path("learning-record-id") learningRecordId: Long,
         @Body request: UpdateLearningRecordRequest,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("api/records/{learningRecordId}")
+    @DELETE("api/records/{learning-record-id}")
     suspend fun deleteLearningRecord(
-        @Path("learningRecordId") learningRecordId: Long,
+        @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<DeleteLearningRecordResponse>>
 
-    @GET("/api/records/{learningRecordId}")
+    @GET("/api/records/{learning-record-id}")
     suspend fun getLearningRecord(
-        @Path("learningRecordId") learningRecordId: Long,
+        @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<GetLearningRecordResponse>>
 
     @POST("/api/records")
@@ -39,9 +39,9 @@ interface LearningRecordApi {
     @GET("/api/records/list")
     suspend fun getLearningRecordList(
         @Query("tag") tag: List<Long>?,
-        @Query("target_date") targetDate: String?,
-        @Query("cursor_created_at") cursorCreatedAt: String?,
-        @Query("cursor_id") cursorId: Long?,
+        @Query("target-date") targetDate: String?,
+        @Query("cursor-created-at") cursorCreatedAt: String?,
+        @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceResponse>>
 }

@@ -14,6 +14,7 @@ data class Color(
     val gray3: Color,
     val gray2: Color,
     val gray1: Color,
+    val recordBackground: Color,
     val background: Color,
     val chartLegend: Color,
     val yellow: Color,
@@ -31,6 +32,7 @@ val LightColorScheme =
         gray3 = Color(0xFFD9D9D9),
         gray2 = Color(0xFFF4F4F4),
         gray1 = Color(0xFFF9F9F9),
+        recordBackground = Color(0xFFFAFAFA),
         secondaryText = Color(0xFF949494),
         background = Color(0xFFFAFAFA),
         chartLegend = Color(0x612E2626),
@@ -52,5 +54,6 @@ val DarkColorScheme =
         secondaryText = Color(0xFFAAAAAA),
         background = Color(0xFF121212),
         chartLegend = Color(0x612E2626),
+        recordBackground = Color(0xFF222222),
         yellow = Color(0xFFF9F871),
     )
