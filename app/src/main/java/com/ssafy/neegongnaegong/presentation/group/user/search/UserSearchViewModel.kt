@@ -71,7 +71,6 @@ class UserSearchViewModel
 
                 is UserSearchContract.Event.OnReportDialogConfirm -> {
                     handleOnReportDialogConfirm(event.userReportData)
-                    println("확인 신고했어요 ${event.userReportData}")
                 }
 
                 is UserSearchContract.Event.OnBackClick -> {
