@@ -47,4 +47,12 @@ class NetworkUserDataSourceImpl @Inject constructor(
     override fun findUnReadNotification(): Flow<UnReadNotificationResponse> = apiFlow {
         userApi.findUnReadNotification()
     }
+
+    override fun logout(): Flow<Unit> = apiFlow {
+        userApi.logout()
+    }
+
+    override fun withdraw(): Flow<Unit> = apiFlow {
+        userApi.withdraw()
+    }
 }
