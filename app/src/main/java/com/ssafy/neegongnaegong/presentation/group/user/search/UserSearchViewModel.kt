@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import com.ssafy.neegongnaegong.domain.usecase.user.SearchUserUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModel
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModelMapper.toUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,6 +59,10 @@ class UserSearchViewModel
                 is UserSearchContract.Event.OnTypingSearch -> {
                     handleOnTypingSearch(event.keyword)
                 }
+
+                is UserSearchContract.Event.OnDeclareClick -> {
+                    handleOnDeclareClick(event.user)
+                }
             }
         }
 
@@ -65,5 +70,8 @@ class UserSearchViewModel
             setState {
                 copy(searchKeyword = searchWord)
             }
+        }
+
+        private fun handleOnDeclareClick(user: UserUiModel) {
         }
     }

@@ -80,6 +80,7 @@ fun UserSearchScreen(
     query: String,
     onTypeSearch: (String) -> Unit,
     userSearchList: LazyPagingItems<UserUiModel>,
+
     popBackStack: () -> Unit = {},
 ) {
     Column(

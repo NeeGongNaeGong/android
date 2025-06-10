@@ -4,11 +4,16 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModel
 
 class UserSearchContract {
     sealed class Event : UiEvent {
         data class OnTypingSearch(
             val keyword: String,
+        ) : Event()
+
+        data class OnDeclareClick(
+            val user: UserUiModel,
         ) : Event()
     }
 
