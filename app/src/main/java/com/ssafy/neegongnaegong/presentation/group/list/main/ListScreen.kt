@@ -39,7 +39,6 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.internal.toImmutableList
 
@@ -64,7 +63,7 @@ fun ListRoute(
         LoadingDialog()
     } else {
         LaunchedEffect(effect) {
-            effect.collectLatest {
+            effect.collect {
                 when (it) {
                     Effect.NavigateToBackStack -> popBackStack()
 
