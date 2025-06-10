@@ -74,19 +74,23 @@ class StudyGroupRepositoryImpl
         ): Flow<StudyGroupNoticeDetailInfo> = dataSource.getStudyGroupNoticeDetail(studyGroupId, noticeId).map { it.toDomain() }
 
         override fun getVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailInfo> =
-            dataSource.getStudyGroupVoteDetail(voteId).map { it.toDomain() }
+            dataSource.getStudyGroupVoteDetail(voteId).map { it.toDomain() }.flowOn(ioDispatcher)
 
         override fun castVote(
             studyGroupId: Long,
             voteId: Long,
             voteItems: List<String>,
-        ): Flow<StudyGroupVoteDetailInfo> = dataSource.castVote(studyGroupId, voteId, voteItems).map { it.toDomain() }
+        ): Flow<StudyGroupVoteDetailInfo> =
+            dataSource.castVote(studyGroupId, voteId, voteItems).map { it.toDomain() }
+                .flowOn(ioDispatcher)
 
         override fun addNewVoteOption(
             studyGroupId: Long,
             voteId: Long,
             voteItem: String,
-        ): Flow<StudyGroupVoteDetailInfo> = dataSource.addNewVoteOption(studyGroupId, voteId, voteItem).map { it.toDomain() }
+        ): Flow<StudyGroupVoteDetailInfo> =
+            dataSource.addNewVoteOption(studyGroupId, voteId, voteItem).map { it.toDomain() }
+                .flowOn(ioDispatcher)
 
         override fun approveStudyGroupJoin(
             studyGroupId: Long,

@@ -8,7 +8,6 @@ import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContr
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -42,7 +41,7 @@ class NoticeDetailViewModel
 
         init {
             if (groupId != null && noticeId != null) {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
                     getNoticeDetailUseCase(groupId, noticeId).safeCollect {
                         val outputFormatter = DateTimeFormatter.ofPattern("M월 d일 a h:mm")
                         val createdAt = it.createdAt.format(outputFormatter)

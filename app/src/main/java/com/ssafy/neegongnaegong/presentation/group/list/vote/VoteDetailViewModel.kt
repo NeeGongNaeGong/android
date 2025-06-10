@@ -14,7 +14,6 @@ import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -86,7 +85,7 @@ class VoteDetailViewModel
                 }
 
                 is Event.CastVote -> {
-                    viewModelScope.launch(Dispatchers.IO) {
+                    viewModelScope.launch {
                         if (uiState.value.selected != uiState.value.voteValues) {
                             if (groupId != null && voteId != null) {
                                 castVoteUseCase(
@@ -119,7 +118,7 @@ class VoteDetailViewModel
                 Event.OnCancelAddOption -> setState { copy(addOptionMode = false, newOption = "") }
 
                 Event.OnConfirmAddOption -> {
-                    viewModelScope.launch(Dispatchers.IO) {
+                    viewModelScope.launch {
                         if (groupId != null && voteId != null) {
                             addNewVoteOptionUseCase(groupId, voteId, uiState.value.newOption).safeCollect {
                                 setVoteState(it)
@@ -135,7 +134,7 @@ class VoteDetailViewModel
 
         init {
             if (groupId != null && voteId != null) {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
                     getVoteDetailUseCase(voteId).safeCollect {
                         setVoteState(it)
                     }

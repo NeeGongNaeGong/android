@@ -8,7 +8,6 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -51,7 +50,7 @@ class NoticeViewModel
                 NoticeContract.Event.OnClickCompleteButton -> {
                     val studyGroupId = savedStateHandle.get<Long>("studyGroupId")
                     if (studyGroupId != null) {
-                        viewModelScope.launch(Dispatchers.IO) {
+                        viewModelScope.launch {
                             createNoticeUseCase(
                                 studyGroupId,
                                 uiState.value.title,
