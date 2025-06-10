@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.user.search.component
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,16 +45,21 @@ fun UserItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             GlideImage(
-                imageModel = { user.profileImg },
                 modifier =
                     Modifier
                         .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.LightGray),
+                        .clip(CircleShape),
+                imageModel = { user.profileImg },
                 imageOptions =
                     ImageOptions(
                         contentScale = ContentScale.Crop,
                     ),
+                failure = {
+                    Image(
+                        painter = painterResource(id = R.drawable.img_default_profile),
+                        contentDescription = "Default Profile Image",
+                    )
+                },
             )
 
             Spacer(modifier = Modifier.width(12.dp))
