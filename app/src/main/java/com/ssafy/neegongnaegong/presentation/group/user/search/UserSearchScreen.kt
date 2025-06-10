@@ -44,11 +44,11 @@ fun UserSearchRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState,
-        onTypeSearch = { viewModel.setEvent(UserSearchContract.Event.OnTypingSearch(it)) },
+        onTypeSearch = { viewModel.setEvent(UserSearchContract.Event.OnTypingSearch(keyword = it)) },
         userSearchList = userSearchList,
-        onReportClick = { viewModel.setEvent(UserSearchContract.Event.OnReportClick(it)) },
+        onReportClick = { viewModel.setEvent(UserSearchContract.Event.OnReportClick(user = it)) },
         onDismissDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogDismiss) },
-        onConfirmDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogConfirm(it)) },
+        onConfirmDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogConfirm(userReportData = it)) },
         popBackStack = popBackStack,
     )
 }
