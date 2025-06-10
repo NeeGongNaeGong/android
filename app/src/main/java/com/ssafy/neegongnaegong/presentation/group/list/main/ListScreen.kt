@@ -40,7 +40,6 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import okhttp3.internal.toImmutableList
 
 @Composable
 fun ListRoute(
@@ -148,7 +147,7 @@ private fun ListTab(
             )
         },
     ) {
-        Index.entries.toImmutableList().forEach { item ->
+        Index.entries.forEach { item ->
             Tab(
                 modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
                 selectedContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
