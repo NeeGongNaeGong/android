@@ -32,7 +32,6 @@ import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Effect.NavigateToBackStack
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun NoticeDetailRoute(
@@ -43,7 +42,7 @@ fun NoticeDetailRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.effect) {
-        viewModel.effect.collectLatest {
+        viewModel.effect.collect {
             when (it) {
                 NavigateToBackStack -> {
                     popBackStack()
