@@ -48,7 +48,13 @@ fun UserSearchRoute(
         userSearchList = userSearchList,
         onReportClick = { viewModel.setEvent(UserSearchContract.Event.OnReportClick(user = it)) },
         onDismissDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogDismiss) },
-        onConfirmDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogConfirm(userReportData = it)) },
+        onConfirmDialog = {
+            viewModel.setEvent(
+                UserSearchContract.Event.OnReportDialogConfirm(
+                    userReportData = it,
+                ),
+            )
+        },
         popBackStack = popBackStack,
     )
 }
@@ -123,7 +129,10 @@ fun UserSearchScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
-            items(userSearchList.itemCount) { index ->
+            items(
+                count = userSearchList.itemCount,
+                key = { index: Int -> userSearchList[index]?.id ?: index },
+            ) { index ->
                 val user = userSearchList[index]
                 if (user != null) {
                     UserItem(
