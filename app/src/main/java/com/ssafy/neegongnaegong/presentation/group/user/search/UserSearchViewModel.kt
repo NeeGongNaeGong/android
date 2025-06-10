@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import com.ssafy.neegongnaegong.domain.usecase.user.SearchUserUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
+import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserReportData
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModel
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModelMapper.toUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
@@ -69,6 +70,7 @@ class UserSearchViewModel
                 }
 
                 is UserSearchContract.Event.OnReportDialogConfirm -> {
+                    handleOnReportDialogConfirm(event.userReportData)
                     println("확인 신고했어요 ${event.userReportData}")
                 }
             }
@@ -90,6 +92,12 @@ class UserSearchViewModel
         }
 
         private fun handleOnReportDialogDismiss() {
+            setState {
+                copy(isReportDialogOpen = false)
+            }
+        }
+
+        private fun handleOnReportDialogConfirm(userReportData: UserReportData) {
             setState {
                 copy(isReportDialogOpen = false)
             }
