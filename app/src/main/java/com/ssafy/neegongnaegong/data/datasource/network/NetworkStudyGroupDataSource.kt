@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
-import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
@@ -16,16 +15,16 @@ import kotlinx.coroutines.flow.Flow
 interface NetworkStudyGroupDataSource {
     fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagResponse>>
 
-    suspend fun getMemberStudyContents(request: MemberStudyContentsRequest): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
+    suspend fun getMemberStudyContents(request: MemberStudyContentsRequest): Flow<MemberWeeklyStudyContentBySliceResponse>
 
-    suspend fun getStudyGroupVoteList(request: StudyGroupVoteListRequest): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
-
-    suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListRequest): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
+    suspend fun getStudyGroupVoteList(request: StudyGroupVoteListRequest): Flow<StudyGroupVoteListBySliceResponse>
 
     fun getStudyGroupNoticeDetail(
         studyGroupId: Long,
         noticeId: Long,
     ): Flow<StudyGroupNoticeDetailResponse>
+
+    suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListRequest): Flow<StudyGroupNoticeListBySliceResponse>
 
     fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse>
 

@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteHis
 import com.ssafy.neegongnaegong.domain.model.studygroup.CursorSliceKey
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
+import kotlinx.coroutines.flow.first
 
 class StudyGroupVoteListPagingSource(
     private val dataSource: NetworkStudyGroupDataSource,
@@ -22,7 +23,7 @@ class StudyGroupVoteListPagingSource(
                     cursorTime = cursor?.cursorCreatedAt,
                     cursorId = cursor?.cursorId,
                 )
-            val response = dataSource.getStudyGroupVoteList(request).getOrThrow().data
+            val response = dataSource.getStudyGroupVoteList(request).first()
             val data: List<StudyGroupVoteHistoryResponse> = response.content
             LoadResult.Page(
                 data = data.toDomain(),

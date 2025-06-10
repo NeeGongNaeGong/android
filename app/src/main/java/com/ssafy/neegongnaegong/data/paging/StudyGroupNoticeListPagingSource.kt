@@ -7,6 +7,7 @@ import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupNoticeHistoryIn
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeHistoryResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequest
+import kotlinx.coroutines.flow.first
 
 class StudyGroupNoticeListPagingSource(
     private val dataSource: NetworkStudyGroupDataSource,
@@ -21,7 +22,7 @@ class StudyGroupNoticeListPagingSource(
                     cursorId = cursor,
                     size = 10,
                 )
-            val response = dataSource.getStudyGroupNoticeList(request).getOrThrow().data
+            val response = dataSource.getStudyGroupNoticeList(request).first()
             val data: List<StudyGroupNoticeHistoryResponse> = response.content
             LoadResult.Page(
                 data = data.toDomain(),

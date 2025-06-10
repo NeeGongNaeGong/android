@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
-import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemsRequest
@@ -28,35 +27,35 @@ class NetworkStudyGroupDataSourceImpl
                 api.getMemberStudyLogsByTag(request.studyGroupId, request.targetUserId)
             }
 
-        override suspend fun getMemberStudyContents(
-            request: MemberStudyContentsRequest,
-        ): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>> =
-            api.getMemberStudyContents(
-                request.studyGroupId,
-                request.userId,
-                request.cursorCreatedAt,
-                request.cursorId,
-                request.size,
-            )
+        override suspend fun getMemberStudyContents(request: MemberStudyContentsRequest): Flow<MemberWeeklyStudyContentBySliceResponse> =
+            apiFlow {
+                api.getMemberStudyContents(
+                    request.studyGroupId,
+                    request.userId,
+                    request.cursorCreatedAt,
+                    request.cursorId,
+                    request.size,
+                )
+            }
 
-        override suspend fun getStudyGroupVoteList(
-            request: StudyGroupVoteListRequest,
-        ): Result<ApiResponse<StudyGroupVoteListBySliceResponse>> =
-            api.getStudyGroupVoteList(
-                studyGroupId = request.studyGroupId,
-                cursorTime = request.cursorTime,
-                cursorId = request.cursorId,
-                size = request.size,
-            )
+        override suspend fun getStudyGroupVoteList(request: StudyGroupVoteListRequest): Flow<StudyGroupVoteListBySliceResponse> =
+            apiFlow {
+                api.getStudyGroupVoteList(
+                    studyGroupId = request.studyGroupId,
+                    cursorTime = request.cursorTime,
+                    cursorId = request.cursorId,
+                    size = request.size,
+                )
+            }
 
-        override suspend fun getStudyGroupNoticeList(
-            request: StudyGroupNoticeListRequest,
-        ): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>> =
-            api.getStudyGroupNoticeList(
-                studyGroupId = request.studyGroupId,
-                cursorId = request.cursorId,
-                size = request.size,
-            )
+        override suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListRequest): Flow<StudyGroupNoticeListBySliceResponse> =
+            apiFlow {
+                api.getStudyGroupNoticeList(
+                    studyGroupId = request.studyGroupId,
+                    cursorId = request.cursorId,
+                    size = request.size,
+                )
+            }
 
         override fun getStudyGroupNoticeDetail(
             studyGroupId: Long,

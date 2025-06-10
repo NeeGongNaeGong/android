@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyContentRespo
 import com.ssafy.neegongnaegong.domain.model.studygroup.CursorSliceKey
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import kotlinx.coroutines.flow.first
 
 class MemberStudyContentsPagingSource(
     private val dataSource: NetworkStudyGroupDataSource,
@@ -24,7 +25,7 @@ class MemberStudyContentsPagingSource(
                     cursorCreatedAt = cursor?.cursorCreatedAt,
                     cursorId = cursor?.cursorId,
                 )
-            val response = dataSource.getMemberStudyContents(request).getOrThrow().data
+            val response = dataSource.getMemberStudyContents(request).first()
             val data: List<StudyContentResponse> = response.content
             LoadResult.Page(
                 data = data.toDomain(),
