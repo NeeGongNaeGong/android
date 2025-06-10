@@ -32,6 +32,7 @@ fun ProfileImage(
     modifier: Modifier = Modifier,
     shouldShowProfileImageWarningInfo: Boolean,
     profileImg: String,
+    onCheckProfileImageWarning: () -> Unit,
     onImageSelected: (Uri) -> Unit,
 ) {
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -83,6 +84,7 @@ fun ProfileImage(
             },
             onConfirm = {
                 showDialog = false
+                onCheckProfileImageWarning()
                 launcher.launch("image/*")
             }
         )

@@ -67,6 +67,10 @@ fun ProfileRoute(
         hasUnReadNotification = uiModel.hasUnReadNotification,
         shouldShowProfileImageWarningInfo = uiModel.shouldShowProfileImageWarningInfo,
         isEditing = uiState.isEditing,
+        onCheckProfileImageWarning = {
+            val event = ProfileContract.Event.CheckProfileImageWarning
+            viewModel.setEvent(event = event)
+        },
         onChangeNickName = { text: String ->
             val event = ProfileContract.Event.ChangeNickName(text = text)
             viewModel.setEvent(event = event)
