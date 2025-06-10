@@ -8,20 +8,20 @@ import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserReportD
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModel
 
 class UserSearchContract {
-    sealed class Event : UiEvent {
+    sealed interface Event : UiEvent {
         data class OnTypingSearch(
             val keyword: String,
-        ) : Event()
+        ) : Event
 
         data class OnReportClick(
             val user: UserUiModel,
-        ) : Event()
+        ) : Event
 
-        data object OnReportDialogDismiss : Event()
+        data object OnReportDialogDismiss : Event
 
         data class OnReportDialogConfirm(
             val userReportData: UserReportData,
-        ) : Event()
+        ) : Event
     }
 
     data class State(
@@ -36,7 +36,7 @@ class UserSearchContract {
 
     sealed class Effect : UiEffect
 
-    sealed class Error : ErrorContext {
-        data object GetUserListError : Error()
+    sealed interface Error : ErrorContext {
+        data object GetUserListError : Error
     }
 }
