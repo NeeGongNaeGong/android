@@ -19,9 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.ssafy.neegongnaegong.presentation.group.user.search.component.SearchTopBar
+import com.ssafy.neegongnaegong.presentation.group.user.search.component.ReportDialog
 import com.ssafy.neegongnaegong.presentation.group.user.search.component.UserItem
 import com.ssafy.neegongnaegong.presentation.group.user.search.component.UserSearchTextField
+import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserReportData
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -50,6 +51,9 @@ fun UserSearchRoute(
         uiState = uiState,
         onTypeSearch = { viewModel.setEvent(UserSearchContract.Event.OnTypingSearch(it)) },
         userSearchList = userSearchList,
+        onReportClick = { viewModel.setEvent(UserSearchContract.Event.OnReportClick(it)) },
+        onDismissDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogDismiss) },
+        onConfirmDialog = { viewModel.setEvent(UserSearchContract.Event.OnReportDialogConfirm(it)) },
         popBackStack = popBackStack,
     )
 }
@@ -61,15 +65,28 @@ fun UserSearchContent(
     uiState: UserSearchContract.State,
     onTypeSearch: (String) -> Unit,
     userSearchList: LazyPagingItems<UserUiModel>,
+    // dialog
+    onReportClick: (UserUiModel) -> Unit,
+    onDismissDialog: () -> Unit,
+    onConfirmDialog: (UserReportData) -> Unit,
     popBackStack: () -> Unit,
 ) {
     LaunchedEffect(effect) {}
+
+    if (uiState.isReportDialogOpen) {
+        ReportDialog(
+            user = uiState.reportUser,
+            onDismiss = onDismissDialog,
+            onReport = onConfirmDialog,
+        )
+    }
 
     UserSearchScreen(
         modifier = modifier,
         query = uiState.searchKeyword,
         onTypeSearch = onTypeSearch,
         userSearchList = userSearchList,
+        onReportClick = onReportClick,
         popBackStack = popBackStack,
     )
 }
@@ -80,8 +97,8 @@ fun UserSearchScreen(
     query: String,
     onTypeSearch: (String) -> Unit,
     userSearchList: LazyPagingItems<UserUiModel>,
-
-    popBackStack: () -> Unit = {},
+    onReportClick: (UserUiModel) -> Unit,
+    popBackStack: () -> Unit,
 ) {
     Column(
         modifier =
@@ -93,7 +110,10 @@ fun UserSearchScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         UserSearchTextField(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp),
             content = query,
             onContentChanged = onTypeSearch,
         )
@@ -104,7 +124,10 @@ fun UserSearchScreen(
             items(userSearchList.itemCount) { index ->
                 val user = userSearchList[index]
                 if (user != null) {
-                    UserItem(user)
+                    UserItem(
+                        user = user,
+                        onReportClick = onReportClick,
+                    )
                 }
             }
         }
@@ -124,6 +147,7 @@ fun UserSearchScreenPreview() {
             query = "Preview Query",
             onTypeSearch = {},
             userSearchList = fakeFlow,
+            onReportClick = {},
             popBackStack = {},
         )
     }

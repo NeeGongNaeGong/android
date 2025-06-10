@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserReportData
 import com.ssafy.neegongnaegong.presentation.group.user.search.model.UserUiModel
 
 class UserSearchContract {
@@ -12,8 +13,14 @@ class UserSearchContract {
             val keyword: String,
         ) : Event()
 
-        data class OnDeclareClick(
+        data class OnReportClick(
             val user: UserUiModel,
+        ) : Event()
+
+        data object OnReportDialogDismiss : Event()
+
+        data class OnReportDialogConfirm(
+            val userReportData: UserReportData,
         ) : Event()
     }
 
@@ -22,6 +29,9 @@ class UserSearchContract {
         val isLoading: Boolean = false,
         // search
         val searchKeyword: String = "",
+        // dialog
+        val isReportDialogOpen: Boolean = false,
+        val reportUser: UserUiModel = UserUiModel.toDefault(),
     ) : UiState
 
     sealed class Effect : UiEffect

@@ -60,8 +60,16 @@ class UserSearchViewModel
                     handleOnTypingSearch(event.keyword)
                 }
 
-                is UserSearchContract.Event.OnDeclareClick -> {
+                is UserSearchContract.Event.OnReportClick -> {
                     handleOnDeclareClick(event.user)
+                }
+
+                is UserSearchContract.Event.OnReportDialogDismiss -> {
+                    handleOnReportDialogDismiss()
+                }
+
+                is UserSearchContract.Event.OnReportDialogConfirm -> {
+                    println("확인 신고했어요 ${event.userReportData}")
                 }
             }
         }
@@ -73,5 +81,17 @@ class UserSearchViewModel
         }
 
         private fun handleOnDeclareClick(user: UserUiModel) {
+            setState {
+                copy(
+                    isReportDialogOpen = true,
+                    reportUser = user,
+                )
+            }
+        }
+
+        private fun handleOnReportDialogDismiss() {
+            setState {
+                copy(isReportDialogOpen = false)
+            }
         }
     }

@@ -31,7 +31,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 @Composable
 fun UserItem(
     user: UserUiModel,
-    onDeclareClick: () -> Unit,
+    onReportClick: (UserUiModel) -> Unit,
 ) {
     Row(
         modifier =
@@ -84,7 +84,7 @@ fun UserItem(
             modifier =
                 Modifier
                     .padding(end = 16.dp)
-                    .clickable(onClick = onDeclareClick),
+                    .clickable(onClick = { onReportClick(user) }),
             painter = painterResource(id = R.drawable.ic_siren),
             contentDescription = "신고 아이콘",
             tint = Color.Red,
@@ -104,7 +104,7 @@ fun UserItemPreview() {
                     email = "이메일",
                     profileImg = "",
                 ),
-            onDeclareClick = {},
+            onReportClick = {},
         )
     }
 }
