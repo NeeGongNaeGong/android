@@ -91,8 +91,6 @@ fun UserSearchScreen(
     ) {
         Spacer(modifier = Modifier.height(12.dp))
 
-        SearchTopBar{ popBackStack() }
-
         UserSearchTextField(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
             content = query,

@@ -39,7 +39,7 @@ fun UserSearchTextField(
         placeholder = {
             Text(
                 modifier = Modifier.padding(bottom = 2.dp),
-                text = "유저 닉네임",
+                text = "검색",
                 fontSize = 18.sp,
                 color = NeeGongNaeGongTheme.colorScheme.gray4,
                 letterSpacing = 0.2.sp,

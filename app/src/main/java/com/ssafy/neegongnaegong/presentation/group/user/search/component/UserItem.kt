@@ -52,19 +52,19 @@ fun UserItem(user: UserUiModel) {
             Text(
                 text = user.nickname,
                 style =
-                    NeeGongNaeGongTheme.typography.titleMedium.copy(
-                        fontSize = 20.sp,
+                    NeeGongNaeGongTheme.typography.bodyMedium.copy(
+                        fontSize = 18.sp,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     ),
             )
-            Text(
-                text = user.email,
-                style =
-                    NeeGongNaeGongTheme.typography.bodySmall.copy(
-                        fontSize = 16.sp,
-                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                    ),
-            )
+//            Text(
+//                text = user.email,
+//                style =
+//                    NeeGongNaeGongTheme.typography.bodySmall.copy(
+//                        fontSize = 16.sp,
+//                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+//                    ),
+//            )
         }
     }
 }
