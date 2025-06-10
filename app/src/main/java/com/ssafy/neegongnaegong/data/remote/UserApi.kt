@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.remote
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateFcmTokenRequest
 import com.ssafy.neegongnaegong.data.model.user.request.UpdateUserRequest
+import com.ssafy.neegongnaegong.data.model.user.response.UnReadNotificationResponse
 import com.ssafy.neegongnaegong.data.model.user.response.UserDetailResponse
 import com.ssafy.neegongnaegong.data.model.user.response.UserPage
 import com.ssafy.neegongnaegong.data.model.user.response.ValidateNicknameResponse
@@ -10,6 +11,7 @@ import com.ssafy.neegongnaegong.domain.model.pagable.PageableData
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -42,4 +44,13 @@ interface UserApi {
         @Query("size") size: Int,
         @Query("user-name") userName: String,
     ): Result<ApiResponse<UserPage>>
+
+    @GET("/api/users/me/notification-status")
+    suspend fun findUnReadNotification() : Result<ApiResponse<UnReadNotificationResponse>>
+
+    @POST("/api/users/logout")
+    suspend fun logout() : Result<ApiResponse<Unit>>
+
+    @POST("/api/users/withdraw")
+    suspend fun withdraw(): Result<ApiResponse<Unit>>
 }

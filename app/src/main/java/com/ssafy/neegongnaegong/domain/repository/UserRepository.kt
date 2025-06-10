@@ -14,4 +14,7 @@ interface UserRepository {
     suspend fun updateFcmToken(fcmToken: String? = null)
     suspend fun checkUpdateFcmTokenState(): Boolean
     fun searchUser(userName: String): Flow<PagingData<User>>
+    fun findUnReadNotification(): Flow<Boolean>
+    fun logout(): Flow<Unit>
+    fun withdraw(): Flow<Unit>
 }

@@ -11,7 +11,6 @@ interface ProfileContract {
 
     sealed class Event : UiEvent {
         data object ClickNotification : Event()
-        data object ClickNotice : Event()
         data object ClickPrivacyInfo : Event()
         data object ClickLogout : Event()
         data object ClickDeleteAccount : Event()
@@ -33,12 +32,16 @@ interface ProfileContract {
         data object ShowInvalidNicknameErrorMessage : Effect()
         data object ShowDuplicatedNicknameErrorMessage : Effect()
         data object NavigateToNotification : Effect()
-        data object NavigateToNotice : Effect()
         data object NavigateToPrivacyInfo : Effect()
-        data object NavigateToLogout : Effect()
+        data object NavigateToAuth : Effect()
     }
 
     sealed class Error : ErrorContext {
-        data object ShowErrorMessage : Error()
+        data object CantAccessMyInfoError: Error()
+        data object CantAccessUnReadNotificationInfoError: Error()
+        data object LogoutError : Error()
+        data object DeleteAccountError: Error()
+        data object ChangeNicknameError: Error()
+        data object ChangeProfileImgError: Error()
     }
 }

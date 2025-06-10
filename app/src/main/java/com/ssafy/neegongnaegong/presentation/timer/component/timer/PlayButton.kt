@@ -16,27 +16,43 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
-fun PlayButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun PlayButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     val interactionSource = remember { MutableInteractionSource() }
 
     OutlinedButton(
-        modifier = modifier
-            .size(88.dp),
+        modifier =
+            modifier
+                .size(88.dp),
         onClick = onClick,
         shape = CircleShape,
-        border = BorderStroke(4.dp, Color.Black),
-        colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Color.Black,
-            containerColor = Color.Transparent
-        ),
-        interactionSource = interactionSource
+        border = BorderStroke(4.dp, NeeGongNaeGongTheme.colorScheme.primaryText),
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                contentColor = Color.Black,
+                containerColor = Color.Transparent,
+            ),
+        interactionSource = interactionSource,
     ) {
         Icon(
             imageVector = Icons.Default.PlayArrow,
             contentDescription = stringResource(R.string.txt_timer_play),
-            modifier = Modifier.size(60.dp)
+            modifier = Modifier.size(60.dp),
+            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun PlayButtonPreview() {
+    NeeGongNaeGongTheme {
+        PlayButton {}
     }
 }

@@ -15,6 +15,8 @@ import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
+private const val PRIVACY_INFO_URL = "https://www.notion.so/2082fdb33c0980419574e74d7ee3dcaf"
+
 @Composable
 fun ProfileRoute(
     viewModel: ProfileViewModel = hiltViewModel(),
@@ -45,23 +47,13 @@ fun ProfileRoute(
                 navigateToNotification()
             }
 
-            ProfileContract.Effect.NavigateToNotice -> {
-                // TODO ("주소 변경 필요!")
-                val url = "https://www.naver.com"
-                Builder()
-                    .build()
-                    .launchUrl(context, url.toUri())
-            }
-
             ProfileContract.Effect.NavigateToPrivacyInfo -> {
-                // TODO ("주소 변경 필요!")
-                val url = "https://www.google.com"
                 Builder()
                     .build()
-                    .launchUrl(context, url.toUri())
+                    .launchUrl(context, PRIVACY_INFO_URL.toUri())
             }
 
-            ProfileContract.Effect.NavigateToLogout -> {
+            ProfileContract.Effect.NavigateToAuth -> {
                 navigateToAuth()
             }
 
@@ -72,6 +64,7 @@ fun ProfileRoute(
     else ProfileScreen(
         profileImg = uiModel.profileImg,
         nickname = uiModel.nickname,
+        hasUnReadNotification = uiModel.hasUnReadNotification,
         isEditing = uiState.isEditing,
         onChangeNickName = { text: String ->
             val event = ProfileContract.Event.ChangeNickName(text = text)
@@ -91,10 +84,6 @@ fun ProfileRoute(
         },
         onClickNotification = {
             val event = ProfileContract.Event.ClickNotification
-            viewModel.setEvent(event = event)
-        },
-        onClickNotice = {
-            val event = ProfileContract.Event.ClickNotice
             viewModel.setEvent(event = event)
         },
         onClickPrivacyInfo = {

@@ -20,11 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -33,17 +33,17 @@ fun TagList(
     modifier: Modifier = Modifier,
     tags: List<Tag>,
     onTagPlusClicked: () -> Unit,
-    onTagEraseClicked: (Tag) -> Unit
+    onTagEraseClicked: (Tag) -> Unit,
 ) {
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         tags.forEach { tag ->
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = NeeGongNaeGongTheme.colorScheme.blue
+                color = NeeGongNaeGongTheme.colorScheme.blue,
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -56,45 +56,49 @@ fun TagList(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .clickable { onTagEraseClicked(tag) },
+                        modifier =
+                            Modifier
+                                .size(16.dp)
+                                .clickable { onTagEraseClicked(tag) },
                         imageVector = Icons.Default.Close,
                         contentDescription = "삭제",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
         }
 
         Surface(
-            modifier = Modifier
-                .size(32.dp)
-                .clickable { onTagPlusClicked() },
+            modifier =
+                Modifier
+                    .size(32.dp)
+                    .clickable { onTagPlusClicked() },
             shape = RoundedCornerShape(4.dp),
             color = NeeGongNaeGongTheme.colorScheme.blue,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp)
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "태그 추가",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun TagListPreview() {
-    TagList(
-        modifier = Modifier.padding(16.dp),
-        tags = PersonalPreviewDataProvider().getTags(),
-        onTagPlusClicked = {},
-        onTagEraseClicked = {}
-    )
+    NeeGongNaeGongTheme {
+        TagList(
+            modifier = Modifier.padding(16.dp),
+            tags = PersonalPreviewDataProvider().getTags(),
+            onTagPlusClicked = {},
+            onTagEraseClicked = {},
+        )
+    }
 }

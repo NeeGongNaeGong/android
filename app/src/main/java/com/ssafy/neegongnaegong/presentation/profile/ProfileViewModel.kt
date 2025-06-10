@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
+import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -13,19 +16,22 @@ import com.ssafy.neegongnaegong.presentation.profile.data.ProfileMapper.toUiMode
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    val getMyProfileUseCase: GetMyProfileUseCase,
-    val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase,
+    private val logoutUseCase: LogoutUseCase,
+    private val withdrawUseCase: WithdrawUseCase,
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -34,20 +40,29 @@ class ProfileViewModel @Inject constructor(
             uiState.isInitial
         }.filter { uiState: ProfileContract.State ->
             uiState.isInitial
-        }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        }.safeFlatMapLatest(errorContext = ProfileContract.Error.CantAccessMyInfoError) {
             getMyProfileUseCase()
-        }.map { user: User ->
-            user.toUiModel()
+        }.combine(hasUnReadNotification) { user: User, hasUnReadNotification: Boolean ->
+            user.toUiModel(hasUnReadNotification = hasUnReadNotification)
         }.onEach {
             endLoad()
         }.toViewModelState(ProfileUiModel.default())
+    }
+
+    private val hasUnReadNotification: Flow<Boolean> by lazy {
+        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.filter { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.safeFlatMapLatest(errorContext = ProfileContract.Error.CantAccessUnReadNotificationInfoError) {
+            checkUnReadNotificationUseCase()
+        }
     }
 
     override fun createInitialState(): ProfileContract.State = ProfileContract.State()
 
     override fun handleEvent(event: ProfileContract.Event) = when (event) {
         ProfileContract.Event.ClickNotification -> handleNotification()
-        ProfileContract.Event.ClickNotice -> handleNotice()
         ProfileContract.Event.ClickPrivacyInfo -> handlePrivacyInfo()
         ProfileContract.Event.ClickLogout -> handleLogout()
         ProfileContract.Event.ClickDeleteAccount -> handleDeleteAccount()
@@ -62,11 +77,6 @@ class ProfileViewModel @Inject constructor(
         setEffect { sideEffect }
     }
 
-    private fun handleNotice() {
-        val sideEffect = ProfileContract.Effect.NavigateToNotice
-        setEffect { sideEffect }
-    }
-
     private fun handlePrivacyInfo() {
         val sideEffect = ProfileContract.Effect.NavigateToPrivacyInfo
         setEffect { sideEffect }
@@ -77,25 +87,29 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleLogout() {
-        viewModelScope.safeLaunch {
-            // TODO("계정 로그아웃 API 추가되면 수정")
-            delay(1000)
-            val sideEffect = ProfileContract.Effect.NavigateToLogout
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.LogoutError) {
+            logoutUseCase().withLoading { isModifying ->
+                setState { copy(isModifying = isModifying) }
+            }.firstOrNull()
+
+            val sideEffect = ProfileContract.Effect.NavigateToAuth
             setEffect { sideEffect }
         }
     }
 
     private fun handleDeleteAccount() {
-        viewModelScope.safeLaunch {
-            // TODO("계정 삭제 API 추가되면 수정")
-            delay(1000)
-            val sideEffect = ProfileContract.Effect.NavigateToLogout
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.DeleteAccountError) {
+            withdrawUseCase().withLoading { isModifying ->
+                setState { copy(isModifying = isModifying) }
+            }.firstOrNull()
+
+            val sideEffect = ProfileContract.Effect.NavigateToAuth
             setEffect { sideEffect }
         }
     }
 
     private fun handleChangeNickName(text: String) {
-        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeNicknameError) {
             updateNicknameUseCase(nickname = text).withLoading { isModifying ->
                 setState { copy(isModifying = isModifying) }
             }.firstOrNull()
@@ -105,7 +119,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun handleChangeProfileImage(uri: Uri) {
-        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ShowErrorMessage) {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImgError) {
             // TODO("형선이형 브랜치에서 사용되는 S3 이미지 업로드 UseCase 결함 예정")
         }
     }

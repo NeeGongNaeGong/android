@@ -34,12 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -61,17 +61,23 @@ fun TagSelectDialog(
             modifier =
                 modifier
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                    .background(
+                        NeeGongNaeGongTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
         ) {
             Column(
-                modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp),
+                modifier =
+                    Modifier
+                        .background(NeeGongNaeGongTheme.colorScheme.background)
+                        .padding(top = 20.dp, start = 16.dp, end = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "태그 선택",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -87,6 +93,7 @@ fun TagSelectDialog(
                         Text(
                             text = "검색어를 입력해주세요",
                             style = NeeGongNaeGongTheme.typography.labelLarge,
+                            color = NeeGongNaeGongTheme.colorScheme.gray4,
                         )
                     },
                     singleLine = true,
@@ -108,7 +115,11 @@ fun TagSelectDialog(
                             unfocusedIndicatorColor = Color.LightGray,
                             disabledIndicatorColor = Color.LightGray,
                         ),
-                    textStyle = NeeGongNaeGongTheme.typography.labelLarge.copy(fontSize = 18.sp),
+                    textStyle =
+                        NeeGongNaeGongTheme.typography.labelLarge.copy(
+                            fontSize = 18.sp,
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        ),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -130,7 +141,12 @@ fun TagSelectDialog(
                                 }
                                 onSearchQueryChanged(query)
                             },
-                            label = { Text(tag.koName) },
+                            label = {
+                                Text(
+                                    tag.koName,
+                                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                )
+                            },
                             leadingIcon =
                                 if (isSelected) {
                                     {
@@ -150,7 +166,7 @@ fun TagSelectDialog(
                                     selectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
                                     selectedLabelColor = Color.White,
                                     // 컬러 Transparent로 하면 마우스 갖다 덌을때 색 영역이 다르게 표시됨
-                                    containerColor = Color.White,
+                                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
                                 ),
                         )
                     }
@@ -205,7 +221,7 @@ fun TagSelectDialog(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun TagSelectDialogPreview() {
     NeeGongNaeGongTheme(dynamicColor = false) {

@@ -19,12 +19,36 @@ class NetworkStudyGroupDataSourceImpl @Inject constructor(
         }
 
     override suspend fun getMemberStudyContents(request: MemberStudyContentsInfo): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>> =
-            api.getMemberStudyContents(
-                request.studyGroupId,
-                request.userId,
-                request.cursorCreatedAt,
-                request.cursorId,
-                request.size
-            )
+        api.getMemberStudyContents(
+            request.studyGroupId,
+            request.userId,
+            request.cursorCreatedAt,
+            request.cursorId,
+            request.size
+        )
 
+
+    override fun approveStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?
+    ): Flow<Unit> = apiFlow {
+        api.approveStudyGroupJoin(
+            studyGroupId = studyGroupId,
+            userId = userId,
+            notificationId = notificationId
+        )
+    }
+
+    override fun rejectStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?
+    ): Flow<Unit> = apiFlow {
+        api.rejectStudyGroupJoin(
+            studyGroupId = studyGroupId,
+            userId = userId,
+            notificationId = notificationId
+        )
+    }
 }

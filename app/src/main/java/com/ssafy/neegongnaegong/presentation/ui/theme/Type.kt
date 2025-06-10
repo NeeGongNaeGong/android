@@ -8,11 +8,12 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.R
 
-val fontFamily = FontFamily(
-    Font(R.font.pretendard_bold, FontWeight.Bold),
-    Font(R.font.pretendard_semibold, FontWeight.SemiBold),
-    Font(R.font.pretendard_regular, FontWeight.Normal),
-)
+val fontFamily =
+    FontFamily(
+        Font(R.font.pretendard_bold, FontWeight.Bold),
+        Font(R.font.pretendard_semibold, FontWeight.SemiBold),
+        Font(R.font.pretendard_regular, FontWeight.Normal),
+    )
 val letterSpacing = (-0.06).em
 
 data class Typography(
@@ -54,7 +55,7 @@ data class Typography(
     val bodySmall: TextStyle =
         TextStyle(
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
             letterSpacing = letterSpacing,
         ),
@@ -65,12 +66,13 @@ data class Typography(
             fontSize = 16.sp,
             letterSpacing = letterSpacing,
         ),
-    val labelMedium: TextStyle = TextStyle(
-        fontFamily = fontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        letterSpacing = letterSpacing,
-    ),
+    val labelMedium: TextStyle =
+        TextStyle(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            letterSpacing = letterSpacing,
+        ),
     val labelSmall: TextStyle =
         TextStyle(
             fontFamily = fontFamily,
