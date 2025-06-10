@@ -115,8 +115,7 @@ fun NoticeContent(
             onValueChange = onChangeTitle,
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp),
+                    .fillMaxWidth(),
             // 여기선 Text 자체 padding 조절
             textStyle = NeeGongNaeGongTheme.typography.titleSmall,
             cursorBrush = SolidColor(NeeGongNaeGongTheme.colorScheme.primaryText),
