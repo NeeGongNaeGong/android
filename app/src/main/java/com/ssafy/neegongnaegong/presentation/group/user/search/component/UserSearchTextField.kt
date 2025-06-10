@@ -86,7 +86,6 @@ fun UserSearchTextField(
             Modifier
                 .padding(bottom = 2.dp, start = 12.dp, end = 12.dp)
                 .fillMaxWidth(),
-        thickness = 1.dp,
         color = NeeGongNaeGongTheme.colorScheme.gray4,
     )
 }
