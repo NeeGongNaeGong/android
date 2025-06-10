@@ -18,6 +18,7 @@ interface ProfileContract {
         data object ClickEditCancel : Event()
         data class ChangeImage(val uri: Uri) : Event()
         data class ChangeNickName(val text: String) : Event()
+        data object CheckProfileImageWarning: Event()
     }
 
     @Stable
@@ -39,9 +40,11 @@ interface ProfileContract {
     sealed class Error : ErrorContext {
         data object CantAccessMyInfoError: Error()
         data object CantAccessUnReadNotificationInfoError: Error()
+        data object CantAccessShowProfileImageWarningInfoError: Error()
         data object LogoutError : Error()
         data object DeleteAccountError: Error()
         data object ChangeNicknameError: Error()
         data object ChangeProfileImgError: Error()
+        data object ChangeProfileImageWarningInfoError: Error()
     }
 }

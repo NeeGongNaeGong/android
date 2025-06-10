@@ -36,6 +36,8 @@ fun ProfileScreen(
     nickname: String,
     isEditing: Boolean,
     hasUnReadNotification: Boolean,
+    shouldShowProfileImageWarningInfo: Boolean,
+    onCheckProfileImageWarning: () -> Unit,
     onChangeNickName: (String) -> Unit,
     onClickEdit: () -> Unit,
     onClickEditCancel: () -> Unit,
@@ -61,6 +63,8 @@ fun ProfileScreen(
                 .size(120.dp)
                 .clip(CircleShape),
             profileImg = profileImg,
+            shouldShowProfileImageWarningInfo = shouldShowProfileImageWarningInfo,
+            onCheckProfileImageWarning = onCheckProfileImageWarning,
             onImageSelected = onImageSelected
         )
 
@@ -127,6 +131,8 @@ fun ProfileScreenPreview() {
         nickname = "닉네임",
         isEditing = false,
         hasUnReadNotification = false,
+        shouldShowProfileImageWarningInfo = false,
+        onCheckProfileImageWarning = {},
         onChangeNickName = {},
         onClickEdit = {},
         onClickEditCancel = {},

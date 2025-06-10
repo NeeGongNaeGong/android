@@ -102,6 +102,13 @@ class UserRepositoryImpl @Inject constructor(
         localUserDataSource.clearUser()
     }.flowOn(context = ioDispatcher)
 
+    override fun saveProfileImageWarningAcceptedAt(time: Long) = localUserDataSource
+        .saveProfileImageWarningAcceptedAt(time = time)
+
+    override fun getProfileImageWarningAcceptedAt(): Flow<Long> = localUserDataSource
+        .getProfileImageWarningAcceptedAt()
+        .flowOn(context = ioDispatcher)
+
     companion object {
         private const val USER_PAGING_SIZE = 30
     }
