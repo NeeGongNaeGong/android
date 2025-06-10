@@ -19,6 +19,7 @@ import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 @Composable
 fun NotificationRoute(
     viewModel: NotificationViewModel = hiltViewModel(),
+    navigateUp: () -> Unit,
     navigateToGroup: (groupId: Long) -> Unit,
     navigateToNotice: (groupId: Long, noticeId: Long) -> Unit,
     navigateToVote: (groupId: Long, voteId: Long) -> Unit,
@@ -38,6 +39,10 @@ fun NotificationRoute(
 
             is NotificationContract.Effect.ScrollToFirstPosition -> {
                 listState.animateScrollToItem(0)
+            }
+
+            NotificationContract.Effect.NavigateUp -> {
+                navigateUp()
             }
 
             is NotificationContract.Effect.NavigateToGroup -> {
@@ -63,6 +68,10 @@ fun NotificationRoute(
         listState = listState,
         isRefresh = uiState.isLoading,
         notificationList = notificationList,
+        onNavigateUp = {
+            val event = NotificationContract.Event.OnNavigateUp
+            viewModel.setEvent(event = event)
+        },
         onRefresh = {
             val event = NotificationContract.Event.RefreshEvent
             viewModel.setEvent(event = event)

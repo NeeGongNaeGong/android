@@ -55,6 +55,7 @@ class NotificationViewModel @Inject constructor(
     override fun createInitialState(): NotificationContract.State = NotificationContract.State()
 
     override fun handleEvent(event: NotificationContract.Event) = when (event) {
+        NotificationContract.Event.OnNavigateUp -> handleNavigateUp()
         NotificationContract.Event.RefreshEvent -> handleRefresh()
         NotificationContract.Event.DeleteAllNotification -> handleDeleteAllNotification()
         is NotificationContract.Event.DeleteNotification -> handleDeleteNotification(data = event.data)
@@ -71,6 +72,11 @@ class NotificationViewModel @Inject constructor(
         setState { copy(isLoading = true) }
 
         val sideEffect = NotificationContract.Effect.ScrollToFirstPosition
+        setEffect { sideEffect }
+    }
+
+    private fun handleNavigateUp() {
+        val sideEffect = NotificationContract.Effect.NavigateUp
         setEffect { sideEffect }
     }
 
