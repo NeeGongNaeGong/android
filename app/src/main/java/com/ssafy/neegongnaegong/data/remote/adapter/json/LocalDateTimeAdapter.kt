@@ -32,9 +32,7 @@ class LocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<Loc
             listOf(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"), // 마이크로초
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSS"), // 마이크로초
-                // 투표 상세 조회에서 오는 endTime의 형식이 아래와 같음
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"), // 마이크로초
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"), // 마이크로초
             )
         formatter.forEach {
             try {
