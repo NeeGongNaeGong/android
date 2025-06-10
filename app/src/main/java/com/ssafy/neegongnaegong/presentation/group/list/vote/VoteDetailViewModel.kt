@@ -34,6 +34,7 @@ class VoteDetailViewModel
                 userProfileImg = "",
                 progressTime = "",
                 voteTitle = "",
+                state = false,
                 voteOptions = persistentListOf(),
                 selected = persistentListOf(),
                 voteItems = persistentListOf(),
@@ -152,6 +153,7 @@ class VoteDetailViewModel
                     userProfileImg = voteDetailInfo.userProfileImg,
                     progressTime = voteDetailInfo.progressTime,
                     voteTitle = voteDetailInfo.voteTitle,
+                    state = voteDetailInfo.state,
                     selected = voteDetailInfo.voteValues.toPersistentList(),
                     voteOptions =
                         voteDetailInfo.voteOptions.mapNotNull { option ->

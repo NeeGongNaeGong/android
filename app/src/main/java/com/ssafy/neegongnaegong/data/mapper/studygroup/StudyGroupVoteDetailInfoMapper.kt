@@ -40,6 +40,7 @@ internal object StudyGroupVoteDetailInfoMapper {
             userProfileImg = userProfileImg,
             progressTime = progressTime,
             voteTitle = voteTitle,
+            state = state,
             voteOptions = voteOptions,
             voteItems = voteItems.toDomain(),
             voteValues = voteValues.toVoteValueDomain(),

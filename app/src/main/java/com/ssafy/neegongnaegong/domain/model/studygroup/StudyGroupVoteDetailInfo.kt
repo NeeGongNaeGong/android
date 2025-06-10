@@ -5,6 +5,7 @@ data class StudyGroupVoteDetailInfo(
     val userProfileImg: String,
     val progressTime: String,
     val voteTitle: String,
+    val state: Boolean,
     val voteOptions: List<String>,
     val voteItems: List<StudyGroupVoteStatusInfo>,
     val voteValues: List<VoteValue>,

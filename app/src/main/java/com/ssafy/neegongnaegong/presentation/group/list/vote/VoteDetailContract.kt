@@ -49,6 +49,7 @@ class VoteDetailContract {
         val userProfileImg: String,
         val progressTime: String,
         val voteTitle: String,
+        val state: Boolean,
         val selected: PersistentList<StudyGroupVoteDetailInfo.VoteValue>,
         val voteOptions: PersistentList<VoteOptions>,
         val voteItems: PersistentList<StudyGroupVoteStatusInfo>,

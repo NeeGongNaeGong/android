@@ -95,6 +95,7 @@ fun VoteDetailRoute(
             userProfileImg = state.userProfileImg,
             progressTime = state.progressTime,
             voteTitle = state.voteTitle,
+            state = state.state,
             selected = state.selected,
             voteOptions = state.voteOptions,
             voteItems = state.voteItems,
@@ -143,6 +144,7 @@ fun VoteDetailScreen(
     userProfileImg: String,
     progressTime: String,
     voteTitle: String,
+    state: Boolean,
     selected: PersistentList<StudyGroupVoteDetailInfo.VoteValue>,
     voteOptions: PersistentList<VoteOptions>,
     voteItems: PersistentList<StudyGroupVoteStatusInfo>,
@@ -269,6 +271,7 @@ fun VoteDetailScreen(
                                 voteOptions.find { it == VoteOptions.IS_SECRET }
                                     ?.let { true } ?: false,
                             alreadyVoted = !voteValues.isEmpty(),
+                            state = state,
                             votedUsers = voteItem.votedMembers,
                             isSelected =
                                 selected.find { voteItem.voteItemId == it.voteItemId }
@@ -287,7 +290,7 @@ fun VoteDetailScreen(
                 }
 
                 if (!addOptionMode) {
-                    if (voteOptions.contains(VoteOptions.IS_CHOSEN)) {
+                    if (voteOptions.contains(VoteOptions.IS_CHOSEN) && state) {
                         Row(
                             modifier =
                                 Modifier
@@ -311,7 +314,7 @@ fun VoteDetailScreen(
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
-                        enabled = !(selected.isEmpty() && voteValues.isEmpty()),
+                        enabled = !((selected.isEmpty() && voteValues.isEmpty()) || !state),
                         onClick = onCastVote,
                         colors =
                             ButtonDefaults.buttonColors(
@@ -323,7 +326,9 @@ fun VoteDetailScreen(
                     ) {
                         Text(
                             text =
-                                if (voteValues.isEmpty()) {
+                                if (!state) {
+                                    "투표가 종료되었습니다"
+                                } else if (voteValues.isEmpty()) {
                                     "투표하기"
                                 } else {
                                     "다시 투표하기"
@@ -404,6 +409,7 @@ fun PreviewVoteDetailScreen() {
             userProfileImg = "",
             progressTime = "",
             voteTitle = "가능한 날",
+            state = false,
             voteOptions = persistentListOf(VoteOptions.IS_SECRET, VoteOptions.IS_MULTIPLE),
             voteItems =
                 persistentListOf(
@@ -446,6 +452,7 @@ fun PreviewVoteDetailScreenCastMode() {
             userProfileImg = "",
             progressTime = "",
             voteTitle = "가능한 날",
+            state = true,
             voteOptions =
                 persistentListOf(
                     VoteOptions.IS_SECRET,

@@ -35,6 +35,7 @@ fun OptionButton(
     modifier: Modifier = Modifier,
     progress: Float,
     alreadyVoted: Boolean,
+    state: Boolean,
     isAnonymous: Boolean,
     isSelected: Boolean,
     optionTitle: String,
@@ -48,11 +49,11 @@ fun OptionButton(
             modifier
                 .fillMaxWidth()
                 .padding(0.dp)
-                .clickable { if (castMode) onClick() },
+                .clickable { if (state && castMode) onClick() },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (castMode) {
+        if (state && castMode) {
             Box(contentAlignment = Alignment.Center) {
                 val iconModifier = Modifier.size(40.dp)
                 Icon(
@@ -79,7 +80,7 @@ fun OptionButton(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(modifier = Modifier.weight(1F)) {
-                    if (!castMode && isSelected) {
+                    if ((!castMode || !state) && isSelected) {
                         val iconSizeDp: Dp =
                             with(LocalDensity.current) {
                                 NeeGongNaeGongTheme.typography
@@ -103,7 +104,7 @@ fun OptionButton(
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                 }
-                if (alreadyVoted && !isAnonymous) {
+                if ((alreadyVoted || !state) && !isAnonymous) {
                     Row(
                         modifier =
                             Modifier
@@ -134,7 +135,7 @@ fun OptionButton(
                     }
                 }
             }
-            if (alreadyVoted && !isAnonymous) {
+            if ((alreadyVoted || !state) && !isAnonymous) {
                 Box(
                     modifier =
                         Modifier
@@ -163,6 +164,7 @@ fun PreviewOptionButton() {
             isSelected = true,
             progress = 0.3F,
             alreadyVoted = true,
+            state = false,
             isAnonymous = false,
             votedUsers = listOf(StudyGroupVoteStatusInfo.VotedMemberInfo(0, ",", "")),
             optionTitle = "종료 시간",
@@ -180,6 +182,7 @@ fun PreviewOptionButtonEditMode() {
             isSelected = true,
             progress = 0.3F,
             alreadyVoted = true,
+            state = true,
             isAnonymous = false,
             votedUsers = listOf(StudyGroupVoteStatusInfo.VotedMemberInfo(0, ",", "")),
             optionTitle = "종료 시간",
