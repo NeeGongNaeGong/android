@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
-import com.ssafy.neegongnaegong.domain.usecase.user.CheckShowProfileImageWarningUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.SaveProfileImageWarningAcceptedAtUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.ShouldShowProfileImageWarningUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -33,7 +34,8 @@ class ProfileViewModel @Inject constructor(
     private val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val withdrawUseCase: WithdrawUseCase,
-    private val checkShowProfileImageWarningUseCase: CheckShowProfileImageWarningUseCase
+    private val shouldShowProfileImageWarningUseCase: ShouldShowProfileImageWarningUseCase,
+    private val saveProfileImageWarningAcceptedAtUseCase: SaveProfileImageWarningAcceptedAtUseCase
 ) : BaseViewModel<ProfileContract.Event, ProfileContract.State, ProfileContract.Effect>() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -69,7 +71,7 @@ class ProfileViewModel @Inject constructor(
     private val showProfileImageWarning: Flow<Boolean> by lazy {
         uiState.init().safeFlatMapLatest(
             errorContext = ProfileContract.Error.CantAccessShowProfileImageWarningInfoError,
-            transform = { checkShowProfileImageWarningUseCase() }
+            transform = { shouldShowProfileImageWarningUseCase() }
         )
     }
 
@@ -84,6 +86,7 @@ class ProfileViewModel @Inject constructor(
         ProfileContract.Event.ClickEditCancel -> handleEdit(isEditing = false)
         is ProfileContract.Event.ChangeNickName -> handleChangeNickName(event.text)
         is ProfileContract.Event.ChangeImage -> handleChangeProfileImage(event.uri)
+        ProfileContract.Event.CheckProfileImageWarning -> handleCheckProfileImageWarning()
     }
 
     private fun handleNotification() {
@@ -98,6 +101,14 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleEdit(isEditing: Boolean) {
         setState { copy(isEditing = isEditing) }
+    }
+
+    private fun handleCheckProfileImageWarning() {
+        viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImageWarningInfoError) {
+            saveProfileImageWarningAcceptedAtUseCase().withLoading { isModifying ->
+                setState { copy(isModifying = isModifying) }
+            }.firstOrNull()
+        }
     }
 
     private fun handleLogout() {
