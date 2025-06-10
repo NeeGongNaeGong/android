@@ -48,7 +48,6 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun VoteRoute(
@@ -92,7 +91,7 @@ fun VoteRoute(
         )
 
         LaunchedEffect(viewModel.effect) {
-            viewModel.effect.collectLatest { effect ->
+            viewModel.effect.collect { effect ->
                 when (effect) {
                     VoteContract.Effect.NavigateToBackStack -> {
                         popBackStack()

@@ -53,7 +53,6 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun VoteDetailRoute(
@@ -65,7 +64,7 @@ fun VoteDetailRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.effect) {
-        viewModel.effect.collectLatest {
+        viewModel.effect.collect {
             when (it) {
                 VoteDetailContract.Effect.NavigateToBackStack -> {
                     popBackStack()

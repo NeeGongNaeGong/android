@@ -24,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun NoticeRoute(
@@ -68,7 +67,7 @@ fun NoticeRoute(
         )
 
         LaunchedEffect(viewModel.effect) {
-            viewModel.effect.collectLatest { effect ->
+            viewModel.effect.collect { effect ->
                 when (effect) {
                     NoticeContract.Effect.NavigateToBackStack -> popBackStack()
                     is NoticeContract.Effect.NavigateToBackStackInclusive ->
