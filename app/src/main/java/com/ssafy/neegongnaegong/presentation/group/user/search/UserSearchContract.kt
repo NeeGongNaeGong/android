@@ -22,6 +22,8 @@ class UserSearchContract {
         data class OnReportDialogConfirm(
             val userReportData: UserReportData,
         ) : Event
+
+        data object OnBackClick : Event
     }
 
     data class State(
@@ -34,7 +36,9 @@ class UserSearchContract {
         val reportUser: UserUiModel = UserUiModel.toDefault(),
     ) : UiState
 
-    sealed class Effect : UiEffect
+    sealed interface Effect : UiEffect {
+        data object NavigateBack : Effect
+    }
 
     sealed interface Error : ErrorContext {
         data object GetUserListError : Error

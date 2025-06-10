@@ -43,7 +43,7 @@ fun UserSearchRoute(
         }
     }
 
-    BackHandler { popBackStack() }
+    BackHandler { viewModel.setEvent(UserSearchContract.Event.OnBackClick) }
 
     UserSearchContent(
         modifier = modifier,
@@ -71,7 +71,15 @@ fun UserSearchContent(
     onConfirmDialog: (UserReportData) -> Unit,
     popBackStack: () -> Unit,
 ) {
-    LaunchedEffect(effect) {}
+    LaunchedEffect(effect) {
+        effect.collect { effect ->
+            when (effect) {
+                is UserSearchContract.Effect.NavigateBack -> {
+                    popBackStack()
+                }
+            }
+        }
+    }
 
     if (uiState.isReportDialogOpen) {
         ReportDialog(

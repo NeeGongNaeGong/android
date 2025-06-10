@@ -73,6 +73,10 @@ class UserSearchViewModel
                     handleOnReportDialogConfirm(event.userReportData)
                     println("확인 신고했어요 ${event.userReportData}")
                 }
+
+                is UserSearchContract.Event.OnBackClick -> {
+                    setEffect { UserSearchContract.Effect.NavigateBack }
+                }
             }
         }
 
