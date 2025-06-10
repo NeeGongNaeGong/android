@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.user.search
 
+import androidx.compose.runtime.Stable
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
@@ -26,6 +27,7 @@ class UserSearchContract {
         data object OnBackClick : Event
     }
 
+    @Stable
     data class State(
         // api
         val isLoading: Boolean = false,

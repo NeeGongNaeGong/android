@@ -84,7 +84,7 @@ fun ReportDialog(
 
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp),
-                    text = "신고 사유를 선택해주세요:",
+                    text = "신고 사유를 선택해주세요",
                     style = MaterialTheme.typography.bodyMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
