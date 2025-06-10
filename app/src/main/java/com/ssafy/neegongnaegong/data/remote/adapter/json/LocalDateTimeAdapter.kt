@@ -42,4 +42,5 @@ class LocalDateTimeAdapter :
             }
         }
         throw JsonParseException("Unparseable date: ${json.asString}")
+    }
 }
