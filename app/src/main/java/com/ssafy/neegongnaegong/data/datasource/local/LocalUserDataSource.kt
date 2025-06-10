@@ -5,6 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalUserDataSource {
     fun saveUser(user: User)
+
     fun getUser(): Flow<User>
+
     fun clearUser()
+
+    fun saveProfileImageWarningAcceptedAt(time: Long)
+
+    fun getProfileImageWarningAcceptedAt(): Flow<Long>
 }
