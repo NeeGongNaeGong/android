@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.vote
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.AddNewVoteOptionUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.CastVoteUseCase
@@ -11,6 +12,7 @@ import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.State
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.VoteOptions
+import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -87,17 +89,12 @@ class VoteDetailViewModel
                 is Event.CastVote -> {
                     viewModelScope.launch {
                         if (uiState.value.selected != uiState.value.voteValues) {
-                            if (groupId != null && voteId != null) {
-                                castVoteUseCase(
-                                    groupId,
-                                    voteId,
-                                    uiState.value.selected.map { it.voteItemName },
-                                ).safeCollect {
-                                    setVoteState(it)
-                                }
-                            } else {
-                                showErrorMessage("잘못된 그룹입니다")
-                                setEvent(Event.InvalidAccess)
+                            castVoteUseCase(
+                                groupId,
+                                voteId,
+                                uiState.value.selected.map { it.voteItemName },
+                            ).safeCollect {
+                                setVoteState(it)
                             }
                         } else {
                             setState { copy(castMode = false) }
@@ -119,29 +116,28 @@ class VoteDetailViewModel
 
                 Event.OnConfirmAddOption -> {
                     viewModelScope.launch {
-                        if (groupId != null && voteId != null) {
-                            addNewVoteOptionUseCase(groupId, voteId, uiState.value.newOption).safeCollect {
-                                setVoteState(it)
-                            }
+                        addNewVoteOptionUseCase(
+                            groupId,
+                            voteId,
+                            uiState.value.newOption,
+                        ).safeCollect {
+                            setVoteState(it)
                         }
                     }
                 }
             }
         }
 
-        private val groupId: Long? = savedStateHandle["groupId"]
-        private val voteId: Long? = savedStateHandle["voteId"]
+        private val groupId: Long =
+            savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().groupId
+        private val voteId: Long =
+            savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().voteId
 
         init {
-            if (groupId != null && voteId != null) {
-                viewModelScope.launch {
-                    getVoteDetailUseCase(voteId).safeCollect {
-                        setVoteState(it)
-                    }
+            viewModelScope.launch {
+                getVoteDetailUseCase(voteId).safeCollect {
+                    setVoteState(it)
                 }
-            } else {
-                showErrorMessage("잘못된 그룹입니다")
-                setEvent(Event.InvalidAccess)
             }
         }
 

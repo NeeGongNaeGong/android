@@ -2,11 +2,13 @@ package com.ssafy.neegongnaegong.presentation.group.vote
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateVoteUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract
+import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
 import com.ssafy.neegongnaegong.presentation.util.TimeFormatter.convertStringToLocalDateTime
@@ -78,32 +80,37 @@ class VoteViewModel
                 }
 
                 is VoteContract.Event.OnClickCompleteButton -> {
-                    val studyGroupId = savedStateHandle.get<Long>("studyGroupId")
-                    if (studyGroupId != null) {
-                        viewModelScope.launch {
-                            createVoteUseCase(
-                                studyGroupId = studyGroupId,
-                                uiState.value.run {
-                                    VoteInfo(
-                                        title = voteTitle,
-                                        startTime = LocalDateTime.now(), // getCurrentTimeByISO8601Format(),
-                                        endTime =
-                                            if (isEndDateEnabled) {
-                                                convertStringToLocalDateTime(date, time)
-                                            } else {
-                                                null
-                                            },
-                                        state = true,
-                                        items = voteItemList.filter { it.isNotEmpty() },
-                                        multiple = isMultipleSelectionEnabled,
-                                        secret = isAnonymousVotingEnabled,
-                                        notify = isAlarmBeforeClosingEnabled,
-                                        choose = allowAddingSelection,
-                                    )
-                                },
-                            ).safeCollect(VoteContract.Error.CreateVoteError) {
-                                showSuccessMessage("투표를 생성했습니다!")
-                                setEffect { VoteContract.Effect.NavigateToMain(ListContract.Index.Vote.index, studyGroupId) }
+                    val studyGroupId =
+                        savedStateHandle.toRoute<AppNavigation.Screen.Studies.MakeVote>().studyGroupId
+
+                    viewModelScope.launch {
+                        createVoteUseCase(
+                            studyGroupId = studyGroupId,
+                            uiState.value.run {
+                                VoteInfo(
+                                    title = voteTitle,
+                                    startTime = LocalDateTime.now(), // getCurrentTimeByISO8601Format(),
+                                    endTime =
+                                        if (isEndDateEnabled) {
+                                            convertStringToLocalDateTime(date, time)
+                                        } else {
+                                            null
+                                        },
+                                    state = true,
+                                    items = voteItemList.filter { it.isNotEmpty() },
+                                    multiple = isMultipleSelectionEnabled,
+                                    secret = isAnonymousVotingEnabled,
+                                    notify = isAlarmBeforeClosingEnabled,
+                                    choose = allowAddingSelection,
+                                )
+                            },
+                        ).safeCollect(VoteContract.Error.CreateVoteError) {
+                            showSuccessMessage("투표를 생성했습니다!")
+                            setEffect {
+                                VoteContract.Effect.NavigateToMain(
+                                    ListContract.Index.Vote.index,
+                                    studyGroupId,
+                                )
                             }
                         }
                     }

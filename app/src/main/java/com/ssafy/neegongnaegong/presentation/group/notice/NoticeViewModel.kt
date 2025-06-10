@@ -2,10 +2,12 @@ package com.ssafy.neegongnaegong.presentation.group.notice
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateNoticeUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract
+import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -48,24 +50,22 @@ class NoticeViewModel
                 }
 
                 NoticeContract.Event.OnClickCompleteButton -> {
-                    val studyGroupId = savedStateHandle.get<Long>("studyGroupId")
-                    if (studyGroupId != null) {
-                        viewModelScope.launch {
-                            createNoticeUseCase(
-                                studyGroupId,
-                                uiState.value.title,
-                                uiState.value.content,
-                            ).safeCollect {
-                                setEffect {
-                                    NoticeContract.Effect.NavigateToBackStackInclusive(
-                                        ListContract.Index.Notice.index,
-                                        studyGroupId,
-                                    )
-                                }
+                    val studyGroupId =
+                        savedStateHandle.toRoute<AppNavigation.Screen.Studies.MakeNotice>().studyGroupId
+
+                    viewModelScope.launch {
+                        createNoticeUseCase(
+                            studyGroupId,
+                            uiState.value.title,
+                            uiState.value.content,
+                        ).safeCollect {
+                            setEffect {
+                                NoticeContract.Effect.NavigateToBackStackInclusive(
+                                    ListContract.Index.Notice.index,
+                                    studyGroupId,
+                                )
                             }
                         }
-                    } else {
-                        showErrorMessage("접근이 잘못되었습니다!")
                     }
                 }
             }
