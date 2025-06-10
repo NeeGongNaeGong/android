@@ -7,21 +7,20 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeL
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
-import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
-import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListInfo
-import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsRequest
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequest
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkStudyGroupDataSource {
     fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagResponse>>
 
-    suspend fun getMemberStudyContents(request: MemberStudyContentsInfo): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
+    suspend fun getMemberStudyContents(request: MemberStudyContentsRequest): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
 
+    suspend fun getStudyGroupVoteList(request: StudyGroupVoteListRequest): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
 
-    suspend fun getStudyGroupVoteList(request: StudyGroupVoteListInfo): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>
-
-    suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListInfo): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
+    suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListRequest): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
 
     fun getStudyGroupNoticeDetail(
         studyGroupId: Long,
@@ -45,12 +44,12 @@ interface NetworkStudyGroupDataSource {
     fun approveStudyGroupJoin(
         studyGroupId: Long,
         userId: Long,
-        notificationId: Long?
+        notificationId: Long?,
     ): Flow<Unit>
 
     fun rejectStudyGroupJoin(
         studyGroupId: Long,
         userId: Long,
-        notificationId: Long?
+        notificationId: Long?,
     ): Flow<Unit>
 }

@@ -4,10 +4,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupNoticeHistoryInfoMapper.toDomain
-import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupVoteHistoryInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeHistoryResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
-import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequest
 
 class StudyGroupNoticeListPagingSource(
     private val dataSource: NetworkStudyGroupDataSource,
@@ -17,7 +16,7 @@ class StudyGroupNoticeListPagingSource(
         return try {
             val cursor = params.key
             val request =
-                StudyGroupNoticeListInfo(
+                StudyGroupNoticeListRequest(
                     studyGroupId = studyGroupId,
                     cursorId = cursor,
                     size = 10,

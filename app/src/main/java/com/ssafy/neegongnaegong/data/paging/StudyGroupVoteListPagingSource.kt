@@ -6,7 +6,7 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSou
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupVoteHistoryInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteHistoryResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.CursorSliceKey
-import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 
 class StudyGroupVoteListPagingSource(
@@ -17,7 +17,7 @@ class StudyGroupVoteListPagingSource(
         return try {
             val cursor = params.key
             val request =
-                StudyGroupVoteListInfo(
+                StudyGroupVoteListRequest(
                     studyGroupId = studyGroupId,
                     cursorTime = cursor?.cursorCreatedAt,
                     cursorId = cursor?.cursorId,

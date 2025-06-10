@@ -6,7 +6,7 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSou
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyContentInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyContentResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.CursorSliceKey
-import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
 
 class MemberStudyContentsPagingSource(
@@ -18,7 +18,7 @@ class MemberStudyContentsPagingSource(
         return try {
             val cursor = params.key
             val request =
-                MemberStudyContentsInfo(
+                MemberStudyContentsRequest(
                     studyGroupId = studyGroupId,
                     userId = userId,
                     cursorCreatedAt = cursor?.cursorCreatedAt,

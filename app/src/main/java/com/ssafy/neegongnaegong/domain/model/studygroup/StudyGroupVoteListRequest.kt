@@ -2,10 +2,9 @@ package com.ssafy.neegongnaegong.domain.model.studygroup
 
 import java.time.LocalDateTime
 
-data class MemberStudyContentsInfo(
+data class StudyGroupVoteListRequest(
     val studyGroupId: Long,
-    val userId: Long,
-    val cursorCreatedAt: LocalDateTime?,
+    val cursorTime: LocalDateTime?,
     val cursorId: Long?,
-    val size: Int = 10
+    val size: Int = 10,
 )
