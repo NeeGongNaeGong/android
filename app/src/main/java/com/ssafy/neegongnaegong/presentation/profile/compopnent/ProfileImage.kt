@@ -14,6 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +30,11 @@ import com.ssafy.neegongnaegong.R
 @Composable
 fun ProfileImage(
     modifier: Modifier = Modifier,
+    shouldShowProfileImageWarningInfo: Boolean,
     profileImg: String,
     onImageSelected: (Uri) -> Unit,
 ) {
+    var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val contract: ActivityResultContract<String, Uri?> = ActivityResultContracts.GetContent()
     val launcher = rememberLauncherForActivityResult(contract = contract) { uri: Uri? ->
         uri?.let { onImageSelected(uri) }
@@ -60,9 +66,25 @@ fun ProfileImage(
                     interactionSource = null,
                     indication = null,
                     onClick = {
-                        launcher.launch("image/*")
+                        if (shouldShowProfileImageWarningInfo) {
+                            showDialog = true
+                        } else {
+                            launcher.launch("image/*")
+                        }
                     }
                 )
+        )
+    }
+
+    if (showDialog) {
+        ProfileImageWarningDialog(
+            onDismiss = {
+                showDialog = false
+            },
+            onConfirm = {
+                showDialog = false
+                launcher.launch("image/*")
+            }
         )
     }
 }

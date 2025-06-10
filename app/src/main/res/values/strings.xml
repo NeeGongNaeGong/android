@@ -31,10 +31,20 @@
     <string name="withdrawal_no_recovery_notice">탈퇴 후에는 복구가 불가능하며, 동일한 이메일로 재가입 시에도 기존 정보는 복원되지 않습니다.</string>
     <string name="withdrawal_confirm_checkbox_text">위 내용을 모두 확인했으며, 회원탈퇴에 동의합니다.</string>
     <string name="common_cancel">취소</string>
+    <string name="common_continue">계속하기</string>
     <string name="withdrawal_confirm_button">회원 탈퇴</string>
     <string name="withdrawal_footer_notice">탈퇴를 원하지 않으시면 언제든지 취소하실 수 있습니다.</string>
     <string name="common_warning">경고</string>
     <string name="invalid_nickname">닉네임은 한글, 영어, 숫자만 사용할 수 있습니다</string>
     <string name="already_use_nickname">중복된 닉네임입니다</string>
+    <string name="profile_image_change_guide">프로필 이미지 변경 안내</string>
+    <string name="check_community_guideline">커뮤니티 가이드라인 확인</string>
+    <string name="profile_image_change_notice">다음 내용이 포함된 이미지는 피해주세요</string>
+    <string name="guideline_sexual_content">성적이거나 선정적인 내용</string>
+    <string name="guideline_violent_content">폭력적이거나 혐오적인 내용</string>
+    <string name="guideline_offensive_content">타인에게 불쾌감을 줄 수 있는 내용</string>
+    <string name="community_guideline_thanks">모든 사용자가 편안하게 이용할 수 있도록 커뮤니티 가이드라인을 준수해 주셔서 감사합니다.</string>
+    <string name="confirm_guideline_check">위 가이드라인을 확인했으며, 적절한 이미지만 업로드하겠습니다.</string>
+
 
 </resources>

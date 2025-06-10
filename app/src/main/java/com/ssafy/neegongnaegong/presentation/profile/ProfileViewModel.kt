@@ -40,7 +40,11 @@ class ProfileViewModel @Inject constructor(
         }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
             getMyProfileUseCase()
         }.combine(hasUnReadNotification) { user: User, hasUnReadNotification: Boolean ->
-            user.toUiModel(hasUnReadNotification = hasUnReadNotification)
+            // TODO("결합 예정")
+            user.toUiModel(
+                hasUnReadNotification = hasUnReadNotification,
+                shouldShowProfileImageWarningInfo = true
+            )
         }.onEach {
             endLoad()
         }.toViewModelState(ProfileUiModel.default())
