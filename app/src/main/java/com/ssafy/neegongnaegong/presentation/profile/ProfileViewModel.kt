@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
 import com.ssafy.neegongnaegong.domain.model.User
-import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
-import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.CheckShowProfileImageWarningUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.profile.data.ProfileMapper.toUiModel
@@ -53,33 +53,24 @@ class ProfileViewModel @Inject constructor(
     }
 
     private val myInfo: Flow<User> by lazy {
-        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
-            uiState.isInitial
-        }.filter { uiState: ProfileContract.State ->
-            uiState.isInitial
-        }.safeFlatMapLatest(errorContext = ProfileContract.Error.CantAccessMyInfoError) {
-            getMyProfileUseCase()
-        }
+        uiState.init().safeFlatMapLatest(
+            errorContext = ProfileContract.Error.CantAccessMyInfoError,
+            transform = { getMyProfileUseCase() }
+        )
     }
 
     private val hasUnReadNotification: Flow<Boolean> by lazy {
-        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
-            uiState.isInitial
-        }.filter { uiState: ProfileContract.State ->
-            uiState.isInitial
-        }.safeFlatMapLatest(errorContext = ProfileContract.Error.CantAccessUnReadNotificationInfoError) {
-            checkUnReadNotificationUseCase()
-        }
+        uiState.init().safeFlatMapLatest(
+            errorContext = ProfileContract.Error.CantAccessUnReadNotificationInfoError,
+            transform = { checkUnReadNotificationUseCase() }
+        )
     }
 
     private val showProfileImageWarning: Flow<Boolean> by lazy {
-        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
-            uiState.isInitial
-        }.filter { uiState: ProfileContract.State ->
-            uiState.isInitial
-        }.safeFlatMapLatest(errorContext = ProfileContract.Error.ShowErrorMessage) {
-            checkShowProfileImageWarningUseCase()
-        }
+        uiState.init().safeFlatMapLatest(
+            errorContext = ProfileContract.Error.CantAccessShowProfileImageWarningInfoError,
+            transform = { checkShowProfileImageWarningUseCase() }
+        )
     }
 
     override fun createInitialState(): ProfileContract.State = ProfileContract.State()
@@ -170,4 +161,12 @@ class ProfileViewModel @Inject constructor(
     private fun endLoad() {
         setState { copy(isInitial = false, isModifying = false) }
     }
+
+    private fun <T> Flow<T>.init() =
+        uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }.filter { uiState: ProfileContract.State ->
+            uiState.isInitial
+        }
+
 }
