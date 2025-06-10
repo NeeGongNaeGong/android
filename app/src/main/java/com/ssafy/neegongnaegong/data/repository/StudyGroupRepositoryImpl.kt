@@ -29,6 +29,7 @@ class StudyGroupRepositoryImpl
     @Inject
     constructor(
         private val dataSource: NetworkStudyGroupDataSource,
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : StudyGroupRepository {
         override fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagInfo>> =
             dataSource.getMemberStudyLogsByTag(request).map { tagList -> tagList.toDomain() }
@@ -90,20 +91,22 @@ class StudyGroupRepositoryImpl
         override fun approveStudyGroupJoin(
             studyGroupId: Long,
             userId: Long,
-            notificationId: Long?
-        ): Flow<Unit> = dataSource.approveStudyGroupJoin(
-            studyGroupId = studyGroupId,
-            userId = userId,
-            notificationId = notificationId
-        ).flowOn(context = ioDispatcher)
+            notificationId: Long?,
+        ): Flow<Unit> =
+            dataSource.approveStudyGroupJoin(
+                studyGroupId = studyGroupId,
+                userId = userId,
+                notificationId = notificationId,
+            ).flowOn(context = ioDispatcher)
 
         override fun rejectStudyGroupJoin(
             studyGroupId: Long,
             userId: Long,
-            notificationId: Long?
-        ): Flow<Unit> = dataSource.rejectStudyGroupJoin(
-            studyGroupId = studyGroupId,
-            userId = userId,
-            notificationId = notificationId
-        ).flowOn(context = ioDispatcher)
-}
+            notificationId: Long?,
+        ): Flow<Unit> =
+            dataSource.rejectStudyGroupJoin(
+                studyGroupId = studyGroupId,
+                userId = userId,
+                notificationId = notificationId,
+            ).flowOn(context = ioDispatcher)
+    }
