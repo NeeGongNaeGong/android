@@ -34,7 +34,7 @@ fun UserSearchTextField(
             NeeGongNaeGongTheme.typography.labelLarge.copy(
                 fontSize = 18.sp,
                 fontFeatureSettings = "tnum",
-                color = NeeGongNaeGongTheme.colorScheme.primaryText
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             ),
         placeholder = {
             Text(
