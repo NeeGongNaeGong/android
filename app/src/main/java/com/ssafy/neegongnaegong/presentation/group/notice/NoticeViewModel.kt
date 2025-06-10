@@ -68,6 +68,8 @@ class NoticeViewModel
                         }
                     }
                 }
+
+                NoticeContract.Event.OnClickPopBackStackButton -> setEvent(NoticeContract.Event.OnClickPopBackStackButton)
             }
         }
     }

@@ -61,7 +61,7 @@ fun NoticeDetailRoute(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            onNavigationClick = { popBackStack() },
+            onNavigationClick = { viewModel.setEvent(NoticeDetailContract.Event.OnClickPopBackStackButton) },
         )
         NoticeDetailScreen(
             writer = state.writer,

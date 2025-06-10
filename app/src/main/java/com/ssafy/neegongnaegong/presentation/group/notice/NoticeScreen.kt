@@ -41,7 +41,7 @@ fun NoticeRoute(
                     text = "공지 만들기",
                 )
             },
-            onNavigationClick = { popBackStack() },
+            onNavigationClick = { viewModel.setEvent(NoticeContract.Event.OnClickPopBackStackButton) },
             actionButtons = {
                 TextButton(
                     enabled = uiState.title.isNotEmpty() && uiState.content.isNotEmpty(),

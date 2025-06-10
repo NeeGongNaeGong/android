@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.group.notice.NoticeContract.Event
 import kotlinx.collections.immutable.PersistentList
 
 class VoteContract {
@@ -37,6 +38,8 @@ class VoteContract {
         data class OnChangeDate(val date: Long) : Event
 
         data class OnChangeTime(val hour: Int, val minute: Int) : Event
+
+        data object OnClickPopBackStackButton : Event
     }
 
     data class State(

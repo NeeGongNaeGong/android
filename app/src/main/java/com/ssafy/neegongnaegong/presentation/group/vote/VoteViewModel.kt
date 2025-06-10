@@ -171,6 +171,8 @@ class VoteViewModel
                         }
                     }
                 }
+
+                VoteContract.Event.OnClickPopBackStackButton -> setEvent(VoteContract.Event.OnClickPopBackStackButton)
             }
         }
     }

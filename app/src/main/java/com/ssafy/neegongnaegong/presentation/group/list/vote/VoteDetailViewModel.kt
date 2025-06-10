@@ -125,6 +125,8 @@ class VoteDetailViewModel
                         }
                     }
                 }
+
+                Event.OnClickPopBackStackButton -> setEffect { Effect.NavigateToBackStack }
             }
         }
 

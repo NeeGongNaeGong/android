@@ -87,7 +87,7 @@ fun VoteDetailRoute(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            onNavigationClick = { popBackStack() },
+            onNavigationClick = { viewModel.setEvent(VoteDetailContract.Event.OnClickPopBackStackButton) },
         )
         VoteDetailScreen(
             userName = state.userName,

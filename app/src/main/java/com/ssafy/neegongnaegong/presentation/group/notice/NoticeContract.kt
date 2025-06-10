@@ -12,17 +12,19 @@ class NoticeContract {
         data class OnChangeTitle(val title: String) : Event
 
         data class OnChangeContent(val content: String) : Event
+
+        data object OnClickPopBackStackButton : Event
     }
 
     data class State(val title: String, val content: String) : UiState
 
-    sealed class Effect : UiEffect {
-        data object NavigateToBackStack : Effect()
+    sealed interface Effect : UiEffect {
+        data object NavigateToBackStack : Effect
 
         data class NavigateToBackStackInclusive(
             val startIndex: Int,
             val studyGroupId: Long,
-        ) : Effect()
+        ) : Effect
     }
 
     sealed interface Error : ErrorContext {

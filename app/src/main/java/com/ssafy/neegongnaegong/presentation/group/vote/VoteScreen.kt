@@ -65,7 +65,7 @@ fun VoteRoute(
                     text = "투표 만들기",
                 )
             },
-            onNavigationClick = { popBackStack() },
+            onNavigationClick = { viewModel.setEvent(VoteContract.Event.OnClickPopBackStackButton) },
             actionButtons = {
                 TextButton(
                     enabled = uiState.voteTitle.isNotEmpty() && uiState.voteItemList.filter { it.isNotEmpty() }.isNotEmpty(),
@@ -93,13 +93,9 @@ fun VoteRoute(
         LaunchedEffect(viewModel.effect) {
             viewModel.effect.collect { effect ->
                 when (effect) {
-                    VoteContract.Effect.NavigateToBackStack -> {
-                        popBackStack()
-                    }
+                    VoteContract.Effect.NavigateToBackStack -> popBackStack()
 
-                    is VoteContract.Effect.NavigateToMain -> {
-                        navigateToMain(effect.startIndex, effect.studyGroupId)
-                    }
+                    is VoteContract.Effect.NavigateToMain -> navigateToMain(effect.startIndex, effect.studyGroupId)
                 }
             }
         }

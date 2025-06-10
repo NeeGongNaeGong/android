@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event
 import kotlinx.collections.immutable.PersistentList
 
 class VoteDetailContract {
@@ -30,6 +31,8 @@ class VoteDetailContract {
         data object OnCancelAddOption : Event
 
         data object OnConfirmAddOption : Event
+
+        data object OnClickPopBackStackButton : Event
     }
 
     enum class VoteOptions(val option: String, val description: String) {

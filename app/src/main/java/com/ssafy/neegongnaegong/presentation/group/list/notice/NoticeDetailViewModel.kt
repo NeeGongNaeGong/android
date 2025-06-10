@@ -32,9 +32,9 @@ class NoticeDetailViewModel
 
         override fun handleEvent(event: Event) {
             when (event) {
-                Event.InvalidAccess -> {
-                    setEffect { Effect.NavigateToBackStack }
-                }
+                Event.InvalidAccess -> setEffect { Effect.NavigateToBackStack }
+
+                Event.OnClickPopBackStackButton -> setEffect { Effect.NavigateToBackStack }
             }
         }
 
