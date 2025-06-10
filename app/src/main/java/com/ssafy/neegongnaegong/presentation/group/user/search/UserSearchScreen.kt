@@ -38,11 +38,6 @@ fun UserSearchRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val userSearchList = viewModel.searchUserList.collectAsLazyPagingItems()
 
-    if (userSearchList.loadState.refresh is androidx.paging.LoadState.Loading) {
-        if (userSearchList.loadState.append is androidx.paging.LoadState.Loading) {
-        }
-    }
-
     BackHandler { viewModel.setEvent(UserSearchContract.Event.OnBackClick) }
 
     UserSearchContent(
