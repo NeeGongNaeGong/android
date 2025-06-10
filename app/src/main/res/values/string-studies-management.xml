@@ -12,4 +12,15 @@
     <string name="studies_create_max_members">최대 인원</string>
     <string name="studies_create_study_time">목표 시간</string>
 
+    <!--스터디 수정 화면-->
+    <string name="studies_edit_title">그룹 관리</string>
+    <string name="studies_edit_study_name">스터디명</string>
+    <string name="studies_edit_public_private">공개 여부</string>
+    <string name="studies_edit_select_category">카테고리 선택</string>
+    <string name="studies_edit_select_tags">태그 선택</string>
+    <string name="studies_edit_description">스터디 설명</string>
+    <string name="studies_edit_add_photo">사진 추가</string>
+    <string name="studies_edit_update">수정하기</string>
+    <string name="studies_edit_max_members">최대 인원</string>
+    <string name="studies_edit_study_time">목표 시간</string>
 </resources>

@@ -42,6 +42,7 @@ private const val TAG = "StudiesDrawer"
 @Composable
 fun StudiesDrawerContent(
     navBackStackEntry: NavBackStackEntry,
+    navigateTodStudiesEdit: () -> Unit,
     navigateToStudiesMembersRole: () -> Unit,
     navigateToStudiesApplications: () -> Unit,
 ) {
@@ -57,6 +58,7 @@ fun StudiesDrawerContent(
                 StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
             )
         },
+        navigateTodStudiesEdit = navigateTodStudiesEdit,
         navigateToStudiesMembersRole = navigateToStudiesMembersRole,
         navigateToStudiesApplications = navigateToStudiesApplications,
     )
@@ -68,13 +70,13 @@ private fun StudiesDrawer(
     headerImageUrl: String? = null,
     name: String = "",
     description: String = "",
-    onGroupManagementClick: () -> Unit = {},
     onScheduleManagementClick: () -> Unit = {},
     onStudyCreateClick: () -> Unit = {},
     onStudySearchClick: () -> Unit = {},
     onMyStudyClick: () -> Unit = {},
     onStudyItemClick: (Long) -> Unit = {},
     onStudyDeleteClick: () -> Unit = {},
+    navigateTodStudiesEdit: () -> Unit = {},
     navigateToStudiesMembersRole: () -> Unit = {},
     navigateToStudiesApplications: () -> Unit = {},
 ) {
@@ -136,7 +138,7 @@ private fun StudiesDrawer(
         DrawerMenuItem(
             icon = R.drawable.ic_studies_drw_group_management,
             title = stringResource(R.string.studies_drw_group_management),
-            onClick = onGroupManagementClick,
+            onClick = navigateTodStudiesEdit,
         )
 
         // 멤버 관리 섹션

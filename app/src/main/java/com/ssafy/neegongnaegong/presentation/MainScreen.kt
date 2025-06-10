@@ -139,6 +139,14 @@ fun MainScreen() {
                     }
                 StudiesDrawerContent(
                     navBackStackEntry = entry,
+                    navigateTodStudiesEdit = {
+                        if (isStudiesDetail) {
+                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                            navController.navigate(
+                                AppNavigation.Screen.Studies.Edit(route.studyGroupId),
+                            )
+                        }
+                    },
                     navigateToStudiesMembersRole = {
                         if (isStudiesDetail) {
                             val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
