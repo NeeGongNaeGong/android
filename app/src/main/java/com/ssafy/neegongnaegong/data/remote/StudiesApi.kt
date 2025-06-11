@@ -33,7 +33,7 @@ interface StudiesApi {
     @GET("/api/study-groups/list")
     suspend fun getStudiesList(
         @Query("cursor-created-at") cursorCreatedAt: String?,
-        @Query("cursorId") cursorId: Long?,
+        @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceStudiesListResponse>>
 
