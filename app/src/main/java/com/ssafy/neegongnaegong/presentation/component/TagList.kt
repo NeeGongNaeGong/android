@@ -20,11 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -90,13 +90,15 @@ fun TagList(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun TagListPreview() {
-    TagList(
-        modifier = Modifier.padding(16.dp),
-        tags = PersonalPreviewDataProvider().getTags(),
-        onTagPlusClicked = {},
-        onTagEraseClicked = {},
-    )
+    NeeGongNaeGongTheme {
+        TagList(
+            modifier = Modifier.padding(16.dp),
+            tags = PersonalPreviewDataProvider().getTags(),
+            onTagPlusClicked = {},
+            onTagEraseClicked = {},
+        )
+    }
 }

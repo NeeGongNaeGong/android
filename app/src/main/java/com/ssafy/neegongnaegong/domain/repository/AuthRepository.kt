@@ -5,7 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun login(idToken: String): Flow<User>
-    suspend fun register(email: String, nickname: String, profileImage: String): Flow<Boolean>
-    suspend fun logout(): Flow<Boolean>
+
+    suspend fun register(
+        email: String,
+        nickname: String,
+        profileImage: String,
+    ): Flow<Boolean>
+
     suspend fun reissue(): Flow<Boolean>
 }

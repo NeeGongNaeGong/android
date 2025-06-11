@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,17 +39,23 @@ fun PauseDialog(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                    .background(
+                        NeeGongNaeGongTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
         ) {
             Column(
-                modifier = Modifier.padding(top = 20.dp, start = 10.dp, end = 10.dp),
+                modifier =
+                    Modifier
+                        .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+                        .background(NeeGongNaeGongTheme.colorScheme.background),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(R.string.txt_dialog_title),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -58,7 +63,7 @@ fun PauseDialog(
                 Text(
                     text = stringResource(R.string.txt_dialog_content),
                     fontSize = 14.sp,
-                    color = Color.Gray,
+                    color = NeeGongNaeGongTheme.colorScheme.gray4,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -99,7 +104,7 @@ fun PauseDialog(
                             stringResource(R.string.txt_dialog_close),
                             style = NeeGongNaeGongTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Blue,
+                            color = NeeGongNaeGongTheme.colorScheme.blue,
                         )
                     }
                 }
@@ -111,9 +116,11 @@ fun PauseDialog(
 @NeeGongNaeGongPreviews
 @Composable
 fun PauseDialogPreview() {
-    PauseDialog(
-        onCancel = {},
-        onDismiss = {},
-        onConfirm = {},
-    )
+    NeeGongNaeGongTheme {
+        PauseDialog(
+            onCancel = {},
+            onDismiss = {},
+            onConfirm = {},
+        )
+    }
 }

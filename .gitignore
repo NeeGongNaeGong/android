@@ -25,3 +25,4 @@ local.properties
 .idea/ChatHistory_schema_v2.xml
 app/google-services.json
 node_modules/
+.idea/studiobot.xml

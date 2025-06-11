@@ -7,6 +7,7 @@ import com.ssafy.neegongnaegong.data.remote.AuthApi
 import com.ssafy.neegongnaegong.data.remote.CategoryApi
 import com.ssafy.neegongnaegong.data.remote.FileApi
 import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
+import com.ssafy.neegongnaegong.data.remote.NotificationApi
 import com.ssafy.neegongnaegong.data.remote.S3Api
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import com.ssafy.neegongnaegong.data.remote.StudyGroupApi
@@ -27,6 +28,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -169,12 +171,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLearningRecordApi(
-        @SecureRetrofit retrofit: Retrofit,
-    ): LearningRecordApi = retrofit.create(LearningRecordApi::class.java)
-
-    @Provides
-    @Singleton
     fun provideCategoryApi(
         @SecureRetrofit retrofit: Retrofit,
     ): CategoryApi = retrofit.create(CategoryApi::class.java)
@@ -190,4 +186,14 @@ object NetworkModule {
     fun provideS3Api(
         @S3Retrofit retrofit: Retrofit,
     ): S3Api = retrofit.create(S3Api::class.java)
+
+    fun provideLearningRecordApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): LearningRecordApi = retrofit.create(LearningRecordApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNotificationApi(
+        @SecureRetrofit retrofit: Retrofit,
+    ): NotificationApi = retrofit.create()
 }

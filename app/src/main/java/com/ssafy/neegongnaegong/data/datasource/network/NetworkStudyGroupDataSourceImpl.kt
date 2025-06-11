@@ -30,4 +30,30 @@ class NetworkStudyGroupDataSourceImpl
                 request.cursorId,
                 request.size,
             )
+
+        override fun approveStudyGroupJoin(
+            studyGroupId: Long,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> =
+            apiFlow {
+                api.approveStudyGroupJoin(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    notificationId = notificationId,
+                )
+            }
+
+        override fun rejectStudyGroupJoin(
+            studyGroupId: Long,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> =
+            apiFlow {
+                api.rejectStudyGroupJoin(
+                    studyGroupId = studyGroupId,
+                    userId = userId,
+                    notificationId = notificationId,
+                )
+            }
     }

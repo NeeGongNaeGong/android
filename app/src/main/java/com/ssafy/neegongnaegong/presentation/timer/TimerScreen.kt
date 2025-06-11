@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.timer
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +24,8 @@ import com.ssafy.neegongnaegong.presentation.timer.component.timer.PauseButton
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.PauseDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.PlayButton
 import com.ssafy.neegongnaegong.presentation.timer.component.timer.TimerText
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -71,6 +75,8 @@ fun TimerContent(
     // activity
     onCloseActivity: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     if (uiState.isPauseDialogVisible) {
         PauseDialog(
             onCancel = onCancelDialog,
@@ -124,7 +130,10 @@ fun TimerScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(NeeGongNaeGongTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(screenHeight * 0.1f))
@@ -146,5 +155,18 @@ fun TimerScreen(
         }
 
         Spacer(modifier = Modifier.height(screenHeight * 0.03f))
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun TimerScreenPreview() {
+    NeeGongNaeGongTheme {
+        TimerScreen(
+            totalElapsedTime = 90_000L,
+            isRunning = false,
+            onPauseClicked = {},
+            onPlayClicked = {},
+        )
     }
 }

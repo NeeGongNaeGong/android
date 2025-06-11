@@ -25,7 +25,7 @@ fun PersonalByTagScreen(
     navigateToEditScreen: (Long) -> Unit,
     // Paging
     onLoadMore: () -> Unit,
-    hasNext: Boolean,
+    hasTagDataNext: Boolean,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         TagList(
@@ -43,7 +43,7 @@ fun PersonalByTagScreen(
             learningRecords = learningRecords,
             onClick = navigateToEditScreen,
             onLoadMore = onLoadMore,
-            hasNext = hasNext,
+            hasNext = hasTagDataNext,
         )
     }
 }
@@ -59,7 +59,7 @@ fun PersonalByTagScreenPreview() {
             onTagEraseClicked = {},
             navigateToEditScreen = {},
             onLoadMore = {},
-            hasNext = false,
+            hasTagDataNext = false,
         )
     }
 }

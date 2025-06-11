@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.material3.Surface
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ssafy.neegongnaegong.presentation.base.LoginStatusViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -21,7 +22,6 @@ class MainActivity : ComponentActivity() {
     private val permissionLauncher by lazy {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { _ -> }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -48,8 +48,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            NeeGongNaeGongTheme(dynamicColor = false) {
-                MainScreen()
+            NeeGongNaeGongTheme {
+                Surface(color = NeeGongNaeGongTheme.colorScheme.background) {
+                    MainScreen()
+                }
             }
         }
     }

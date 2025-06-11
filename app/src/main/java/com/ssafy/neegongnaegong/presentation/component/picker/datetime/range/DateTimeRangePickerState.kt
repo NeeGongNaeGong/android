@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.component.picker.datetime.range
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -14,22 +15,20 @@ import java.time.LocalTime
 fun rememberDateTimeRangePickerState(
     startDateTime: LocalDateTime = LocalDateTime.now().with(LocalTime.MIN),
     endDateTime: LocalDateTime = startDateTime.plusHours(1),
-    isAllDay: Boolean = false
+    isAllDay: Boolean = false,
 ): DateTimeRangePickerState {
     require(startDateTime <= endDateTime) {
         "startDateTime($startDateTime) must be before or equal to endDateTime($endDateTime)"
     }
 
-    return remember {
-        DateTimeRangePickerState(startDateTime, endDateTime, isAllDay)
-    }
+    return remember { DateTimeRangePickerState(startDateTime, endDateTime, isAllDay) }
 }
 
 @Stable
 class DateTimeRangePickerState(
     startDateTime: LocalDateTime,
     endDateTime: LocalDateTime,
-    isAllDay: Boolean
+    isAllDay: Boolean,
 ) {
     var startDateTime by mutableStateOf(startDateTime)
         private set
@@ -41,8 +40,11 @@ class DateTimeRangePickerState(
         private set
 
     fun updateStartDate(date: LocalDate) = updateStartDateTime(startDateTime.with(date))
+
     fun updateStartTime(time: LocalTime) = updateStartDateTime(startDateTime.with(time))
+
     fun updateEndDate(date: LocalDate) = updateEndDateTime(this.endDateTime.with(date))
+
     fun updateEndTime(time: LocalTime) = updateEndDateTime(this.endDateTime.with(time))
 
     fun updateStartDateTime(dateTime: LocalDateTime) {
@@ -53,6 +55,7 @@ class DateTimeRangePickerState(
     }
 
     fun updateEndDateTime(dateTime: LocalDateTime) {
+        Log.d("DateTimeRangePickerState", "updateEndDateTime $dateTime")
         endDateTime = dateTime
         if (dateTime.isBefore(startDateTime)) {
             startDateTime = dateTime
@@ -62,10 +65,13 @@ class DateTimeRangePickerState(
     fun updateIsAllDay(isAllDay: Boolean) {
         this.isAllDay = isAllDay
         if (isAllDay) {
+            Log.d("DateTimeRangePickerState", "updateIsAllDay $isAllDay")
             updateStartTime(LocalTime.MIN)
             updateEndTime(LocalTime.MAX)
         }
     }
+
+    fun toggleIsAllDay() = updateIsAllDay(!isAllDay)
 
     val isFocused: Boolean
         get() = focus != Focus.None
@@ -79,17 +85,23 @@ class DateTimeRangePickerState(
         get() = focus == Focus.EndTime
 
     private fun updateFocus(focus: Focus) {
-        this.focus = if (this.focus == focus) {
-            Focus.None
-        } else {
-            focus
-        }
+        this.focus =
+            if (this.focus == focus) {
+                Log.d("DateTimeRangePickerState", "$focus")
+                Focus.None
+            } else {
+                focus
+            }
     }
 
     fun clearFocus() = updateFocus(Focus.None)
+
     fun focusOnStartDate() = updateFocus(Focus.StartDate)
+
     fun focusOnStartTime() = updateFocus(Focus.StartTime)
+
     fun focusOnEndDate() = updateFocus(Focus.EndDate)
+
     fun focusOnEndTime() = updateFocus(Focus.EndTime)
 
     enum class Focus {

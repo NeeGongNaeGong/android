@@ -11,4 +11,16 @@ interface NetworkStudyGroupDataSource {
     fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagResponse>>
 
     suspend fun getMemberStudyContents(request: MemberStudyContentsInfo): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
+
+    fun approveStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
+
+    fun rejectStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
 }

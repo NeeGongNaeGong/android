@@ -2,16 +2,19 @@ package com.ssafy.neegongnaegong.presentation.component.picker.date
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.YearMonth
 
 @Composable
-fun DatePickerHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
+fun DatePickerHeader(
+    modifier: Modifier = Modifier,
+    selectedMonth: YearMonth,
+) {
     DatePickerHeader(
         modifier = modifier,
         text = "${selectedMonth.year}년 ${selectedMonth.monthValue}월",
@@ -19,21 +22,26 @@ fun DatePickerHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
 }
 
 @Composable
-fun DatePickerHeader(modifier: Modifier = Modifier, text: String) {
+fun DatePickerHeader(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             modifier = modifier.fillMaxWidth(),
             text = text,
-            style = MaterialTheme.typography.titleSmall,
+            style = NeeGongNaeGongTheme.typography.titleSmall,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
         DayOfWeek()
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DatePickerHeaderPreview() {
-    
+    NeeGongNaeGongTheme {
+        DatePickerHeader(selectedMonth = YearMonth.now())
+    }
 }

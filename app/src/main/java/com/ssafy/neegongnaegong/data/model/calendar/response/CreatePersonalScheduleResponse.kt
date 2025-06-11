@@ -8,8 +8,8 @@ data class CreatePersonalScheduleResponse(
     val id: Long,
     val title: String,
     val content: String?,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startAt: LocalDateTime,
+    val endAt: LocalDateTime,
     val location: String?,
     val repeatRule: RepeatRuleResponse? = null,
 )

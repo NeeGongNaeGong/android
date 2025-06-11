@@ -5,22 +5,29 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.exception.AuthException
 import com.ssafy.neegongnaegong.presentation.util.AuthManager
+import com.ssafy.neegongnaegong.presentation.util.FlowUtil.safeFlatMapLatest
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect> : ViewModel() {
-
     private val initialState: State by lazy { createInitialState() }
+
     abstract fun createInitialState(): State
 
     private val currentState: State
@@ -30,7 +37,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     val uiState = _uiState.asStateFlow()
 
     private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
-    private val event = _event.asSharedFlow()
+    val event = _event.asSharedFlow()
 
     private val _effect: Channel<Effect> = Channel()
     val effect = _effect.receiveAsFlow()
@@ -80,7 +87,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     protected fun showMessage(
         message: String,
         type: SnackbarManager.Type = SnackbarManager.Type.None,
-        action: SnackbarManager.Action? = null
+        action: SnackbarManager.Action? = null,
     ) = viewModelScope.launch {
         SnackbarManager.showMessage(message, type, action)
     }
@@ -96,7 +103,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      */
     protected fun showSuccessMessage(
         message: String,
-        action: SnackbarManager.Action? = null
+        action: SnackbarManager.Action? = null,
     ) = viewModelScope.launch {
         SnackbarManager.showSuccessMessage(message, action)
     }
@@ -112,7 +119,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      */
     protected fun showWarningMessage(
         message: String,
-        action: SnackbarManager.Action? = null
+        action: SnackbarManager.Action? = null,
     ) = viewModelScope.launch {
         SnackbarManager.showWarningMessage(message, action)
     }
@@ -128,24 +135,37 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      */
     protected fun showErrorMessage(
         message: String,
-        action: SnackbarManager.Action? = null
+        action: SnackbarManager.Action? = null,
     ) = viewModelScope.launch {
         SnackbarManager.showErrorMessage(message, action)
     }
 
-
     /**
      * Flow에 맞춰 Loading 상태를 전달하는 함수
+     * 만약 collet가 delay 전에 종료된다면 loading을 true로 세팅하지 않습니다.
      *
+     * @param delay 편의를 위한 loading을 true로 설정하기까지의 최소한의 딜레이
      * @param setLoading onStart에 true를 전달하고, onCompletion에 false를 전달
      */
-    protected fun <T> Flow<T>.withLoading(setLoading: (Boolean) -> Unit = {}): Flow<T> {
-        return this.onStart { setLoading(true) }.onCompletion { setLoading(false) }
+    protected fun <T> Flow<T>.withLoading(
+        delay: Long = 100L,
+        setLoading: (Boolean) -> Unit = {},
+    ): Flow<T> {
+        var isFinished = false
+        return this.onStart {
+            viewModelScope.launch {
+                delay(delay)
+                if (!isFinished) setLoading(true)
+            }
+        }.onCompletion {
+            isFinished = true
+            setLoading(false)
+        }
     }
 
     /**
      * 안전하게 Flow를 collect하는 함수
-     * 실패시 [_handleException]로 공통 에러 로직 처리 후
+     * 실패시 [handleException]로 공통 에러 로직 처리 후
      * [handleException]로 커스템 에러 로직 처리
      *
      * @param errorContext ErrorContext
@@ -153,17 +173,66 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      */
     protected suspend fun <T> Flow<T>.safeCollect(
         errorContext: ErrorContext? = null,
-        block: suspend (T) -> Unit = {}
+        block: suspend (T) -> Unit = {},
     ) {
         runCatching {
             collect { value -> block(value) }
         }.onFailure { exception ->
             exception.printStackTrace()
-            _handleException<T>(exception, errorContext) {
-                this.safeCollect(errorContext, block)
+            handleException<T>(exception, errorContext) {
+                safeCollect(errorContext, block)
             }
         }
     }
+
+    /**
+     * 안전하게 suspend 블록을 실행하는 함수
+     * 성공 시 [onSuccess] 블록을 호출하고,
+     * 실패 시 [handleException]로 공통 에러 로직 처리 후,
+     * [retry]를 통해 재시도 로직을 연결할 수 있음
+     *
+     * @param onSuccess suspend 블록 실행 성공 시 호출될 콜백
+     * @param errorContext ErrorContext – 에러 처리 컨텍스트
+     * @param retry 실패 시 재시도할 로직
+     * @param block 실행할 suspend 블록
+     */
+    protected open fun <Result> CoroutineScope.safeLaunch(
+        onSuccess: (Result) -> Unit = {},
+        errorContext: ErrorContext? = null,
+        retry: () -> Unit = {},
+        block: suspend () -> Result,
+    ): Job =
+        launch {
+            runCatching { block() }
+                .onSuccess { result: Result -> onSuccess(result) }
+                .onFailure { throwable: Throwable ->
+                    handleException<Result>(e = throwable, errorContext = errorContext, retry = retry)
+                }
+        }
+
+    /**
+     * 안전하게 flatMapLatest를 수행하는 확장 함수
+     *
+     * Flow에서 예외가 발생할 수 있는 flatMapLatest 연산을 수행할 때,
+     * 공통 에러 처리 로직 [handleException]을 통해 예외를 처리하고,
+     * 필요 시 [retry] 블록을 통해 재시도 로직을 연결할 수 있음.
+     *
+     * @param errorContext ErrorContext – 에러 처리 컨텍스트
+     * @param retry 실패 시 재시도할 로직
+     * @param transform 변환할 suspend flatMapLatest 블록
+     *
+     * @return 안전하게 예외 처리가 적용된 Flow<R>
+     */
+    protected fun <T, R> Flow<T>.safeFlatMapLatest(
+        errorContext: ErrorContext? = null,
+        retry: () -> Unit = {},
+        transform: suspend (value: T) -> Flow<R>,
+    ) = safeFlatMapLatest(
+        transform = transform,
+        catch = { throwable: Throwable ->
+            handleException<T>(e = throwable, errorContext = errorContext, retry = retry)
+        },
+    )
 
     /**
      * safeCollect 중 발생한 예외를 처리하는 함수
@@ -177,31 +246,53 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      * @param errorContext ErrorContext
      * @param retry 재시도 콜백
      */
-    private fun <T> _handleException(
+    private fun <T> handleException(
         e: Throwable,
         errorContext: ErrorContext?,
-        retry: suspend () -> Unit
+        retry: suspend () -> Unit,
     ) {
         when (e) {
-            is AuthException.InvalidTokenException -> viewModelScope.launch {
-                showErrorMessage(e.message)
-                authManager.invalid()
-            }
+            is AuthException.InvalidTokenException ->
+                viewModelScope.launch {
+                    showErrorMessage(e.message)
+                    authManager.invalid()
+                }
 
-            is ApiException.ServerException -> viewModelScope.launch {
-                showErrorMessage(
-                    e.message,
-                    SnackbarManager.Action.retry { viewModelScope.launch { retry() } }
-                )
-            }
+            is ApiException.ServerException ->
+                viewModelScope.launch {
+                    showErrorMessage(
+                        e.message,
+                        SnackbarManager.Action.retry { viewModelScope.launch { retry() } },
+                    )
+                }
 
-            is ApiException.NetworkException -> viewModelScope.launch {
-                showErrorMessage(e.message)
-            }
+            is ApiException.NetworkException ->
+                viewModelScope.launch {
+                    showErrorMessage(
+                        e.message,
+                        SnackbarManager.Action.retry { viewModelScope.launch { retry() } },
+                    )
+                }
 
-            else -> errorContext?.let { handleException(e, it) { viewModelScope.launch { retry() } } }
+            else ->
+                errorContext?.let {
+                    handleException(e, it) { viewModelScope.launch { retry() } }
+                }
         }
     }
+
+    /**
+     * Flow를 ViewModel에서 사용할 수 있는 StateFlow로 변환하는 확장 함수입니다.
+     *
+     * @param initValue 초기 상태 값입니다. 화면이 처음 구성될 때 사용할 기본 값입니다.
+     * @return ViewModel 범위(viewModelScope) 내에서 구독되는 StateFlow를 반환합니다.
+     */
+    protected fun <T> Flow<T>.toViewModelState(initValue: T): StateFlow<T> =
+        stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = TIME_OUT),
+            initialValue = initValue,
+        )
 
     /**
      * ErrorContext에 따라 예외를 처리하는 함수
@@ -213,5 +304,13 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      * @param errorContext ErrorContext
      * @param retry 재시도 콜백
      */
-    open fun handleException(e: Throwable, errorContext: ErrorContext, retry: () -> Unit) {}
+    open fun handleException(
+        e: Throwable,
+        errorContext: ErrorContext,
+        retry: () -> Unit,
+    ) {}
+
+    companion object {
+        protected const val TIME_OUT: Long = 5_000L
+    }
 }

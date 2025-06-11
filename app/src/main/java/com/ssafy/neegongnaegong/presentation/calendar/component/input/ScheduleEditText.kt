@@ -1,19 +1,26 @@
-package com.ssafy.neegongnaegong.presentation.calendar.component
+package com.ssafy.neegongnaegong.presentation.calendar.component.input
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.presentation.calendar.component.textFieldColors
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
@@ -23,8 +30,30 @@ fun ScheduleEditText(
     onTextChange: (String) -> Unit = {},
     placeHolder: String? = null,
     prefix: ImageVector? = null,
-    enabled: Boolean = true,
+    enable: Boolean = true,
 ) {
+    var textFieldValue by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = text,
+                selection = TextRange(text.length),
+            )
+        )
+    }
+
+    LaunchedEffect(text) {
+        textFieldValue = if(textFieldValue.text.isEmpty()) {
+            textFieldValue.copy(
+                text = text,
+                selection = TextRange(text.length)
+            )
+        } else {
+            textFieldValue.copy(
+                text = text,
+            )
+        }
+    }
+
     TextField(
         modifier = modifier,
         prefix = {
@@ -36,9 +65,12 @@ fun ScheduleEditText(
                 )
             }
         },
-        enabled = enabled,
-        value = text,
-        onValueChange = onTextChange,
+        enabled = enable,
+        value = textFieldValue,
+        onValueChange = {
+            textFieldValue = it
+            onTextChange(textFieldValue.text)
+        },
         textStyle = NeeGongNaeGongTheme.typography.bodyMedium,
         shape = RectangleShape,
         placeholder = {
@@ -46,18 +78,18 @@ fun ScheduleEditText(
                 Text(
                     text = placeHolder,
                     style = NeeGongNaeGongTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.6f)
                 )
             }
         },
-        colors = MaterialTheme.textFieldColors()
+        colors = NeeGongNaeGongTheme.textFieldColors()
     )
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun ScheduleEditTextPreview() {
-    NeeGongNaeGongTheme(dynamicColor = false) {
+    NeeGongNaeGongTheme {
         ScheduleEditText(
             modifier = Modifier.fillMaxWidth(),
             text = "Preview Text",

@@ -1,26 +1,27 @@
 package com.ssafy.neegongnaegong.presentation.calendar.component
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
-fun MaterialTheme.textFieldColors(): TextFieldColors = TextFieldDefaults.colors(
-    focusedIndicatorColor = Color.Transparent,
-    unfocusedIndicatorColor = Color.Transparent,
-    disabledIndicatorColor = Color.Transparent,
-    focusedContainerColor = colorScheme.primaryContainer,
-    unfocusedContainerColor = colorScheme.primaryContainer,
-    disabledContainerColor = colorScheme.primaryContainer,
-    focusedTextColor = colorScheme.onBackground,
-    unfocusedTextColor = colorScheme.onBackground,
-    disabledTextColor = colorScheme.onBackground,
-    focusedPlaceholderColor = colorScheme.onBackground,
-    unfocusedPlaceholderColor = colorScheme.onBackground,
-    disabledPlaceholderColor = colorScheme.onBackground,
-    focusedPrefixColor = colorScheme.onBackground,
-    unfocusedPrefixColor = colorScheme.onBackground,
-    disabledPrefixColor = colorScheme.onBackground
-)
+fun NeeGongNaeGongTheme.textFieldColors(): TextFieldColors =
+    TextFieldDefaults.colors(
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        disabledContainerColor = Color.Transparent,
+        focusedTextColor = colorScheme.primaryText,
+        unfocusedTextColor = colorScheme.primaryText,
+        disabledTextColor = colorScheme.primaryText,
+        focusedPlaceholderColor = colorScheme.primaryText,
+        unfocusedPlaceholderColor = colorScheme.primaryText,
+        disabledPlaceholderColor = colorScheme.primaryText,
+        focusedPrefixColor = colorScheme.primaryText,
+        unfocusedPrefixColor = colorScheme.primaryText,
+        disabledPrefixColor = colorScheme.primaryText,
+    )

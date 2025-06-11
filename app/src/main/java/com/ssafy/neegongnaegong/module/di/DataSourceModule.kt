@@ -14,6 +14,8 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkFileDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkFileDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkS3DataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkS3DataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
@@ -75,4 +77,10 @@ internal interface DataSourceModule {
     @Singleton
     @Binds
     fun bindNetworkS3DataSource(networkS3DataSourceImpl: NetworkS3DataSourceImpl): NetworkS3DataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkNotificationDataSource(
+        networkNotificationDataSourceImpl: NetworkNotificationDataSourceImpl,
+    ): NetworkNotificationDataSource
 }

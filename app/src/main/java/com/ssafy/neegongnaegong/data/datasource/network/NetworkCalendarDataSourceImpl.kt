@@ -10,41 +10,46 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import com.ssafy.neegongnaegong.data.remote.UserCalendarApi
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
-class NetworkCalendarDataSourceImpl @Inject constructor(
-    private val api: UserCalendarApi
-) : NetworkCalendarDataSource {
-    override suspend fun getUserSchedules(
-        month: YearMonth
-    ): Flow<GetUserScheduleResponse> = apiFlow {
-        api.getUserSchedules(month)
-    }
+class NetworkCalendarDataSourceImpl
+    @Inject
+    constructor(
+        private val api: UserCalendarApi,
+    ) : NetworkCalendarDataSource {
+        override suspend fun getUserSchedules(month: YearMonth): Flow<GetUserScheduleResponse> =
+            apiFlow {
+                api.getUserSchedules(month)
+            }
 
-    override suspend fun getPersonalSchedule(
-        scheduleId: Long
-    ): Flow<ScheduleResponse> = apiFlow {
-        api.getPersonalSchedule(scheduleId)
-    }
+        override suspend fun getPersonalSchedule(
+            scheduleId: Long,
+            date: LocalDate,
+        ): Flow<ScheduleResponse> =
+            apiFlow {
+                api.getPersonalSchedule(scheduleId, date)
+            }
 
-    override suspend fun createPersonalSchedule(
-        request: CreatePersonalScheduleRequest
-    ): Flow<CreatePersonalScheduleResponse> = apiFlow {
-        api.createPersonalSchedule(request)
-    }
+        override suspend fun createPersonalSchedule(request: CreatePersonalScheduleRequest): Flow<CreatePersonalScheduleResponse> =
+            apiFlow {
+                api.createPersonalSchedule(request)
+            }
 
-    override suspend fun updatePersonalSchedule(
-        scheduleId: Long,
-        request: UpdatePersonalScheduleRequest
-    ): Flow<UpdatePersonalScheduleResponse> = apiFlow {
-        api.updatePersonalSchedule(scheduleId, request)
-    }
+        override suspend fun updatePersonalSchedule(
+            scheduleId: Long,
+            request: UpdatePersonalScheduleRequest,
+        ): Flow<UpdatePersonalScheduleResponse> =
+            apiFlow {
+                api.updatePersonalSchedule(scheduleId, request)
+            }
 
-    override suspend fun deletePersonalSchedule(
-        scheduleId: Long,
-        request: DeletePersonalScheduleRequest
-    ): Flow<Unit> = apiFlow {
-        api.deletePersonalSchedule(scheduleId, request)
+        override suspend fun deletePersonalSchedule(
+            scheduleId: Long,
+            request: DeletePersonalScheduleRequest,
+        ): Flow<Unit> =
+            apiFlow {
+                api.deletePersonalSchedule(scheduleId, request)
+            }
     }
-}

@@ -9,39 +9,41 @@ import com.ssafy.neegongnaegong.data.model.calendar.response.GetUserScheduleResp
 import com.ssafy.neegongnaegong.data.model.calendar.response.ScheduleResponse
 import com.ssafy.neegongnaegong.data.model.calendar.response.UpdatePersonalScheduleResponse
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.time.LocalDate
 import java.time.YearMonth
 
 interface UserCalendarApi {
-    @GET("/api/user/calendar/schedules")
+    @GET("/api/calendar/schedules")
     suspend fun getUserSchedules(
-        @Query("month") month: YearMonth
+        @Query("month") month: YearMonth,
     ): Result<ApiResponse<GetUserScheduleResponse>>
 
-    @GET("/api/user/calendar/schedules/{scheduleId}")
+    @GET("/api/calendar/schedules/{schedule-id}")
     suspend fun getPersonalSchedule(
-        @Path("scheduleId") scheduleId: Long
+        @Path("schedule-id") scheduleId: Long,
+        @Query("date") date: LocalDate,
     ): Result<ApiResponse<ScheduleResponse>>
 
-    @POST("/api/user/calendar/schedules")
+    @POST("/api/calendar/schedules")
     suspend fun createPersonalSchedule(
-        @Body request: CreatePersonalScheduleRequest
+        @Body request: CreatePersonalScheduleRequest,
     ): Result<ApiResponse<CreatePersonalScheduleResponse>>
 
-    @PUT("/api/user/calendar/schedules/{scheduleId}")
+    @PUT("/api/calendar/schedules/{schedule-id}")
     suspend fun updatePersonalSchedule(
-        @Path("scheduleId") scheduleId: Long,
-        @Body request: UpdatePersonalScheduleRequest
+        @Path("schedule-id") scheduleId: Long,
+        @Body request: UpdatePersonalScheduleRequest,
     ): Result<ApiResponse<UpdatePersonalScheduleResponse>>
 
-    @DELETE("/api/user/calendar/schedules/{scheduleId}")
+    @HTTP(method = "DELETE", path = "/api/calendar/schedules/{schedule-id}", hasBody = true)
     suspend fun deletePersonalSchedule(
-        @Path("scheduleId") scheduleId: Long,
-        @Body request: DeletePersonalScheduleRequest
+        @Path("schedule-id") scheduleId: Long,
+        @Body request: DeletePersonalScheduleRequest,
     ): Result<ApiResponse<Unit>>
 }

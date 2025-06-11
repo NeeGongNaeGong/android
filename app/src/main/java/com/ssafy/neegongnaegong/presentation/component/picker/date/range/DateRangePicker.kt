@@ -6,19 +6,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarHeader
+import com.ssafy.neegongnaegong.presentation.component.LaunchedEffectAfterFirst
 import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePickerBody
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
@@ -48,10 +48,11 @@ fun DateRangePicker(
      * pageCount는 전체 달 수
      * initialPage는 전체 중 초기 선택 달의 인덱스
      */
-    val pagerState = rememberPagerState(
-        pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
-        initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
+            initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
+        )
 
     /**
      * selectedMonth는 현재 선택된 달
@@ -62,7 +63,7 @@ fun DateRangePicker(
      * pagerState.currentPage가 변경될 때마다
      * selectedMonth 업데이트
      */
-    LaunchedEffect(pagerState.currentPage) {
+    LaunchedEffectAfterFirst(pagerState.currentPage) {
         selectedMonth = minMonth.plusMonths(pagerState.currentPage.toLong())
     }
 
@@ -71,10 +72,10 @@ fun DateRangePicker(
      * 해당하는 달로 pagerState.currentPage 업데이트
      * onStartDateSelected 호출
      */
-    LaunchedEffect(state.startDate) {
+    LaunchedEffectAfterFirst(state.startDate) {
         if (selectedMonth != YearMonth.from(state.startDate)) {
             pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
+                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt(),
             )
         }
         onStartDateSelected(state.startDate)
@@ -85,10 +86,10 @@ fun DateRangePicker(
      * 해당하는 달로 pagerState.currentPage 업데이트
      * onEndDateSelected 호출
      */
-    LaunchedEffect(state.endDate) {
+    LaunchedEffectAfterFirst(state.endDate) {
         if (selectedMonth != YearMonth.from(state.endDate)) {
             pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
+                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt(),
             )
         }
         onEndDateSelected(state.endDate)
@@ -96,15 +97,16 @@ fun DateRangePicker(
 
     Column(modifier = modifier) {
         CalendarHeader(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            selectedMonth = selectedMonth
+            modifier =
+                Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+            selectedMonth = selectedMonth,
         )
         HorizontalPager(
             modifier = Modifier.wrapContentHeight(),
             state = pagerState,
-            beyondViewportPageCount = 1
+            beyondViewportPageCount = 1,
         ) { page ->
             key(page) {
                 val displayedMonth by remember {
@@ -118,7 +120,7 @@ fun DateRangePicker(
                         date = date,
                         startDate = state.startDate,
                         endDate = state.endDate,
-                        onSelected = state::updateDate
+                        onSelected = state::updateDate,
                     )
                 }
             }
@@ -126,15 +128,16 @@ fun DateRangePicker(
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun DateRangePickerPreview() {
-    val state = rememberDateRangePickerState().apply {
-        val now = LocalDate.now()
-        updateDate(now)
-        updateDate(now.plusDays(1))
-    }
-    Surface {
+    val state =
+        rememberDateRangePickerState().apply {
+            val now = LocalDate.now()
+            updateDate(now)
+            updateDate(now.plusDays(1))
+        }
+    NeeGongNaeGongTheme {
         DateRangePicker(state = state)
     }
 }

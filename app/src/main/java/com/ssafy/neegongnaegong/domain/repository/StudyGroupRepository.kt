@@ -10,4 +10,16 @@ interface StudyGroupRepository {
     fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagInfo>>
 
     fun getMemberStudyContents(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>>
+
+    fun approveStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
+
+    fun rejectStudyGroupJoin(
+        studyGroupId: Long,
+        userId: Long,
+        notificationId: Long?,
+    ): Flow<Unit>
 }

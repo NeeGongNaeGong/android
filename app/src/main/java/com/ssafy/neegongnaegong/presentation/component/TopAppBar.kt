@@ -19,8 +19,6 @@ import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
 
-enum class TopAppBarNavigationType { Back, Menu, None }
-
 /**
  * 커스텀 `TopAppBar` 컴포넌트
  *
@@ -98,3 +96,5 @@ fun PreviewTopAppBar() {
         )
     }
 }
+
+enum class TopAppBarNavigationType { Back, Menu, None }

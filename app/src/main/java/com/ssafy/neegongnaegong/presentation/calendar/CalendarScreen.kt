@@ -1,38 +1,32 @@
 package com.ssafy.neegongnaegong.presentation.calendar
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
-import com.ssafy.neegongnaegong.presentation.calendar.component.ScheduleInput
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
+import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -46,9 +40,7 @@ fun CalendarRoute(
     navigateToScheduleDetail: (Schedule) -> Unit,
     navigateToScheduleEdit: (Schedule) -> Unit,
 ) {
-    BackHandler {
-        popBackStack()
-    }
+    BackHandler { popBackStack() }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -65,7 +57,7 @@ fun CalendarRoute(
         },
         navigateToScheduleDetail = navigateToScheduleDetail,
         navigateToScheduleCreate = navigateToScheduleCreate,
-        navigateToEditSchedule = navigateToScheduleEdit
+        navigateToEditSchedule = navigateToScheduleEdit,
     )
 }
 
@@ -83,31 +75,34 @@ fun CalendarContent(
     navigateToScheduleCreate: (LocalDate) -> Unit,
     navigateToEditSchedule: (Schedule) -> Unit,
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+    val calendarState = rememberCalendarState(uiState.selectedDate)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
 
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(
-                    effect.schedule
-                )
+                is CalendarContract.Effect.NavigateToScheduleDetailScreen ->
+                    navigateToScheduleDetail(
+                        effect.schedule,
+                    )
 
-                is CalendarContract.Effect.NavigateToScheduleEditScreen -> navigateToEditSchedule(
-                    effect.schedule
-                )
+                is CalendarContract.Effect.NavigateToScheduleEditScreen ->
+                    navigateToEditSchedule(
+                        effect.schedule,
+                    )
 
-                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
-                    effect.date
-                )
+                is CalendarContract.Effect.NavigateToCreateScheduleScreen ->
+                    navigateToScheduleCreate(
+                        effect.date,
+                    )
             }
         }
     }
 
     CalendarScreen(
         modifier = modifier,
-        selectedDate = uiState.selectedDate,
+        calendarState = calendarState,
         schedules = uiState.schedules,
         isOnCreate = uiState.isOnCreate,
         onMonthSelected = onMonthSelected,
@@ -117,27 +112,24 @@ fun CalendarContent(
 
     if (uiState.isLoading) LoadingDialog()
 
-    if (uiState.isCalendarDialogShow) CalendarScheduleDialog(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.background,
-                RoundedCornerShape(20.dp)
-            )
-            .height(screenHeight * 0.7f)
-            .padding(20.dp),
-        onDismissRequest = onDialogDismissRequest,
-        date = uiState.selectedDate,
-        schedules = uiState.schedules[uiState.selectedDate] ?: emptyList(),
-        isOnCreate = uiState.isOnCreate,
-        onSubmit = createSchedule,
-        onScheduleClick = onScheduleClicked,
-    )
+    if (uiState.isCalendarDialogShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) {
+        CalendarScheduleDialog(
+            state = calendarState,
+            onMonthChanged = onMonthSelected,
+            onDateSelected = onDateSelected,
+            onDismissRequest = onDialogDismissRequest,
+            schedules = uiState.schedules,
+            isOnCreate = uiState.isOnCreate,
+            onSubmit = createSchedule,
+            onScheduleClick = onScheduleClicked,
+        )
+    }
 }
 
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    selectedDate: LocalDate,
+    calendarState: CalendarState,
     isOnCreate: Boolean,
     schedules: Map<LocalDate, List<Schedule>>,
     onMonthSelected: (YearMonth) -> Unit,
@@ -150,74 +142,75 @@ fun CalendarScreen(
     ) {
         ScheduleCalendar(
             modifier = Modifier.weight(1f),
+            state = calendarState,
             onMonthChanged = onMonthSelected,
             onDateSelected = onDateSelected,
-            schedules = schedules
+            schedules = schedules,
         )
         ScheduleInput(
-            selectedDate = selectedDate,
+            selectedDate = calendarState.date,
             isLoading = isOnCreate,
             onSubmit = createSchedule,
         )
     }
 }
 
-@Preview
+@NeeGongNaeGongPreviews
 @Composable
 private fun PreviewCalendarScreen() {
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val calendarState = rememberCalendarState()
     val isOnCreate = true
-    val schedules = listOf(
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 1,
-            info = ScheduleInfo(
-                title = "Meeting",
-                content = "Meeting",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
-            ),
-        ),
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 2,
-            info = ScheduleInfo(
-                title = "Lunch",
-                content = "Lunch",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                isAllDay = false,
-            )
-        ),
-    )
-
-    NeeGongNaeGongTheme(dynamicColor = false) {
-        Surface {
-            CalendarScreen(
-                selectedDate = LocalDate.now(),
-                isOnCreate = isOnCreate,
-                schedules = mapOf(LocalDate.now() to schedules),
-                onMonthSelected = { },
-                onDateSelected = { },
-                createSchedule = { _, _ -> }
-            )
-
-            CalendarScheduleDialog(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.background,
-                        RoundedCornerShape(20.dp)
-                    )
-                    .height(screenHeight * 0.7f)
-                    .padding(20.dp),
-                onDismissRequest = {},
-                date = LocalDate.now(),
-                schedules = schedules,
-                onSubmit = { _, _ -> },
-                isOnCreate = isOnCreate,
-                onScheduleClick = {},
+    val now = LocalDateTime.now()
+    val schedules =
+        mutableMapOf<LocalDate, List<Schedule>>().apply {
+            put(
+                now.toLocalDate(),
+                listOf(
+                    Schedule(
+                        type = ScheduleType.PERSONAL,
+                        id = 1,
+                        info =
+                            ScheduleInfo(
+                                title = "Meeting",
+                                content = "Meeting",
+                                startAt = now,
+                                endAt = now.plusHours(1),
+                            ),
+                    ),
+                    Schedule(
+                        type = ScheduleType.PERSONAL,
+                        id = 2,
+                        info =
+                            ScheduleInfo(
+                                title = "Lunch",
+                                content = "Lunch",
+                                startAt = now,
+                                endAt = now.plusHours(1),
+                            ),
+                    ),
+                ),
             )
         }
+
+    NeeGongNaeGongTheme {
+        CalendarScreen(
+            calendarState = calendarState,
+            isOnCreate = isOnCreate,
+            schedules = schedules,
+            onMonthSelected = { },
+            onDateSelected = { },
+            createSchedule = { _, _ -> },
+        )
+
+        CalendarScheduleDialog(
+            state = calendarState,
+            onDateSelected = {},
+            onMonthChanged = {},
+            onDismissRequest = {},
+            schedules = schedules,
+            onSubmit = { _, _ -> },
+            isOnCreate = isOnCreate,
+            onScheduleClick = {},
+        )
     }
 }

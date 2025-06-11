@@ -4,7 +4,13 @@ import com.ssafy.neegongnaegong.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface LocalUserDataSource {
-    suspend fun saveUser(user: User): Flow<Boolean>
-    suspend fun clearUser(): Flow<Boolean>
-    suspend fun getUser(): Flow<User>
+    fun saveUser(user: User)
+
+    fun getUser(): Flow<User>
+
+    fun clearUser()
+
+    fun saveProfileImageWarningAcceptedAt(time: Long)
+
+    fun getProfileImageWarningAcceptedAt(): Flow<Long>
 }

@@ -7,5 +7,5 @@ data class UserDetailResponse(
     val email: String,
     @SerializedName("nickName")
     val nickname: String,
-    val profileImg: String,
+    val profileImg: String?,
 )

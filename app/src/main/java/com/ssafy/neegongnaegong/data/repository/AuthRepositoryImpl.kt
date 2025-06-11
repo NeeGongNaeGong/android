@@ -58,15 +58,6 @@ class AuthRepositoryImpl
                 ).map { true }
             }
 
-        override suspend fun logout(): Flow<Boolean> =
-            withContext(ioDispatcher) {
-                flow {
-                    tokenManager.clearToken()
-                    localUserDataSource.clearUser()
-                    emit(true)
-                }
-            }
-
         override suspend fun reissue(): Flow<Boolean> =
             withContext(ioDispatcher) {
                 flow {
@@ -80,6 +71,7 @@ class AuthRepositoryImpl
                         with(response.createJwt) {
                             tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
                             tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
+                            localUserDataSource.saveUser(response.userDetailedInquiryResponse.toDomain())
                         }
                         emit(true)
                     }

@@ -11,14 +11,22 @@ import java.time.LocalDateTime
 class ScheduleCreateContract {
     sealed class Event : UiEvent {
         data class OnLoad(val date: LocalDate) : Event()
+
         data class OnTitleChanged(val title: String) : Event()
+
         data class OnContentChanged(val content: String?) : Event()
-        data class OnStartDateChanged(val date: LocalDateTime) : Event()
-        data class OnEndDateChanged(val date: LocalDateTime) : Event()
+
+        data class OnStartAtChanged(val at: LocalDateTime) : Event()
+
+        data class OnEndAtChanged(val at: LocalDateTime) : Event()
+
         data class OnLocationChanged(val location: String?) : Event()
+
         data class OnRepeatRuleChanged(val repeatRule: RepeatRuleInfo?) : Event()
+
         data object OnCreateScheduleClicked : Event()
-        data object OnCancelClick: Event()
+
+        data object OnCancelClick : Event()
     }
 
     data class State(

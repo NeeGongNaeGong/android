@@ -13,6 +13,8 @@ sealed class ApiException(override val message: String) : IOException(message) {
 
     class ClientException(message: String? = null) : ApiException(message ?: CLIENT_ERROR)
 
+    class ConflictException(message: String? = null) : ApiException(message ?: CLIENT_ERROR)
+
     companion object {
         const val UNKNOWN_ERROR = "알수 없는 에러 발생"
         const val NETWORK_ERROR = "네트워크 에러 발생"
@@ -20,17 +22,23 @@ sealed class ApiException(override val message: String) : IOException(message) {
         const val FILE_NOT_FOUND_ERROR = "파일을 찾을 수 없습니다"
         const val CLIENT_ERROR = "잘못된 요청입니다"
 
-        fun fromCode(code: Int, message: String? = null): ApiException = when (code) {
-            in 400..499 -> ClientException(message)
-            in 500..599 -> ServerException(message)
-            else -> UnknownException(message)
-        }
+        fun fromCode(
+            code: Int,
+            message: String? = null,
+        ): ApiException =
+            when (code) {
+                409 -> ConflictException(message)
+                in 400..499 -> ClientException(message)
+                in 500..599 -> ServerException(message)
+                else -> UnknownException(message)
+            }
 
-        fun fromCommonException(error: Throwable) = when (error) {
-            is AuthException, is ApiException -> error
-            is java.io.FileNotFoundException -> FileNotFoundException()
-            is IOException -> NetworkException()
-            else -> UnknownException(error.message)
-        }
+        fun fromCommonException(error: Throwable) =
+            when (error) {
+                is AuthException, is ApiException -> error
+                is java.io.FileNotFoundException -> FileNotFoundException()
+                is IOException -> NetworkException()
+                else -> UnknownException(error.message)
+            }
     }
 }

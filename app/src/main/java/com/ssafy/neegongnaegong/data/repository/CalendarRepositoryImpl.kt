@@ -32,9 +32,12 @@ class CalendarRepositoryImpl
                 dataSource.getUserSchedules(month).map { it.schedules.map { it.toDomain() } }
             }
 
-        override suspend fun getScheduleDetail(id: Long): Flow<Schedule> =
+        override suspend fun getScheduleDetail(
+            id: Long,
+            date: LocalDate,
+        ): Flow<Schedule> =
             withContext(ioDispatcher) {
-                dataSource.getPersonalSchedule(id).map { it.toDomain() }
+                dataSource.getPersonalSchedule(id, date).map { it.toDomain() }
             }
 
         override suspend fun createPersonalSchedule(
