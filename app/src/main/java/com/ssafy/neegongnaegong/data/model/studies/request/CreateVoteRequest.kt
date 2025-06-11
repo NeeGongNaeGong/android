@@ -8,8 +8,8 @@ data class CreateVoteRequest(
     val endTime: LocalDateTime?,
     val state: Boolean = true,
     val items: List<String>,
-    val multiple: Boolean,
-    val secret: Boolean,
-    val notify: Boolean,
-    val choose: Boolean,
+    val isMultiple: Boolean,
+    val isSecret: Boolean,
+    val isNotify: Boolean,
+    val isChoose: Boolean,
 )

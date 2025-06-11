@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.ui.theme
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,25 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.tooling.preview.Preview
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NeeGongNaeGongTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            if (darkTheme) DarkColorScheme else LightColorScheme
+    val colorScheme =
+        when {
+            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                if (darkTheme) DarkColorScheme else LightColorScheme
+            }
+
+            darkTheme -> DarkColorScheme
+            else -> LightColorScheme
         }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
 
     CompositionLocalProvider(
         LocalRippleConfiguration provides null,
@@ -37,7 +34,7 @@ fun NeeGongNaeGongTheme(
         LocalSpacing provides NeeGongNaeGongTheme.paddingScheme,
     ) {
         MaterialTheme(
-            content = content
+            content = content,
         )
     }
 }
@@ -47,13 +44,12 @@ val LocalColors = staticCompositionLocalOf { LightColorScheme }
 val LocalSpacing = staticCompositionLocalOf { Spacing() }
 
 object NeeGongNaeGongTheme {
-
     val typography: Typography
         @Composable
         @ReadOnlyComposable
         get() = LocalTypography.current
 
-    val colorScheme: NeeGongNaeGongColors
+    val colorScheme: Color
         @Composable
         @ReadOnlyComposable
         get() = LocalColors.current
@@ -63,4 +59,3 @@ object NeeGongNaeGongTheme {
         @ReadOnlyComposable
         get() = LocalSpacing.current
 }
-

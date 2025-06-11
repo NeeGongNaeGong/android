@@ -2,7 +2,7 @@ package com.ssafy.neegongnaegong.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-data class NeeGongNaeGongColors(
+data class Color(
     val primaryText: Color,
     val secondaryText: Color,
     val blue: Color,
@@ -17,10 +17,11 @@ data class NeeGongNaeGongColors(
     val recordBackground: Color,
     val background: Color,
     val chartLegend: Color,
+    val yellow: Color,
 )
 
 val LightColorScheme =
-    NeeGongNaeGongColors(
+    Color(
         blue = Color(0xFF82ACCF),
         mintBlue = Color(0xFFB5E7E5),
         mint = Color(0xFFA5F7CB),
@@ -35,10 +36,11 @@ val LightColorScheme =
         secondaryText = Color(0xFF949494),
         background = Color(0xFFFAFAFA),
         chartLegend = Color(0x612E2626),
+        yellow = Color(0xFFF9F871),
     )
 
 val DarkColorScheme =
-    NeeGongNaeGongColors(
+    Color(
         blue = Color(0xFF4A708E),
         mintBlue = Color(0xFF7FCBCB),
         mint = Color(0xFF6FCFA6),
@@ -49,8 +51,9 @@ val DarkColorScheme =
         gray3 = Color(0xFF555555),
         gray2 = Color(0xFF333333),
         gray1 = Color(0xFF222222),
-        recordBackground = Color(0xFF222222),
         secondaryText = Color(0xFFAAAAAA),
         background = Color(0xFF121212),
         chartLegend = Color(0x612E2626),
+        recordBackground = Color(0xFF222222),
+        yellow = Color(0xFFF9F871),
     )
