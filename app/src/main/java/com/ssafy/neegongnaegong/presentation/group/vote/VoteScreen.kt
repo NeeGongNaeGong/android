@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -47,12 +48,12 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.CustomDateTimeFormatter
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun VoteRoute(
-    popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
+    navigateToMain: (Int, Long) -> Unit,
+    popBackStack: () -> Boolean,
     viewModel: VoteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,15 +65,25 @@ fun VoteRoute(
                     text = "투표 만들기",
                 )
             },
-            onNavigationClick = { popBackStack() },
+            onNavigationClick = { viewModel.setEvent(VoteContract.Event.OnClickPopBackStackButton) },
             actionButtons = {
-                TextButton(onClick = {
-                    viewModel.setEvent(
-                        VoteContract.Event.OnClickCompleteButton,
-                    )
-                }) {
+                TextButton(
+                    enabled = uiState.voteTitle.isNotEmpty() && uiState.voteItemList.filter { it.isNotEmpty() }.isNotEmpty(),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray4,
+                        ),
+                    onClick = {
+                        viewModel.setEvent(
+                            VoteContract.Event.OnClickCompleteButton,
+                        )
+                    },
+                ) {
                     Text(
-                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        style = NeeGongNaeGongTheme.typography.bodyMedium,
                         text = "완료",
                     )
                 }
@@ -80,11 +91,11 @@ fun VoteRoute(
         )
 
         LaunchedEffect(viewModel.effect) {
-            viewModel.effect.collectLatest { effect ->
+            viewModel.effect.collect { effect ->
                 when (effect) {
-                    VoteContract.Effect.NavigateToBackStack -> {
-                        popBackStack()
-                    }
+                    VoteContract.Effect.NavigateToBackStack -> popBackStack()
+
+                    is VoteContract.Effect.NavigateToMain -> navigateToMain(effect.startIndex, effect.studyGroupId)
                 }
             }
         }

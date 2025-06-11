@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.apiFlow
+import com.ssafy.neegongnaegong.data.model.studies.request.CreateNoticeRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplicationsMembersRequest
@@ -21,6 +22,19 @@ class NetworkStudiesDataSourceImpl
     constructor(
         private val studiesApi: StudiesApi,
     ) : NetworkStudiesDataSource {
+        override fun createVote(
+            studyGroupId: Long,
+            requestBody: CreateVoteRequest,
+        ): Flow<Unit> = apiFlow { studiesApi.createVote(studyGroupId, requestBody) }
+
+        override fun createNotice(
+            studyGroupId: Long,
+            requestBody: CreateNoticeRequest,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.createNotice(studyGroupId, requestBody)
+            }
+
         override suspend fun getStudiesList(request: GetStudiesListRequest): Flow<CursorSliceStudiesListResponse> =
             apiFlow {
                 studiesApi.getStudiesList(
@@ -52,11 +66,6 @@ class NetworkStudiesDataSourceImpl
             apiFlow {
                 studiesApi.deleteStudies(studyGroupId)
             }
-
-        override suspend fun createVote(
-            studyId: Int,
-            requestBody: CreateVoteRequest,
-        ): Flow<Unit> = apiFlow { studiesApi.createVote(studyId, requestBody) }
 
         override suspend fun applyStudies(studyGroupId: Long): Flow<Unit> =
             apiFlow {

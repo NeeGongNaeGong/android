@@ -11,9 +11,9 @@ class CreateVoteUseCase
         private val studiesRepository: StudiesRepository,
     ) {
         suspend operator fun invoke(
-            studyId: Int,
+            studyGroupId: Long,
             voteInfo: VoteInfo,
         ): Flow<Unit> {
-            return studiesRepository.createVote(studyId, voteInfo)
+            return studiesRepository.createVote(studyGroupId, voteInfo)
         }
     }

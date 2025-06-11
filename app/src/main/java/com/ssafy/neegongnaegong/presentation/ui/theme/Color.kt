@@ -51,9 +51,9 @@ val DarkColorScheme =
         gray3 = Color(0xFF555555),
         gray2 = Color(0xFF333333),
         gray1 = Color(0xFF222222),
-        recordBackground = Color(0xFF222222),
         secondaryText = Color(0xFFAAAAAA),
         background = Color(0xFF121212),
         chartLegend = Color(0x612E2626),
+        recordBackground = Color(0xFF222222),
         yellow = Color(0xFFF9F871),
     )

@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesApplicationsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesMemberMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.vote.VoteMapper.toCreateRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.CreateNoticeRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplicationsMembersRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
@@ -21,6 +22,7 @@ import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -34,9 +36,18 @@ class StudiesRepositoryImpl
         override suspend fun getStudies(): List<Studies> = TODO()
 
         override suspend fun createVote(
-            studyId: Int,
+            studyGroupId: Long,
             voteInfo: VoteInfo,
-        ): Flow<Unit> = dataSource.createVote(studyId, voteInfo.toCreateRequest())
+        ): Flow<Unit> = dataSource.createVote(studyGroupId, voteInfo.toCreateRequest()).flowOn(ioDispatcher)
+
+        override fun createNotice(
+            studyGroupId: Long,
+            title: String,
+            content: String,
+        ): Flow<Unit> =
+            dataSource
+                .createNotice(studyGroupId, CreateNoticeRequest(title, content))
+                .flowOn(ioDispatcher)
 
         override suspend fun getStudiesList(
             cursorCreatedAt: String?,

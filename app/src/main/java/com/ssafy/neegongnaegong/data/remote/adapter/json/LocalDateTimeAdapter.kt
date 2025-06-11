@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.remote.adapter.json
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
@@ -27,13 +28,19 @@ class LocalDateTimeAdapter :
         typeOfT: Type,
         context: JsonDeserializationContext,
     ): LocalDateTime {
-        val value = json.asString
-        return try {
-            // 나노초 포함된 포맷 처리
-            LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        } catch (e: DateTimeParseException) {
-            // 밀리초 이하가 없는 경우 fallback
-            LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+        val formatter =
+            listOf(
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"), // 마이크로초
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"), // 마이크로초
+            )
+        formatter.forEach {
+            try {
+                return LocalDateTime.parse(json.asString, it)
+            } catch (_: DateTimeParseException) {
+            }
         }
+        throw JsonParseException("Unparseable date: ${json.asString}")
     }
 }

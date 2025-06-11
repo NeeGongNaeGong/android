@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
+import com.ssafy.neegongnaegong.data.model.studies.request.CreateNoticeRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplicationsMembersRequest
@@ -12,9 +13,14 @@ import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkStudiesDataSource {
-    suspend fun createVote(
-        studyId: Int,
+    fun createVote(
+        studyGroupId: Long,
         requestBody: CreateVoteRequest,
+    ): Flow<Unit>
+
+    fun createNotice(
+        studyGroupId: Long,
+        requestBody: CreateNoticeRequest,
     ): Flow<Unit>
 
     suspend fun getStudiesList(request: GetStudiesListRequest): Flow<CursorSliceStudiesListResponse>

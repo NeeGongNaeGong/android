@@ -11,9 +11,9 @@ internal object VoteMapper {
             endTime = endTime,
             state = state,
             items = items,
-            multiple = multiple,
-            secret = secret,
-            notify = notify,
-            choose = choose,
+            isMultiple = multiple,
+            isSecret = secret,
+            isNotify = notify,
+            isChoose = choose,
         )
 }

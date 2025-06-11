@@ -77,10 +77,32 @@ object AppNavigation {
             data class Edit(val studyGroupId: Long) : Studies
 
             @Serializable
-            data class MakeVote(val studyGroupId: Int) : Studies
+            data class MakeVote(val studyGroupId: Long) : Studies
+
+            @Serializable
+            data class MakeNotice(val studyGroupId: Long) : Studies
 
             @Serializable
             data class Record(val groupId: Long, val memberId: Long) : Studies
+
+            @Serializable
+            sealed interface SubTab : Studies {
+                @Serializable
+                data class Main(val startTab: Int, val groupId: Long) : SubTab
+
+                @Serializable
+                sealed interface Screen : SubTab {
+                    @Serializable
+                    data class NoticeDetail(val groupId: Long, val noticeId: Long) : Screen
+
+                    @Serializable
+                    data class VoteDetail(val groupId: Long, val voteId: Long) : Screen
+
+                    // 객체의 리스트를 내비게이션의 인자로 보낼 수가 없어서 json으로 List<StudyGroupVoteStatusInfo.VotedMemberInfo>을 String으로 변환한 값을 전달 후 복호화
+                    @Serializable
+                    data class VotedPerson(val title: String, val votedPersonList: String) : SubTab
+                }
+            }
         }
 
         @Serializable
