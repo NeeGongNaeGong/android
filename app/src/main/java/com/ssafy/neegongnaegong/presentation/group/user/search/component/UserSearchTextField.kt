@@ -33,7 +33,6 @@ fun UserSearchTextField(
         textStyle =
             NeeGongNaeGongTheme.typography.labelLarge.copy(
                 fontSize = 18.sp,
-                fontFeatureSettings = "tnum",
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             ),
         placeholder = {
