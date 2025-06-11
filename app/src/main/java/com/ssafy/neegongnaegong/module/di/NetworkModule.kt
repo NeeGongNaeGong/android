@@ -187,6 +187,8 @@ object NetworkModule {
         @S3Retrofit retrofit: Retrofit,
     ): S3Api = retrofit.create(S3Api::class.java)
 
+    @Provides
+    @Singleton
     fun provideLearningRecordApi(
         @SecureRetrofit retrofit: Retrofit,
     ): LearningRecordApi = retrofit.create(LearningRecordApi::class.java)
