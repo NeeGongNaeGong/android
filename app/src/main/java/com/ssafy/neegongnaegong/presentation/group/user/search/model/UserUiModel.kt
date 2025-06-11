@@ -1,15 +1,18 @@
-package com.ssafy.neegongnaegong.domain.model
+package com.ssafy.neegongnaegong.presentation.group.user.search.model
 
-data class User(
+import androidx.compose.runtime.Stable
+
+@Stable
+data class UserUiModel(
     val id: Long,
     val email: String,
     val nickname: String,
     val profileImg: String,
 ) {
     companion object {
-        fun default() =
-            User(
-                id = 0L,
+        fun toDefault() =
+            UserUiModel(
+                id = -1,
                 email = "",
                 nickname = "",
                 profileImg = "",

@@ -144,7 +144,6 @@ fun TagSelectDialog(
                             label = {
                                 Text(
                                     tag.koName,
-                                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                                 )
                             },
                             leadingIcon =
@@ -161,7 +160,7 @@ fun TagSelectDialog(
                                 },
                             colors =
                                 FilterChipDefaults.filterChipColors(
-                                    labelColor = Color.Black,
+                                    labelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
                                     iconColor = Color.Black,
                                     selectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
                                     selectedLabelColor = Color.White,
