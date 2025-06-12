@@ -64,15 +64,21 @@ class UserRepositoryImpl
                 networkUserDataSource.getUser(id).map { it.toDomain() }
             }
 
-        override suspend fun updateProfileImage(profileImage: String): Flow<Unit> =
-            withContext(ioDispatcher) {
-                val user = localUserDataSource.getUser().first()
-                networkUserDataSource.updateUser(UpdateUserRequest(nickName = user.nickname, profileImg = profileImage)).map { Unit }
-            }
+        override fun updateProfileImage(profileImg: String): Flow<Unit> =
+            flow {
+                val user: User = localUserDataSource.getUser().first()
+                val userRequest = UpdateUserRequest(nickName = user.nickname, profileImg = profileImg)
+                networkUserDataSource.updateUser(request = userRequest).firstOrNull()
+
+                val updatedUser = user.copy(profileImg = profileImg)
+                localUserDataSource.saveUser(user = updatedUser)
+                emit(value = Unit)
+            }.flowOn(context = ioDispatcher)
 
         override suspend fun updateFcmToken(fcmToken: String?): Unit =
             withContext(ioDispatcher) {
-                val request = UpdateFcmTokenRequest(fcmToken = fcmToken ?: localFcmDataSource.getFcmToken())
+                val request =
+                    UpdateFcmTokenRequest(fcmToken = fcmToken ?: localFcmDataSource.getFcmToken())
                 try {
                     networkUserDataSource.updateFcmToken(request)
                     localFcmDataSource.setUpdateFcmTokenState(true)
@@ -102,17 +108,21 @@ class UserRepositoryImpl
 
         @OptIn(ExperimentalCoroutinesApi::class)
         override fun logout(): Flow<Unit> =
-            networkUserDataSource.logout().onEach {
-                tokenManager.clearToken()
-                localUserDataSource.clearUser()
-            }.flowOn(context = ioDispatcher)
+            networkUserDataSource
+                .logout()
+                .onEach {
+                    tokenManager.clearToken()
+                    localUserDataSource.clearUser()
+                }.flowOn(context = ioDispatcher)
 
         @OptIn(ExperimentalCoroutinesApi::class)
         override fun withdraw(): Flow<Unit> =
-            networkUserDataSource.withdraw().onEach {
-                tokenManager.clearToken()
-                localUserDataSource.clearUser()
-            }.flowOn(context = ioDispatcher)
+            networkUserDataSource
+                .withdraw()
+                .onEach {
+                    tokenManager.clearToken()
+                    localUserDataSource.clearUser()
+                }.flowOn(context = ioDispatcher)
 
         override fun saveProfileImageWarningAcceptedAt(time: Long) =
             localUserDataSource
