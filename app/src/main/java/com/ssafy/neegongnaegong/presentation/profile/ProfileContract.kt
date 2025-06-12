@@ -13,6 +13,8 @@ interface ProfileContract {
 
         data object ClickPrivacyInfo : Event()
 
+        data object ClickInquiry : Event()
+
         data object ClickLogout : Event()
 
         data object ClickDeleteAccount : Event()
@@ -49,6 +51,8 @@ interface ProfileContract {
         data object ShowDuplicatedNicknameErrorMessage : Effect()
 
         data object ShowUnsupportedFileTypeErrorMessage : Effect()
+
+        data object NavigateToInquiry : Effect()
 
         data object NavigateToNotification : Effect()
 

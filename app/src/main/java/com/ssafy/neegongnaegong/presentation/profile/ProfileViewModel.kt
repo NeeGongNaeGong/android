@@ -84,6 +84,7 @@ class ProfileViewModel
         override fun handleEvent(event: ProfileContract.Event) =
             when (event) {
                 ProfileContract.Event.ClickNotification -> handleNotification()
+                ProfileContract.Event.ClickInquiry -> handleInquiry()
                 ProfileContract.Event.ClickPrivacyInfo -> handlePrivacyInfo()
                 ProfileContract.Event.ClickLogout -> handleLogout()
                 ProfileContract.Event.ClickDeleteAccount -> handleDeleteAccount()
@@ -96,6 +97,11 @@ class ProfileViewModel
 
         private fun handleNotification() {
             val sideEffect = ProfileContract.Effect.NavigateToNotification
+            setEffect { sideEffect }
+        }
+
+        private fun handleInquiry() {
+            val sideEffect = ProfileContract.Effect.NavigateToInquiry
             setEffect { sideEffect }
         }
 

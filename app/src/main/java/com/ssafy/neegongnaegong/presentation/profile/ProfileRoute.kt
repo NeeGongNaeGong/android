@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.profile
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent.Builder
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import com.ssafy.neegongnaegong.presentation.profile.data.ProfileUiModel
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 
 private const val PRIVACY_INFO_URL = "https://www.notion.so/2082fdb33c0980419574e74d7ee3dcaf"
+private const val INQUIRY_EMAIL = "neegongnaegong@gmail.com"
 
 @Composable
 fun ProfileRoute(
@@ -61,6 +63,14 @@ fun ProfileRoute(
             ProfileContract.Effect.NavigateToAuth -> {
                 navigateToAuth()
             }
+
+            ProfileContract.Effect.NavigateToInquiry -> {
+                val intent =
+                    Intent(Intent.ACTION_SENDTO).apply {
+                        data = "mailto:${INQUIRY_EMAIL}".toUri()
+                    }
+                context.startActivity(intent)
+            }
         }
     }
 
@@ -99,6 +109,10 @@ fun ProfileRoute(
             },
             onClickPrivacyInfo = {
                 val event = ProfileContract.Event.ClickPrivacyInfo
+                viewModel.setEvent(event = event)
+            },
+            onClickInquiry = {
+                val event = ProfileContract.Event.ClickInquiry
                 viewModel.setEvent(event = event)
             },
             onClickLogout = {
