@@ -36,6 +36,7 @@
     <string name="withdrawal_footer_notice">탈퇴를 원하지 않으시면 언제든지 취소하실 수 있습니다.</string>
     <string name="common_warning">경고</string>
     <string name="invalid_nickname">닉네임은 한글, 영어, 숫자만 사용할 수 있습니다</string>
+    <string name="invalid_image">"지원하지 않는 파일 형식입니다."</string>
     <string name="already_use_nickname">중복된 닉네임입니다</string>
     <string name="profile_image_change_guide">프로필 이미지 변경 안내</string>
     <string name="check_community_guideline">커뮤니티 가이드라인 확인</string>
