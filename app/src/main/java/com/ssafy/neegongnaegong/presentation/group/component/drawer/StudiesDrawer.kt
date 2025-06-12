@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.group.component.drawer
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,8 +36,6 @@ import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailContract
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
-private const val TAG = "StudiesDrawer"
-
 @Composable
 fun StudiesDrawerContent(
     navBackStackEntry: NavBackStackEntry,
@@ -48,7 +45,6 @@ fun StudiesDrawerContent(
 ) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    Log.d(TAG, "img : ${uiState.value.studies.studyInfo.profileImg}")
     StudiesDrawer(
         headerImageUrl = uiState.value.studies.studyInfo.profileImg,
         name = uiState.value.studies.studyInfo.name,
