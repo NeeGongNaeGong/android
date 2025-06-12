@@ -192,8 +192,7 @@ fun Notification(
                         interactionSource = null,
                         indication = null,
                         onClick = onMove,
-                    )
-                    .draggableToRevealAction(
+                    ).draggableToRevealAction(
                         offsetState = offsetX,
                         rightDistancePx = rightDistancePx,
                         leftDistancePx = leftDistancePx,
@@ -326,10 +325,12 @@ private fun Modifier.draggableToRevealAction(
 @Composable
 @Preview()
 fun NotificationPreview() {
-    // image = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
     Notification(
         modifier = Modifier.fillMaxWidth(),
-        image = "",
+        image =
+            "https://encrypted-tbn1.gstatic.com/" +
+                "images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy" +
+                "_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
         user = "킹민조",
         content = "님이 그룹 가입을 요청했습니다.",
         isRead = false,

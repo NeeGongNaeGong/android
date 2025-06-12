@@ -116,11 +116,14 @@ fun NotificationScreen(
 @Composable
 @Preview
 fun NotificationPreviewScreen() {
-    // image = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
     val testModel =
         NotificationUiModel(
             id = Random.nextLong(),
-            image = "",
+            image =
+                "https://encrypted-tbn1.gstatic.com/" +
+                    "images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy" +
+                    "_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV" +
+                    "_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
             user = "홍길동",
             content = "님이 ㅋㅋㅋ 게시글에 답글을 추가했습니다.",
             isRead = true,
