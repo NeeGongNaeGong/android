@@ -13,6 +13,8 @@ interface ProfileContract {
 
         data object ClickPrivacyInfo : Event()
 
+        data object ClickInquiry : Event()
+
         data object ClickLogout : Event()
 
         data object ClickDeleteAccount : Event()
@@ -21,9 +23,13 @@ interface ProfileContract {
 
         data object ClickEditCancel : Event()
 
-        data class ChangeImage(val uri: Uri) : Event()
+        data class ChangeImage(
+            val uri: Uri,
+        ) : Event()
 
-        data class ChangeNickName(val text: String) : Event()
+        data class ChangeNickName(
+            val text: String,
+        ) : Event()
 
         data object CheckProfileImageWarning : Event()
     }
@@ -36,11 +42,15 @@ interface ProfileContract {
     ) : UiState
 
     sealed class Effect : UiEffect {
-        data class ShowErrorMessage(val message: String) : Effect()
+        data class ShowErrorMessage(
+            val message: String,
+        ) : Effect()
 
         data object ShowInvalidNicknameErrorMessage : Effect()
 
         data object ShowDuplicatedNicknameErrorMessage : Effect()
+
+        data object NavigateToInquiry : Effect()
 
         data object NavigateToNotification : Effect()
 

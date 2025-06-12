@@ -81,6 +81,7 @@ class ProfileViewModel
         override fun handleEvent(event: ProfileContract.Event) =
             when (event) {
                 ProfileContract.Event.ClickNotification -> handleNotification()
+                ProfileContract.Event.ClickInquiry -> handleInquiry()
                 ProfileContract.Event.ClickPrivacyInfo -> handlePrivacyInfo()
                 ProfileContract.Event.ClickLogout -> handleLogout()
                 ProfileContract.Event.ClickDeleteAccount -> handleDeleteAccount()
@@ -96,6 +97,11 @@ class ProfileViewModel
             setEffect { sideEffect }
         }
 
+        private fun handleInquiry() {
+            val sideEffect = ProfileContract.Effect.NavigateToInquiry
+            setEffect { sideEffect }
+        }
+
         private fun handlePrivacyInfo() {
             val sideEffect = ProfileContract.Effect.NavigateToPrivacyInfo
             setEffect { sideEffect }
@@ -107,17 +113,19 @@ class ProfileViewModel
 
         private fun handleCheckProfileImageWarning() {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImageWarningInfoError) {
-                saveProfileImageWarningAcceptedAtUseCase().withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                saveProfileImageWarningAcceptedAtUseCase()
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
             }
         }
 
         private fun handleLogout() {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.LogoutError) {
-                logoutUseCase().withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                logoutUseCase()
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
 
                 val sideEffect = ProfileContract.Effect.NavigateToAuth
                 setEffect { sideEffect }
@@ -126,9 +134,10 @@ class ProfileViewModel
 
         private fun handleDeleteAccount() {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.DeleteAccountError) {
-                withdrawUseCase().withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                withdrawUseCase()
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
 
                 val sideEffect = ProfileContract.Effect.NavigateToAuth
                 setEffect { sideEffect }
@@ -137,9 +146,10 @@ class ProfileViewModel
 
         private fun handleChangeNickName(text: String) {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeNicknameError) {
-                updateNicknameUseCase(nickname = text).withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                updateNicknameUseCase(nickname = text)
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
 
                 setState { copy(isEditing = false) }
             }
@@ -181,9 +191,10 @@ class ProfileViewModel
         }
 
         private fun <T> Flow<T>.init() =
-            uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
-                uiState.isInitial
-            }.filter { uiState: ProfileContract.State ->
-                uiState.isInitial
-            }
+            uiState
+                .distinctUntilChangedBy { uiState: ProfileContract.State ->
+                    uiState.isInitial
+                }.filter { uiState: ProfileContract.State ->
+                    uiState.isInitial
+                }
     }
