@@ -93,28 +93,32 @@ private fun StudiesMemberRoleContent(
 ) {
     Log.d("임시", "$effect") // TODO (effect 처리예정)
     if (uiState.isChangeRoleDialogShow) {
-        RoleChangeDialog(
-            modifier = modifier,
-            initialMemberRole = uiState.selectedMember?.groupRole ?: StudiesMemberRole.TEAM_MEMBER,
-            profileImageUrl = uiState.selectedMember?.profileImg ?: "",
-            userId = uiState.selectedMember?.userId ?: 0,
-            userName = uiState.selectedMember?.name ?: "Unknown",
-            onCancel = onChangeRoleDialogCancel,
-            onDismiss = onChangeRoleDialogDismiss,
-            onConfirm = onChangeRoleDialogConfirm,
-        )
+        if (uiState.selectedMember != null) {
+            RoleChangeDialog(
+                modifier = modifier,
+                initialMemberRole = uiState.selectedMember.groupRole,
+                profileImageUrl = uiState.selectedMember.profileImg,
+                userId = uiState.selectedMember.userId,
+                userName = uiState.selectedMember.name,
+                onCancel = onChangeRoleDialogCancel,
+                onDismiss = onChangeRoleDialogDismiss,
+                onConfirm = onChangeRoleDialogConfirm,
+            )
+        }
     }
 
     if (uiState.isExpelMemberDialogShow) {
-        ExpelMemberDialog(
-            modifier = modifier,
-            profileImageUrl = uiState.selectedMember?.profileImg ?: "",
-            userId = uiState.selectedMember?.userId ?: 0,
-            userName = uiState.selectedMember?.name ?: "Unknown",
-            onCancel = onExpelMemberDialogCancel,
-            onDismiss = onExpelMemberDialogDismiss,
-            onConfirm = onExpelMemberDialogConfirm,
-        )
+        if (uiState.selectedMember != null) {
+            ExpelMemberDialog(
+                modifier = modifier,
+                profileImageUrl = uiState.selectedMember.profileImg,
+                userId = uiState.selectedMember.userId,
+                userName = uiState.selectedMember.name,
+                onCancel = onExpelMemberDialogCancel,
+                onDismiss = onExpelMemberDialogDismiss,
+                onConfirm = onExpelMemberDialogConfirm,
+            )
+        }
     }
 
     StudiesMemberRoleScreen(
