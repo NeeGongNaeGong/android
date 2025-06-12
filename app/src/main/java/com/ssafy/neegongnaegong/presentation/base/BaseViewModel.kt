@@ -165,8 +165,8 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
 
     /**
      * 안전하게 Flow를 collect하는 함수
-     * 실패시 [handleException]로 공통 에러 로직 처리 후
-     * [handleException]로 커스템 에러 로직 처리
+     * 실패시 [defaultHandleException]로 공통 에러 로직 처리 후
+     * [defaultHandleException]로 커스템 에러 로직 처리
      *
      * @param errorContext ErrorContext
      * @param block collect 시 실행할 블록
@@ -179,7 +179,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             collect { value -> block(value) }
         }.onFailure { exception ->
             exception.printStackTrace()
-            handleException<T>(exception, errorContext) {
+            defaultHandleException<T>(exception, errorContext) {
                 safeCollect(errorContext, block)
             }
         }
@@ -188,7 +188,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     /**
      * 안전하게 suspend 블록을 실행하는 함수
      * 성공 시 [onSuccess] 블록을 호출하고,
-     * 실패 시 [handleException]로 공통 에러 로직 처리 후,
+     * 실패 시 [defaultHandleException]로 공통 에러 로직 처리 후,
      * [retry]를 통해 재시도 로직을 연결할 수 있음
      *
      * @param onSuccess suspend 블록 실행 성공 시 호출될 콜백
@@ -206,7 +206,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
             runCatching { block() }
                 .onSuccess { result: Result -> onSuccess(result) }
                 .onFailure { throwable: Throwable ->
-                    handleException<Result>(e = throwable, errorContext = errorContext, retry = retry)
+                    defaultHandleException<Result>(e = throwable, errorContext = errorContext, retry = retry)
                 }
         }
 
@@ -214,7 +214,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      * 안전하게 flatMapLatest를 수행하는 확장 함수
      *
      * Flow에서 예외가 발생할 수 있는 flatMapLatest 연산을 수행할 때,
-     * 공통 에러 처리 로직 [handleException]을 통해 예외를 처리하고,
+     * 공통 에러 처리 로직 [defaultHandleException]을 통해 예외를 처리하고,
      * 필요 시 [retry] 블록을 통해 재시도 로직을 연결할 수 있음.
      *
      * @param errorContext ErrorContext – 에러 처리 컨텍스트
@@ -230,7 +230,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
     ) = safeFlatMapLatest(
         transform = transform,
         catch = { throwable: Throwable ->
-            handleException<T>(e = throwable, errorContext = errorContext, retry = retry)
+            defaultHandleException<T>(e = throwable, errorContext = errorContext, retry = retry)
         },
     )
 
@@ -246,7 +246,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
      * @param errorContext ErrorContext
      * @param retry 재시도 콜백
      */
-    private fun <T> handleException(
+    private fun <T> defaultHandleException(
         e: Throwable,
         errorContext: ErrorContext?,
         retry: suspend () -> Unit,
