@@ -48,9 +48,10 @@ fun DateTimeRangePickerBody(
                 prefix = Icons.Outlined.Schedule,
             )
             Switch(
-                modifier = Modifier
-                    .scale(0.75f)
-                    .padding(end = 16.dp),
+                modifier =
+                    Modifier
+                        .scale(0.75f)
+                        .padding(end = 16.dp),
                 checked = isAllDay,
                 onCheckedChange = onIsAllDayChanged,
                 enabled = enable,
@@ -72,7 +73,7 @@ fun DateTimeRangePickerBody(
                 Icon(
                     Icons.AutoMirrored.Outlined.ArrowForward,
                     "",
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onBackground,
                 )
             }
             DateTimePickerBody(

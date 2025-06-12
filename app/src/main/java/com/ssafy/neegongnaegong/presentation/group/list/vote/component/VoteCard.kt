@@ -73,5 +73,5 @@ fun VoteCard(
 @Composable
 @NeeGongNaeGongPreviews
 fun PreviewVoteCard() {
-    VoteCard(id  = 0, title = "테스트 투표입니다", participationMember = 1, voted = false, endTime = LocalDateTime.now()) {}
+    VoteCard(id = 0, title = "테스트 투표입니다", participationMember = 1, voted = false, endTime = LocalDateTime.now()) {}
 }

@@ -30,39 +30,39 @@ fun TimePicker(
 
     LaunchedEffectAfterFirst(
         hourPickerState.selectedItem,
-        minutePickerState.selectedItem
+        minutePickerState.selectedItem,
     ) {
         onTimeChange(
             LocalTime.of(
                 hourPickerState.selectedItem,
-                minutePickerState.selectedItem
-            )
+                minutePickerState.selectedItem,
+            ),
         )
     }
 
     LaunchedEffectAfterFirst(amPmPickerState.selectedItem) {
         hourPickerState.updateSelectedItem(
-            hourPickerState.selectedItem % 12 + if (amPmPickerState.selectedItem == "AM") 0 else 12
+            hourPickerState.selectedItem % 12 + if (amPmPickerState.selectedItem == "AM") 0 else 12,
         )
     }
 
     LaunchedEffectAfterFirst(hourPickerState.selectedItem) {
         amPmPickerState.updateSelectedItem(
-            if (hourPickerState.selectedItem < 12) "AM" else "PM"
+            if (hourPickerState.selectedItem < 12) "AM" else "PM",
         )
     }
 
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         ScrollPicker(
             modifier = Modifier.weight(1f),
             items = amPmList,
             state = amPmPickerState,
             visibleItemsCount = 3,
-            isInfinite = false
+            isInfinite = false,
         )
         ScrollPicker(
             modifier = Modifier.weight(1f),
@@ -73,7 +73,7 @@ fun TimePicker(
         Text(
             ":",
             style = NeeGongNaeGongTheme.typography.bodyMedium,
-            color = NeeGongNaeGongTheme.colorScheme.primaryText
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
         ScrollPicker(
             modifier = Modifier.weight(1f),
@@ -89,7 +89,7 @@ private fun TimePickerPreview() {
     NeeGongNaeGongTheme {
         TimePicker(
             selectedTime = LocalTime.of(10, 30),
-            onTimeChange = {}
+            onTimeChange = {},
         )
     }
 }

@@ -17,15 +17,19 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun CalendarDialogHeader(modifier: Modifier = Modifier, date: LocalDate) {
+fun CalendarDialogHeader(
+    modifier: Modifier = Modifier,
+    date: LocalDate,
+) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             modifier = Modifier.alignByBaseline(),
-            text = "${date.dayOfMonth}", color = date.dayOfWeek.color,
-            style = NeeGongNaeGongTheme.typography.titleLarge
+            text = "${date.dayOfMonth}",
+            color = date.dayOfWeek.color,
+            style = NeeGongNaeGongTheme.typography.titleLarge,
         )
         Spacer(Modifier.width(8.dp))
         Text(

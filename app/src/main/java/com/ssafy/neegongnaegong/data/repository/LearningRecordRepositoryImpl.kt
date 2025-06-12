@@ -42,7 +42,7 @@ class LearningRecordRepositoryImpl
             withContext(ioDispatcher) {
                 dataSource.updateLearningRecord(
                     learningRecordId = learningRecordId,
-                    request = learningRecord.toUpdateRequest()
+                    request = learningRecord.toUpdateRequest(),
                 )
             }
 

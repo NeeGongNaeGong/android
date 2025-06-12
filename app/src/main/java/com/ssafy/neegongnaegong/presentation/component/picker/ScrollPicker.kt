@@ -39,26 +39,30 @@ fun <T> ScrollPicker(
     items: List<T>,
     visibleItemsCount: Int = 3,
     isInfinite: Boolean = true,
-    text: (T) -> String = { it.toString() }
+    text: (T) -> String = { it.toString() },
 ) {
-    val visibleItemsMiddle = remember(visibleItemsCount) {
-        visibleItemsCount / 2
-    }
+    val visibleItemsMiddle =
+        remember(visibleItemsCount) {
+            visibleItemsCount / 2
+        }
 
-    val listScrollCount = remember(isInfinite, items.size) {
-        if (isInfinite) Int.MAX_VALUE else items.size
-    }
+    val listScrollCount =
+        remember(isInfinite, items.size) {
+            if (isInfinite) Int.MAX_VALUE else items.size
+        }
 
-    val listScrollMiddle = remember(listScrollCount) {
-        listScrollCount / 2
-    }
+    val listScrollMiddle =
+        remember(listScrollCount) {
+            listScrollCount / 2
+        }
 
     val listStartIndex =
         remember(isInfinite, listScrollMiddle, visibleItemsMiddle, items, state.selectedItem) {
             if (isInfinite) {
-                listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + items.indexOf(
-                    state.selectedItem
-                )
+                listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle +
+                    items.indexOf(
+                        state.selectedItem,
+                    )
             } else {
                 items.indexOf(state.selectedItem)
             }
@@ -72,13 +76,14 @@ fun <T> ScrollPicker(
     var itemHeightPixels by remember { mutableIntStateOf(0) }
     val itemHeightDp = pixelsToDp(itemHeightPixels)
 
-    val fadingEdgeGradient = remember {
-        Brush.verticalGradient(
-            0f to Color.Transparent,
-            0.5f to Color.Black,
-            1f to Color.Transparent
-        )
-    }
+    val fadingEdgeGradient =
+        remember {
+            Brush.verticalGradient(
+                0f to Color.Transparent,
+                0.5f to Color.Black,
+                1f to Color.Transparent,
+            )
+        }
 
     LaunchedEffect(state.selectedItem) {
         listState.scrollToItem(listStartIndex)
@@ -97,27 +102,32 @@ fun <T> ScrollPicker(
         state = listState,
         flingBehavior = flingBehavior,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .height(itemHeightDp * visibleItemsCount)
-            .fadingEdge(fadingEdgeGradient)
+        modifier =
+            modifier
+                .height(itemHeightDp * visibleItemsCount)
+                .fadingEdge(fadingEdgeGradient),
     ) {
-        if (!isInfinite) items(visibleItemsCount / 2) {
-            Text(
-                modifier = Modifier
-                    .onSizeChanged { size -> itemHeightPixels = size.height }
-                    .padding(vertical = 4.dp),
-                text = "",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = NeeGongNaeGongTheme.typography.bodyMedium,
-                color = NeeGongNaeGongTheme.colorScheme.primaryText,
-            )
+        if (!isInfinite) {
+            items(visibleItemsCount / 2) {
+                Text(
+                    modifier =
+                        Modifier
+                            .onSizeChanged { size -> itemHeightPixels = size.height }
+                            .padding(vertical = 4.dp),
+                    text = "",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            }
         }
         items(listScrollCount) { index ->
             Text(
-                modifier = Modifier
-                    .onSizeChanged { size -> itemHeightPixels = size.height }
-                    .padding(vertical = 4.dp),
+                modifier =
+                    Modifier
+                        .onSizeChanged { size -> itemHeightPixels = size.height }
+                        .padding(vertical = 4.dp),
                 text = text(getItem(index)),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -125,28 +135,31 @@ fun <T> ScrollPicker(
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
         }
-        if (!isInfinite) items(visibleItemsCount / 2) {
-            Text(
-                modifier = Modifier
-                    .onSizeChanged { size -> itemHeightPixels = size.height }
-                    .padding(vertical = 4.dp),
-                text = "",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = NeeGongNaeGongTheme.typography.bodyMedium,
-                color = NeeGongNaeGongTheme.colorScheme.primaryText,
-            )
+        if (!isInfinite) {
+            items(visibleItemsCount / 2) {
+                Text(
+                    modifier =
+                        Modifier
+                            .onSizeChanged { size -> itemHeightPixels = size.height }
+                            .padding(vertical = 4.dp),
+                    text = "",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            }
         }
     }
 }
 
-private fun Modifier.fadingEdge(brush: Brush) = this
-    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-    .drawWithContent {
-        drawContent()
-        drawRect(brush = brush, blendMode = BlendMode.DstIn)
-    }
-
+private fun Modifier.fadingEdge(brush: Brush) =
+    this
+        .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+        .drawWithContent {
+            drawContent()
+            drawRect(brush = brush, blendMode = BlendMode.DstIn)
+        }
 
 @NeeGongNaeGongPreviews
 @Composable
@@ -159,7 +172,7 @@ private fun NumberPickerPreview_Not_Infinite() {
             modifier = Modifier.fillMaxWidth(),
             state = state,
             items = items,
-            isInfinite = false
+            isInfinite = false,
         )
     }
 }

@@ -40,10 +40,11 @@ fun DateRangePickerCell(
         isSelected = isSelected,
         isLeftEdge = date == startDate,
         isRightEdge = date == endDate,
-        dateColor = when {
-            isSelected -> NeeGongNaeGongTheme.colorScheme.background
-            else -> date.dayOfWeek.color
-        },
+        dateColor =
+            when {
+                isSelected -> NeeGongNaeGongTheme.colorScheme.background
+                else -> date.dayOfWeek.color
+            },
         onSelected = { onSelected(date) },
     )
 }
@@ -68,20 +69,22 @@ fun DateRangePickerCell(
             Modifier
                 .weight(1f)
                 .background(if (!isLeftEdge && isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent)
-                .height(height)
+                .height(height),
         )
         Text(
-            modifier = Modifier
-                .background(
-                    if (isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
-                    shape = RoundedCornerShape(
-                        topStart = if (!isLeftEdge) 0.dp else 10.dp,
-                        bottomStart = if (!isLeftEdge) 0.dp else 10.dp,
-                        topEnd = if (!isRightEdge) 0.dp else 10.dp,
-                        bottomEnd = if (!isRightEdge) 0.dp else 10.dp
+            modifier =
+                Modifier
+                    .background(
+                        if (isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
+                        shape =
+                            RoundedCornerShape(
+                                topStart = if (!isLeftEdge) 0.dp else 10.dp,
+                                bottomStart = if (!isLeftEdge) 0.dp else 10.dp,
+                                topEnd = if (!isRightEdge) 0.dp else 10.dp,
+                                bottomEnd = if (!isRightEdge) 0.dp else 10.dp,
+                            ),
                     )
-                )
-                .padding(vertical = 4.dp, horizontal = 8.dp),
+                    .padding(vertical = 4.dp, horizontal = 8.dp),
             text = date.toString(),
             style = NeeGongNaeGongTheme.typography.labelMedium,
             color = dateColor,
@@ -91,7 +94,7 @@ fun DateRangePickerCell(
             Modifier
                 .weight(1f)
                 .background(if (!isRightEdge && isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent)
-                .height(height)
+                .height(height),
         )
     }
 }

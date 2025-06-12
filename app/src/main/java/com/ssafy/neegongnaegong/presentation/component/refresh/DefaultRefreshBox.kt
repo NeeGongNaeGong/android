@@ -22,7 +22,7 @@ fun DefaultRefreshBox(
     state: PullToRefreshState = rememberPullToRefreshState(),
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     PullToRefreshBox(
         modifier = modifier,
@@ -38,8 +38,8 @@ fun DefaultRefreshBox(
                 modifier = Modifier.align(Alignment.TopCenter),
                 containerColor = MaterialTheme.colorScheme.background,
                 isRefreshing = isRefreshing,
-                state = state
+                state = state,
             )
-        }
+        },
     )
 }

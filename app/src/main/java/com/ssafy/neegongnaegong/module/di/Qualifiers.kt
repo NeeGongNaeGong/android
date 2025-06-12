@@ -16,8 +16,16 @@ annotation class SecureRetrofit
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class S3Retrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class AuthOkHttpClient
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SecureOkHttpClient
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class S3OkHttpClient

@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.component.edittext.PlainEditText
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
-private const val MaxNickNameLength: Int = 15
+private const val MAX_NICKNAME_LENGTH: Int = 15
 private val IconSize: Dp = 18.dp
 
 @Composable
@@ -34,7 +34,7 @@ fun ProfileNickname(
     text: String,
     onClickEdit: () -> Unit,
     onClickEditCancel: () -> Unit,
-    onClickEditDone: (String) -> Unit
+    onClickEditDone: (String) -> Unit,
 ) {
     if (isEditing) {
         ProfileEditText(
@@ -47,7 +47,7 @@ fun ProfileNickname(
         ProfileText(
             modifier = modifier,
             text = text,
-            onClickEdit = onClickEdit
+            onClickEdit = onClickEdit,
         )
     }
 }
@@ -57,7 +57,7 @@ private fun ProfileEditText(
     modifier: Modifier = Modifier,
     text: String,
     onClickEditCancel: () -> Unit,
-    onClickEditDone: (String) -> Unit
+    onClickEditDone: (String) -> Unit,
 ) {
     var textValue by rememberSaveable { mutableStateOf(text) }
     val focusManager = LocalFocusManager.current
@@ -67,7 +67,7 @@ private fun ProfileEditText(
             modifier = Modifier.weight(1f),
             value = textValue,
             onValueChange = { newValue: String ->
-                if (newValue.length <= MaxNickNameLength) textValue = newValue
+                if (newValue.length <= MAX_NICKNAME_LENGTH) textValue = newValue
             },
             singleLine = true,
         )
@@ -78,13 +78,13 @@ private fun ProfileEditText(
             onClick = {
                 focusManager.clearFocus(force = true)
                 onClickEditDone(textValue)
-            }
+            },
         )
 
         TrailingIcon(
             imageVector = Icons.Default.Close,
             iconSize = IconSize + 2.dp,
-            onClick = onClickEditCancel
+            onClick = onClickEditCancel,
         )
     }
 }
@@ -93,19 +93,18 @@ private fun ProfileEditText(
 private fun ProfileText(
     modifier: Modifier = Modifier,
     text: String,
-    onClickEdit: () -> Unit
+    onClickEdit: () -> Unit,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = text,
             style = NeeGongNaeGongTheme.typography.bodySmall,
-            color = NeeGongNaeGongTheme.colorScheme.primaryText
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
 
         TrailingIcon(imageVector = Icons.Default.Edit, onClick = onClickEdit)
     }
 }
-
 
 @Composable
 private fun TrailingIcon(
@@ -116,16 +115,17 @@ private fun TrailingIcon(
     onClick: () -> Unit,
 ) {
     Icon(
-        modifier = modifier
-            .padding(start = 12.dp)
-            .size(size = iconSize)
-            .clickable(
-                interactionSource = null,
-                indication = null,
-                onClick = onClick
-            ),
+        modifier =
+            modifier
+                .padding(start = 12.dp)
+                .size(size = iconSize)
+                .clickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = onClick,
+                ),
         imageVector = imageVector,
         contentDescription = contentDescription,
-        tint = NeeGongNaeGongTheme.colorScheme.primaryText
+        tint = NeeGongNaeGongTheme.colorScheme.primaryText,
     )
 }

@@ -24,11 +24,12 @@ fun ProfileContent(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier.clickable(
-            interactionSource = null,
-            indication = null,
-            onClick = onClick
-        )
+        modifier =
+            modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onClick,
+            ),
     ) {
         Spacer(modifier = Modifier.height(18.dp))
 
@@ -39,7 +40,7 @@ fun ProfileContent(
                 style = NeeGongNaeGongTheme.typography.bodyMedium,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
 
             Spacer(modifier = Modifier.width(18.dp))

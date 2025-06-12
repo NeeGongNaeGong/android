@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun LaunchedEffectAfterFirst(
     vararg keys: Any?,
-    block: suspend CoroutineScope.() -> Unit
+    block: suspend CoroutineScope.() -> Unit,
 ) {
     var hasLaunched by remember { mutableStateOf(false) }
 

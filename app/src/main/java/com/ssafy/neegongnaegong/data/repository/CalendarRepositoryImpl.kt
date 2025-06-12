@@ -21,52 +21,57 @@ import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
-class CalendarRepositoryImpl @Inject constructor(
-    private val dataSource: NetworkCalendarDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : CalendarRepository {
-    override suspend fun getUserSchedules(
-        month: YearMonth
-    ): Flow<List<Schedule>> = withContext(ioDispatcher) {
-        dataSource.getUserSchedules(month).map { it.schedules.map { it.toDomain() } }
-    }
+class CalendarRepositoryImpl
+    @Inject
+    constructor(
+        private val dataSource: NetworkCalendarDataSource,
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    ) : CalendarRepository {
+        override suspend fun getUserSchedules(month: YearMonth): Flow<List<Schedule>> =
+            withContext(ioDispatcher) {
+                dataSource.getUserSchedules(month).map { it.schedules.map { it.toDomain() } }
+            }
 
-    override suspend fun getScheduleDetail(
-        id: Long,
-        date: LocalDate
-    ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.getPersonalSchedule(id, date).map { it.toDomain() }
-    }
+        override suspend fun getScheduleDetail(
+            id: Long,
+            date: LocalDate,
+        ): Flow<Schedule> =
+            withContext(ioDispatcher) {
+                dataSource.getPersonalSchedule(id, date).map { it.toDomain() }
+            }
 
-    override suspend fun createPersonalSchedule(
-        schedule: ScheduleInfo,
-        repeatRule: RepeatRuleInfo?
-    ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.createPersonalSchedule(
-            schedule.toCreateRequest(repeatRule)
-        ).map { createPersonalScheduleResponse: CreatePersonalScheduleResponse ->
-            createPersonalScheduleResponse.toDomain()
-        }
-    }
+        override suspend fun createPersonalSchedule(
+            schedule: ScheduleInfo,
+            repeatRule: RepeatRuleInfo?,
+        ): Flow<Schedule> =
+            withContext(ioDispatcher) {
+                dataSource.createPersonalSchedule(
+                    schedule.toCreateRequest(repeatRule),
+                ).map { createPersonalScheduleResponse: CreatePersonalScheduleResponse ->
+                    createPersonalScheduleResponse.toDomain()
+                }
+            }
 
-    override suspend fun updatePersonalSchedule(
-        id: Long,
-        schedule: ScheduleInfo,
-        repeatRule: RepeatRuleInfo?,
-        type: UpdateType,
-        date: LocalDate
-    ): Flow<Schedule> = withContext(ioDispatcher) {
-        dataSource.updatePersonalSchedule(
-            id,
-            schedule.toUpdateRequest(type, date, repeatRule)
-        ).map { it.toDomain() }
-    }
+        override suspend fun updatePersonalSchedule(
+            id: Long,
+            schedule: ScheduleInfo,
+            repeatRule: RepeatRuleInfo?,
+            type: UpdateType,
+            date: LocalDate,
+        ): Flow<Schedule> =
+            withContext(ioDispatcher) {
+                dataSource.updatePersonalSchedule(
+                    id,
+                    schedule.toUpdateRequest(type, date, repeatRule),
+                ).map { it.toDomain() }
+            }
 
-    override suspend fun deletePersonalSchedule(
-        id: Long,
-        type: DeleteType,
-        date: LocalDate
-    ): Flow<Unit> = withContext(ioDispatcher) {
-        dataSource.deletePersonalSchedule(id, DeletePersonalScheduleRequest(type, date))
+        override suspend fun deletePersonalSchedule(
+            id: Long,
+            type: DeleteType,
+            date: LocalDate,
+        ): Flow<Unit> =
+            withContext(ioDispatcher) {
+                dataSource.deletePersonalSchedule(id, DeletePersonalScheduleRequest(type, date))
+            }
     }
-}

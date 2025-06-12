@@ -21,29 +21,29 @@ import java.time.YearMonth
 interface UserCalendarApi {
     @GET("/api/calendar/schedules")
     suspend fun getUserSchedules(
-        @Query("month") month: YearMonth
+        @Query("month") month: YearMonth,
     ): Result<ApiResponse<GetUserScheduleResponse>>
 
     @GET("/api/calendar/schedules/{schedule-id}")
     suspend fun getPersonalSchedule(
         @Path("schedule-id") scheduleId: Long,
-        @Query("date") date: LocalDate
+        @Query("date") date: LocalDate,
     ): Result<ApiResponse<ScheduleResponse>>
 
     @POST("/api/calendar/schedules")
     suspend fun createPersonalSchedule(
-        @Body request: CreatePersonalScheduleRequest
+        @Body request: CreatePersonalScheduleRequest,
     ): Result<ApiResponse<CreatePersonalScheduleResponse>>
 
     @PUT("/api/calendar/schedules/{schedule-id}")
     suspend fun updatePersonalSchedule(
         @Path("schedule-id") scheduleId: Long,
-        @Body request: UpdatePersonalScheduleRequest
+        @Body request: UpdatePersonalScheduleRequest,
     ): Result<ApiResponse<UpdatePersonalScheduleResponse>>
 
     @HTTP(method = "DELETE", path = "/api/calendar/schedules/{schedule-id}", hasBody = true)
     suspend fun deletePersonalSchedule(
         @Path("schedule-id") scheduleId: Long,
-        @Body request: DeletePersonalScheduleRequest
+        @Body request: DeletePersonalScheduleRequest,
     ): Result<ApiResponse<Unit>>
 }

@@ -31,7 +31,7 @@ fun CalendarBody(
     Column(modifier = modifier) {
         Spacer(Modifier.height(16.dp))
         Column(
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight(),
         ) {
             val totalRows = (firstDayOfWeek + lastDay + 6) / 7
             for (row in 0 until totalRows) {
@@ -39,25 +39,28 @@ fun CalendarBody(
                     for (column in 0..6) {
                         val calendarIndex = row * 7 + column
                         val dayOffset = calendarIndex - firstDayOfWeek + 1
-                        val date = if (dayOffset < 1) {
-                            val previousMonth = selectedMonth.minusMonths(1)
-                            val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
-                            previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
-                        } else if (dayOffset > lastDay) {
-                            val nextMonth = selectedMonth.plusMonths(1)
-                            nextMonth.atDay(dayOffset - lastDay)
-                        } else {
-                            selectedMonth.atDay(dayOffset)
-                        }
+                        val date =
+                            if (dayOffset < 1) {
+                                val previousMonth = selectedMonth.minusMonths(1)
+                                val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
+                                previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
+                            } else if (dayOffset > lastDay) {
+                                val nextMonth = selectedMonth.plusMonths(1)
+                                nextMonth.atDay(dayOffset - lastDay)
+                            } else {
+                                selectedMonth.atDay(dayOffset)
+                            }
 
                         CalendarCell(
-                            modifier = Modifier
-                                .weight(1f)
-                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
                             date = date,
-                            isSelected = remember(selectedDate) {
-                                selectedDate.compareTo(date) == 0
-                            },
+                            isSelected =
+                                remember(selectedDate) {
+                                    selectedDate.compareTo(date) == 0
+                                },
                             onSelected = onDateSelected,
                         ) {
                             dateContent(date)
@@ -79,7 +82,7 @@ fun CalendarBodyPreview() {
         CalendarBody(
             selectedMonth = currentMonth,
             selectedDate = currentDate,
-            onDateSelected = { }
+            onDateSelected = { },
         )
     }
 }

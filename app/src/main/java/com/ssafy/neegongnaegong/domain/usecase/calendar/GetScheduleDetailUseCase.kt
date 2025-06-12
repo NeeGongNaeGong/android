@@ -6,7 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 class GetScheduleDetailUseCase(private val calendarRepository: CalendarRepository) {
-    suspend operator fun invoke(scheduleId: Long, date: LocalDate): Flow<Schedule> {
+    suspend operator fun invoke(
+        scheduleId: Long,
+        date: LocalDate,
+    ): Flow<Schedule> {
         return calendarRepository.getScheduleDetail(scheduleId, date)
     }
 }

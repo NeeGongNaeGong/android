@@ -12,5 +12,5 @@ data class StudyContentResponse(
     val learningRecordCreatedAt: LocalDateTime,
     val learningRecordModifiedAt: LocalDateTime,
     val cursorCreatedAt: LocalDateTime,
-    val cursorId: Long
+    val cursorId: Long,
 )

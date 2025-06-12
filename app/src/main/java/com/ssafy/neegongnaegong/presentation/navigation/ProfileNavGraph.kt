@@ -22,7 +22,7 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
                     navController.navigate(route = auth) {
                         popUpTo(id = 0)
                     }
-                }
+                },
             )
         }
 
@@ -35,11 +35,9 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
                     navController.navigate(route = group)
                 },
                 navigateToNotice = { groupId: Long, noticeId: Long ->
-
                 },
                 navigateToVote = { groupId: Long, voteId: Long ->
-
-                }
+                },
             )
         }
     }

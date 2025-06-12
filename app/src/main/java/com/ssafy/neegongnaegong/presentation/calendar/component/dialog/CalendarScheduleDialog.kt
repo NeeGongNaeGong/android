@@ -11,10 +11,10 @@ import androidx.compose.ui.util.fastForEachIndexed
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
-import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleInfoItem
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.LocalDate
@@ -42,21 +42,24 @@ fun CalendarScheduleDialog(
     ) { date ->
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
             ) {
                 schedules[date]?.let { schedules ->
                     schedules.fastForEachIndexed { index, schedule ->
                         ScheduleInfoItem(
-                            modifier = Modifier
-                                .padding(1.dp)
-                                .fillMaxWidth(),
+                            modifier =
+                                Modifier
+                                    .padding(1.dp)
+                                    .fillMaxWidth(),
                             schedule = schedule,
-                            showPrefix = index == 0
-                                    || schedule.info.startAt.toLocalTime() != schedules[index - 1].info.startAt.toLocalTime()
-                                    || !(schedule.info.isAllDay && schedules[index - 1].info.isAllDay),
-                            onClick = onScheduleClick
+                            showPrefix =
+                                index == 0 ||
+                                    schedule.info.startAt.toLocalTime() != schedules[index - 1].info.startAt.toLocalTime() ||
+                                    !(schedule.info.isAllDay && schedules[index - 1].info.isAllDay),
+                            onClick = onScheduleClick,
                         )
                     }
                 }
@@ -75,23 +78,25 @@ fun CalendarScheduleDialog(
 fun CalendarScheduleDialogPreview() {
     val now: LocalDateTime = LocalDateTime.now()
     val calendarState = rememberCalendarState(now.toLocalDate())
-    val schedules = mutableMapOf<LocalDate, List<Schedule>>().apply {
-        put(
-            now.toLocalDate(),
-            mutableListOf(
-                Schedule(
-                    id = 1L,
-                    type = ScheduleType.PERSONAL,
-                    info = ScheduleInfo(
-                        title = "Test Schedule",
-                        content = "This is a test schedule",
-                        startAt = now,
-                        endAt = now.plusHours(1),
-                    )
+    val schedules =
+        mutableMapOf<LocalDate, List<Schedule>>().apply {
+            put(
+                now.toLocalDate(),
+                mutableListOf(
+                    Schedule(
+                        id = 1L,
+                        type = ScheduleType.PERSONAL,
+                        info =
+                            ScheduleInfo(
+                                title = "Test Schedule",
+                                content = "This is a test schedule",
+                                startAt = now,
+                                endAt = now.plusHours(1),
+                            ),
+                    ),
                 ),
             )
-        )
-    }
+        }
 
     NeeGongNaeGongTheme {
         CalendarScheduleDialog(

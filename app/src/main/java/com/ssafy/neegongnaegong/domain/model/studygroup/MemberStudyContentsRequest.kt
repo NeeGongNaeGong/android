@@ -7,5 +7,5 @@ data class MemberStudyContentsRequest(
     val userId: Long,
     val cursorCreatedAt: LocalDateTime?,
     val cursorId: Long?,
-    val size: Int = 10
+    val size: Int = 10,
 )

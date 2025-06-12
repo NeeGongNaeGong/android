@@ -1,5 +1,6 @@
-package com.ssafy.neegongnaegong.presentation.group
+package com.ssafy.neegongnaegong.presentation.group.detail
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,50 +11,74 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
 import com.ssafy.neegongnaegong.presentation.group.component.detail.MedalType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
-
-private const val TAG = "StudiesDetailScreen"
 
 @Composable
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
+    navBackStackEntry: NavBackStackEntry,
+    studyGroupId: Long,
     popBackStack: () -> Unit = {},
 ) {
+    val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
     BackHandler {
-        popBackStack()
+        /* 드로어가 열려 있으면 드로어를 우선 닫음
+         * 드로어가 닫혀 있으면 popBackStack 실행
+         */
+        if (StudiesDrawerController.isOpen.value) {
+            StudiesDrawerController.close()
+        } else {
+            popBackStack()
+        }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoad(studyGroupId))
+    }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
         modifier = modifier,
+        uiState = uiState.value,
     )
 }
 
 @Composable
-fun StudiesContent(modifier: Modifier = Modifier) {
+private fun StudiesContent(
+    modifier: Modifier = Modifier,
+    uiState: StudiesDetailContract.State,
+) {
     StudiesDetailScreen(
         modifier = modifier,
+        name = uiState.studies.studyInfo.name,
+        members = uiState.members,
         onProfileClick = {},
         profiles = listOf(),
     )
 }
 
 @Composable
-fun StudiesDetailScreen(
+private fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
+    name: String,
+    members: List<StudiesMember> = emptyList(),
     onProfileClick: (Long) -> Unit = {},
     profiles: List<ProfileData> = emptyList(),
 ) {
@@ -67,8 +92,9 @@ fun StudiesDetailScreen(
             title = {
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    text = "수학 스터디",
+                    text = name,
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             navigationType = TopAppBarNavigationType.Menu,
@@ -83,11 +109,20 @@ fun StudiesDetailScreen(
                 Modifier
                     .verticalScroll(scrollState),
         ) {
+            val memberProfileList: List<ProfileData> =
+                members.map { member ->
+                    ProfileData(
+                        id = member.userId,
+                        imageUrl = member.profileImg,
+                        name = member.name,
+                        progress = 0.7f,
+                    )
+                }
             // 프로필 아이콘 행
-            ProfilesSection(modifier, profiles, onProfileClick)
-
+            ProfilesSection(modifier, memberProfileList, onProfileClick)
+            Log.d("StudiesDetailScreen", "StudiesDetailScreen: $profiles") // TODO : profile 데이터 삭제 필요
             Spacer(modifier = Modifier.height(12.dp))
-            // 스터디 공지사항 카드
+            // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(
                 modifier = Modifier.padding(5.dp),
                 announcements =
@@ -113,9 +148,9 @@ fun StudiesDetailScreen(
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
-fun PreviewStudiesDetailScreen() {
+private fun PreviewStudiesDetailScreen() {
     val previewProfiles =
         listOf(
             ProfileData(
@@ -161,6 +196,7 @@ fun PreviewStudiesDetailScreen() {
     NeeGongNaeGongTheme {
         StudiesDetailScreen(
             onProfileClick = {},
+            name = "스터디 이름",
             profiles = previewProfiles,
         )
     }

@@ -13,13 +13,14 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 @Composable
 fun LoadingDialog(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = NeeGongNaeGongTheme.colorScheme.background.copy(alpha = 0.5f)),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(color = NeeGongNaeGongTheme.colorScheme.background.copy(alpha = 0.5f)),
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
-            color = NeeGongNaeGongTheme.colorScheme.blue
+            color = NeeGongNaeGongTheme.colorScheme.blue,
         )
     }
 }

@@ -24,17 +24,18 @@ fun CalendarTopAppBar(title: String = "") {
             IconButton(onClick = { backDispatcher?.onBackPressed() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "Back"
+                    contentDescription = "Back",
                 )
             }
         },
         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-        colors = TopAppBarDefaults.topAppBarColors().copy(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent,
-            navigationIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            titleContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-            actionIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText
-        )
+        colors =
+            TopAppBarDefaults.topAppBarColors().copy(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent,
+                navigationIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                titleContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                actionIconContentColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+            ),
     )
 }

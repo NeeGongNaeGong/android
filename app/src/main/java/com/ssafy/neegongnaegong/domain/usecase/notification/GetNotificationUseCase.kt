@@ -6,7 +6,8 @@ import com.ssafy.neegongnaegong.domain.repository.NotificationRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetNotificationUseCase @Inject constructor(private val notificationRepository: NotificationRepository) {
-    operator fun invoke(): Flow<PagingData<Notification>> =
-        notificationRepository.getNotifications()
-}
+class GetNotificationUseCase
+    @Inject
+    constructor(private val notificationRepository: NotificationRepository) {
+        operator fun invoke(): Flow<PagingData<Notification>> = notificationRepository.getNotifications()
+    }

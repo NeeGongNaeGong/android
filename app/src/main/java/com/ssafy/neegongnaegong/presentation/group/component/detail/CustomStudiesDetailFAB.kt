@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,7 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
 import kotlinx.coroutines.delay
 
@@ -51,7 +49,10 @@ fun CustomStudiesFAB(
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(color = NeeGongNaeGongTheme.colorScheme.background),
         contentAlignment = Alignment.BottomEnd,
     ) {
         Column(
@@ -82,8 +83,8 @@ fun CustomStudiesFAB(
             // 메인 FAB 버튼 - 테마 컬러 적용
             FloatingActionButton(
                 onClick = { expanded = !expanded },
-                containerColor = MaterialTheme.colorScheme.primary, // 테마 적용
-                contentColor = MaterialTheme.colorScheme.onPrimary, // 테마 적용
+                containerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                contentColor = NeeGongNaeGongTheme.colorScheme.background,
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_studies_fab_plus),
@@ -131,12 +132,12 @@ fun CustomStudiesSubFAB(
         ) {
             Text(
                 text = textLabel,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = NeeGongNaeGongTheme.colorScheme.background,
                 style = NeeGongNaeGongTheme.typography.labelMedium,
                 modifier =
                     modifier
                         .background(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = NeeGongNaeGongTheme.colorScheme.blue,
                             shape = RoundedCornerShape(8.dp),
                         ).padding(horizontal = 8.dp, vertical = 4.dp),
             )
@@ -147,13 +148,16 @@ fun CustomStudiesSubFAB(
                 modifier =
                     modifier
                         .size(32.dp)
-                        .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape),
+                        .background(
+                            color = NeeGongNaeGongTheme.colorScheme.blue,
+                            shape = CircleShape,
+                        ),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = painterResource(id = imgRes),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = NeeGongNaeGongTheme.colorScheme.background,
                 )
             }
         }

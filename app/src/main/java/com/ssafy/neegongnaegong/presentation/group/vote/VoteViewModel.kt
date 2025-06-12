@@ -9,9 +9,9 @@ import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
+import com.ssafy.neegongnaegong.presentation.util.CustomDateTimeFormatter
+import com.ssafy.neegongnaegong.presentation.util.CustomDateTimeFormatter.convertStringToLocalDateTime
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
-import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
-import com.ssafy.neegongnaegong.presentation.util.TimeFormatter.convertStringToLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -34,8 +34,8 @@ class VoteViewModel
                 isAlarmBeforeClosingEnabled = false,
                 voteTitle = "",
                 voteItemList = persistentListOf("", "", ""),
-                date = TimeFormatter.convertLocalDateTimeToStringDate(LocalDateTime.now()),
-                time = TimeFormatter.convertLocalDateTimeToStringTime(LocalDateTime.now()),
+                date = CustomDateTimeFormatter.convertLocalDateTimeToStringDate(LocalDateTime.now()),
+                time = CustomDateTimeFormatter.convertLocalDateTimeToStringTime(LocalDateTime.now()),
                 isDateDialogVisible = false,
                 isTimeDialogVisible = false,
             )
@@ -155,7 +155,7 @@ class VoteViewModel
                 }
 
                 is VoteContract.Event.OnChangeDate -> {
-                    setState { copy(date = TimeFormatter.convertLongToDateString(event.date)) }
+                    setState { copy(date = CustomDateTimeFormatter.convertLongToDateString(event.date)) }
                 }
 
                 is VoteContract.Event.OnChangeTime -> {
@@ -163,7 +163,7 @@ class VoteViewModel
                         setState {
                             copy(
                                 time =
-                                    TimeFormatter.convertHourMinuteToAmPmFormat(
+                                    CustomDateTimeFormatter.convertHourMinuteToAmPmFormat(
                                         event.hour,
                                         event.minute,
                                     ),

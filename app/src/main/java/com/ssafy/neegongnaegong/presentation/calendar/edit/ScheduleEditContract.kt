@@ -13,15 +13,25 @@ import java.time.LocalDateTime
 class ScheduleEditContract {
     sealed class Event : UiEvent {
         data class OnLoad(val scheduleId: Long, val date: LocalDate) : Event()
+
         data class OnTitleChanged(val title: String) : Event()
+
         data class OnContentChanged(val content: String?) : Event()
+
         data class OnStartAtChanged(val at: LocalDateTime) : Event()
+
         data class OnEndAtChanged(val at: LocalDateTime) : Event()
+
         data class OnLocationChanged(val location: String?) : Event()
+
         data class OnRepeatRuleChanged(val repeatRule: RepeatRuleInfo?) : Event()
+
         data object OnSaveScheduleClicked : Event()
-        data object OnDialogDismissed: Event()
+
+        data object OnDialogDismissed : Event()
+
         data class OnUpdateTypeSelected(val type: UpdateType) : Event()
+
         data object OnCancelClick : Event()
     }
 

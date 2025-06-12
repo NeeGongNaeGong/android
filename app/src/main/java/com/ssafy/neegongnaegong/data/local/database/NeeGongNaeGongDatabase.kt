@@ -10,11 +10,12 @@ import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKey
 @Database(
     entities = [
         NotificationEntity::class,
-        NotificationRemoteKeyEntity::class
+        NotificationRemoteKeyEntity::class,
     ],
-    version = 2
+    version = 2,
 )
 abstract class NeeGongNaeGongDatabase : RoomDatabase() {
     abstract fun localNotificationDataSource(): LocalNotificationDataSource
+
     abstract fun localNotificationRemoteKeyDataSource(): LocalNotificationRemoteKeyDataSource
 }

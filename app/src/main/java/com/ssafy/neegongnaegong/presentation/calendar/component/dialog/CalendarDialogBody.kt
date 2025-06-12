@@ -18,16 +18,16 @@ import java.time.LocalDate
 fun CalendarDialogBody(
     modifier: Modifier = Modifier,
     date: LocalDate,
-    content: @Composable (LocalDate) -> Unit = {}
+    content: @Composable (LocalDate) -> Unit = {},
 ) {
     Surface(
         modifier = modifier,
         color = NeeGongNaeGongTheme.colorScheme.background,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             CalendarDialogHeader(date = date)
             HorizontalDivider()

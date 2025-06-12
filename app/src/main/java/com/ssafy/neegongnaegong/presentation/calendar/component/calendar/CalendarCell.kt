@@ -52,43 +52,48 @@ fun CalendarCell(
     isToday: Boolean = false,
     dateColor: Color = NeeGongNaeGongTheme.colorScheme.primaryText,
     onSelect: () -> Unit = {},
-    content: @Composable () -> Unit = { }
+    content: @Composable () -> Unit = { },
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .border(
-                if (isSelected) BorderStroke(
-                    0.5.dp,
-                    NeeGongNaeGongTheme.colorScheme.blue
-                ) else BorderStroke(0.dp, Color.Transparent),
-                RoundedCornerShape(5.dp)
-            )
-            .clickable { onSelect() }
-            .padding(2.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .border(
+                    if (isSelected) {
+                        BorderStroke(
+                            0.5.dp,
+                            NeeGongNaeGongTheme.colorScheme.blue,
+                        )
+                    } else {
+                        BorderStroke(0.dp, Color.Transparent)
+                    },
+                    RoundedCornerShape(5.dp),
+                )
+                .clickable { onSelect() }
+                .padding(2.dp),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
-                modifier = Modifier
-                    .padding(vertical = 2.dp)
-                    .clip(shape = RoundedCornerShape(5.dp))
-                    .background(if (isToday) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent)
-                    .padding(2.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .padding(vertical = 2.dp)
+                        .clip(shape = RoundedCornerShape(5.dp))
+                        .background(if (isToday) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent)
+                        .padding(2.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = date.toString(),
                     style = NeeGongNaeGongTheme.typography.labelMedium,
                     color = if (isToday) NeeGongNaeGongTheme.colorScheme.background else dateColor,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
             content()
         }
-
     }
 }
 
@@ -97,34 +102,35 @@ fun CalendarCell(
 fun CalendarCellPreview() {
     NeeGongNaeGongTheme {
         Row(
-            modifier = Modifier
-                .background(Color.White)
-                .height(100.dp)
+            modifier =
+                Modifier
+                    .background(Color.White)
+                    .height(100.dp),
         ) {
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 1,
-                dateColor = DayOfWeek.SUNDAY.color
+                dateColor = DayOfWeek.SUNDAY.color,
             )
 
             // Regular day
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 2,
-                dateColor = DayOfWeek.MONDAY.color
+                dateColor = DayOfWeek.MONDAY.color,
             )
 
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 3,
-                dateColor = DayOfWeek.TUESDAY.color
+                dateColor = DayOfWeek.TUESDAY.color,
             )
 
             // Selected day
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 4,
-                dateColor = DayOfWeek.WEDNESDAY.color
+                dateColor = DayOfWeek.WEDNESDAY.color,
             )
 
             // Today
@@ -132,20 +138,20 @@ fun CalendarCellPreview() {
                 modifier = Modifier.weight(1f),
                 date = 5,
                 isToday = true,
-                dateColor = DayOfWeek.THURSDAY.color
+                dateColor = DayOfWeek.THURSDAY.color,
             )
 
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 6,
-                dateColor = DayOfWeek.FRIDAY.color
+                dateColor = DayOfWeek.FRIDAY.color,
             )
 
             // Holiday
             CalendarCell(
                 modifier = Modifier.weight(1f),
                 date = 7,
-                dateColor = DayOfWeek.SATURDAY.color
+                dateColor = DayOfWeek.SATURDAY.color,
             )
         }
     }

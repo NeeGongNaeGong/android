@@ -9,7 +9,7 @@ interface UiEffect
 @Composable
 fun <E : UiEffect> CollectSideEffects(
     effectFlow: Flow<E>,
-    onEffect: suspend (E) -> Unit
+    onEffect: suspend (E) -> Unit,
 ) = LaunchedEffect(key1 = effectFlow) {
     effectFlow.collect { effect: E ->
         onEffect(effect)

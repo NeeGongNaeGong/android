@@ -65,13 +65,13 @@ fun ScheduleEditRoute(
         onUpdateTypeSelected = {
             viewModel.setEvent(
                 ScheduleEditContract.Event.OnUpdateTypeSelected(
-                    it
-                )
+                    it,
+                ),
             )
         },
         onSaveScheduleClicked = { viewModel.setEvent(ScheduleEditContract.Event.OnSaveScheduleClicked) },
         onCancelClick = { viewModel.setEvent(ScheduleEditContract.Event.OnCancelClick) },
-        onDialogDismissed = { viewModel.setEvent(ScheduleEditContract.Event.OnDialogDismissed) }
+        onDialogDismissed = { viewModel.setEvent(ScheduleEditContract.Event.OnDialogDismissed) },
     )
 }
 
@@ -105,28 +105,32 @@ fun ScheduleEditContent(
     }
 
     // TODO : 데이터를 받아오기 전에 로직이 돌아가서 상태관리 이상함 수정 필요
-    if (!uiState.isLoading) ScheduleEditScreen(
-        modifier = modifier,
-        initialFocus = initialFocus,
-        schedule = uiState.schedule,
-        repeatRule = uiState.repeatRule,
-        onTitleChanged = onTitleChanged,
-        onContentChanged = onContentChanged,
-        onRepeatRuleChanged = onRepeatRuleChanged,
-        onStartDateChanged = onStartDateChanged,
-        onEndDateChanged = onEndDateChanged,
-        onLocationChanged = onLocationChanged,
-        onSaveScheduleClicked = onSaveScheduleClicked,
-        onCancelClick = onCancelClick
-    )
+    if (!uiState.isLoading) {
+        ScheduleEditScreen(
+            modifier = modifier,
+            initialFocus = initialFocus,
+            schedule = uiState.schedule,
+            repeatRule = uiState.repeatRule,
+            onTitleChanged = onTitleChanged,
+            onContentChanged = onContentChanged,
+            onRepeatRuleChanged = onRepeatRuleChanged,
+            onStartDateChanged = onStartDateChanged,
+            onEndDateChanged = onEndDateChanged,
+            onLocationChanged = onLocationChanged,
+            onSaveScheduleClicked = onSaveScheduleClicked,
+            onCancelClick = onCancelClick,
+        )
+    }
 
     if (uiState.isLoading || uiState.isOnSave) LoadingDialog()
 
-    if (uiState.isUpdateTypeSelectorShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) UpdateTypeSelectDialog(
-        repeatType = uiState.initSchedule.info.repeatRule?.info?.repeatType,
-        onDismissRequest = onDialogDismissed,
-        onUpdateTypeSelected = onUpdateTypeSelected
-    )
+    if (uiState.isUpdateTypeSelectorShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) {
+        UpdateTypeSelectDialog(
+            repeatType = uiState.initSchedule.info.repeatRule?.info?.repeatType,
+            onDismissRequest = onDialogDismissed,
+            onUpdateTypeSelected = onUpdateTypeSelected,
+        )
+    }
 }
 
 @Composable
@@ -145,9 +149,10 @@ fun ScheduleEditScreen(
     onCancelClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .then(modifier),
     ) {
         CalendarTopAppBar()
 
@@ -167,22 +172,22 @@ fun ScheduleEditScreen(
         Row(modifier = Modifier.fillMaxWidth()) {
             TextButton(
                 onClick = onCancelClick,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     "취소",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
             TextButton(
                 onClick = onSaveScheduleClicked,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     "확인",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
         }
@@ -196,19 +201,21 @@ private fun PreviewScheduleEditScreen() {
         ScheduleEditScreen(
             modifier = Modifier.fillMaxSize(),
             initialFocus = ScheduleInputFormFocus.None,
-            schedule = ScheduleInfo(
-                title = "New Schedule",
-                content = null,
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                location = null,
-            ),
-            repeatRule = RepeatRuleInfo(
-                repeatType = RepeatType.MONTHLY,
-                repeatInterval = 1,
-                repeatDay = 3,
-                endDate = null
-            ),
+            schedule =
+                ScheduleInfo(
+                    title = "New Schedule",
+                    content = null,
+                    startAt = LocalDateTime.now(),
+                    endAt = LocalDateTime.now().plusHours(1),
+                    location = null,
+                ),
+            repeatRule =
+                RepeatRuleInfo(
+                    repeatType = RepeatType.MONTHLY,
+                    repeatInterval = 1,
+                    repeatDay = 3,
+                    endDate = null,
+                ),
             onTitleChanged = { },
             onContentChanged = { },
             onLocationChanged = { },

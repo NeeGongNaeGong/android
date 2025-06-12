@@ -11,7 +11,10 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import java.time.YearMonth
 
 @Composable
-fun DatePickerHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
+fun DatePickerHeader(
+    modifier: Modifier = Modifier,
+    selectedMonth: YearMonth,
+) {
     DatePickerHeader(
         modifier = modifier,
         text = "${selectedMonth.year}년 ${selectedMonth.monthValue}월",
@@ -19,14 +22,17 @@ fun DatePickerHeader(modifier: Modifier = Modifier, selectedMonth: YearMonth) {
 }
 
 @Composable
-fun DatePickerHeader(modifier: Modifier = Modifier, text: String) {
+fun DatePickerHeader(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             modifier = modifier.fillMaxWidth(),
             text = text,
             style = NeeGongNaeGongTheme.typography.titleSmall,
             textAlign = TextAlign.Center,
-            color = NeeGongNaeGongTheme.colorScheme.primaryText
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
         DayOfWeek()
     }

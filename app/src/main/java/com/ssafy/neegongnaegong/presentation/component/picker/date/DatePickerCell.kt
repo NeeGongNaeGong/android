@@ -32,10 +32,11 @@ fun DatePickerCell(
         modifier = modifier,
         date = date.dayOfMonth,
         isSelected = isSelected,
-        dateColor = when {
-            isSelected -> NeeGongNaeGongTheme.colorScheme.background
-            else -> date.dayOfWeek.color
-        },
+        dateColor =
+            when {
+                isSelected -> NeeGongNaeGongTheme.colorScheme.background
+                else -> date.dayOfWeek.color
+            },
         onSelected = { onSelected(date) },
     )
 }
@@ -50,16 +51,17 @@ fun DatePickerCell(
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
-            modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .background(
-                    if (isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
-                )
-                .clickable { onSelected() }
-                .padding(vertical = 4.dp, horizontal = 8.dp),
+            modifier =
+                Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(
+                        if (isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
+                    )
+                    .clickable { onSelected() }
+                    .padding(vertical = 4.dp, horizontal = 8.dp),
             text = date.toString(),
             style = NeeGongNaeGongTheme.typography.labelMedium,
             color = dateColor,
@@ -76,9 +78,10 @@ private fun DatePickerCellPreview() {
         Row {
             repeat(7) {
                 DatePickerCell(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
                     date = sunday.plusDays(it.toLong()),
                     isSelected = it == 3,
                     onSelected = { },

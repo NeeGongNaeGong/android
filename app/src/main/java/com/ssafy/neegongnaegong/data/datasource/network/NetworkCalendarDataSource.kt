@@ -12,26 +12,22 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 interface NetworkCalendarDataSource {
-    suspend fun getUserSchedules(
-        month: YearMonth
-    ): Flow<GetUserScheduleResponse>
+    suspend fun getUserSchedules(month: YearMonth): Flow<GetUserScheduleResponse>
 
     suspend fun getPersonalSchedule(
         scheduleId: Long,
         date: LocalDate,
     ): Flow<ScheduleResponse>
 
-    suspend fun createPersonalSchedule(
-        request: CreatePersonalScheduleRequest
-    ): Flow<CreatePersonalScheduleResponse>
+    suspend fun createPersonalSchedule(request: CreatePersonalScheduleRequest): Flow<CreatePersonalScheduleResponse>
 
     suspend fun updatePersonalSchedule(
         scheduleId: Long,
-        request: UpdatePersonalScheduleRequest
+        request: UpdatePersonalScheduleRequest,
     ): Flow<UpdatePersonalScheduleResponse>
 
     suspend fun deletePersonalSchedule(
         scheduleId: Long,
-        request: DeletePersonalScheduleRequest
+        request: DeletePersonalScheduleRequest,
     ): Flow<Unit>
 }

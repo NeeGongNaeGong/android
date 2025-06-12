@@ -6,5 +6,5 @@ data class UserResponse(
     val nickName: String,
     val profileImg: String?,
     val cursorId: Long,
-    val cursorCreatedAt: String
+    val cursorCreatedAt: String,
 )

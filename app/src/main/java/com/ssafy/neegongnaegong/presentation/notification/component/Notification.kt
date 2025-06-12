@@ -73,7 +73,7 @@ fun Notification(
     onDelete: () -> Unit,
     onMove: () -> Unit,
     onAccept: () -> Unit,
-    onReject: () -> Unit
+    onReject: () -> Unit,
 ) {
     val offsetX: MutableFloatState = remember { mutableFloatStateOf(0f) }
     val rightDistancePx: Float = with(LocalDensity.current) { MAX_SLIDE_DISTANCE.toPx() }
@@ -81,31 +81,33 @@ fun Notification(
     val animatedOffsetX: Float by animateFloatAsState(
         targetValue = offsetX.floatValue,
         animationSpec = tween(durationMillis = 150),
-        label = "offsetX"
+        label = "offsetX",
     )
 
     Box(modifier = modifier) {
         // 오른쪽 삭제 버튼
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .matchParentSize(),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .matchParentSize(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.End,
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .size(MAX_SLIDE_DISTANCE)
-                    .background(color = Color.Red)
-                    .clickable(onClick = onDelete),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .size(MAX_SLIDE_DISTANCE)
+                        .background(color = Color.Red)
+                        .clickable(onClick = onDelete),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete",
                     tint = Color.White,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }
@@ -113,66 +115,69 @@ fun Notification(
         // 왼쪽 수락/거절 버튼 (그룹 가입 요청인 경우만)
         if (isGroupJoinRequest) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .matchParentSize(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .matchParentSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
             ) {
                 // 수락 버튼
                 Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(GROUP_JOIN_SLIDE_DISTANCE / 2)
-                        .background(color = AcceptColor)
-                        .clickable(onClick = onAccept),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxHeight()
+                            .width(GROUP_JOIN_SLIDE_DISTANCE / 2)
+                            .background(color = AcceptColor)
+                            .clickable(onClick = onAccept),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = stringResource(id = R.string.accept),
                             tint = Color.White,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
 
                         Text(
                             text = stringResource(id = R.string.accept),
                             color = Color.White,
                             style = TextStyle(fontSize = 10.sp),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
 
                 // 거절 버튼
                 Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(GROUP_JOIN_SLIDE_DISTANCE / 2)
-                        .background(color = RejectColor)
-                        .clickable(onClick = onReject),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxHeight()
+                            .width(GROUP_JOIN_SLIDE_DISTANCE / 2)
+                            .background(color = RejectColor)
+                            .clickable(onClick = onReject),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
                             contentDescription = stringResource(id = R.string.reject),
                             tint = Color.White,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
 
                         Text(
                             text = stringResource(id = R.string.reject),
                             color = Color.White,
                             style = TextStyle(fontSize = 10.sp),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
@@ -180,24 +185,24 @@ fun Notification(
         }
 
         NotificationContent(
-            modifier = Modifier
-                .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
-                .clickable(
-                    interactionSource = null,
-                    indication = null,
-                    onClick = onMove
-                )
-                .draggableToRevealAction(
-                    offsetState = offsetX,
-                    rightDistancePx = rightDistancePx,
-                    leftDistancePx = leftDistancePx,
-                    isGroupJoinRequest = isGroupJoinRequest
-                ),
+            modifier =
+                Modifier
+                    .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = onMove,
+                    ).draggableToRevealAction(
+                        offsetState = offsetX,
+                        rightDistancePx = rightDistancePx,
+                        leftDistancePx = leftDistancePx,
+                        isGroupJoinRequest = isGroupJoinRequest,
+                    ),
             image = image,
             user = user,
             content = content,
             isRead = isRead,
-            isGroupJoinRequest = isGroupJoinRequest
+            isGroupJoinRequest = isGroupJoinRequest,
         )
     }
 }
@@ -214,40 +219,43 @@ private fun NotificationContent(
     val color: Color = notificationBackgroundColor(isRead = isRead)
 
     Row(
-        modifier = modifier
-            .background(color = color)
-            .padding(horizontal = 8.dp, vertical = 10.dp),
+        modifier =
+            modifier
+                .background(color = color)
+                .padding(horizontal = 8.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         GlideImage(
-            modifier = Modifier
-                .size(ICON_SIZE)
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .size(ICON_SIZE)
+                    .clip(CircleShape),
             imageModel = { image },
             failure = {
                 Image(
                     painter = painterResource(id = R.drawable.img_default_profile),
                     contentDescription = "Default Profile Image",
-                    modifier = Modifier
-                        .size(ICON_SIZE)
-                        .clip(CircleShape)
+                    modifier =
+                        Modifier
+                            .size(ICON_SIZE)
+                            .clip(CircleShape),
                 )
-            }
+            },
         )
 
         Text(
             modifier = Modifier.weight(1f),
             text = buildText(user = user, content = content),
             style = NeeGongNaeGongTheme.typography.bodySmall,
-            color = NeeGongNaeGongTheme.colorScheme.primaryText
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
 
         if (isGroupJoinRequest) {
             Text(
                 text = stringResource(id = R.string.help_group_join),
                 style = TextStyle(fontSize = 11.sp),
-                color = Color.Gray
+                color = Color.Gray,
             )
         }
     }
@@ -263,56 +271,66 @@ private fun notificationBackgroundColor(isRead: Boolean): Color {
     }
 }
 
-private fun buildText(user: String, content: String): AnnotatedString = buildAnnotatedString {
-    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-        append(user)
+private fun buildText(
+    user: String,
+    content: String,
+): AnnotatedString =
+    buildAnnotatedString {
+        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+            append(user)
+        }
+        append(content)
     }
-    append(content)
-}
 
 private fun Modifier.draggableToRevealAction(
     offsetState: MutableState<Float>,
     rightDistancePx: Float,
     leftDistancePx: Float,
-    isGroupJoinRequest: Boolean
-): Modifier = pointerInput(Unit) {
-    detectHorizontalDragGestures(
-        onDragEnd = {
-            val newOffset = if (isGroupJoinRequest) {
-                // 그룹 가입 요청인 경우 양방향 드래그 지원
-                when {
-                    offsetState.value > leftDistancePx / 2 -> leftDistancePx
-                    offsetState.value < -rightDistancePx / 2 -> -rightDistancePx
-                    else -> 0f
-                }
-            } else {
-                // 일반 알림인 경우 오른쪽으로만 드래그 (삭제)
-                if (offsetState.value < -rightDistancePx / 2) {
-                    -rightDistancePx
+    isGroupJoinRequest: Boolean,
+): Modifier =
+    pointerInput(Unit) {
+        detectHorizontalDragGestures(
+            onDragEnd = {
+                val newOffset =
+                    if (isGroupJoinRequest) {
+                        // 그룹 가입 요청인 경우 양방향 드래그 지원
+                        when {
+                            offsetState.value > leftDistancePx / 2 -> leftDistancePx
+                            offsetState.value < -rightDistancePx / 2 -> -rightDistancePx
+                            else -> 0f
+                        }
+                    } else {
+                        // 일반 알림인 경우 오른쪽으로만 드래그 (삭제)
+                        if (offsetState.value < -rightDistancePx / 2) {
+                            -rightDistancePx
+                        } else {
+                            0f
+                        }
+                    }
+                offsetState.value = newOffset
+            },
+        ) { _, dragAmount ->
+            val newOffset =
+                if (isGroupJoinRequest) {
+                    // 그룹 가입 요청인 경우: 양방향 드래그 허용
+                    (offsetState.value + dragAmount).coerceIn(-rightDistancePx, leftDistancePx)
                 } else {
-                    0f
+                    // 일반 알림인 경우: 왼쪽으로만 드래그 허용 (삭제)
+                    (offsetState.value + dragAmount).coerceIn(-rightDistancePx, 0f)
                 }
-            }
             offsetState.value = newOffset
         }
-    ) { _, dragAmount ->
-        val newOffset = if (isGroupJoinRequest) {
-            // 그룹 가입 요청인 경우: 양방향 드래그 허용
-            (offsetState.value + dragAmount).coerceIn(-rightDistancePx, leftDistancePx)
-        } else {
-            // 일반 알림인 경우: 왼쪽으로만 드래그 허용 (삭제)
-            (offsetState.value + dragAmount).coerceIn(-rightDistancePx, 0f)
-        }
-        offsetState.value = newOffset
     }
-}
 
 @Composable
 @Preview()
 fun NotificationPreview() {
     Notification(
         modifier = Modifier.fillMaxWidth(),
-        image = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
+        image =
+            "https://encrypted-tbn1.gstatic.com/" +
+                "images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy" +
+                "_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
         user = "킹민조",
         content = "님이 그룹 가입을 요청했습니다.",
         isRead = false,
@@ -320,6 +338,6 @@ fun NotificationPreview() {
         onDelete = {},
         onMove = {},
         onAccept = {},
-        onReject = {}
+        onReject = {},
     )
 }

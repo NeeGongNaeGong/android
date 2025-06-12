@@ -17,11 +17,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.calendar.Schedule
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleInfo
 import com.ssafy.neegongnaegong.domain.model.calendar.ScheduleType
-import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.CalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.ScheduleCalendar
 import com.ssafy.neegongnaegong.presentation.calendar.component.calendar.rememberCalendarState
 import com.ssafy.neegongnaegong.presentation.calendar.component.dialog.CalendarScheduleDialog
+import com.ssafy.neegongnaegong.presentation.calendar.component.input.ScheduleInput
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -57,7 +57,7 @@ fun CalendarRoute(
         },
         navigateToScheduleDetail = navigateToScheduleDetail,
         navigateToScheduleCreate = navigateToScheduleCreate,
-        navigateToEditSchedule = navigateToScheduleEdit
+        navigateToEditSchedule = navigateToScheduleEdit,
     )
 }
 
@@ -82,17 +82,20 @@ fun CalendarContent(
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
-                is CalendarContract.Effect.NavigateToScheduleDetailScreen -> navigateToScheduleDetail(
-                    effect.schedule
-                )
+                is CalendarContract.Effect.NavigateToScheduleDetailScreen ->
+                    navigateToScheduleDetail(
+                        effect.schedule,
+                    )
 
-                is CalendarContract.Effect.NavigateToScheduleEditScreen -> navigateToEditSchedule(
-                    effect.schedule
-                )
+                is CalendarContract.Effect.NavigateToScheduleEditScreen ->
+                    navigateToEditSchedule(
+                        effect.schedule,
+                    )
 
-                is CalendarContract.Effect.NavigateToCreateScheduleScreen -> navigateToScheduleCreate(
-                    effect.date
-                )
+                is CalendarContract.Effect.NavigateToCreateScheduleScreen ->
+                    navigateToScheduleCreate(
+                        effect.date,
+                    )
             }
         }
     }
@@ -109,16 +112,18 @@ fun CalendarContent(
 
     if (uiState.isLoading) LoadingDialog()
 
-    if (uiState.isCalendarDialogShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) CalendarScheduleDialog(
-        state = calendarState,
-        onMonthChanged = onMonthSelected,
-        onDateSelected = onDateSelected,
-        onDismissRequest = onDialogDismissRequest,
-        schedules = uiState.schedules,
-        isOnCreate = uiState.isOnCreate,
-        onSubmit = createSchedule,
-        onScheduleClick = onScheduleClicked,
-    )
+    if (uiState.isCalendarDialogShow && lifecycleState.isAtLeast(Lifecycle.State.STARTED)) {
+        CalendarScheduleDialog(
+            state = calendarState,
+            onMonthChanged = onMonthSelected,
+            onDateSelected = onDateSelected,
+            onDismissRequest = onDialogDismissRequest,
+            schedules = uiState.schedules,
+            isOnCreate = uiState.isOnCreate,
+            onSubmit = createSchedule,
+            onScheduleClick = onScheduleClicked,
+        )
+    }
 }
 
 @Composable
@@ -140,7 +145,7 @@ fun CalendarScreen(
             state = calendarState,
             onMonthChanged = onMonthSelected,
             onDateSelected = onDateSelected,
-            schedules = schedules
+            schedules = schedules,
         )
         ScheduleInput(
             selectedDate = calendarState.date,
@@ -156,33 +161,36 @@ private fun PreviewCalendarScreen() {
     val calendarState = rememberCalendarState()
     val isOnCreate = true
     val now = LocalDateTime.now()
-    val schedules = mutableMapOf<LocalDate, List<Schedule>>().apply {
-        put(
-            now.toLocalDate(),
-            listOf(
-                Schedule(
-                    type = ScheduleType.PERSONAL,
-                    id = 1,
-                    info = ScheduleInfo(
-                        title = "Meeting",
-                        content = "Meeting",
-                        startAt = now,
-                        endAt = now.plusHours(1),
+    val schedules =
+        mutableMapOf<LocalDate, List<Schedule>>().apply {
+            put(
+                now.toLocalDate(),
+                listOf(
+                    Schedule(
+                        type = ScheduleType.PERSONAL,
+                        id = 1,
+                        info =
+                            ScheduleInfo(
+                                title = "Meeting",
+                                content = "Meeting",
+                                startAt = now,
+                                endAt = now.plusHours(1),
+                            ),
+                    ),
+                    Schedule(
+                        type = ScheduleType.PERSONAL,
+                        id = 2,
+                        info =
+                            ScheduleInfo(
+                                title = "Lunch",
+                                content = "Lunch",
+                                startAt = now,
+                                endAt = now.plusHours(1),
+                            ),
                     ),
                 ),
-                Schedule(
-                    type = ScheduleType.PERSONAL,
-                    id = 2,
-                    info = ScheduleInfo(
-                        title = "Lunch",
-                        content = "Lunch",
-                        startAt = now,
-                        endAt = now.plusHours(1),
-                    )
-                ),
             )
-        )
-    }
+        }
 
     NeeGongNaeGongTheme {
         CalendarScreen(
@@ -191,7 +199,7 @@ private fun PreviewCalendarScreen() {
             schedules = schedules,
             onMonthSelected = { },
             onDateSelected = { },
-            createSchedule = { _, _ -> }
+            createSchedule = { _, _ -> },
         )
 
         CalendarScheduleDialog(

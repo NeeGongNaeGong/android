@@ -8,10 +8,16 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkCalendarDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCategoryDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkCategoryDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkFileDataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkFileDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkNotificationDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkS3DataSource
+import com.ssafy.neegongnaegong.data.datasource.network.NetworkS3DataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
@@ -50,9 +56,6 @@ internal interface DataSourceModule {
     @Binds
     fun bindLocalFcmDataSource(localFcmDataSourceImpl: LocalFcmDataSourceImpl): LocalFcmDataSource
 
-    @Binds
-    fun bindNetworkStudiesDataSource(networkStudiesDataSourceImpl: NetworkStudiesDataSourceImpl): NetworkStudiesDataSource
-
     @Singleton
     @Binds
     fun bindNetworkLearningRecordDataSource(
@@ -61,7 +64,23 @@ internal interface DataSourceModule {
 
     @Singleton
     @Binds
+    fun bindNetworkStudiesDataSource(networkStudiesDataSourceImpl: NetworkStudiesDataSourceImpl): NetworkStudiesDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkCategoryDataSource(networkCategoryDataSourceImpl: NetworkCategoryDataSourceImpl): NetworkCategoryDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkFileDataSource(networkFileDataSourceImpl: NetworkFileDataSourceImpl): NetworkFileDataSource
+
+    @Singleton
+    @Binds
+    fun bindNetworkS3DataSource(networkS3DataSourceImpl: NetworkS3DataSourceImpl): NetworkS3DataSource
+
+    @Singleton
+    @Binds
     fun bindNetworkNotificationDataSource(
-        networkNotificationDataSourceImpl: NetworkNotificationDataSourceImpl
+        networkNotificationDataSourceImpl: NetworkNotificationDataSourceImpl,
     ): NetworkNotificationDataSource
 }

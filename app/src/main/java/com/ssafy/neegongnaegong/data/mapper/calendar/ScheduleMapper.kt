@@ -15,7 +15,6 @@ import com.ssafy.neegongnaegong.domain.model.calendar.UpdateType
 import java.time.LocalDate
 
 internal object ScheduleMapper {
-
     fun ScheduleInfo.toCreateRequest(repeatRule: RepeatRuleInfo? = null) =
         CreatePersonalScheduleRequest(
             title = title,
@@ -23,13 +22,13 @@ internal object ScheduleMapper {
             startAt = startAt,
             endAt = endAt,
             location = location,
-            repeatRule = repeatRule?.toCreateRequest()
+            repeatRule = repeatRule?.toCreateRequest(),
         )
 
     fun ScheduleInfo.toUpdateRequest(
         type: UpdateType,
         date: LocalDate,
-        repeatRule: RepeatRuleInfo?
+        repeatRule: RepeatRuleInfo?,
     ) = UpdatePersonalScheduleRequest(
         type = type,
         date = date,
@@ -38,48 +37,54 @@ internal object ScheduleMapper {
         startAt = startAt,
         endAt = endAt,
         location = location,
-        repeatRule = repeatRule?.let { repeatRule.toUpdateRequest() }
+        repeatRule = repeatRule?.let { repeatRule.toUpdateRequest() },
     )
 
-    fun CreatePersonalScheduleResponse.toDomain() = Schedule(
-        type = type,
-        id = id,
-        info = ScheduleInfo(
-            title = title,
-            content = content,
-            startAt = startAt,
-            endAt = endAt,
+    fun CreatePersonalScheduleResponse.toDomain() =
+        Schedule(
+            type = type,
+            id = id,
+            info =
+                ScheduleInfo(
+                    title = title,
+                    content = content,
+                    startAt = startAt,
+                    endAt = endAt,
 //            isAllDay = endDate.second == 59, // TODO: 추후 수정
-            location = location,
-            repeatRule = repeatRule?.toDomain(),
-        ),
-    )
+                    location = location,
+                    repeatRule = repeatRule?.toDomain(),
+                ),
+        )
 
-    fun UpdatePersonalScheduleResponse.toDomain() = Schedule(
-        type = type,
-        id = id,
-        info = ScheduleInfo(
-            title = title,
-            content = content,
-            startAt = startAt,
-            endAt = endAt,
+    fun UpdatePersonalScheduleResponse.toDomain() =
+        Schedule(
+            type = type,
+            id = id,
+            info =
+                ScheduleInfo(
+                    title = title,
+                    content = content,
+                    startAt = startAt,
+                    endAt = endAt,
 //            isAllDay = endDate.second == 59, // TODO: 추후 수정
-            location = location,
-            repeatRule = repeatRule?.toDomain()
-        ),
-    )
+                    location = location,
+                    repeatRule = repeatRule?.toDomain(),
+                ),
+        )
 
-    fun ScheduleResponse.toDomain() = Schedule(
-        type = type,
-        id = id,
-        info = ScheduleInfo(
-            title = title,
-            content = content,
-            startAt = startAt,
-            endAt = endAt,
+    fun ScheduleResponse.toDomain() =
+        Schedule(
+            type = type,
+            id = id,
+            info =
+                ScheduleInfo(
+                    title = title,
+                    content = content,
+                    startAt = startAt,
+                    endAt = endAt,
 //            isAllDay = endAt.second == 59, // TODO: 추후 수정
-            location = location,
-            repeatRule = repeatRule?.toDomain()
-        ),
-    )
+                    location = location,
+                    repeatRule = repeatRule?.toDomain(),
+                ),
+        )
 }

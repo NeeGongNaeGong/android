@@ -21,7 +21,7 @@ private const val PRIVACY_INFO_URL = "https://www.notion.so/2082fdb33c0980419574
 fun ProfileRoute(
     viewModel: ProfileViewModel = hiltViewModel(),
     navigateToNotification: () -> Unit,
-    navigateToAuth: () -> Unit
+    navigateToAuth: () -> Unit,
 ) {
     val context: Context = LocalContext.current
     val uiState: ProfileContract.State by viewModel.uiState.collectAsStateWithLifecycle()
@@ -56,54 +56,56 @@ fun ProfileRoute(
             ProfileContract.Effect.NavigateToAuth -> {
                 navigateToAuth()
             }
-
         }
     }
 
-    if (uiState.isInitial) LoadingDialog()
-    else ProfileScreen(
-        profileImg = uiModel.profileImg,
-        nickname = uiModel.nickname,
-        hasUnReadNotification = uiModel.hasUnReadNotification,
-        shouldShowProfileImageWarningInfo = uiModel.shouldShowProfileImageWarningInfo,
-        isEditing = uiState.isEditing,
-        onCheckProfileImageWarning = {
-            val event = ProfileContract.Event.CheckProfileImageWarning
-            viewModel.setEvent(event = event)
-        },
-        onChangeNickName = { text: String ->
-            val event = ProfileContract.Event.ChangeNickName(text = text)
-            viewModel.setEvent(event = event)
-        },
-        onClickEdit = {
-            val event = ProfileContract.Event.ClickEdit
-            viewModel.setEvent(event = event)
-        },
-        onClickEditCancel = {
-            val event = ProfileContract.Event.ClickEditCancel
-            viewModel.setEvent(event = event)
-        },
-        onImageSelected = { uri: Uri ->
-            val event = ProfileContract.Event.ChangeImage(uri = uri)
-            viewModel.setEvent(event = event)
-        },
-        onClickNotification = {
-            val event = ProfileContract.Event.ClickNotification
-            viewModel.setEvent(event = event)
-        },
-        onClickPrivacyInfo = {
-            val event = ProfileContract.Event.ClickPrivacyInfo
-            viewModel.setEvent(event = event)
-        },
-        onClickLogout = {
-            val event = ProfileContract.Event.ClickLogout
-            viewModel.setEvent(event = event)
-        },
-        onClickDeleteAccount = {
-            val event = ProfileContract.Event.ClickDeleteAccount
-            viewModel.setEvent(event = event)
-        },
-    )
+    if (uiState.isInitial) {
+        LoadingDialog()
+    } else {
+        ProfileScreen(
+            profileImg = uiModel.profileImg,
+            nickname = uiModel.nickname,
+            hasUnReadNotification = uiModel.hasUnReadNotification,
+            shouldShowProfileImageWarningInfo = uiModel.shouldShowProfileImageWarningInfo,
+            isEditing = uiState.isEditing,
+            onCheckProfileImageWarning = {
+                val event = ProfileContract.Event.CheckProfileImageWarning
+                viewModel.setEvent(event = event)
+            },
+            onChangeNickName = { text: String ->
+                val event = ProfileContract.Event.ChangeNickName(text = text)
+                viewModel.setEvent(event = event)
+            },
+            onClickEdit = {
+                val event = ProfileContract.Event.ClickEdit
+                viewModel.setEvent(event = event)
+            },
+            onClickEditCancel = {
+                val event = ProfileContract.Event.ClickEditCancel
+                viewModel.setEvent(event = event)
+            },
+            onImageSelected = { uri: Uri ->
+                val event = ProfileContract.Event.ChangeImage(uri = uri)
+                viewModel.setEvent(event = event)
+            },
+            onClickNotification = {
+                val event = ProfileContract.Event.ClickNotification
+                viewModel.setEvent(event = event)
+            },
+            onClickPrivacyInfo = {
+                val event = ProfileContract.Event.ClickPrivacyInfo
+                viewModel.setEvent(event = event)
+            },
+            onClickLogout = {
+                val event = ProfileContract.Event.ClickLogout
+                viewModel.setEvent(event = event)
+            },
+            onClickDeleteAccount = {
+                val event = ProfileContract.Event.ClickDeleteAccount
+                viewModel.setEvent(event = event)
+            },
+        )
+    }
 
     if (uiState.isModifying) LoadingDialog()
 }

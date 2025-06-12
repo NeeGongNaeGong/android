@@ -44,7 +44,8 @@ fun ScheduleInputForm(
     onEndDateChanged: (LocalDateTime) -> Unit,
     onContentChanged: (String) -> Unit,
     onLocationChanged: (String) -> Unit,
-    onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit, enable: Boolean = true,
+    onRepeatRuleChanged: (RepeatRuleInfo?) -> Unit,
+    enable: Boolean = true,
 ) {
     val titleFocus = remember { FocusRequester() }
     val contentFocus = remember { FocusRequester() }
@@ -54,11 +55,12 @@ fun ScheduleInputForm(
 
     var isRepeatRuleFocused by remember { mutableStateOf(false) }
 
-    val dateTimeRangePickerState = rememberDateTimeRangePickerState(
-        startDateTime = schedule.startAt,
-        endDateTime = schedule.endAt,
-        isAllDay = schedule.isAllDay
-    )
+    val dateTimeRangePickerState =
+        rememberDateTimeRangePickerState(
+            startDateTime = schedule.startAt,
+            endDateTime = schedule.endAt,
+            isAllDay = schedule.isAllDay,
+        )
 
     LaunchedEffectAfterFirst(schedule.startAt) {
         dateTimeRangePickerState.updateStartDateTime(schedule.startAt)
@@ -87,9 +89,10 @@ fun ScheduleInputForm(
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         ScheduleEditText(
-            modifier = Modifier
-                .focusRequester(titleFocus)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .focusRequester(titleFocus)
+                    .fillMaxWidth(),
             text = schedule.title,
             onTextChange = onTitleChanged,
             placeHolder = "제목",
@@ -102,9 +105,10 @@ fun ScheduleInputForm(
             enable = enable,
         )
         ScheduleEditText(
-            modifier = Modifier
-                .focusRequester(contentFocus)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .focusRequester(contentFocus)
+                    .fillMaxWidth(),
             text = schedule.content ?: "",
             onTextChange = onContentChanged,
             placeHolder = "메모",
@@ -112,9 +116,10 @@ fun ScheduleInputForm(
             enable = enable,
         )
         ScheduleEditText(
-            modifier = Modifier
-                .focusRequester(locationFocus)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .focusRequester(locationFocus)
+                    .fillMaxWidth(),
             text = schedule.location ?: "",
             onTextChange = onLocationChanged,
             placeHolder = "장소",
@@ -122,9 +127,10 @@ fun ScheduleInputForm(
             enable = enable,
         )
         ScheduleEditText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { isRepeatRuleFocused = !isRepeatRuleFocused },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { isRepeatRuleFocused = !isRepeatRuleFocused },
             text = repeatRule?.toDisplayString() ?: "반복 안 함",
             placeHolder = "반복 안 함",
             prefix = Icons.Outlined.Repeat,
@@ -134,7 +140,7 @@ fun ScheduleInputForm(
             RepeatRuleInput(
                 schedule = schedule,
                 repeatRule = repeatRule,
-                onRepeatRuleChange = onRepeatRuleChanged
+                onRepeatRuleChange = onRepeatRuleChanged,
             )
         }
     }
@@ -145,19 +151,21 @@ fun ScheduleInputForm(
 private fun ScheduleInputFormPreview() {
     NeeGongNaeGongTheme {
         ScheduleInputForm(
-            schedule = ScheduleInfo(
-                title = "New Schedule",
-                content = null,
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                location = null,
-            ),
-            repeatRule = RepeatRuleInfo(
-                repeatType = RepeatType.WEEKLY,
-                repeatInterval = 1,
-                repeatDay = 6,
-                endDate = null
-            ),
+            schedule =
+                ScheduleInfo(
+                    title = "New Schedule",
+                    content = null,
+                    startAt = LocalDateTime.now(),
+                    endAt = LocalDateTime.now().plusHours(1),
+                    location = null,
+                ),
+            repeatRule =
+                RepeatRuleInfo(
+                    repeatType = RepeatType.WEEKLY,
+                    repeatInterval = 1,
+                    repeatDay = 6,
+                    endDate = null,
+                ),
             onTitleChanged = {},
             onStartDateChanged = {},
             onEndDateChanged = {},
@@ -179,5 +187,5 @@ enum class ScheduleInputFormFocus {
     IsAllDay,
     Content,
     Location,
-    RepeatRule
+    RepeatRule,
 }

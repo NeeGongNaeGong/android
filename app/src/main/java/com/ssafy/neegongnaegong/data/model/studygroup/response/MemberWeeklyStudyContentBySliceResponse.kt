@@ -6,5 +6,5 @@ data class MemberWeeklyStudyContentBySliceResponse(
     val content: List<StudyContentResponse>,
     val hasNext: Boolean,
     val cursorCreatedAt: LocalDateTime,
-    val cursorId: Long
+    val cursorId: Long,
 )

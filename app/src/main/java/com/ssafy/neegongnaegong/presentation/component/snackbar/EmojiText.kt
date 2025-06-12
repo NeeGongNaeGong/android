@@ -9,6 +9,6 @@ internal fun EmojiText(emoji: String) {
     Text(
         emoji,
         color = NeeGongNaeGongTheme.colorScheme.primaryText,
-        style = NeeGongNaeGongTheme.typography.titleSmall
+        style = NeeGongNaeGongTheme.typography.titleSmall,
     )
 }

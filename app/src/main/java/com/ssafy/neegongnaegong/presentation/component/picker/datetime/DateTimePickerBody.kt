@@ -37,32 +37,34 @@ fun DateTimePickerBody(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            modifier = Modifier
-                .clip(RoundedCornerShape(100))
-                .clickable(
-                    onClick = onDateClicked,
-                    enabled = enable
-                )
-                .background(
-                    color = if (isDateFocused) NeeGongNaeGongTheme.colorScheme.gray3 else Color.Transparent,
-                    shape = RoundedCornerShape(100)
-                )
-                .padding(4.dp),
+            modifier =
+                Modifier
+                    .clip(RoundedCornerShape(100))
+                    .clickable(
+                        onClick = onDateClicked,
+                        enabled = enable,
+                    )
+                    .background(
+                        color = if (isDateFocused) NeeGongNaeGongTheme.colorScheme.gray3 else Color.Transparent,
+                        shape = RoundedCornerShape(100),
+                    )
+                    .padding(4.dp),
             text = DateTimeFormatter.ofPattern("M월 d일 (E)", Locale.KOREAN).format(dateTime),
             color = NeeGongNaeGongTheme.colorScheme.primaryText,
-            style = NeeGongNaeGongTheme.typography.bodyMedium
+            style = NeeGongNaeGongTheme.typography.bodyMedium,
         )
         AnimatedVisibility(isTimeVisible) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(100))
-                    .clickable(onClick = onTimeClicked, enabled = enable)
-                    .background(
-                        color = if (isTimeFocused) NeeGongNaeGongTheme.colorScheme.gray3 else Color.Transparent,
-                        shape = RoundedCornerShape(100)
-                    )
-                    .padding(4.dp),
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(100))
+                        .clickable(onClick = onTimeClicked, enabled = enable)
+                        .background(
+                            color = if (isTimeFocused) NeeGongNaeGongTheme.colorScheme.gray3 else Color.Transparent,
+                            shape = RoundedCornerShape(100),
+                        )
+                        .padding(4.dp),
                 text = DateTimeFormatter.ofPattern("a h:mm", Locale.KOREAN).format(dateTime),
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 style = NeeGongNaeGongTheme.typography.bodyMedium,

@@ -31,8 +31,9 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawer
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawerContent
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import com.ssafy.neegongnaegong.presentation.navigation.BottomNavigationBar
 import com.ssafy.neegongnaegong.presentation.navigation.MainNavigationGraph
@@ -75,20 +76,23 @@ fun MainScreen() {
 
     val showBottomNavigationBar =
         currentDestination?.let { destination ->
-            val isAuthTab: Boolean = destination.hierarchy
-                .any { navDestination: NavDestination ->
-                    navDestination.hasRoute(AppNavigation.Tab.Auth::class)
-                }
+            val isAuthTab: Boolean =
+                destination.hierarchy
+                    .any { navDestination: NavDestination ->
+                        navDestination.hasRoute(AppNavigation.Tab.Auth::class)
+                    }
 
-            val isEditScreen: Boolean = destination.hierarchy
-                .any { navDestination: NavDestination ->
-                    navDestination.hasRoute(AppNavigation.Screen.Personal.Edit::class)
-                }
+            val isEditScreen: Boolean =
+                destination.hierarchy
+                    .any { navDestination: NavDestination ->
+                        navDestination.hasRoute(AppNavigation.Screen.Personal.Edit::class)
+                    }
 
-            val isNotificationScreen: Boolean = destination.hierarchy
-                .any { navDestination: NavDestination ->
-                    navDestination.hasRoute(AppNavigation.Screen.Profile.Notification::class)
-                }
+            val isNotificationScreen: Boolean =
+                destination.hierarchy
+                    .any { navDestination: NavDestination ->
+                        navDestination.hasRoute(AppNavigation.Screen.Profile.Notification::class)
+                    }
 
             !isAuthTab && !isEditScreen && !isNotificationScreen
         } != false
@@ -97,6 +101,12 @@ fun MainScreen() {
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val context = LocalContext.current
+    LaunchedEffect(navBackStackEntry) {
+        // TODO : 드로어 상태 관리 임시 처리 -> 애니메이션 없이 닫기
+        if (navBackStackEntry != null) {
+            studiesDrawerState.snapTo(DrawerValue.Closed)
+        }
+    }
 
     LaunchedEffect(isStudiesDrawerOpen) {
         if (isStudiesDrawerOpen) {
@@ -131,16 +141,39 @@ fun MainScreen() {
         drawerState = studiesDrawerState,
         gesturesEnabled = enableGestures.value,
         drawerContent = {
-            StudiesDrawer(
-                headerImageUrl = null,
-                onGroupManagementClick = {},
-                onMemberManagementClick = {},
-                onScheduleManagementClick = {},
-                onStudyCreateClick = {},
-                onStudySearchClick = {},
-                onMyStudyClick = {},
-                onStudyItemClick = {},
-            )
+            navBackStackEntry?.let { entry ->
+                val isStudiesDetail =
+                    entry.destination.hierarchy.any {
+                        it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
+                    }
+                StudiesDrawerContent(
+                    navBackStackEntry = entry,
+                    navigateTodStudiesEdit = {
+                        if (isStudiesDetail) {
+                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                            navController.navigate(
+                                AppNavigation.Screen.Studies.Edit(route.studyGroupId),
+                            )
+                        }
+                    },
+                    navigateToStudiesMembersRole = {
+                        if (isStudiesDetail) {
+                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                            navController.navigate(
+                                AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
+                            )
+                        }
+                    },
+                    navigateToStudiesApplications = {
+                        if (isStudiesDetail) {
+                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                            navController.navigate(
+                                AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
+                            )
+                        }
+                    },
+                )
+            }
         },
     ) {
         Scaffold(

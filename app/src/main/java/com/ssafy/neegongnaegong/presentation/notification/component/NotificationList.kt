@@ -17,15 +17,15 @@ fun NotificationList(
     onDeleteNotification: (NotificationUiModel) -> Unit,
     onMoveNotification: (NotificationUiModel) -> Unit,
     onAcceptGroupJoinRequest: (NotificationUiModel) -> Unit,
-    onRejectGroupJoinRequest: (NotificationUiModel) -> Unit
+    onRejectGroupJoinRequest: (NotificationUiModel) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
-        state = listState
+        state = listState,
     ) {
         items(
             count = notificationList.itemCount,
-            key = { index: Int -> notificationList[index]?.id ?: index }
+            key = { index: Int -> notificationList[index]?.id ?: index },
         ) { index: Int ->
             val data: NotificationUiModel = notificationList[index] ?: return@items
             Notification(
@@ -38,7 +38,7 @@ fun NotificationList(
                 onDelete = { onDeleteNotification(data) },
                 onMove = { onMoveNotification(data) },
                 onAccept = { onAcceptGroupJoinRequest(data) },
-                onReject = { onRejectGroupJoinRequest(data) }
+                onReject = { onRejectGroupJoinRequest(data) },
             )
         }
     }

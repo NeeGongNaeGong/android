@@ -10,7 +10,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface NotificationApi {
-
     @GET("api/notifications")
     suspend fun getNotifications(
         @Query("cursor-id") cursorId: Long?,
@@ -19,12 +18,12 @@ interface NotificationApi {
 
     @GET("/api/notifications/{notification-id}")
     suspend fun getNotification(
-        @Path("notification-id") notificationId: Long
+        @Path("notification-id") notificationId: Long,
     ): Result<ApiResponse<GetNotificationResponse>>
 
     @DELETE("/api/notifications/{notification-id}")
     suspend fun deleteNotification(
-        @Path("notification-id") notificationId: Long
+        @Path("notification-id") notificationId: Long,
     ): Result<ApiResponse<Unit>>
 
     @DELETE("/api/notifications/all")
@@ -32,7 +31,6 @@ interface NotificationApi {
 
     @PATCH("/api/notifications/{notification-id}/read")
     suspend fun readNotification(
-        @Path("notification-id") notificationId: Long
+        @Path("notification-id") notificationId: Long,
     ): Result<ApiResponse<Unit>>
-
 }

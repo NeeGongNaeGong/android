@@ -8,7 +8,6 @@ import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordL
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject

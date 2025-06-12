@@ -8,26 +8,28 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class RejectStudyGroupJoinUseCase @Inject constructor(
-    private val studyGroupRepository: StudyGroupRepository,
-    private val notificationRepository: NotificationRepository,
-) {
-    operator fun invoke(
-        studyGroupId: Long?,
-        userId: Long,
-        notificationId: Long?
-    ): Flow<Unit> {
-        if (studyGroupId == null) throw InvalidGroupIdException()
+class RejectStudyGroupJoinUseCase
+    @Inject
+    constructor(
+        private val studyGroupRepository: StudyGroupRepository,
+        private val notificationRepository: NotificationRepository,
+    ) {
+        operator fun invoke(
+            studyGroupId: Long?,
+            userId: Long,
+            notificationId: Long?,
+        ): Flow<Unit> {
+            if (studyGroupId == null) throw InvalidGroupIdException()
 
-        return studyGroupRepository.rejectStudyGroupJoin(
-            studyGroupId = studyGroupId,
-            userId = userId,
-            notificationId = notificationId
-        ).onEach {
-            notificationId?.let {
-                notificationRepository.getNotification(notificationId = notificationId)
-                    .firstOrNull()
+            return studyGroupRepository.rejectStudyGroupJoin(
+                studyGroupId = studyGroupId,
+                userId = userId,
+                notificationId = notificationId,
+            ).onEach {
+                notificationId?.let {
+                    notificationRepository.getNotification(notificationId = notificationId)
+                        .firstOrNull()
+                }
             }
         }
     }
-}

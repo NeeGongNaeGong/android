@@ -7,9 +7,9 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
-
-object TimeFormatter {
+object CustomDateTimeFormatter {
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E)")
     private val timeFormatter = DateTimeFormatter.ofPattern("a hh:mm")
 
@@ -19,8 +19,7 @@ object TimeFormatter {
      * @param LocalDateTime
      * @return String - yyyy년 MM월 dd일 (요일)
      */
-    fun convertLocalDateTimeToStringDate(time: LocalDateTime): String =
-        time.atZone(ZoneId.systemDefault()).format(dateFormatter)
+    fun convertLocalDateTimeToStringDate(time: LocalDateTime): String = time.atZone(ZoneId.systemDefault()).format(dateFormatter)
 
     /**
      * LocalDateTime.now 등으로 시간을 얻고
@@ -28,8 +27,7 @@ object TimeFormatter {
      * @param LocalDateTime
      * @return String - yyyy년 MM월 dd일 (요일)
      */
-    fun convertLocalDateTimeToStringTime(time: LocalDateTime): String =
-        time.atZone(ZoneId.systemDefault()).format(timeFormatter)
+    fun convertLocalDateTimeToStringTime(time: LocalDateTime): String = time.atZone(ZoneId.systemDefault()).format(timeFormatter)
 
     /**
      * yyyy년 MM월 dd일 (E) 꼴의 문자열을 인자로 넣으면 밀리초로 변환하는 함수
@@ -74,7 +72,10 @@ object TimeFormatter {
      * @param Int 분
      * @return String a hh:mm 꼴의 문자열
      */
-    fun convertHourMinuteToAmPmFormat(hour: Int, minute: Int): String {
+    fun convertHourMinuteToAmPmFormat(
+        hour: Int,
+        minute: Int,
+    ): String {
         // 날짜는 임의로 설정 (시간 형식만 중요하므로)
         val localDateTime = LocalDateTime.of(2025, 1, 1, hour, minute, 0)
         return localDateTime.format(timeFormatter)
@@ -87,7 +88,10 @@ object TimeFormatter {
      * @param String a hh:mm
      * @return String 2025-05-09T03:58:41.360
      */
-    fun convertStringToLocalDateTime(dateStr: String, timeStr: String): LocalDateTime {
+    fun convertStringToLocalDateTime(
+        dateStr: String,
+        timeStr: String,
+    ): LocalDateTime {
         // 날짜는 임의로 설정 (시간 형식만 중요하므로)
         val date = LocalDate.parse(dateStr, dateFormatter)
         val time = LocalTime.parse(timeStr, timeFormatter)
@@ -111,14 +115,13 @@ object TimeFormatter {
      * 밀리초로 들어온 기간을 00H00M으로 바꾸기 위한 함수
      * @param Long 기간
      * @return String 00H00M 꼴
-      */
+     */
     @SuppressLint("DefaultLocale")
     fun formatDurationToHM(millis: Long): String {
         val totalMinutes = millis / (1000 * 60)
         val hours = totalMinutes / 60
         val minutes = totalMinutes % 60
 
-        return String.format("%02dH%02dM", hours, minutes)
+        return String.format(Locale.getDefault(), "%02dH%02dM", hours, minutes)
     }
-
 }

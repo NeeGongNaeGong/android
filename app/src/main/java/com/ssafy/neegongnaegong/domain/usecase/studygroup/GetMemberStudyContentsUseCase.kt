@@ -9,6 +9,5 @@ import kotlinx.coroutines.flow.Flow
 class GetMemberStudyContentsUseCase(
     private val repository: StudyGroupRepository,
 ) {
-    operator fun invoke(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>> =
-        repository.getMemberStudyContents(request)
+    operator fun invoke(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>> = repository.getMemberStudyContents(request)
 }

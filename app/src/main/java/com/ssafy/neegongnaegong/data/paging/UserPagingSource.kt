@@ -10,54 +10,57 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 
-class UserPagingSource @AssistedInject constructor(
-    private val userDataSource: NetworkUserDataSource,
-    @Assisted private val userName: String
-) : PagingSource<CursorKey, UserResponse>() {
+class UserPagingSource
+    @AssistedInject
+    constructor(
+        private val userDataSource: NetworkUserDataSource,
+        @Assisted private val userName: String,
+    ) : PagingSource<CursorKey, UserResponse>() {
+        override suspend fun load(params: LoadParams<CursorKey>): LoadResult<CursorKey, UserResponse> {
+            val cursorId: Long? = params.key?.id
+            val cursorCreateAt: String? = params.key?.createdAt
 
-    override suspend fun load(params: LoadParams<CursorKey>): LoadResult<CursorKey, UserResponse> {
-        val cursorId: Long? = params.key?.id
-        val cursorCreateAt: String? = params.key?.createdAt
+            return runCatching {
+                val remoteResult =
+                    userDataSource.searchUsers(
+                        time = cursorCreateAt,
+                        cursorId = cursorId,
+                        size = params.loadSize,
+                        userName = userName,
+                    ).first()
 
-        return runCatching {
-            val remoteResult = userDataSource.searchUsers(
-                time = cursorCreateAt,
-                cursorId = cursorId,
-                size = params.loadSize,
-                userName = userName
-            ).first()
+                val nextKey =
+                    remoteResult.run {
+                        if (cursorId != null && cursorCreatedAt != null) {
+                            CursorKey(id = cursorId, createdAt = cursorCreatedAt)
+                        } else {
+                            null
+                        }
+                    }
 
-            val nextKey = remoteResult.run {
-                if (cursorId != null && cursorCreatedAt != null) {
-                    CursorKey(id = cursorId, createdAt = cursorCreatedAt)
-                } else {
-                    null
-                }
+                LoadResult.Page(
+                    data = remoteResult.content,
+                    prevKey = null,
+                    nextKey = nextKey,
+                )
+            }.getOrElse { throwable ->
+                LoadResult.Error(throwable)
             }
+        }
 
-            LoadResult.Page(
-                data = remoteResult.content,
-                prevKey = null,
-                nextKey = nextKey
-            )
-        }.getOrElse { throwable ->
-            LoadResult.Error(throwable)
+        override fun getRefreshKey(state: PagingState<CursorKey, UserResponse>): CursorKey? {
+            val anchor = state.anchorPosition ?: return null
+            val item =
+                state.closestPageToPosition(anchor)
+                    ?.data
+                    ?.firstOrNull()
+                    ?: return null
+
+            return CursorKey(id = item.cursorId, createdAt = item.cursorCreatedAt)
+        }
+
+        @AssistedFactory
+        interface Factory {
+            fun create(userName: String): UserPagingSource
         }
     }
-
-    override fun getRefreshKey(state: PagingState<CursorKey, UserResponse>): CursorKey? {
-        val anchor = state.anchorPosition ?: return null
-        val item = state.closestPageToPosition(anchor)
-            ?.data
-            ?.firstOrNull()
-            ?: return null
-
-        return CursorKey(id = item.cursorId, createdAt = item.cursorCreatedAt)
-    }
-
-    @AssistedFactory
-    interface Factory {
-        fun create(userName: String): UserPagingSource
-    }
-}
-

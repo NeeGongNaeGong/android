@@ -27,9 +27,10 @@ fun NotificationRoute(
     val context: Context = LocalContext.current
     val listState: LazyListState = rememberLazyListState()
     val uiState: NotificationContract.State by viewModel.uiState.collectAsStateWithLifecycle()
-    val notificationList: LazyPagingItems<NotificationUiModel> = viewModel
-        .notificationList
-        .collectAsLazyPagingItems()
+    val notificationList: LazyPagingItems<NotificationUiModel> =
+        viewModel
+            .notificationList
+            .collectAsLazyPagingItems()
 
     CollectSideEffects(effectFlow = viewModel.effect) { effect: NotificationContract.Effect ->
         when (effect) {
@@ -95,7 +96,7 @@ fun NotificationRoute(
         onRejectGroupJoinRequest = { uiModel: NotificationUiModel ->
             val event = NotificationContract.Event.RejectGroupJoinRequest(data = uiModel)
             viewModel.setEvent(event = event)
-        }
+        },
     )
 
     if (uiState.isModifying) LoadingDialog()

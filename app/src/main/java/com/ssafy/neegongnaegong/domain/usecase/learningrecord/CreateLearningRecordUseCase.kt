@@ -7,6 +7,5 @@ import kotlinx.coroutines.flow.Flow
 class CreateLearningRecordUseCase(
     private val learningRecordRepository: LearningRecordRepository,
 ) {
-    suspend operator fun invoke(learningRecord: LearningRecord): Flow<Long> =
-        learningRecordRepository.createLearningRecord(learningRecord)
+    suspend operator fun invoke(learningRecord: LearningRecord): Flow<Long> = learningRecordRepository.createLearningRecord(learningRecord)
 }

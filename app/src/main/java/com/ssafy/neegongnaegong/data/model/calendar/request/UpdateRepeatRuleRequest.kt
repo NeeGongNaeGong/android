@@ -7,5 +7,5 @@ data class UpdateRepeatRuleRequest(
     val repeatType: RepeatType,
     val repeatInterval: Int,
     val repeatDay: Int,
-    val endDate: LocalDate? = null
+    val endDate: LocalDate? = null,
 )

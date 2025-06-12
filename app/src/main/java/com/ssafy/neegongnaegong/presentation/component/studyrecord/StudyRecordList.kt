@@ -87,7 +87,7 @@ fun StudyRecordList(
                         modifier = Modifier.padding(vertical = 4.dp),
                         text = date,
                         style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 18.sp),
-                        color = NeeGongNaeGongTheme.colorScheme.primaryText
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                 }
 

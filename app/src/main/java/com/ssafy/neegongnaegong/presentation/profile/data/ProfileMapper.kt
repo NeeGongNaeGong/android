@@ -11,6 +11,6 @@ internal object ProfileMapper {
         nickname = nickname,
         profileImg = profileImg,
         hasUnReadNotification = hasUnReadNotification,
-        shouldShowProfileImageWarningInfo = shouldShowProfileImageWarningInfo
+        shouldShowProfileImageWarningInfo = shouldShowProfileImageWarningInfo,
     )
 }

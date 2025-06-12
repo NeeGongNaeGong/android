@@ -47,47 +47,50 @@ private val Red = Color(0xFFEF4444)
 @Composable
 fun WithdrawalDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
     var isConfirmed: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnClickOutside = false)
+        properties = DialogProperties(dismissOnClickOutside = false),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = NeeGongNaeGongTheme.colorScheme.background,
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                        .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-
                 // 경고 아이콘
                 Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(
-                            color = Color(0xFFFEE2E2),
-                            shape = RoundedCornerShape(32.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(64.dp)
+                            .background(
+                                color = Color(0xFFFEE2E2),
+                                shape = RoundedCornerShape(32.dp),
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = stringResource(id = R.string.common_warning),
                         tint = Red,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
 
@@ -98,7 +101,7 @@ fun WithdrawalDialog(
                     text = stringResource(id = R.string.withdrawal_dialog_title),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -108,15 +111,16 @@ fun WithdrawalDialog(
                     style = NeeGongNaeGongTheme.typography.bodySmall,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
-                    color = NeeGongNaeGongTheme.colorScheme.secondaryText
+                    color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                 )
 
                 // 삭제 항목 리스트
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = NeeGongNaeGongTheme.colorScheme.background
-                    ),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                        ),
                 ) {
                     Column(modifier = Modifier.padding(vertical = 16.dp)) {
                         DeletionItem(text = stringResource(id = R.string.withdrawal_info_profile))
@@ -130,19 +134,19 @@ fun WithdrawalDialog(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center,
-                    color = Red
+                    color = Red,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(
                         checked = isConfirmed,
                         onCheckedChange = { isConfirmed = it },
-                        colors = CheckboxDefaults.colors(checkedColor = Red)
+                        colors = CheckboxDefaults.colors(checkedColor = Red),
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -152,7 +156,7 @@ fun WithdrawalDialog(
                         style = NeeGongNaeGongTheme.typography.bodySmall,
                         fontSize = 14.sp,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
 
@@ -160,21 +164,22 @@ fun WithdrawalDialog(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFE5E7EB)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFE5E7EB),
+                            ),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
                             text = stringResource(id = R.string.common_cancel),
                             color = Color(0xFF374151),
                             fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(vertical = 4.dp)
+                            modifier = Modifier.padding(vertical = 4.dp),
                         )
                     }
 
@@ -182,17 +187,18 @@ fun WithdrawalDialog(
                         onClick = onConfirm,
                         enabled = isConfirmed,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isConfirmed) Red else Color(0xFFF3F4F6),
-                            disabledContainerColor = Color(0xFFF3F4F6)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = if (isConfirmed) Red else Color(0xFFF3F4F6),
+                                disabledContainerColor = Color(0xFFF3F4F6),
+                            ),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
                             text = stringResource(id = R.string.withdrawal_confirm_button),
                             color = if (isConfirmed) Color.White else Color(0xFF9CA3AF),
                             fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(vertical = 4.dp)
+                            modifier = Modifier.padding(vertical = 4.dp),
                         )
                     }
                 }
@@ -204,7 +210,7 @@ fun WithdrawalDialog(
                     style = NeeGongNaeGongTheme.typography.bodySmall,
                     fontSize = 12.sp,
                     color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -214,23 +220,24 @@ fun WithdrawalDialog(
 @Composable
 fun DeletionItem(text: String) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "•",
             color = Red,
             fontSize = 14.sp,
-            modifier = Modifier.padding(end = 8.dp, top = 2.dp)
+            modifier = Modifier.padding(end = 8.dp, top = 2.dp),
         )
 
         Text(
             text = text,
             fontSize = 14.sp,
             color = Color(0xFF374151),
-            lineHeight = 20.sp
+            lineHeight = 20.sp,
         )
     }
 }

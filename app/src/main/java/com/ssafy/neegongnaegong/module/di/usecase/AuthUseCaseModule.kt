@@ -20,7 +20,10 @@ object AuthUseCaseModule {
 
     @Provides
     @Singleton
-    fun provideReissueUseCase(authRepository: AuthRepository, userRepository: UserRepository): ReissueUseCase = ReissueUseCase(authRepository, userRepository)
+    fun provideReissueUseCase(
+        authRepository: AuthRepository,
+        userRepository: UserRepository,
+    ): ReissueUseCase = ReissueUseCase(authRepository, userRepository)
 
     @Provides
     @Singleton

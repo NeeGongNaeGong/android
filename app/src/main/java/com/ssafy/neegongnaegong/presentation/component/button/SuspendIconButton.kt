@@ -24,26 +24,29 @@ fun SuspendIconButton(
     onClick: () -> Unit = {},
 ) {
     IconButton(
-        modifier = Modifier
-            .background(
-                color = NeeGongNaeGongTheme.colorScheme.blue,
-                shape = CircleShape
-            )
-            .then(modifier),
+        modifier =
+            Modifier
+                .background(
+                    color = NeeGongNaeGongTheme.colorScheme.blue,
+                    shape = CircleShape,
+                )
+                .then(modifier),
         onClick = onClick,
-        enabled = !isLoading
+        enabled = !isLoading,
     ) {
         when (isLoading) {
-            true -> CircularProgressIndicator(
-                modifier = Modifier.padding(4.dp),
-                color = NeeGongNaeGongTheme.colorScheme.primaryText
-            )
+            true ->
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(4.dp),
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
 
-            false -> Icon(
-                imageVector = imageVector,
-                contentDescription = contentDescription,
-                tint = NeeGongNaeGongTheme.colorScheme.primaryText
-            )
+            false ->
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = contentDescription,
+                    tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
         }
     }
 }
@@ -66,7 +69,7 @@ private fun SuspendIconButtonPreview_Loading() {
         SuspendIconButton(
             imageVector = Icons.Default.Add,
             contentDescription = "Add Schedule",
-            isLoading = true
+            isLoading = true,
         )
     }
 }

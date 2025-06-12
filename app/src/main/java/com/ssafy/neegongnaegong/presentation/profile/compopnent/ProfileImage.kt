@@ -37,9 +37,10 @@ fun ProfileImage(
 ) {
     var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val contract: ActivityResultContract<String, Uri?> = ActivityResultContracts.GetContent()
-    val launcher = rememberLauncherForActivityResult(contract = contract) { uri: Uri? ->
-        uri?.let { onImageSelected(uri) }
-    }
+    val launcher =
+        rememberLauncherForActivityResult(contract = contract) { uri: Uri? ->
+            uri?.let { onImageSelected(uri) }
+        }
 
     Box {
         GlideImage(
@@ -50,30 +51,31 @@ fun ProfileImage(
                     imageModel = { R.drawable.img_main_character },
                     modifier = modifier,
                 )
-            }
+            },
         )
 
         Icon(
             imageVector = Icons.Default.CameraAlt,
             contentDescription = "Edit Profile Image",
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(30.dp)
-                .clip(CircleShape)
-                .shadow(14.dp, CircleShape)
-                .background(Color(0xFFF5F5F5), CircleShape)
-                .padding(8.dp)
-                .clickable(
-                    interactionSource = null,
-                    indication = null,
-                    onClick = {
-                        if (shouldShowProfileImageWarningInfo) {
-                            showDialog = true
-                        } else {
-                            launcher.launch("image/*")
-                        }
-                    }
-                )
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(30.dp)
+                    .clip(CircleShape)
+                    .shadow(14.dp, CircleShape)
+                    .background(Color(0xFFF5F5F5), CircleShape)
+                    .padding(8.dp)
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = {
+                            if (shouldShowProfileImageWarningInfo) {
+                                showDialog = true
+                            } else {
+                                launcher.launch("image/*")
+                            }
+                        },
+                    ),
         )
     }
 
@@ -86,7 +88,7 @@ fun ProfileImage(
                 showDialog = false
                 onCheckProfileImageWarning()
                 launcher.launch("image/*")
-            }
+            },
         )
     }
 }

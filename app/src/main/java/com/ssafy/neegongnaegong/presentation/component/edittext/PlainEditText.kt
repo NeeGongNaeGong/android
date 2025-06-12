@@ -50,16 +50,18 @@ fun PlainEditText(
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = TextFieldDefaults.shape,
     cursorBrush: Brush = SolidColor(NeeGongNaeGongTheme.colorScheme.primaryText),
-    colors: TextFieldColors = TextFieldDefaults.colors(
-        focusedContainerColor = Color.Transparent,
-        unfocusedContainerColor = Color.Transparent,
-        focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-        unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-    ),
-    textSelectionColors: TextSelectionColors = TextSelectionColors(
-        handleColor = Color.Transparent,
-        backgroundColor = Color.Transparent
-    )
+    colors: TextFieldColors =
+        TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+            unfocusedIndicatorColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+        ),
+    textSelectionColors: TextSelectionColors =
+        TextSelectionColors(
+            handleColor = Color.Transparent,
+            backgroundColor = Color.Transparent,
+        ),
 ) {
     val actualTextStyle: TextStyle = textStyle.copy(color = textColor)
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
@@ -97,9 +99,9 @@ fun PlainEditText(
                     enabled = enabled,
                     isError = isError,
                     interactionSource = interactionSource,
-                    colors = colors
+                    colors = colors,
                 )
-            }
+            },
         )
     }
 }
@@ -109,6 +111,6 @@ fun PlainEditText(
 fun PlainEditTextPreview() {
     PlainEditText(
         value = "text",
-        onValueChange = {}
+        onValueChange = {},
     )
 }

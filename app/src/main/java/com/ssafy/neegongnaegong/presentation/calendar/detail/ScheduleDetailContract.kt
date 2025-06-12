@@ -11,10 +11,15 @@ import java.time.LocalDate
 class ScheduleDetailContract {
     sealed class Event : UiEvent {
         data class OnLoad(val scheduleId: Long, val date: LocalDate) : Event()
+
         data object OnEditClick : Event()
+
         data class OnFormClick(val focus: ScheduleInputFormFocus) : Event()
+
         data object OnDeleteClick : Event()
+
         data class OnDeleteTypeSelected(val type: DeleteType) : Event()
+
         data object OnDialogDismissed : Event()
     }
 
@@ -29,9 +34,10 @@ class ScheduleDetailContract {
 
     sealed class Effect : UiEffect {
         data object NavigateBack : Effect()
+
         data class NavigateToEditScheduleScreen(
             val schedule: Schedule,
-            val focus: ScheduleInputFormFocus
+            val focus: ScheduleInputFormFocus,
         ) : Effect()
     }
 }

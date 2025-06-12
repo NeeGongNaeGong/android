@@ -41,12 +41,12 @@ interface StudyGroupRepository {
     fun approveStudyGroupJoin(
         studyGroupId: Long,
         userId: Long,
-        notificationId: Long?
+        notificationId: Long?,
     ): Flow<Unit>
 
     fun rejectStudyGroupJoin(
         studyGroupId: Long,
         userId: Long,
-        notificationId: Long?
+        notificationId: Long?,
     ): Flow<Unit>
 }

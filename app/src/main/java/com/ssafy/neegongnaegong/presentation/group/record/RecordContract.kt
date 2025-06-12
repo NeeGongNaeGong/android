@@ -12,7 +12,7 @@ class RecordContract {
     }
 
     data class State(
-        val studyLogsByTag:  PersistentList<StudyLogByTagInfo>,
+        val studyLogsByTag: PersistentList<StudyLogByTagInfo>,
     ) : UiState
 
     sealed class Effect : UiEffect {

@@ -14,7 +14,6 @@ data class Notification(
     val content: String,
     val createdAt: LocalDateTime,
     val read: Boolean,
-
     val studyGroupId: Long?,
-    val studyGroupName: String?
+    val studyGroupName: String?,
 )

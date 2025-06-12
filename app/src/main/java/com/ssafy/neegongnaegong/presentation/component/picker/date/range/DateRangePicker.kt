@@ -48,10 +48,11 @@ fun DateRangePicker(
      * pageCount는 전체 달 수
      * initialPage는 전체 중 초기 선택 달의 인덱스
      */
-    val pagerState = rememberPagerState(
-        pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
-        initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
+            initialPage = ChronoUnit.MONTHS.between(minMonth, initialMonth).toInt(),
+        )
 
     /**
      * selectedMonth는 현재 선택된 달
@@ -74,7 +75,7 @@ fun DateRangePicker(
     LaunchedEffectAfterFirst(state.startDate) {
         if (selectedMonth != YearMonth.from(state.startDate)) {
             pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
+                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt(),
             )
         }
         onStartDateSelected(state.startDate)
@@ -88,7 +89,7 @@ fun DateRangePicker(
     LaunchedEffectAfterFirst(state.endDate) {
         if (selectedMonth != YearMonth.from(state.endDate)) {
             pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt()
+                ChronoUnit.MONTHS.between(minMonth, selectedMonth).toInt(),
             )
         }
         onEndDateSelected(state.endDate)
@@ -96,15 +97,16 @@ fun DateRangePicker(
 
     Column(modifier = modifier) {
         CalendarHeader(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            selectedMonth = selectedMonth
+            modifier =
+                Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+            selectedMonth = selectedMonth,
         )
         HorizontalPager(
             modifier = Modifier.wrapContentHeight(),
             state = pagerState,
-            beyondViewportPageCount = 1
+            beyondViewportPageCount = 1,
         ) { page ->
             key(page) {
                 val displayedMonth by remember {
@@ -118,7 +120,7 @@ fun DateRangePicker(
                         date = date,
                         startDate = state.startDate,
                         endDate = state.endDate,
-                        onSelected = state::updateDate
+                        onSelected = state::updateDate,
                     )
                 }
             }
@@ -129,11 +131,12 @@ fun DateRangePicker(
 @NeeGongNaeGongPreviews
 @Composable
 private fun DateRangePickerPreview() {
-    val state = rememberDateRangePickerState().apply {
-        val now = LocalDate.now()
-        updateDate(now)
-        updateDate(now.plusDays(1))
-    }
+    val state =
+        rememberDateRangePickerState().apply {
+            val now = LocalDate.now()
+            updateDate(now)
+            updateDate(now.plusDays(1))
+        }
     NeeGongNaeGongTheme {
         DateRangePicker(state = state)
     }

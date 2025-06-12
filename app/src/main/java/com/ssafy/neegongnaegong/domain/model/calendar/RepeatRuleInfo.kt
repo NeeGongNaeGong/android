@@ -12,38 +12,41 @@ data class RepeatRuleInfo(
     val endDate: LocalDate?,
 ) {
     companion object {
-        fun empty() = RepeatRuleInfo(
-            repeatType = RepeatType.DAILY,
-            repeatInterval = 1,
-            repeatDay = 1,
-            endDate = null,
-        )
+        fun empty() =
+            RepeatRuleInfo(
+                repeatType = RepeatType.DAILY,
+                repeatInterval = 1,
+                repeatDay = 1,
+                endDate = null,
+            )
     }
 
-    fun toDisplayString() = "${
-        endDate?.let {
-            DateTimeFormatter.ofPattern("yyyy년 M월 d일(E)까지 ").format(it)
-        } ?: ""
-    }$repeatInterval${repeatType.toDisplayString()} ${"${repeatDayToDisplayString()} "}반복"
+    fun toDisplayString() =
+        "${
+            endDate?.let {
+                DateTimeFormatter.ofPattern("yyyy년 M월 d일(E)까지 ").format(it)
+            } ?: ""
+        }$repeatInterval${repeatType.toDisplayString()} ${"${repeatDayToDisplayString()} "}반복"
 
-    fun repeatDayToDisplayString() = when (repeatType) {
-        RepeatType.DAILY -> ""
-        RepeatType.WEEKLY -> {
-            dayOfWeekOrder
-                .filter {
-                    repeatDay.isRepeatDaySelected(it.value)
-                }
-                .joinToString(separator = ", ") {
-                    it.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                }
-                .plus("요일")
-        }
+    fun repeatDayToDisplayString() =
+        when (repeatType) {
+            RepeatType.DAILY -> ""
+            RepeatType.WEEKLY -> {
+                DayOfWeekOrder
+                    .filter {
+                        repeatDay.isRepeatDaySelected(it.value)
+                    }
+                    .joinToString(separator = ", ") {
+                        it.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    }
+                    .plus("요일")
+            }
 
-        RepeatType.MONTHLY -> {
-            (1..31).filter { repeatDay.isRepeatDaySelected(it) }.ifEmpty { listOf("") }
-                .joinToString(separator = ", ").plus("일")
+            RepeatType.MONTHLY -> {
+                (1..31).filter { repeatDay.isRepeatDaySelected(it) }.ifEmpty { listOf("") }
+                    .joinToString(separator = ", ").plus("일")
+            }
         }
-    }
 }
 
 fun Int.isRepeatDaySelected(value: Int): Boolean {

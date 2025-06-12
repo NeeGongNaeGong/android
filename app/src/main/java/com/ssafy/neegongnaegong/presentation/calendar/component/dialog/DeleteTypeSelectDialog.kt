@@ -37,12 +37,13 @@ fun DeleteTypeSelectDialog(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         containerColor = NeeGongNaeGongTheme.colorScheme.gray1,
-        dragHandle = { }
+        dragHandle = { },
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 text = "이 일정을 삭제할까요?",
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -50,45 +51,46 @@ fun DeleteTypeSelectDialog(
 
             Spacer(modifier.padding(top = 16.dp))
 
-            if(repeatType != null) {
+            if (repeatType != null) {
                 HorizontalDivider(
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.2f)
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.2f),
                 )
 
                 Spacer(modifier.padding(top = 12.dp))
 
                 DeleteType.entries.forEach {
                     Text(
-                        modifier = Modifier
-                            .padding(vertical = 12.dp)
-                            .clickable { onDeleteTypeSelected(it) }
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .padding(vertical = 12.dp)
+                                .clickable { onDeleteTypeSelected(it) }
+                                .fillMaxWidth(),
                         text = it.toDisplayText(),
                         style = NeeGongNaeGongTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
-                        color = NeeGongNaeGongTheme.colorScheme.primaryText
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                 }
             } else {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     TextButton(
                         onClick = onDismissRequest,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             "취소",
                             style = NeeGongNaeGongTheme.typography.bodyMedium,
-                            color = NeeGongNaeGongTheme.colorScheme.primaryText
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
                     }
                     TextButton(
                         onClick = { onDeleteTypeSelected(DeleteType.ALL) },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             "삭제",
                             style = NeeGongNaeGongTheme.typography.bodyMedium,
-                            color = NeeGongNaeGongTheme.colorScheme.peach
+                            color = NeeGongNaeGongTheme.colorScheme.peach,
                         )
                     }
                 }

@@ -20,12 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.ssafy.neegongnaegong.domain.model.calendar.DayOfWeekOrder
 import com.ssafy.neegongnaegong.domain.model.calendar.isRepeatDaySelected
 import com.ssafy.neegongnaegong.domain.model.calendar.toggleRepeatDay
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.color
-import com.ssafy.neegongnaegong.domain.model.calendar.dayOfWeekOrder
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -33,38 +33,40 @@ import java.util.Locale
 fun RepeatDayWeeklySelector(
     modifier: Modifier = Modifier,
     repeatDay: Int,
-    onChange: (Int) -> Unit
+    onChange: (Int) -> Unit,
 ) {
     Row(modifier) {
-        dayOfWeekOrder.forEach { dayOfWeek ->
+        DayOfWeekOrder.forEach { dayOfWeek ->
             val selected = repeatDay.isRepeatDaySelected(dayOfWeek.value)
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .weight(1f)
-                    .padding(10.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .weight(1f)
+                        .padding(10.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Box(
-                    modifier = Modifier
-                        .clickable {
-                            onChange(repeatDay.toggleRepeatDay(dayOfWeek.value))
-                        }
-                        .border(
-                            width = 1.dp,
-                            color = if (selected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
-                            shape = CircleShape,
-                        )
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .clickable {
+                                onChange(repeatDay.toggleRepeatDay(dayOfWeek.value))
+                            }
+                            .border(
+                                width = 1.dp,
+                                color = if (selected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
+                                shape = CircleShape,
+                            )
+                            .fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN),
                         style = NeeGongNaeGongTheme.typography.labelMedium,
                         color = if (selected) NeeGongNaeGongTheme.colorScheme.blue else dayOfWeek.color,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -79,7 +81,7 @@ private fun RepeatDayWeeklySelectorPreview() {
     NeeGongNaeGongTheme {
         RepeatDayWeeklySelector(
             repeatDay = repeatDay,
-            onChange = { repeatDay = it }
+            onChange = { repeatDay = it },
         )
     }
 }

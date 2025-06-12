@@ -8,15 +8,16 @@ data class ProfileUiModel(
     val nickname: String,
     val profileImg: String,
     val hasUnReadNotification: Boolean,
-    val shouldShowProfileImageWarningInfo: Boolean
+    val shouldShowProfileImageWarningInfo: Boolean,
 ) {
     companion object {
-        fun default() = ProfileUiModel(
-            email = "",
-            nickname = "",
-            profileImg = "",
-            hasUnReadNotification = false,
-            shouldShowProfileImageWarningInfo = false
-        )
+        fun default() =
+            ProfileUiModel(
+                email = "",
+                nickname = "",
+                profileImg = "",
+                hasUnReadNotification = false,
+                shouldShowProfileImageWarningInfo = false,
+            )
     }
 }

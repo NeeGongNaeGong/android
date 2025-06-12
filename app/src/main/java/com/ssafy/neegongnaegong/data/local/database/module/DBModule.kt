@@ -16,32 +16,27 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DBModule {
-
     @Singleton
     @Provides
     fun providesDatabase(
-        @ApplicationContext context: Context
-    ): NeeGongNaeGongDatabase = Room
-        .databaseBuilder(
-            context = context,
-            klass = NeeGongNaeGongDatabase::class.java,
-            name = "neegongnaegong.db"
-        )
-        .addMigrations(MigrationFrom1To2())
-        .build()
-
-
-    @Singleton
-    @Provides
-    fun providesLocalNotificationDataSource(
-        neeGongNaeGongDatabase: NeeGongNaeGongDatabase
-    ): LocalNotificationDataSource = neeGongNaeGongDatabase.localNotificationDataSource()
+        @ApplicationContext context: Context,
+    ): NeeGongNaeGongDatabase =
+        Room
+            .databaseBuilder(
+                context = context,
+                klass = NeeGongNaeGongDatabase::class.java,
+                name = "neegongnaegong.db",
+            )
+            .addMigrations(MigrationFrom1To2())
+            .build()
 
     @Singleton
     @Provides
-    fun providesLocalNotificationRemoteKeyDataSource(
-        neeGongNaeGongDatabase: NeeGongNaeGongDatabase
-    ): LocalNotificationRemoteKeyDataSource =
+    fun providesLocalNotificationDataSource(neeGongNaeGongDatabase: NeeGongNaeGongDatabase): LocalNotificationDataSource =
+        neeGongNaeGongDatabase.localNotificationDataSource()
+
+    @Singleton
+    @Provides
+    fun providesLocalNotificationRemoteKeyDataSource(neeGongNaeGongDatabase: NeeGongNaeGongDatabase): LocalNotificationRemoteKeyDataSource =
         neeGongNaeGongDatabase.localNotificationRemoteKeyDataSource()
-
 }

@@ -22,8 +22,8 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
                     navController.navigate(
                         AppNavigation.Screen.Calendar.Detail(
                             it.id,
-                            it.info.startAt.toLocalDate()
-                        )
+                            it.info.startAt.toLocalDate(),
+                        ),
                     )
                 },
                 navigateToScheduleCreate = {
@@ -34,8 +34,8 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
                         AppNavigation.Screen.Calendar.Edit(
                             it.id,
                             it.info.startAt.toLocalDate(),
-                            ScheduleInputFormFocus.None
-                        )
+                            ScheduleInputFormFocus.None,
+                        ),
                     )
                 },
             )
@@ -52,10 +52,10 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
                         AppNavigation.Screen.Calendar.Edit(
                             schedule.id,
                             schedule.info.startAt.toLocalDate(),
-                            focus
-                        )
+                            focus,
+                        ),
                     )
-                }
+                },
             )
         }
 
@@ -73,7 +73,7 @@ fun NavGraphBuilder.calendarNavGraph(navController: NavController) {
                 popBackStack = { navController.popBackStack() },
                 scheduleId = route.scheduleId,
                 date = route.date(),
-                initialFocus = route.focus
+                initialFocus = route.focus,
             )
         }
     }

@@ -24,57 +24,60 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class NotificationRepositoryImpl @Inject constructor(
-    private val networkNotificationDataSource: NetworkNotificationDataSource,
-    private val localNotificationDataSource: LocalNotificationDataSource,
-    private val notificationRemoteMediator: NotificationRemoteMediator,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : NotificationRepository {
+class NotificationRepositoryImpl
+    @Inject
+    constructor(
+        private val networkNotificationDataSource: NetworkNotificationDataSource,
+        private val localNotificationDataSource: LocalNotificationDataSource,
+        private val notificationRemoteMediator: NotificationRemoteMediator,
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    ) : NotificationRepository {
+        @OptIn(ExperimentalPagingApi::class)
+        override fun getNotifications() =
+            Pager(
+                config =
+                    PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = false,
+                    ),
+                remoteMediator = notificationRemoteMediator,
+                pagingSourceFactory = { localNotificationDataSource.getAllNotifications() },
+            ).flow.map { pagingData: PagingData<NotificationEntity> ->
+                pagingData.toNotification()
+            }.flowOn(context = ioDispatcher)
 
-    @OptIn(ExperimentalPagingApi::class)
-    override fun getNotifications() = Pager(
-        config = PagingConfig(
-            pageSize = PAGE_SIZE,
-            enablePlaceholders = false
-        ),
-        remoteMediator = notificationRemoteMediator,
-        pagingSourceFactory = { localNotificationDataSource.getAllNotifications() }
-    ).flow.map { pagingData: PagingData<NotificationEntity> ->
-        pagingData.toNotification()
-    }.flowOn(context = ioDispatcher)
+        @OptIn(ExperimentalCoroutinesApi::class)
+        override fun getNotification(notificationId: Long): Flow<Notification> =
+            networkNotificationDataSource
+                .getNotification(notificationId = notificationId)
+                .onEach { getNotificationResponse: GetNotificationResponse ->
+                    val entity: NotificationEntity = getNotificationResponse.toEntity()
+                    localNotificationDataSource.update(notification = entity)
+                }.flatMapLatest {
+                    localNotificationDataSource.getNotificationById(id = notificationId)
+                }.filterNotNull().map { entity: NotificationEntity ->
+                    entity.toNotification()
+                }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getNotification(
-        notificationId: Long
-    ): Flow<Notification> = networkNotificationDataSource
-        .getNotification(notificationId = notificationId)
-        .onEach { getNotificationResponse: GetNotificationResponse ->
-            val entity: NotificationEntity = getNotificationResponse.toEntity()
-            localNotificationDataSource.update(notification = entity)
-        }.flatMapLatest {
-            localNotificationDataSource.getNotificationById(id = notificationId)
-        }.filterNotNull().map { entity: NotificationEntity ->
-            entity.toNotification()
+        override fun deleteNotification(notificationId: Long): Flow<Unit> =
+            networkNotificationDataSource
+                .deleteNotification(notificationId = notificationId)
+                .onEach { localNotificationDataSource.deleteById(notificationId = notificationId) }
+                .flowOn(context = ioDispatcher)
+
+        override fun deleteAllNotifications(): Flow<Unit> =
+            networkNotificationDataSource
+                .deleteAllNotifications()
+                .onEach { localNotificationDataSource.clearAll() }
+                .flowOn(context = ioDispatcher)
+
+        override fun readNotification(notificationId: Long): Flow<Unit> =
+            networkNotificationDataSource
+                .readNotification(notificationId = notificationId)
+                .onEach { localNotificationDataSource.updateReadById(id = notificationId, isRead = true) }
+                .flowOn(context = ioDispatcher)
+
+        companion object {
+            const val PAGE_SIZE = 30
         }
-
-    override fun deleteNotification(
-        notificationId: Long
-    ): Flow<Unit> = networkNotificationDataSource
-        .deleteNotification(notificationId = notificationId)
-        .onEach { localNotificationDataSource.deleteById(notificationId = notificationId) }
-        .flowOn(context = ioDispatcher)
-
-    override fun deleteAllNotifications(): Flow<Unit> = networkNotificationDataSource
-        .deleteAllNotifications()
-        .onEach { localNotificationDataSource.clearAll() }
-        .flowOn(context = ioDispatcher)
-
-    override fun readNotification(notificationId: Long): Flow<Unit> = networkNotificationDataSource
-        .readNotification(notificationId = notificationId)
-        .onEach { localNotificationDataSource.updateReadById(id = notificationId, isRead = true) }
-        .flowOn(context = ioDispatcher)
-
-    companion object {
-        const val PAGE_SIZE = 30
     }
-}

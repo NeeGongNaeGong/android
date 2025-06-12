@@ -25,15 +25,16 @@ fun OptionButton(
 ) {
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
         Row(
-            modifier = modifier
-                .padding(0.dp)
-                .clickable {
-                    if (enable) {
-                        onClick()
-                    }
-                },
+            modifier =
+                modifier
+                    .padding(0.dp)
+                    .clickable {
+                        if (enable) {
+                            onClick()
+                        }
+                    },
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             RadioButton(
                 enabled = enable,
@@ -43,7 +44,7 @@ fun OptionButton(
             Text(
                 style = NeeGongNaeGongTheme.typography.labelMedium,
                 text = optionTitle,
-                color = if(enable) NeeGongNaeGongTheme.colorScheme.primaryText else NeeGongNaeGongTheme.colorScheme.gray4
+                color = if (enable) NeeGongNaeGongTheme.colorScheme.primaryText else NeeGongNaeGongTheme.colorScheme.gray4,
             )
         }
     }

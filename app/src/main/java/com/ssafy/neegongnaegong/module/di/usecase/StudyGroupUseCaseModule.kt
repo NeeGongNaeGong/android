@@ -21,5 +21,4 @@ object StudyGroupUseCaseModule {
     @Singleton
     fun provideGetMemberStudyLogsByTagUseCase(repository: StudyGroupRepository): GetMemberStudyLogsByTagUseCase =
         GetMemberStudyLogsByTagUseCase(repository)
-
 }

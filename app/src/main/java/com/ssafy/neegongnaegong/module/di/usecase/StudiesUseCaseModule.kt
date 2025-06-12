@@ -2,7 +2,20 @@ package com.ssafy.neegongnaegong.module.di.usecase
 
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import com.ssafy.neegongnaegong.domain.usecase.GetStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.ApplyStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.CancelApplicationsStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.ChangeRoleStudiesMemberUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.CreateStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateVoteUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.ExpelStudiesMemberUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesApplicationsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesMembersUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.PatchApproveStudiesApplicationsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.PatchRejectStudiesApplicationsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.UpdateStudiesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +32,64 @@ object StudiesUseCaseModule {
     @Provides
     @Singleton
     fun provideCreateVoteUseCase(studiesRepository: StudiesRepository): CreateVoteUseCase = CreateVoteUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetStudiesListUseCase(studiesRepository: StudiesRepository): GetStudiesListUseCase = GetStudiesListUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideCreateStudiesUseCase(studiesRepository: StudiesRepository): CreateStudiesUseCase = CreateStudiesUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetStudiesDetailUseCase(studiesRepository: StudiesRepository): GetStudiesDetailUseCase =
+        GetStudiesDetailUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateStudiesUseCase(studiesRepository: StudiesRepository): UpdateStudiesUseCase = UpdateStudiesUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideDeleteStudiesUseCase(studiesRepository: StudiesRepository): DeleteStudiesUseCase = DeleteStudiesUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideApplyStudiesUseCase(studiesRepository: StudiesRepository): ApplyStudiesUseCase = ApplyStudiesUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideCancelApplicationsStudiesUseCase(studiesRepository: StudiesRepository): CancelApplicationsStudiesUseCase =
+        CancelApplicationsStudiesUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetStudiesMembersUseCase(studiesRepository: StudiesRepository): GetStudiesMembersUseCase =
+        GetStudiesMembersUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetStudiesApplicationsUseCase(studiesRepository: StudiesRepository): GetStudiesApplicationsUseCase =
+        GetStudiesApplicationsUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun providePatchApproveStudiesApplicationUseCase(studiesRepository: StudiesRepository): PatchApproveStudiesApplicationsUseCase =
+        PatchApproveStudiesApplicationsUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun providePatchRejectStudiesApplicationUseCase(studiesRepository: StudiesRepository): PatchRejectStudiesApplicationsUseCase =
+        PatchRejectStudiesApplicationsUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideChangeRoleStudiesMemberUseCase(studiesRepository: StudiesRepository): ChangeRoleStudiesMemberUseCase =
+        ChangeRoleStudiesMemberUseCase(studiesRepository)
+
+    @Provides
+    @Singleton
+    fun provideExpelStudiesMemberUseCase(studiesRepository: StudiesRepository): ExpelStudiesMemberUseCase =
+        ExpelStudiesMemberUseCase(studiesRepository)
 }

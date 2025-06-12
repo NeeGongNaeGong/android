@@ -10,5 +10,5 @@ data class NeeGongNaeGongSnackbarVisuals(
     override val actionLabel: String? = null,
     val actionCallback: () -> Unit = {},
     override val duration: SnackbarDuration = SnackbarDuration.Short,
-    override val withDismissAction: Boolean = false
+    override val withDismissAction: Boolean = false,
 ) : SnackbarVisuals

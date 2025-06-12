@@ -13,53 +13,54 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 internal object NotificationMapper {
+    fun GetNotificationResponse.toKey(cursorId: Long?) =
+        NotificationRemoteKeyEntity(
+            id = id,
+            nextCursor = cursorId,
+        )
 
-    fun GetNotificationResponse.toKey(cursorId: Long?) = NotificationRemoteKeyEntity(
-        id = id,
-        nextCursor = cursorId,
-    )
+    fun List<GetNotificationResponse>.toKey(cursorId: Long?): List<NotificationRemoteKeyEntity> = map { it.toKey(cursorId = cursorId) }
 
-    fun List<GetNotificationResponse>.toKey(cursorId: Long?): List<NotificationRemoteKeyEntity> =
-        map { it.toKey(cursorId = cursorId) }
-
-
-    fun GetNotificationResponse.toEntity() = NotificationEntity(
-        id = id,
-        cursorId = cursorId,
-        receiverId = receiverId,
-        senderId = senderId,
-        notificationType = notificationType.toNotificationType(),
-        senderType = senderType,
-        displayName = displayName,
-        profileImg = profileImg,
-        content = content,
-        createdAt = createdAt.toEpochMilli(),
-        read = read,
-        studyGroupId = studyGroupId,
-        studyGroupName = studyGroupName,
-    )
+    fun GetNotificationResponse.toEntity() =
+        NotificationEntity(
+            id = id,
+            cursorId = cursorId,
+            receiverId = receiverId,
+            senderId = senderId,
+            notificationType = notificationType.toNotificationType(),
+            senderType = senderType,
+            displayName = displayName,
+            profileImg = profileImg,
+            content = content,
+            createdAt = createdAt.toEpochMilli(),
+            read = read,
+            studyGroupId = studyGroupId,
+            studyGroupName = studyGroupName,
+        )
 
     fun List<GetNotificationResponse>.toEntity(): List<NotificationEntity> = map { it.toEntity() }
 
-    fun NotificationEntity.toNotification() = Notification(
-        id = id,
-        cursorId = cursorId,
-        receiverId = receiverId,
-        senderId = senderId,
-        notificationType = notificationType.toNotificationType(),
-        senderType = senderType,
-        displayName = displayName,
-        profileImg = profileImg,
-        content = content,
-        createdAt = createdAt.toLocalDateTime(),
-        read = read,
-        studyGroupId = studyGroupId,
-        studyGroupName = studyGroupName,
-    )
+    fun NotificationEntity.toNotification() =
+        Notification(
+            id = id,
+            cursorId = cursorId,
+            receiverId = receiverId,
+            senderId = senderId,
+            notificationType = notificationType.toNotificationType(),
+            senderType = senderType,
+            displayName = displayName,
+            profileImg = profileImg,
+            content = content,
+            createdAt = createdAt.toLocalDateTime(),
+            read = read,
+            studyGroupId = studyGroupId,
+            studyGroupName = studyGroupName,
+        )
 
-    fun PagingData<NotificationEntity>.toNotification(): PagingData<Notification> = map {
-        it.toNotification()
-    }
+    fun PagingData<NotificationEntity>.toNotification(): PagingData<Notification> =
+        map {
+            it.toNotification()
+        }
 
     fun NotificationRemoteType.toNotificationType() = NotificationLocalType.valueOf(name)
 

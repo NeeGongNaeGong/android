@@ -18,7 +18,7 @@ internal fun SnackBarTextButton(
         modifier = modifier.clickable(enable) { onClick() },
         text = text,
         color = NeeGongNaeGongTheme.colorScheme.blue,
-        style = NeeGongNaeGongTheme.typography.bodySmall
+        style = NeeGongNaeGongTheme.typography.bodySmall,
     )
 }
 

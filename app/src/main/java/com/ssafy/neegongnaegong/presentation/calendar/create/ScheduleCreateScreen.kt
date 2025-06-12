@@ -56,12 +56,12 @@ fun ScheduleCreateRoute(
         onRepeatRuleChanged = {
             viewModel.setEvent(
                 ScheduleCreateContract.Event.OnRepeatRuleChanged(
-                    it
-                )
+                    it,
+                ),
             )
         },
         onSaveScheduleClicked = { viewModel.setEvent(ScheduleCreateContract.Event.OnCreateScheduleClicked) },
-        onCancelClick = { viewModel.setEvent(ScheduleCreateContract.Event.OnCancelClick) }
+        onCancelClick = { viewModel.setEvent(ScheduleCreateContract.Event.OnCancelClick) },
     )
 }
 
@@ -100,7 +100,7 @@ fun ScheduleCreateContent(
         onEndDateChanged = onEndDateChanged,
         onLocationChanged = onLocationChanged,
         onSaveScheduleClicked = onSaveScheduleClicked,
-        onCancelClick = onCancelClick
+        onCancelClick = onCancelClick,
     )
 
     if (uiState.isOnCreate) LoadingDialog()
@@ -120,11 +120,11 @@ fun ScheduleCreateScreen(
     onSaveScheduleClicked: (UpdateType) -> Unit,
     onCancelClick: () -> Unit,
 ) {
-
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .then(modifier),
     ) {
         CalendarTopAppBar()
 
@@ -143,22 +143,22 @@ fun ScheduleCreateScreen(
         Row(modifier = Modifier.fillMaxWidth()) {
             TextButton(
                 onClick = onCancelClick,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     "취소",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.peach
+                    color = NeeGongNaeGongTheme.colorScheme.peach,
                 )
             }
             TextButton(
                 onClick = { onSaveScheduleClicked(UpdateType.ALL) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     "확인",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
         }
@@ -171,19 +171,21 @@ private fun PreviewScheduleEditScreen() {
     NeeGongNaeGongTheme {
         ScheduleCreateScreen(
             modifier = Modifier.fillMaxSize(),
-            schedule = ScheduleInfo(
-                title = "New Schedule",
-                content = null,
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-                location = null,
-            ),
-            repeatRule = RepeatRuleInfo(
-                repeatType = RepeatType.MONTHLY,
-                repeatInterval = 1,
-                repeatDay = 3,
-                endDate = null
-            ),
+            schedule =
+                ScheduleInfo(
+                    title = "New Schedule",
+                    content = null,
+                    startAt = LocalDateTime.now(),
+                    endAt = LocalDateTime.now().plusHours(1),
+                    location = null,
+                ),
+            repeatRule =
+                RepeatRuleInfo(
+                    repeatType = RepeatType.MONTHLY,
+                    repeatInterval = 1,
+                    repeatDay = 3,
+                    endDate = null,
+                ),
             onTitleChanged = { },
             onContentChanged = { },
             onLocationChanged = { },
@@ -191,7 +193,7 @@ private fun PreviewScheduleEditScreen() {
             onStartDateChanged = { },
             onEndDateChanged = { },
             onSaveScheduleClicked = { },
-            onCancelClick = { }
+            onCancelClick = { },
         )
     }
 }

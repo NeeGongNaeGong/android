@@ -25,42 +25,70 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailContract
+import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 
 @Composable
-fun StudiesDrawer(
+fun StudiesDrawerContent(
+    navBackStackEntry: NavBackStackEntry,
+    navigateTodStudiesEdit: () -> Unit,
+    navigateToStudiesMembersRole: () -> Unit,
+    navigateToStudiesApplications: () -> Unit,
+) {
+    val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    StudiesDrawer(
+        headerImageUrl = uiState.value.studies.studyInfo.profileImg,
+        name = uiState.value.studies.studyInfo.name,
+        description = uiState.value.studies.studyInfo.description,
+        onStudyDeleteClick = {
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
+            )
+        },
+        navigateTodStudiesEdit = navigateTodStudiesEdit,
+        navigateToStudiesMembersRole = navigateToStudiesMembersRole,
+        navigateToStudiesApplications = navigateToStudiesApplications,
+    )
+}
+
+@Composable
+private fun StudiesDrawer(
     modifier: Modifier = Modifier,
     headerImageUrl: String? = null,
-    onGroupManagementClick: () -> Unit = {},
-    onMemberManagementClick: () -> Unit = {},
+    name: String = "",
+    description: String = "",
     onScheduleManagementClick: () -> Unit = {},
     onStudyCreateClick: () -> Unit = {},
     onStudySearchClick: () -> Unit = {},
     onMyStudyClick: () -> Unit = {},
     onStudyItemClick: (Long) -> Unit = {},
+    onStudyDeleteClick: () -> Unit = {},
+    navigateTodStudiesEdit: () -> Unit = {},
+    navigateToStudiesMembersRole: () -> Unit = {},
+    navigateToStudiesApplications: () -> Unit = {},
 ) {
     Column(
         modifier =
             modifier
                 .fillMaxHeight()
                 .fillMaxWidth(0.75f)
-                .background(MaterialTheme.colorScheme.surface),
+                .background(NeeGongNaeGongTheme.colorScheme.background),
     ) {
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(180.dp)
-                    .padding(horizontal = 0.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
+                    .height(240.dp)
+                    .background(NeeGongNaeGongTheme.colorScheme.gray3),
         ) {
             GlideImage(
                 imageModel = { headerImageUrl ?: R.drawable.img_main_character },
@@ -77,30 +105,25 @@ fun StudiesDrawer(
                     )
                 },
             )
-
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.4f)),
-            )
         }
         // 그룹 정보 부분
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                    .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "취업 스터디",
-                    style = NeeGongNaeGongTheme.typography.bodyLarge,
+                    text = name,
+                    style = NeeGongNaeGongTheme.typography.titleMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
                 Text(
-                    text = "취업을 향해서...",
-                    style = NeeGongNaeGongTheme.typography.labelMedium,
+                    text = description,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
         }
@@ -111,14 +134,14 @@ fun StudiesDrawer(
         DrawerMenuItem(
             icon = R.drawable.ic_studies_drw_group_management,
             title = stringResource(R.string.studies_drw_group_management),
-            onClick = onGroupManagementClick,
+            onClick = navigateTodStudiesEdit,
         )
 
         // 멤버 관리 섹션
         DrawerMenuItem(
             icon = R.drawable.ic_studies_drw_member_management,
             title = stringResource(R.string.studies_drw_member_management),
-            onClick = onMemberManagementClick,
+            onClick = navigateToStudiesMembersRole,
         )
 
         // 일정 관리 섹션
@@ -126,6 +149,20 @@ fun StudiesDrawer(
             icon = R.drawable.ic_studies_drw_schedule_management,
             title = stringResource(R.string.studies_drw_schedule_management),
             onClick = onScheduleManagementClick,
+        )
+
+        // 스터디 삭제 버튼
+        DrawerMenuItem(
+            icon = R.drawable.ic_studies_drw_studies_delete,
+            title = stringResource(R.string.studies_drw_studies_delete),
+            onClick = onStudyDeleteClick,
+        )
+
+        // 스터디 가입신청 현황
+        DrawerMenuItem(
+            icon = R.drawable.ic_studies_drw_studies_applications,
+            title = stringResource(R.string.studies_drw_studies_application),
+            onClick = navigateToStudiesApplications,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -152,14 +189,13 @@ fun StudiesDrawer(
         ) {
             Text(
                 text = stringResource(R.string.studies_drw_my_studies),
-                style = NeeGongNaeGongTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
+                style = NeeGongNaeGongTheme.typography.titleSmall,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
             Text(
                 text = stringResource(R.string.studies_drw_see_more),
                 style = NeeGongNaeGongTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 modifier = Modifier.clickable { onMyStudyClick() },
             )
         }
@@ -220,7 +256,8 @@ fun CircleIcon(
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = CircleShape,
-                ).clickable {
+                )
+                .clickable {
                     onClick()
                 },
         contentAlignment = Alignment.Center,
@@ -235,8 +272,24 @@ fun CircleIcon(
 
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun PreviewStudiesDrawer() {
+private fun PreviewLightModeStudiesDrawer() {
     NeeGongNaeGongTheme {
-        StudiesDrawer()
+        StudiesDrawer(
+            name = "화이트 스터디",
+            description = "하얗습니다.",
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+private fun PreviewDarkModeStudiesDrawer() {
+    NeeGongNaeGongTheme(
+        darkTheme = true,
+    ) {
+        StudiesDrawer(
+            name = "다크 스터디",
+            description = "어둡습니다.",
+        )
     }
 }

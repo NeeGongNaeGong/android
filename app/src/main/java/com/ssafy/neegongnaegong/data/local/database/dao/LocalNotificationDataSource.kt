@@ -27,7 +27,10 @@ interface LocalNotificationDataSource {
     suspend fun update(notification: NotificationEntity)
 
     @Query("UPDATE notifications SET read = :isRead WHERE id = :id")
-    suspend fun updateReadById(id: Long, isRead: Boolean)
+    suspend fun updateReadById(
+        id: Long,
+        isRead: Boolean,
+    )
 
     @Query("DELETE FROM notifications")
     suspend fun clearAll()

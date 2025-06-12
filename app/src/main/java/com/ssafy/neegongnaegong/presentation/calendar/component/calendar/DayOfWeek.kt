@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.ssafy.neegongnaegong.domain.model.calendar.dayOfWeekOrder
+import com.ssafy.neegongnaegong.domain.model.calendar.DayOfWeekOrder
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.color
@@ -14,19 +14,18 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun DayOfWeek(
-    modifier: Modifier = Modifier
-) {
+fun DayOfWeek(modifier: Modifier = Modifier) {
     Row(modifier) {
-        dayOfWeekOrder.forEach { dayOfWeek ->
+        DayOfWeekOrder.forEach { dayOfWeek ->
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 text = dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN),
                 style = NeeGongNaeGongTheme.typography.labelMedium,
                 color = dayOfWeek.color,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -37,7 +36,7 @@ fun DayOfWeek(
 fun DayOfWeekPreview() {
     NeeGongNaeGongTheme {
         DayOfWeek(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

@@ -45,54 +45,58 @@ fun NotificationScreen(
     onDeleteNotification: (NotificationUiModel) -> Unit,
     onMoveNotification: (NotificationUiModel) -> Unit,
     onAcceptGroupJoinRequest: (NotificationUiModel) -> Unit,
-    onRejectGroupJoinRequest: (NotificationUiModel) -> Unit
+    onRejectGroupJoinRequest: (NotificationUiModel) -> Unit,
 ) {
     DefaultRefreshBox(
         isRefreshing = isRefresh,
         onRefresh = onRefresh,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp),
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Icon(
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 16.dp)
-                        .size(22.dp)
-                        .clickable(onClick = onNavigateUp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 16.dp)
+                            .size(22.dp)
+                            .clickable(onClick = onNavigateUp),
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    contentDescription = null
+                    contentDescription = null,
                 )
 
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = stringResource(id = R.string.notification),
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
 
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 Text(
                     text = stringResource(id = R.string.delete_all),
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .clickable(
-                            indication = null,
-                            interactionSource = null,
-                            onClick = onDeleteAll
-                        ),
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .clickable(
+                                indication = null,
+                                interactionSource = null,
+                                onClick = onDeleteAll,
+                            ),
                     textAlign = TextAlign.End,
                     style = NeeGongNaeGongTheme.typography.bodySmall,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             }
 
@@ -103,28 +107,31 @@ fun NotificationScreen(
                 onDeleteNotification = onDeleteNotification,
                 onMoveNotification = onMoveNotification,
                 onAcceptGroupJoinRequest = onAcceptGroupJoinRequest,
-                onRejectGroupJoinRequest = onRejectGroupJoinRequest
+                onRejectGroupJoinRequest = onRejectGroupJoinRequest,
             )
         }
     }
 }
 
-
 @Composable
 @Preview
 fun NotificationPreviewScreen() {
-    val testModel = NotificationUiModel(
-        id = Random.nextLong(),
-        image = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
-        user = "홍길동",
-        content = "님이 ㅋㅋㅋ 게시글에 답글을 추가했습니다.",
-        isRead = true,
-
-        type = NotificationType.SYSTEM,
-        senderId = 0,
-        studyGroupId = null,
-        studyGroupName = null
-    )
+    val testModel =
+        NotificationUiModel(
+            id = Random.nextLong(),
+            image =
+                "https://encrypted-tbn1.gstatic.com/" +
+                    "images?q=tbn:ANd9GcTRI8A6M23RTePWn8of5fgwRzSMMzRy" +
+                    "_6mZP7OrP79VF3ByzCoRcyfx6bYr9w4bH9zdVfpV" +
+                    "_LP9hBAudM5SRGyjnbbEhnrs2vWZKF8wySI",
+            user = "홍길동",
+            content = "님이 ㅋㅋㅋ 게시글에 답글을 추가했습니다.",
+            isRead = true,
+            type = NotificationType.SYSTEM,
+            senderId = 0,
+            studyGroupId = null,
+            studyGroupName = null,
+        )
     val testList = List<NotificationUiModel>(500) { testModel }
     val fakeFlow = flowOf(PagingData.from(testList)).collectAsLazyPagingItems()
 
@@ -138,6 +145,6 @@ fun NotificationPreviewScreen() {
         onDeleteNotification = {},
         onMoveNotification = {},
         onAcceptGroupJoinRequest = {},
-        onRejectGroupJoinRequest = {}
+        onRejectGroupJoinRequest = {},
     )
 }

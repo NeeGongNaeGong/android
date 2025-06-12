@@ -25,30 +25,34 @@ fun HorizontalCarouselPager(
     content: @Composable (Int) -> Unit,
 ) {
     HorizontalPager(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .then(modifier),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .then(modifier),
         state = state,
         beyondViewportPageCount = beyondViewportPageCount,
         contentPadding = contentPadding,
-        pageSpacing = pageSpacing
+        pageSpacing = pageSpacing,
     ) { page ->
         key(page) {
             Box(
-                modifier = Modifier.graphicsLayer {
-                    val pageOffSet = ((state.currentPage - page) + state.currentPageOffsetFraction).absoluteValue
-                    alpha = lerp(
-                        start = 0.5f,
-                        stop = 1f,
-                        fraction = 1f - pageOffSet.coerceIn(0f, 1f)
-                    )
-                    scaleY = lerp(
-                        start = 0.9f,
-                        stop = 1f,
-                        fraction = 1f - pageOffSet.coerceIn(0f, 1f)
-                    )
-                }
+                modifier =
+                    Modifier.graphicsLayer {
+                        val pageOffSet = ((state.currentPage - page) + state.currentPageOffsetFraction).absoluteValue
+                        alpha =
+                            lerp(
+                                start = 0.5f,
+                                stop = 1f,
+                                fraction = 1f - pageOffSet.coerceIn(0f, 1f),
+                            )
+                        scaleY =
+                            lerp(
+                                start = 0.9f,
+                                stop = 1f,
+                                fraction = 1f - pageOffSet.coerceIn(0f, 1f),
+                            )
+                    },
             ) {
                 content(page)
             }

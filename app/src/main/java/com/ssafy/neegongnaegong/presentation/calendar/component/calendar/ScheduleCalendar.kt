@@ -22,7 +22,7 @@ fun ScheduleCalendar(
     state: CalendarState,
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
-    schedules: Map<LocalDate, List<Schedule>> = emptyMap()
+    schedules: Map<LocalDate, List<Schedule>> = emptyMap(),
 ) {
     Calendar(
         modifier = modifier,
@@ -31,16 +31,18 @@ fun ScheduleCalendar(
         onDateSelected = onDateSelected,
     ) { date ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 2.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = 2.dp),
         ) {
             schedules[date]?.take(3)?.forEach { schedule ->
                 ScheduleSummary(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(1.dp),
-                    title = schedule.info.title
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(1.dp),
+                    title = schedule.info.title,
                 )
             }
         }
@@ -52,28 +54,31 @@ fun ScheduleCalendar(
 fun ScheduleCalendarPreview() {
     val state = rememberCalendarState()
     val schedules = mutableMapOf<LocalDate, List<Schedule>>()
-    schedules[LocalDate.now()] = listOf(
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 1,
-            info = ScheduleInfo(
-                title = "Meeting",
-                content = "Meeting",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-            )
-        ),
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 2,
-            info = ScheduleInfo(
-                title = "Lunch",
-                content = "Lunch",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-            )
-        ),
-    )
+    schedules[LocalDate.now()] =
+        listOf(
+            Schedule(
+                type = ScheduleType.PERSONAL,
+                id = 1,
+                info =
+                    ScheduleInfo(
+                        title = "Meeting",
+                        content = "Meeting",
+                        startAt = LocalDateTime.now(),
+                        endAt = LocalDateTime.now().plusHours(1),
+                    ),
+            ),
+            Schedule(
+                type = ScheduleType.PERSONAL,
+                id = 2,
+                info =
+                    ScheduleInfo(
+                        title = "Lunch",
+                        content = "Lunch",
+                        startAt = LocalDateTime.now(),
+                        endAt = LocalDateTime.now().plusHours(1),
+                    ),
+            ),
+        )
 
     NeeGongNaeGongTheme {
         ScheduleCalendar(

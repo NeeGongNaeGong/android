@@ -9,7 +9,7 @@ object FlowUtil {
     @OptIn(ExperimentalCoroutinesApi::class)
     inline fun <T, R> Flow<T>.safeFlatMapLatest(
         crossinline transform: suspend (value: T) -> Flow<R>,
-        crossinline catch: (throwable: Throwable) -> Unit
+        crossinline catch: (throwable: Throwable) -> Unit,
     ) = flatMapLatest { value: T ->
         transform(value).catch { throwable: Throwable ->
             catch(throwable)

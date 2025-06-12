@@ -10,9 +10,8 @@ data class NotificationUiModel(
     val user: String,
     val content: String,
     val isRead: Boolean,
-
     val type: NotificationType,
     val senderId: Long,
     val studyGroupId: Long?,
-    val studyGroupName: String?
+    val studyGroupName: String?,
 )

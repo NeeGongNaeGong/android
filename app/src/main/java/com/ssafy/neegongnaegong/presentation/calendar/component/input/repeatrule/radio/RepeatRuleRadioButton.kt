@@ -18,19 +18,20 @@ fun RepeatRuleRadioButton(
     modifier: Modifier = Modifier,
     selected: Boolean,
     onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         RadioButton(
             modifier = Modifier.padding(start = 2.dp),
             selected = selected,
             onClick = onClick,
-            colors = RadioButtonColors(
-                selectedColor = NeeGongNaeGongTheme.colorScheme.blue,
-                unselectedColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                disabledSelectedColor = NeeGongNaeGongTheme.colorScheme.blue,
-                disabledUnselectedColor = NeeGongNaeGongTheme.colorScheme.primaryText
-            )
+            colors =
+                RadioButtonColors(
+                    selectedColor = NeeGongNaeGongTheme.colorScheme.blue,
+                    unselectedColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                    disabledSelectedColor = NeeGongNaeGongTheme.colorScheme.blue,
+                    disabledUnselectedColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                ),
         )
         Spacer(modifier = Modifier.width(8.dp))
         content()

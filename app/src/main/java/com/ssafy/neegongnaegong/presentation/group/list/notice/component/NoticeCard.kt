@@ -25,7 +25,7 @@ fun NoticeCard(
 ) {
     Column(
         modifier =
-            Modifier.fillMaxWidth().clickable { onClick(id) },
+            modifier.fillMaxWidth().clickable { onClick(id) },
     ) {
         Text(
             text = title,

@@ -45,38 +45,40 @@ fun ProfileScreen(
     onClickNotification: () -> Unit,
     onClickPrivacyInfo: () -> Unit,
     onClickLogout: () -> Unit,
-    onClickDeleteAccount: () -> Unit
+    onClickDeleteAccount: () -> Unit,
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp)
-            .padding(top = 42.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
+                .padding(top = 42.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         ProfileImage(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape),
+            modifier =
+                Modifier
+                    .size(120.dp)
+                    .clip(CircleShape),
             profileImg = profileImg,
             shouldShowProfileImageWarningInfo = shouldShowProfileImageWarningInfo,
             onCheckProfileImageWarning = onCheckProfileImageWarning,
-            onImageSelected = onImageSelected
+            onImageSelected = onImageSelected,
         )
 
         ProfileNickname(
-            modifier = Modifier
-                .padding(top = 12.dp)
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .padding(top = 12.dp)
+                    .padding(horizontal = 16.dp),
             isEditing = isEditing,
             text = nickname,
             onClickEdit = onClickEdit,
             onClickEditCancel = onClickEditCancel,
-            onClickEditDone = onChangeNickName
+            onClickEditDone = onChangeNickName,
         )
 
         Spacer(modifier = Modifier.height(18.dp))
@@ -87,28 +89,29 @@ fun ProfileScreen(
             icon = {
                 if (hasUnReadNotification) {
                     Box(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(8.dp)
-                            .background(Color.Red, shape = CircleShape)
+                        modifier =
+                            Modifier
+                                .padding(end = 16.dp)
+                                .size(8.dp)
+                                .background(Color.Red, shape = CircleShape),
                     )
                 }
-            }
+            },
         )
 
         ProfileContent(
             title = stringResource(id = R.string.privacy_policy),
-            onClick = onClickPrivacyInfo
+            onClick = onClickPrivacyInfo,
         )
 
         ProfileContent(
             title = stringResource(id = R.string.logout),
-            onClick = onClickLogout
+            onClick = onClickLogout,
         )
 
         ProfileContent(
             title = stringResource(id = R.string.account_delete),
-            onClick = { showDialog = true }
+            onClick = { showDialog = true },
         )
 
         if (showDialog) {
@@ -117,7 +120,7 @@ fun ProfileScreen(
                 onConfirm = {
                     showDialog = false
                     onClickDeleteAccount()
-                }
+                },
             )
         }
     }

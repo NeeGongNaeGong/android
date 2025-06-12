@@ -18,24 +18,32 @@ import retrofit2.http.Query
 
 interface UserApi {
     @GET("/api/users/{id}")
-    suspend fun getUser(@Path("id") id: Long): Result<ApiResponse<UserDetailResponse>>
+    suspend fun getUser(
+        @Path("id") id: Long,
+    ): Result<ApiResponse<UserDetailResponse>>
 
     @GET("/api/users")
     suspend fun getUsers(
         @Query("nickname") nickname: String,
         @Query("page") page: Long,
         @Query("size") size: Int,
-        @Query("sort") sort: List<String>
+        @Query("sort") sort: List<String>,
     ): Result<ApiResponse<PageableData<UserDetailResponse>>>
 
     @GET("/api/users/validate-nickname")
-    suspend fun validateNickname(@Query("nickname") nickname: String): Result<ApiResponse<ValidateNicknameResponse>>
+    suspend fun validateNickname(
+        @Query("nickname") nickname: String,
+    ): Result<ApiResponse<ValidateNicknameResponse>>
 
     @PATCH("/api/users/me")
-    suspend fun updateUser(@Body request: UpdateUserRequest): Result<ApiResponse<Unit>>
+    suspend fun updateUser(
+        @Body request: UpdateUserRequest,
+    ): Result<ApiResponse<Unit>>
 
     @PUT("/token/fcm/refresh")
-    suspend fun updateFcmToken(@Body request: UpdateFcmTokenRequest): Result<ApiResponse<Unit>>
+    suspend fun updateFcmToken(
+        @Body request: UpdateFcmTokenRequest,
+    ): Result<ApiResponse<Unit>>
 
     @GET("/api/users/list")
     suspend fun findUsers(
@@ -46,10 +54,10 @@ interface UserApi {
     ): Result<ApiResponse<UserPage>>
 
     @GET("/api/users/me/notification-status")
-    suspend fun findUnReadNotification() : Result<ApiResponse<UnReadNotificationResponse>>
+    suspend fun findUnReadNotification(): Result<ApiResponse<UnReadNotificationResponse>>
 
     @POST("/api/users/logout")
-    suspend fun logout() : Result<ApiResponse<Unit>>
+    suspend fun logout(): Result<ApiResponse<Unit>>
 
     @POST("/api/users/withdraw")
     suspend fun withdraw(): Result<ApiResponse<Unit>>

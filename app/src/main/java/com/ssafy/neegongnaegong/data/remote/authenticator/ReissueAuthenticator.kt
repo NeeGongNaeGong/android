@@ -15,35 +15,41 @@ import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
 
-class ReissueAuthenticator @Inject constructor(
-    private val tokenManager: TokenManager,
-    private val authApi: AuthApi
-) : Authenticator {
-    override fun authenticate(route: Route?, response: Response): Request {
-        val data = Gson().fromJson(response.body?.string(), ErrorResponse::class.java)
+class ReissueAuthenticator
+    @Inject
+    constructor(
+        private val tokenManager: TokenManager,
+        private val authApi: AuthApi,
+    ) : Authenticator {
+        override fun authenticate(
+            route: Route?,
+            response: Response,
+        ): Request {
+            val data = Gson().fromJson(response.body?.string(), ErrorResponse::class.java)
 
-        if (data.errorCode.split("-").first() != "AUTH") throw ApiException.ClientException(data.message)
+            if (data.errorCode.split("-").first() != "AUTH") throw ApiException.ClientException(data.message)
 
-        synchronized(this) {
-            val newAccessToken = runBlocking { fetchNewAccessToken() }
-                ?: throw AuthException.InvalidTokenException()
+            synchronized(this) {
+                val newAccessToken =
+                    runBlocking { fetchNewAccessToken() }
+                        ?: throw AuthException.InvalidTokenException()
 
-            return response.request.newBuilder()
-                .header("Authorization", "Bearer $newAccessToken")
-                .build()
-        }
-    }
-
-    private suspend fun fetchNewAccessToken(): String? {
-        val existRefreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return null
-        val request = RefreshRequest("Bearer $existRefreshToken")
-
-        return authApi.reissue(request).getOrThrow().data.let {
-            with(it.createJwt) {
-                tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
-                tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
+                return response.request.newBuilder()
+                    .header("Authorization", "Bearer $newAccessToken")
+                    .build()
             }
-            tokenManager.getToken(TokenType.ACCESS_TOKEN)
+        }
+
+        private suspend fun fetchNewAccessToken(): String? {
+            val existRefreshToken = tokenManager.getToken(TokenType.REFRESH_TOKEN) ?: return null
+            val request = RefreshRequest("Bearer $existRefreshToken")
+
+            return authApi.reissue(request).getOrThrow().data.let {
+                with(it.createJwt) {
+                    tokenManager.saveToken(TokenType.ACCESS_TOKEN, accessToken)
+                    tokenManager.saveToken(TokenType.REFRESH_TOKEN, refreshToken)
+                }
+                tokenManager.getToken(TokenType.ACCESS_TOKEN)
+            }
         }
     }
-}

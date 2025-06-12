@@ -35,15 +35,16 @@ fun CalendarDialog(
      * pageCount는 전체 날짜 수
      * initialPage는 전체 중 초기 선택 날짜의 인덱스
      */
-    val pagerState = rememberPagerState(
-        pageCount = {
-            ChronoUnit.DAYS.between(
-                state.minMonth.atDay(1),
-                state.maxMonth.atEndOfMonth()
-            ).toInt() + 1
-        },
-        initialPage = ChronoUnit.DAYS.between(state.minMonth.atDay(1), state.date).toInt(),
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = {
+                ChronoUnit.DAYS.between(
+                    state.minMonth.atDay(1),
+                    state.maxMonth.atEndOfMonth(),
+                ).toInt() + 1
+            },
+            initialPage = ChronoUnit.DAYS.between(state.minMonth.atDay(1), state.date).toInt(),
+        )
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
@@ -61,7 +62,7 @@ fun CalendarDialog(
      */
     LaunchedEffect(state.date) {
         pagerState.animateScrollToPage(
-            ChronoUnit.DAYS.between(state.minMonth.atDay(1), state.date).toInt()
+            ChronoUnit.DAYS.between(state.minMonth.atDay(1), state.date).toInt(),
         )
         onDateSelected(state.date)
     }
@@ -76,24 +77,26 @@ fun CalendarDialog(
 
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         HorizontalCarouselPager(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .then(modifier),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .then(modifier),
             state = pagerState,
         ) { page ->
             val displayDate by remember {
                 mutableStateOf(state.minMonth.atDay(1).plusDays(page.toLong()))
             }
             CalendarDialogBody(
-                modifier = Modifier
-                    .height(screenHeight * 0.7f)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .height(screenHeight * 0.7f)
+                        .fillMaxWidth(),
                 date = displayDate,
-                content = content
+                content = content,
             )
         }
     }

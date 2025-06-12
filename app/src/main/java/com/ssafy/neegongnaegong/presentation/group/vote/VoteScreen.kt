@@ -46,7 +46,7 @@ import com.ssafy.neegongnaegong.presentation.group.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.group.vote.component.TimePickerDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.util.TimeFormatter
+import com.ssafy.neegongnaegong.presentation.util.CustomDateTimeFormatter
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -469,14 +469,14 @@ fun LoadDialog(
                     }
                 },
             initialSelectedDateMillis =
-                TimeFormatter.millisToUtc(
-                    TimeFormatter.convertStringDateToMillis(
+                CustomDateTimeFormatter.millisToUtc(
+                    CustomDateTimeFormatter.convertStringDateToMillis(
                         date,
                     ),
                 ),
         )
 
-    val (hour, minute) = TimeFormatter.convertStringTimeToHourAndMinute(time)
+    val (hour, minute) = CustomDateTimeFormatter.convertStringTimeToHourAndMinute(time)
     val timePickerState =
         rememberTimePickerState(
             initialHour = hour,

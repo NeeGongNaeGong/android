@@ -18,7 +18,6 @@ data class NotificationEntity(
     val content: String,
     val createdAt: Long,
     val read: Boolean,
-
     val studyGroupId: Long?,
-    val studyGroupName: String?
+    val studyGroupName: String?,
 )

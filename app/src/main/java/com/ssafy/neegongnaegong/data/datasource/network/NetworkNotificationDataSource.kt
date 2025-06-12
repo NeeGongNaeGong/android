@@ -5,8 +5,10 @@ import com.ssafy.neegongnaegong.data.model.notification.NotificationPage
 import kotlinx.coroutines.flow.Flow
 
 interface NetworkNotificationDataSource {
-
-    fun getNotifications(cursorId: Long?, size: Int): Flow<NotificationPage>
+    fun getNotifications(
+        cursorId: Long?,
+        size: Int,
+    ): Flow<NotificationPage>
 
     fun getNotification(notificationId: Long): Flow<GetNotificationResponse>
 

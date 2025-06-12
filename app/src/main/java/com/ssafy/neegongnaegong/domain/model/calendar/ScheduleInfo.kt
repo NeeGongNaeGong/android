@@ -12,17 +12,19 @@ data class ScheduleInfo(
     val repeatRule: RepeatRule? = null,
 ) {
     companion object {
-        fun empty() = ScheduleInfo(
-            title = "",
-            content = null,
-            startAt = LocalDateTime.now(),
-            endAt = LocalDateTime.now(),
-            location = null,
-            repeatRule = null
-        )
+        fun empty() =
+            ScheduleInfo(
+                title = "",
+                content = null,
+                startAt = LocalDateTime.now(),
+                endAt = LocalDateTime.now(),
+                location = null,
+                repeatRule = null,
+            )
     }
 
     val isAllDay: Boolean
-        get() = startAt.toLocalTime() == LocalTime.MIN
-                && endAt.toLocalTime() == LocalTime.of(23, 59, 59)
+        get() =
+            startAt.toLocalTime() == LocalTime.MIN &&
+                endAt.toLocalTime() == LocalTime.of(23, 59, 59)
 }

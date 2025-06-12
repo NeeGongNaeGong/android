@@ -7,14 +7,17 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
 import kotlin.time.DurationUnit
 
-class ShouldShowProfileImageWarningUseCase @Inject constructor(
-    private val userRepository: UserRepository
-) {
-    private val thresholdMillis = 7.days.toLong(unit = DurationUnit.MILLISECONDS)
+class ShouldShowProfileImageWarningUseCase
+    @Inject
+    constructor(
+        private val userRepository: UserRepository,
+    ) {
+        private val thresholdMillis = 7.days.toLong(unit = DurationUnit.MILLISECONDS)
 
-    operator fun invoke(): Flow<Boolean> = userRepository.getProfileImageWarningAcceptedAt()
-        .map { acceptedTime: Long ->
-            val now = System.currentTimeMillis()
-            (now - acceptedTime) > thresholdMillis
-        }
-}
+        operator fun invoke(): Flow<Boolean> =
+            userRepository.getProfileImageWarningAcceptedAt()
+                .map { acceptedTime: Long ->
+                    val now = System.currentTimeMillis()
+                    (now - acceptedTime) > thresholdMillis
+                }
+    }

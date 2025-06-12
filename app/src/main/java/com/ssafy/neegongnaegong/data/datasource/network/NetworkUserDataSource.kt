@@ -17,7 +17,12 @@ interface NetworkUserDataSource {
 
     suspend fun updateFcmToken(request: UpdateFcmTokenRequest): Flow<Unit>
 
-    fun searchUsers(time: String?, cursorId: Long?, size: Int, userName: String): Flow<UserPage>
+    fun searchUsers(
+        time: String?,
+        cursorId: Long?,
+        size: Int,
+        userName: String,
+    ): Flow<UserPage>
 
     fun findUnReadNotification(): Flow<UnReadNotificationResponse>
 

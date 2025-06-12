@@ -62,10 +62,19 @@ object AppNavigation {
             data object Main : Studies
 
             @Serializable
-            data object StudiesDetail : Studies
+            data class StudiesDetail(val studyGroupId: Long) : Studies
 
             @Serializable
-            data object Management : Studies
+            data class StudiesApplication(val studyGroupId: Long) : Studies
+
+            @Serializable
+            data class StudiesMembersRole(val studyGroupId: Long) : Studies
+
+            @Serializable
+            data object Create : Studies
+
+            @Serializable
+            data class Edit(val studyGroupId: Long) : Studies
 
             @Serializable
             data class MakeVote(val studyGroupId: Long) : Studies
@@ -122,13 +131,19 @@ object AppNavigation {
             @Serializable
             data class Detail(val scheduleId: Long, val date: String) : Calendar {
                 constructor(scheduleId: Long, date: LocalDate) : this(scheduleId, DateTimeFormatter.ISO_LOCAL_DATE.format(date))
-                fun date() : LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+
+                fun date(): LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
             }
 
             @Serializable
             data class Edit(val scheduleId: Long, val date: String, val focus: ScheduleInputFormFocus) : Calendar {
-                constructor(scheduleId: Long, date: LocalDate, focus: ScheduleInputFormFocus) : this(scheduleId, DateTimeFormatter.ISO_LOCAL_DATE.format(date), focus)
-                fun date() : LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+                constructor(
+                    scheduleId: Long,
+                    date: LocalDate,
+                    focus: ScheduleInputFormFocus,
+                ) : this(scheduleId, DateTimeFormatter.ISO_LOCAL_DATE.format(date), focus)
+
+                fun date(): LocalDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
             }
         }
 
@@ -140,7 +155,7 @@ object AppNavigation {
             data object Main : Profile
 
             @Serializable
-            data object Notification: Profile
+            data object Notification : Profile
         }
     }
 }

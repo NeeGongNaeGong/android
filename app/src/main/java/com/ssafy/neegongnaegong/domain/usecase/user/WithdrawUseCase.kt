@@ -4,6 +4,8 @@ import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class WithdrawUseCase @Inject constructor(private val userRepository: UserRepository) {
-    operator fun invoke(): Flow<Unit> = userRepository.withdraw()
-}
+class WithdrawUseCase
+    @Inject
+    constructor(private val userRepository: UserRepository) {
+        operator fun invoke(): Flow<Unit> = userRepository.withdraw()
+    }

@@ -29,28 +29,30 @@ fun ScheduleSummary(
     modifier: Modifier = Modifier,
     title: String,
     isAllDay: Boolean = false,
-    color: Color = Color.Transparent
+    color: Color = Color.Transparent,
 ) {
     Row(
-        modifier = modifier.background(
-            if (isAllDay) color else Color.Transparent,
-            RoundedCornerShape(5.dp)
-        ),
+        modifier =
+            modifier.background(
+                if (isAllDay) color else Color.Transparent,
+                RoundedCornerShape(5.dp),
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (!isAllDay) {
             Box(
-                modifier = Modifier
-                    .width(3.dp)
-                    .height(getTextHeightDp("", NeeGongNaeGongTheme.typography.labelSmall))
-                    .background(color, shape = RoundedCornerShape(100)),
+                modifier =
+                    Modifier
+                        .width(3.dp)
+                        .height(getTextHeightDp("", NeeGongNaeGongTheme.typography.labelSmall))
+                        .background(color, shape = RoundedCornerShape(100)),
             )
             Spacer(modifier = Modifier.width(2.dp))
         }
         Text(
             text = title,
             style = NeeGongNaeGongTheme.typography.labelSmall,
-            color = NeeGongNaeGongTheme.colorScheme.primaryText
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
     }
 }
@@ -58,38 +60,42 @@ fun ScheduleSummary(
 @NeeGongNaeGongPreviews
 @Composable
 fun ScheduleSummaryPreview() {
-    val schedules = listOf(
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 1,
-            info = ScheduleInfo(
-                title = "Meeting",
-                content = "Meeting",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-            )
-        ),
-        Schedule(
-            type = ScheduleType.PERSONAL,
-            id = 2,
-            info = ScheduleInfo(
-                title = "Lunch",
-                content = "Lunch",
-                startAt = LocalDateTime.now(),
-                endAt = LocalDateTime.now().plusHours(1),
-            )
-        ),
-    )
+    val schedules =
+        listOf(
+            Schedule(
+                type = ScheduleType.PERSONAL,
+                id = 1,
+                info =
+                    ScheduleInfo(
+                        title = "Meeting",
+                        content = "Meeting",
+                        startAt = LocalDateTime.now(),
+                        endAt = LocalDateTime.now().plusHours(1),
+                    ),
+            ),
+            Schedule(
+                type = ScheduleType.PERSONAL,
+                id = 2,
+                info =
+                    ScheduleInfo(
+                        title = "Lunch",
+                        content = "Lunch",
+                        startAt = LocalDateTime.now(),
+                        endAt = LocalDateTime.now().plusHours(1),
+                    ),
+            ),
+        )
 
     NeeGongNaeGongTheme {
         Column(modifier = Modifier.fillMaxWidth()) {
             schedules.take(3).forEach { schedule ->
                 ScheduleSummary(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(1.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(1.dp),
                     title = schedule.info.title,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
             }
         }

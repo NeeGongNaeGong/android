@@ -40,7 +40,7 @@ fun DateTimePicker(
             onDateClicked = state::focusOnDate,
             onTimeClicked = state::focusOnTime,
             isTimeVisible = isTimeVisible,
-            enable = enable
+            enable = enable,
         )
 
         AnimatedVisibility(state.isFocused) {
@@ -59,7 +59,7 @@ fun DateTimePicker(
                         TimePicker(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             selectedTime = state.dateTime.toLocalTime(),
-                            onTimeChange = state::updateTime
+                            onTimeChange = state::updateTime,
                         )
                     }
                 }
@@ -81,9 +81,10 @@ private fun DateTimePickerPreview_Focus_None() {
 @NeeGongNaeGongPreviews
 @Composable
 private fun DateTimePickerPreview_Focus_Date() {
-    val state = rememberDateTimePickerState().apply {
-        focusOnDate()
-    }
+    val state =
+        rememberDateTimePickerState().apply {
+            focusOnDate()
+        }
 
     NeeGongNaeGongTheme {
         DateTimePicker(state = state, onDateTimeChanged = {})
@@ -93,9 +94,10 @@ private fun DateTimePickerPreview_Focus_Date() {
 @NeeGongNaeGongPreviews
 @Composable
 private fun DateTimePickerPreview_Focus_Time() {
-    val state = rememberDateTimePickerState().apply {
-        focusOnTime()
-    }
+    val state =
+        rememberDateTimePickerState().apply {
+            focusOnTime()
+        }
 
     NeeGongNaeGongTheme {
         DateTimePicker(state = state, onDateTimeChanged = {})

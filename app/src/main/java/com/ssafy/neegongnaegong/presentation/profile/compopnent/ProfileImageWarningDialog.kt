@@ -52,36 +52,38 @@ private val LightGray = Color(0xFFD1D5DB)
 @Composable
 fun ProfileImageWarningDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
     var isConfirmed: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnClickOutside = false)
+        properties = DialogProperties(dismissOnClickOutside = false),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = NeeGongNaeGongTheme.colorScheme.background
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 WarningDialogHead()
 
                 WarningDialogContent(
                     isConfirmed = isConfirmed,
-                    setConfirmed = { isConfirmed = it }
+                    setConfirmed = { isConfirmed = it },
                 )
 
                 WarningDialogFoot(
                     isConfirmed = isConfirmed,
                     onConfirm = onConfirm,
-                    onDismiss = onDismiss
+                    onDismiss = onDismiss,
                 )
             }
         }
@@ -91,30 +93,31 @@ fun ProfileImageWarningDialog(
 @Composable
 private fun WarningDialogHead(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(brush = Brush.horizontalGradient(colors = HeadColors))
-            .padding(20.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(brush = Brush.horizontalGradient(colors = HeadColors))
+                .padding(20.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
-
             Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        Color.White.copy(alpha = 0.2f),
-                        CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(48.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.2f),
+                            CircleShape,
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     imageVector = Icons.Default.Warning,
                     tint = NeeGongNaeGongTheme.colorScheme.background,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
 
@@ -124,7 +127,7 @@ private fun WarningDialogHead(modifier: Modifier = Modifier) {
                 Text(
                     text = stringResource(id = R.string.profile_image_change_guide),
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.background
+                    color = NeeGongNaeGongTheme.colorScheme.background,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -132,7 +135,7 @@ private fun WarningDialogHead(modifier: Modifier = Modifier) {
                 Text(
                     text = stringResource(id = R.string.check_community_guideline),
                     style = NeeGongNaeGongTheme.typography.labelSmall,
-                    color = NeeGongNaeGongTheme.colorScheme.background
+                    color = NeeGongNaeGongTheme.colorScheme.background,
                 )
             }
         }
@@ -144,27 +147,30 @@ private fun WarningDialogFoot(
     modifier: Modifier = Modifier,
     isConfirmed: Boolean,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .padding(bottom = 24.dp, top = 6.dp),
-        horizontalArrangement = Arrangement.End
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp, top = 6.dp),
+        horizontalArrangement = Arrangement.End,
     ) {
         TextButton(
             onClick = onDismiss,
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
-            )
+            colors =
+                ButtonDefaults.textButtonColors(
+                    contentColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                ),
         ) {
             Text(
                 text = stringResource(id = R.string.common_cancel),
                 color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                style = NeeGongNaeGongTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Medium
-                )
+                style =
+                    NeeGongNaeGongTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                    ),
             )
         }
 
@@ -173,19 +179,25 @@ private fun WarningDialogFoot(
         Button(
             onClick = onConfirm,
             enabled = isConfirmed,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isConfirmed) Blue else NeeGongNaeGongTheme.colorScheme.secondaryText,
-                contentColor = if (isConfirmed) Color.White else NeeGongNaeGongTheme.colorScheme.secondaryText,
-            ),
-            shape = RoundedCornerShape(8.dp)
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = if (isConfirmed) Blue else NeeGongNaeGongTheme.colorScheme.secondaryText,
+                    contentColor = if (isConfirmed) Color.White else NeeGongNaeGongTheme.colorScheme.secondaryText,
+                ),
+            shape = RoundedCornerShape(8.dp),
         ) {
             Text(
                 text = stringResource(id = R.string.common_continue),
-                style = NeeGongNaeGongTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Medium
-                ),
-                color = if (isConfirmed) NeeGongNaeGongTheme.colorScheme.background
-                else NeeGongNaeGongTheme.colorScheme.secondaryText
+                style =
+                    NeeGongNaeGongTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Medium,
+                    ),
+                color =
+                    if (isConfirmed) {
+                        NeeGongNaeGongTheme.colorScheme.background
+                    } else {
+                        NeeGongNaeGongTheme.colorScheme.secondaryText
+                    },
             )
         }
     }
@@ -195,14 +207,14 @@ private fun WarningDialogFoot(
 private fun WarningDialogContent(
     modifier: Modifier = Modifier,
     isConfirmed: Boolean,
-    setConfirmed: (Boolean) -> Unit
+    setConfirmed: (Boolean) -> Unit,
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.padding(all = 24.dp)) {
             Text(
                 text = stringResource(id = R.string.profile_image_change_notice),
                 style = NeeGongNaeGongTheme.typography.bodySmall,
-                color = NeeGongNaeGongTheme.colorScheme.primaryText
+                color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -210,15 +222,16 @@ private fun WarningDialogContent(
             listOf(
                 stringResource(id = R.string.guideline_sexual_content),
                 stringResource(id = R.string.guideline_violent_content),
-                stringResource(id = R.string.guideline_offensive_content)
+                stringResource(id = R.string.guideline_offensive_content),
             ).forEach { guideline: String ->
                 Text(
                     modifier = Modifier.padding(vertical = 2.dp),
                     text = "• $guideline",
-                    style = NeeGongNaeGongTheme.typography.labelSmall.copy(
-                        fontSize = 13.sp
-                    ),
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.6f)
+                    style =
+                        NeeGongNaeGongTheme.typography.labelSmall.copy(
+                            fontSize = 13.sp,
+                        ),
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText.copy(alpha = 0.6f),
                 )
             }
 
@@ -227,26 +240,29 @@ private fun WarningDialogContent(
             Text(
                 text = stringResource(id = R.string.community_guideline_thanks),
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                style = NeeGongNaeGongTheme.typography.labelSmall.copy(
-                    fontSize = 13.sp
-                )
+                style =
+                    NeeGongNaeGongTheme.typography.labelSmall.copy(
+                        fontSize = 13.sp,
+                    ),
             )
         }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .padding(top = 12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                    .padding(top = 12.dp),
         ) {
             Checkbox(
                 checked = isConfirmed,
                 onCheckedChange = setConfirmed,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = Blue,
-                    uncheckedColor = LightGray
-                )
+                colors =
+                    CheckboxDefaults.colors(
+                        checkedColor = Blue,
+                        uncheckedColor = LightGray,
+                    ),
             )
 
             Text(
@@ -257,15 +273,13 @@ private fun WarningDialogContent(
             )
         }
     }
-
 }
-
 
 @Composable
 @NeeGongNaeGongPreviews
 fun ProfileImageWarningDialogPreview() {
     ProfileImageWarningDialog(
         onDismiss = {},
-        onConfirm = {}
+        onConfirm = {},
     )
 }

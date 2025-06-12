@@ -39,10 +39,11 @@ fun DatePicker(
      * pageCount는 전체 달 수
      * initialPage는 전체 중 초기 선택 달의 인덱스
      */
-    val pagerState = rememberPagerState(
-        pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
-        initialPage = ChronoUnit.MONTHS.between(minMonth, state.month).toInt(),
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { ChronoUnit.MONTHS.between(minMonth, maxMonth).toInt() + 1 },
+            initialPage = ChronoUnit.MONTHS.between(minMonth, state.month).toInt(),
+        )
 
     /**
      * pagerState.currentPage가 변경될 때마다
@@ -66,22 +67,23 @@ fun DatePicker(
      */
     LaunchedEffect(state.month) {
         pagerState.animateScrollToPage(
-            ChronoUnit.MONTHS.between(minMonth, state.month).toInt()
+            ChronoUnit.MONTHS.between(minMonth, state.month).toInt(),
         )
     }
 
     Column(modifier = modifier) {
         DatePickerHeader(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            selectedMonth = state.month
+            modifier =
+                Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+            selectedMonth = state.month,
         )
         HorizontalPager(
             modifier = Modifier.wrapContentHeight(),
             state = pagerState,
             beyondViewportPageCount = 1,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) { page ->
             key(page) {
                 val displayMonth = minMonth.plusMonths(page.toLong())
@@ -110,7 +112,7 @@ private fun DateRangePickerPreview() {
     NeeGongNaeGongTheme {
         DatePicker(
             state = state,
-            onDateSelected = {}
+            onDateSelected = {},
         )
     }
 }

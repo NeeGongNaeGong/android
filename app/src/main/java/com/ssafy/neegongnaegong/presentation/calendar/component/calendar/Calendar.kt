@@ -30,10 +30,11 @@ fun Calendar(
      * pageCount는 전체 달 수
      * initialPage는 전체 중 초기 선택 달의 인덱스
      */
-    val pagerState = rememberPagerState(
-        pageCount = { ChronoUnit.MONTHS.between(state.minMonth, state.maxMonth).toInt() + 1 },
-        initialPage = ChronoUnit.MONTHS.between(state.minMonth, state.month).toInt(),
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { ChronoUnit.MONTHS.between(state.minMonth, state.maxMonth).toInt() + 1 },
+            initialPage = ChronoUnit.MONTHS.between(state.minMonth, state.month).toInt(),
+        )
 
     /**
      * pagerState.currentPage가 변경될 때마다
@@ -49,21 +50,22 @@ fun Calendar(
      */
     LaunchedEffect(state.month) {
         pagerState.animateScrollToPage(
-            ChronoUnit.MONTHS.between(state.minMonth, state.month).toInt()
+            ChronoUnit.MONTHS.between(state.minMonth, state.month).toInt(),
         )
         onMonthChanged(state.month)
     }
 
     Column(modifier = modifier) {
         CalendarHeader(
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .fillMaxWidth(),
-            selectedMonth = state.month
+            modifier =
+                Modifier
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+            selectedMonth = state.month,
         )
         HorizontalPager(
             state = pagerState,
-            beyondViewportPageCount = 1
+            beyondViewportPageCount = 1,
         ) { page ->
             key(page) {
                 val displayedMonth = state.minMonth.plusMonths(page.toLong())
@@ -78,7 +80,7 @@ fun Calendar(
                         state.updateDate(it)
                         onDateSelected(it)
                     },
-                    dateContent = dateContent
+                    dateContent = dateContent,
                 )
             }
         }
@@ -91,12 +93,13 @@ fun CalendarPreview() {
     val state = rememberCalendarState()
     NeeGongNaeGongTheme {
         Calendar(
-            modifier = Modifier
-                .background(NeeGongNaeGongTheme.colorScheme.background)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .background(NeeGongNaeGongTheme.colorScheme.background)
+                    .fillMaxWidth(),
             state = state,
             onDateSelected = {},
-            onMonthChanged = {}
+            onMonthChanged = {},
         )
     }
 }

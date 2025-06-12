@@ -11,48 +11,58 @@ import com.ssafy.neegongnaegong.data.remote.UserApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class NetworkUserDataSourceImpl @Inject constructor(
-    private val userApi: UserApi
-) : NetworkUserDataSource {
-    override suspend fun getUser(id: Long): Flow<UserDetailResponse> = apiFlow {
-        userApi.getUser(id)
-    }
+class NetworkUserDataSourceImpl
+    @Inject
+    constructor(
+        private val userApi: UserApi,
+    ) : NetworkUserDataSource {
+        override suspend fun getUser(id: Long): Flow<UserDetailResponse> =
+            apiFlow {
+                userApi.getUser(id)
+            }
 
-    override fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse> = apiFlow {
-        userApi.validateNickname(nickname)
-    }
+        override fun validateUserNickname(nickname: String): Flow<ValidateNicknameResponse> =
+            apiFlow {
+                userApi.validateNickname(nickname)
+            }
 
-    override fun updateUser(request: UpdateUserRequest): Flow<Unit> = apiFlow {
-        userApi.updateUser(request)
-    }
+        override fun updateUser(request: UpdateUserRequest): Flow<Unit> =
+            apiFlow {
+                userApi.updateUser(request)
+            }
 
-    override suspend fun updateFcmToken(request: UpdateFcmTokenRequest): Flow<Unit> = apiFlow {
-        userApi.updateFcmToken(request)
-    }
+        override suspend fun updateFcmToken(request: UpdateFcmTokenRequest): Flow<Unit> =
+            apiFlow {
+                userApi.updateFcmToken(request)
+            }
 
-    override fun searchUsers(
-        time: String?,
-        cursorId: Long?,
-        size: Int,
-        userName: String
-    ): Flow<UserPage> = apiFlow {
-        userApi.findUsers(
-            time = time,
-            cursorId = cursorId,
-            size = size,
-            userName = userName
-        )
-    }
+        override fun searchUsers(
+            time: String?,
+            cursorId: Long?,
+            size: Int,
+            userName: String,
+        ): Flow<UserPage> =
+            apiFlow {
+                userApi.findUsers(
+                    time = time,
+                    cursorId = cursorId,
+                    size = size,
+                    userName = userName,
+                )
+            }
 
-    override fun findUnReadNotification(): Flow<UnReadNotificationResponse> = apiFlow {
-        userApi.findUnReadNotification()
-    }
+        override fun findUnReadNotification(): Flow<UnReadNotificationResponse> =
+            apiFlow {
+                userApi.findUnReadNotification()
+            }
 
-    override fun logout(): Flow<Unit> = apiFlow {
-        userApi.logout()
-    }
+        override fun logout(): Flow<Unit> =
+            apiFlow {
+                userApi.logout()
+            }
 
-    override fun withdraw(): Flow<Unit> = apiFlow {
-        userApi.withdraw()
+        override fun withdraw(): Flow<Unit> =
+            apiFlow {
+                userApi.withdraw()
+            }
     }
-}

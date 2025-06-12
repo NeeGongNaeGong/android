@@ -28,7 +28,7 @@ import java.time.YearMonth
 fun DatePickerBody(
     modifier: Modifier = Modifier,
     selectedMonth: YearMonth,
-    cell: @Composable (LocalDate) -> Unit
+    cell: @Composable (LocalDate) -> Unit,
 ) {
     /**
      * lastDay: 선택된 달의 마지막 날짜
@@ -50,25 +50,27 @@ fun DatePickerBody(
                      */
                     val calendarIndex = row * 7 + column
                     val dayOffset = calendarIndex - firstDayOfWeek + 1
-                    val date = if (dayOffset < 1) { // 지난 달
-                        val previousMonth = selectedMonth.minusMonths(1)
-                        val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
-                        previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
-                    } else if (dayOffset > lastDay) { // 다음 달
-                        val nextMonth = selectedMonth.plusMonths(1)
-                        nextMonth.atDay(dayOffset - lastDay)
-                    } else { // 이번 달
-                        selectedMonth.atDay(dayOffset)
-                    }
+                    val date =
+                        if (dayOffset < 1) { // 지난 달
+                            val previousMonth = selectedMonth.minusMonths(1)
+                            val lastDayOfPreviousMonth = previousMonth.lengthOfMonth()
+                            previousMonth.atDay(lastDayOfPreviousMonth + dayOffset)
+                        } else if (dayOffset > lastDay) { // 다음 달
+                            val nextMonth = selectedMonth.plusMonths(1)
+                            nextMonth.atDay(dayOffset - lastDay)
+                        } else { // 이번 달
+                            selectedMonth.atDay(dayOffset)
+                        }
 
                     /**
                      * 지난달 혹은 다음 달 이면 반투명
                      */
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .alpha(if (dayOffset in 1..lastDay) 1f else 0.3f),
+                        contentAlignment = Alignment.Center,
                     ) {
                         cell(date)
                     }

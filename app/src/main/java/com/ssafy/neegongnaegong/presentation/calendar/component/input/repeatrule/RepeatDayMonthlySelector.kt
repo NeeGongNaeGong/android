@@ -27,7 +27,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 fun RepeatRuleMonthlySelector(
     modifier: Modifier = Modifier,
     repeatDay: Int,
-    onChange: (Int) -> Unit
+    onChange: (Int) -> Unit,
 ) {
     val rows = (1..31).chunked(7)
     Column(modifier) {
@@ -36,24 +36,26 @@ fun RepeatRuleMonthlySelector(
                 week.forEach { day ->
                     val selected = repeatDay.isRepeatDaySelected(day)
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .weight(1f)
-                            .padding(10.dp),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .weight(1f)
+                                .padding(10.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Box(
-                            modifier = Modifier
-                                .clickable {
-                                    onChange(repeatDay.toggleRepeatDay(day))
-                                }
-                                .border(
-                                    width = 1.dp,
-                                    color = if (selected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
-                                    shape = CircleShape,
-                                )
-                                .fillMaxSize(),
+                            modifier =
+                                Modifier
+                                    .clickable {
+                                        onChange(repeatDay.toggleRepeatDay(day))
+                                    }
+                                    .border(
+                                        width = 1.dp,
+                                        color = if (selected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
+                                        shape = CircleShape,
+                                    )
+                                    .fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
@@ -61,7 +63,7 @@ fun RepeatRuleMonthlySelector(
                                 text = day.toString(),
                                 style = NeeGongNaeGongTheme.typography.labelMedium,
                                 color = if (selected) NeeGongNaeGongTheme.colorScheme.blue else NeeGongNaeGongTheme.colorScheme.primaryText,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                         }
                     }
@@ -69,9 +71,10 @@ fun RepeatRuleMonthlySelector(
                 if (week.size < 7) {
                     repeat(7 - week.size) {
                         Spacer(
-                            modifier = Modifier
-                                .weight(1f)
-                                .aspectRatio(1f)
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .aspectRatio(1f),
                         )
                     }
                 }
@@ -86,7 +89,7 @@ private fun RepeatRuleMonthlySelectorPreview() {
     NeeGongNaeGongTheme {
         RepeatRuleMonthlySelector(
             repeatDay = 2,
-            onChange = {}
+            onChange = {},
         )
     }
 }
