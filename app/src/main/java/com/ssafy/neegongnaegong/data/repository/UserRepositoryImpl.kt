@@ -66,11 +66,13 @@ class UserRepositoryImpl
 
         override fun updateProfileImage(profileImg: String): Flow<Unit> =
             flow {
+                val updatedProfileImg = "$profileImg?ts=${System.currentTimeMillis()}"
                 val user: User = localUserDataSource.getUser().first()
-                val userRequest = UpdateUserRequest(nickName = user.nickname, profileImg = profileImg)
+                val userRequest =
+                    UpdateUserRequest(nickName = user.nickname, profileImg = updatedProfileImg)
                 networkUserDataSource.updateUser(request = userRequest).firstOrNull()
 
-                val updatedUser = user.copy(profileImg = profileImg)
+                val updatedUser = user.copy(profileImg = updatedProfileImg)
                 localUserDataSource.saveUser(user = updatedUser)
                 emit(value = Unit)
             }.flowOn(context = ioDispatcher)
