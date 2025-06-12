@@ -23,13 +23,13 @@ interface StudiesApi {
     @GET("/studies")
     suspend fun getStudies(): List<Studies>
 
-    @POST("/api/study-groups/{study-group-id}/posts/votes")
+    @POST("$PREFIX/{study-group-id}/posts/votes")
     suspend fun createVote(
         @Path("study-group-id") studyGroupId: Long,
         @Body requestBody: CreateVoteRequest,
     ): Result<ApiResponse<Unit>>
 
-    @POST("/api/study-groups/{study-group-id}/notices")
+    @POST("$PREFIX/{study-group-id}/notices")
     suspend fun createNotice(
         @Path("study-group-id") studyId: Long,
         @Body requestBody: CreateNoticeRequest,
@@ -37,80 +37,84 @@ interface StudiesApi {
 
     suspend fun getStudiesDel(): List<Studies> // TODO : 제거
 
-    @GET("/api/study-groups/list")
+    @GET("$PREFIX/list")
     suspend fun getStudiesList(
         @Query("cursor-created-at") cursorCreatedAt: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceStudiesListResponse>>
 
-    @POST("/api/study-groups")
+    @POST(PREFIX)
     suspend fun createStudies(
         @Body request: CreateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
-    @GET("/api/study-groups/{study-group-id}")
+    @GET("$PREFIX/{study-group-id}")
     suspend fun getStudies(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<StudiesResponse>>
 
-    @PUT("/api/study-groups/{study-group-id}")
+    @PUT("$PREFIX/{study-group-id}")
     suspend fun updateStudies(
         @Path("study-group-id") studyGroupId: Long,
         @Body request: UpdateStudiesRequest,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/study-groups/{study-group-id}")
+    @DELETE("$PREFIX/{study-group-id}")
     suspend fun deleteStudies(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 
-    @POST("/api/study-groups/{study-group-id}/applications")
+    @POST("$PREFIX/{study-group-id}/applications")
     suspend fun applyStudies(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/study-groups/{study-group-id}/applications")
+    @DELETE("$PREFIX/{study-group-id}/applications")
     suspend fun cancelApplicationsStudies(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 
-    @GET("/api/study-groups/{study-group-id}/users")
+    @GET("$PREFIX/{study-group-id}/users")
     suspend fun getStudiesMembers(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<GetStudiesMemberListResponse>>
 
-    @GET("/api/study-groups/{study-group-id}/applications")
+    @GET("$PREFIX/{study-group-id}/applications")
     suspend fun getStudiesApplications(
         @Path("study-group-id") studyGroupId: Long,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesApplicationsMembersResponse>>
 
-    @PATCH("/api/study-groups/{study-group-id}/applications/{user-id}/approve")
+    @PATCH("$PREFIX/{study-group-id}/applications/{user-id}/approve")
     suspend fun patchApproveStudiesApplications(
         @Path("study-group-id") studyGroupId: Long,
         @Path("user-id") userId: Long,
         @Query("notification-id") notificationId: Long?,
     ): Result<ApiResponse<Unit>>
 
-    @PATCH("/api/study-groups/{study-group-id}/applications/{user-id}/reject")
+    @PATCH("$PREFIX/{study-group-id}/applications/{user-id}/reject")
     suspend fun patchRejectStudiesApplications(
         @Path("study-group-id") studyGroupId: Long,
         @Path("user-id") userId: Long,
         @Query("notification-id") notificationId: Long?,
     ): Result<ApiResponse<Unit>>
 
-    @PUT("/api/study-groups/{study-group-id}/users/{user-id}")
+    @PUT("$PREFIX/{study-group-id}/users/{user-id}")
     suspend fun changeRoleStudiesMember(
         @Path("study-group-id") studyGroupId: Long,
         @Path("user-id") userId: Long,
         @Query("changeRole") changeRole: String,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("/api/study-groups/{study-group-id}/users/{user-id}")
+    @DELETE("$PREFIX/{study-group-id}/users/{user-id}")
     suspend fun expelStudiesMember(
         @Path("study-group-id") studyGroupId: Long,
         @Path("user-id") userId: Long,
     ): Result<ApiResponse<Unit>>
+
+    companion object {
+        const val PREFIX = "/api/study-groups"
+    }
 }
