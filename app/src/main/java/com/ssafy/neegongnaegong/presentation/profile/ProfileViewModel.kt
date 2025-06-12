@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
+import com.ssafy.neegongnaegong.domain.exception.UnsupportedFileTypeException
 import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
@@ -11,6 +12,7 @@ import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.SaveProfileImageWarningAcceptedAtUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.ShouldShowProfileImageWarningUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.UpdateProfileImageUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -33,6 +35,7 @@ class ProfileViewModel
     constructor(
         private val getMyProfileUseCase: GetMyProfileUseCase,
         private val updateNicknameUseCase: UpdateNicknameUseCase,
+        private val updateProfileImageUseCase: UpdateProfileImageUseCase,
         private val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase,
         private val logoutUseCase: LogoutUseCase,
         private val withdrawUseCase: WithdrawUseCase,
@@ -107,17 +110,19 @@ class ProfileViewModel
 
         private fun handleCheckProfileImageWarning() {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImageWarningInfoError) {
-                saveProfileImageWarningAcceptedAtUseCase().withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                saveProfileImageWarningAcceptedAtUseCase()
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
             }
         }
 
         private fun handleLogout() {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.LogoutError) {
-                logoutUseCase().withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                logoutUseCase()
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
 
                 val sideEffect = ProfileContract.Effect.NavigateToAuth
                 setEffect { sideEffect }
@@ -126,9 +131,10 @@ class ProfileViewModel
 
         private fun handleDeleteAccount() {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.DeleteAccountError) {
-                withdrawUseCase().withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                withdrawUseCase()
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
 
                 val sideEffect = ProfileContract.Effect.NavigateToAuth
                 setEffect { sideEffect }
@@ -137,9 +143,10 @@ class ProfileViewModel
 
         private fun handleChangeNickName(text: String) {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeNicknameError) {
-                updateNicknameUseCase(nickname = text).withLoading { isModifying ->
-                    setState { copy(isModifying = isModifying) }
-                }.firstOrNull()
+                updateNicknameUseCase(nickname = text)
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
 
                 setState { copy(isEditing = false) }
             }
@@ -147,7 +154,11 @@ class ProfileViewModel
 
         private fun handleChangeProfileImage(uri: Uri) {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImgError) {
-                // TODO("형선이형 브랜치에서 사용되는 S3 이미지 업로드 UseCase 결함 예정")
+                val userId: Long = uiModel.value.id
+                updateProfileImageUseCase(userId = userId, url = uri.toString())
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
             }
         }
 
@@ -168,6 +179,10 @@ class ProfileViewModel
                         ProfileContract.Effect.ShowInvalidNicknameErrorMessage
                     }
 
+                    is UnsupportedFileTypeException -> {
+                        ProfileContract.Effect.ShowUnsupportedFileTypeErrorMessage
+                    }
+
                     else -> {
                         val message: String = e.message ?: return
                         ProfileContract.Effect.ShowErrorMessage(message)
@@ -181,9 +196,10 @@ class ProfileViewModel
         }
 
         private fun <T> Flow<T>.init() =
-            uiState.distinctUntilChangedBy { uiState: ProfileContract.State ->
-                uiState.isInitial
-            }.filter { uiState: ProfileContract.State ->
-                uiState.isInitial
-            }
+            uiState
+                .distinctUntilChangedBy { uiState: ProfileContract.State ->
+                    uiState.isInitial
+                }.filter { uiState: ProfileContract.State ->
+                    uiState.isInitial
+                }
     }
