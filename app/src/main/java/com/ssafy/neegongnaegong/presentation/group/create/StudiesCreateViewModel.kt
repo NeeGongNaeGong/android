@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.group.create
 
-import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.model.file.UploadPathType
 import com.ssafy.neegongnaegong.domain.model.studies.Category
@@ -65,7 +64,6 @@ class StudiesCreateViewModel
                 is StudiesCreateContract.Event.OnProfileImgChanged -> setStudyInfo(profileImg = event.profileImg)
                 is StudiesCreateContract.Event.OnSelectedImage ->
                     issuePresignedUrl(
-                        event.imageUri,
                         event.extension,
                     )
 
@@ -85,10 +83,7 @@ class StudiesCreateViewModel
             }
         }
 
-        private fun issuePresignedUrl(
-            imageUri: Uri,
-            extension: String?,
-        ) {
+        private fun issuePresignedUrl(extension: String?) {
             if (extension == null) {
                 return
             }
@@ -173,26 +168,16 @@ class StudiesCreateViewModel
 
         private fun validateCreateStudies() {
             if (uiState.value.studyInfo.name
-                    .isBlank()
+                    .isBlank() ||
+                uiState.value.studyInfo.description
+                    .isBlank() ||
+                uiState.value.selectedCategory == null ||
+                uiState.value.selectedTags.isEmpty()
             ) {
                 setState { copy(validateCreateStudies = false) }
-                return
+            } else {
+                setState { copy(validateCreateStudies = true) }
             }
-            if (uiState.value.studyInfo.description
-                    .isBlank()
-            ) {
-                setState { copy(validateCreateStudies = false) }
-                return
-            }
-            if (uiState.value.selectedCategory == null) {
-                setState { copy(validateCreateStudies = false) }
-                return
-            }
-            if (uiState.value.selectedTags.isEmpty()) {
-                setState { copy(validateCreateStudies = false) }
-                return
-            }
-            setState { copy(validateCreateStudies = true) }
         }
 
         private fun createStudies() =
