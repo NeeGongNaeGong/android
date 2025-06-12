@@ -118,12 +118,12 @@ class StudiesEditViewModel
                 }.safeCollect { result ->
                     setState { copy(presignedUrl = result.presignedUrl) }
                     setStudyInfo(profileImg = result.imageUrl)
-                    if (uiState.value.presignedUrl != null && uiState.value.requestImage != null) {
-                        uploadImageToS3UseCase(
-                            presignedUrl = uiState.value.presignedUrl!!,
-                            request = uiState.value.requestImage!!,
-                        )
-                    }
+                    val currentState = uiState.value
+                    if (currentState.presignedUrl == null || currentState.requestImage == null) return@safeCollect
+                    uploadImageToS3UseCase(
+                        presignedUrl = currentState.presignedUrl,
+                        request = currentState.requestImage,
+                    )
                 }
             }
         }
