@@ -50,6 +50,8 @@ interface ProfileContract {
 
         data object ShowDuplicatedNicknameErrorMessage : Effect()
 
+        data object ShowUnsupportedFileTypeErrorMessage : Effect()
+
         data object NavigateToInquiry : Effect()
 
         data object NavigateToNotification : Effect()

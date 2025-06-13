@@ -7,6 +7,7 @@ internal object ProfileMapper {
         hasUnReadNotification: Boolean,
         shouldShowProfileImageWarningInfo: Boolean,
     ) = ProfileUiModel(
+        id = id,
         email = email,
         nickname = nickname,
         profileImg = profileImg,

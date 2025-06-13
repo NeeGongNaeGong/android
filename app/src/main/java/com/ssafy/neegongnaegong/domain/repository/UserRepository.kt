@@ -13,7 +13,7 @@ interface UserRepository {
 
     suspend fun getUser(id: Long): Flow<User>
 
-    suspend fun updateProfileImage(profileImage: String): Flow<Unit>
+    fun updateProfileImage(profileImg: String): Flow<Unit>
 
     suspend fun updateFcmToken(fcmToken: String? = null)
 

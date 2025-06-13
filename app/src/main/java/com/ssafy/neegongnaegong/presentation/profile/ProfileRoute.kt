@@ -45,6 +45,11 @@ fun ProfileRoute(
                 SnackbarManager.showErrorMessage(message = message)
             }
 
+            ProfileContract.Effect.ShowUnsupportedFileTypeErrorMessage -> {
+                val message: String = context.getString(R.string.invalid_image)
+                SnackbarManager.showErrorMessage(message = message)
+            }
+
             ProfileContract.Effect.NavigateToNotification -> {
                 navigateToNotification()
             }

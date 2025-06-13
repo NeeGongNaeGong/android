@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.exception.DuplicateNicknameException
 import com.ssafy.neegongnaegong.domain.exception.InvalidNicknameException
+import com.ssafy.neegongnaegong.domain.exception.UnsupportedFileTypeException
 import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.usecase.user.CheckUnReadNotificationUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
@@ -11,6 +12,7 @@ import com.ssafy.neegongnaegong.domain.usecase.user.LogoutUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.SaveProfileImageWarningAcceptedAtUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.ShouldShowProfileImageWarningUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.UpdateNicknameUseCase
+import com.ssafy.neegongnaegong.domain.usecase.user.UpdateProfileImageUseCase
 import com.ssafy.neegongnaegong.domain.usecase.user.WithdrawUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -33,6 +35,7 @@ class ProfileViewModel
     constructor(
         private val getMyProfileUseCase: GetMyProfileUseCase,
         private val updateNicknameUseCase: UpdateNicknameUseCase,
+        private val updateProfileImageUseCase: UpdateProfileImageUseCase,
         private val checkUnReadNotificationUseCase: CheckUnReadNotificationUseCase,
         private val logoutUseCase: LogoutUseCase,
         private val withdrawUseCase: WithdrawUseCase,
@@ -157,7 +160,11 @@ class ProfileViewModel
 
         private fun handleChangeProfileImage(uri: Uri) {
             viewModelScope.safeLaunch(errorContext = ProfileContract.Error.ChangeProfileImgError) {
-                // TODO("형선이형 브랜치에서 사용되는 S3 이미지 업로드 UseCase 결함 예정")
+                val userId: Long = uiModel.value.id
+                updateProfileImageUseCase(userId = userId, url = uri.toString())
+                    .withLoading { isModifying ->
+                        setState { copy(isModifying = isModifying) }
+                    }.firstOrNull()
             }
         }
 
@@ -176,6 +183,10 @@ class ProfileViewModel
 
                     is InvalidNicknameException -> {
                         ProfileContract.Effect.ShowInvalidNicknameErrorMessage
+                    }
+
+                    is UnsupportedFileTypeException -> {
+                        ProfileContract.Effect.ShowUnsupportedFileTypeErrorMessage
                     }
 
                     else -> {

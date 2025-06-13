@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.data.repository.CalendarRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.CategoryRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.FileRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.LearningRecordRepositoryImpl
+import com.ssafy.neegongnaegong.data.repository.LocalFileRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.NotificationRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.S3RepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.StudiesRepositoryImpl
@@ -15,6 +16,7 @@ import com.ssafy.neegongnaegong.domain.repository.CalendarRepository
 import com.ssafy.neegongnaegong.domain.repository.CategoryRepository
 import com.ssafy.neegongnaegong.domain.repository.FileRepository
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
+import com.ssafy.neegongnaegong.domain.repository.LocalFileRepository
 import com.ssafy.neegongnaegong.domain.repository.NotificationRepository
 import com.ssafy.neegongnaegong.domain.repository.S3Repository
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
@@ -68,4 +70,8 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindNotificationRepository(notificationRepositoryImpl: NotificationRepositoryImpl): NotificationRepository
+
+    @Binds
+    @Singleton
+    fun bindLocalFileRepository(localFileRepositoryImpl: LocalFileRepositoryImpl): LocalFileRepository
 }

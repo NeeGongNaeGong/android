@@ -2,6 +2,8 @@ package com.ssafy.neegongnaegong.module.di
 
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.local.LocalFileDataSource
+import com.ssafy.neegongnaegong.data.datasource.local.LocalFileDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
@@ -83,4 +85,8 @@ internal interface DataSourceModule {
     fun bindNetworkNotificationDataSource(
         networkNotificationDataSourceImpl: NetworkNotificationDataSourceImpl,
     ): NetworkNotificationDataSource
+
+    @Singleton
+    @Binds
+    fun bindLocalFileDataSource(localFileDataSourceImpl: LocalFileDataSourceImpl): LocalFileDataSource
 }
