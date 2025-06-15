@@ -32,11 +32,14 @@ interface ProfileContract {
         ) : Event()
 
         data object CheckProfileImageWarning : Event()
+
+        object RequestFetchUnReadNotification : Event()
     }
 
     @Stable
     data class State(
         val isInitial: Boolean = true,
+        val shouldFetchUnReadNotification: Boolean = true,
         val isModifying: Boolean = false,
         val isEditing: Boolean = false,
     ) : UiState
