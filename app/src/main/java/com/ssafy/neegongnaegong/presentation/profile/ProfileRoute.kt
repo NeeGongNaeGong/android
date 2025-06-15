@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent.Builder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
@@ -72,6 +73,11 @@ fun ProfileRoute(
                 context.startActivity(intent)
             }
         }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        val event = ProfileContract.Event.RequestFetchUnReadNotification
+        viewModel.setEvent(event = event)
     }
 
     if (uiState.isInitial) {

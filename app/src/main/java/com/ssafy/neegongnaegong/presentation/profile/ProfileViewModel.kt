@@ -65,18 +65,25 @@ class ProfileViewModel
             )
         }
 
-        private val hasUnReadNotification: Flow<Boolean> by lazy {
-            uiState.init().safeFlatMapLatest(
-                errorContext = ProfileContract.Error.CantAccessUnReadNotificationInfoError,
-                transform = { checkUnReadNotificationUseCase() },
-            )
-        }
-
         private val showProfileImageWarning: Flow<Boolean> by lazy {
             uiState.init().safeFlatMapLatest(
                 errorContext = ProfileContract.Error.CantAccessShowProfileImageWarningInfoError,
                 transform = { shouldShowProfileImageWarningUseCase() },
             )
+        }
+
+        private val hasUnReadNotification: Flow<Boolean> by lazy {
+            uiState
+                .distinctUntilChangedBy { uiState: ProfileContract.State ->
+                    uiState.shouldFetchUnReadNotification
+                }.filter { uiState: ProfileContract.State ->
+                    uiState.shouldFetchUnReadNotification
+                }.safeFlatMapLatest(
+                    errorContext = ProfileContract.Error.CantAccessUnReadNotificationInfoError,
+                    transform = { checkUnReadNotificationUseCase() },
+                ).onEach {
+                    setState { copy(shouldFetchUnReadNotification = false) }
+                }
         }
 
         override fun createInitialState(): ProfileContract.State = ProfileContract.State()
@@ -93,7 +100,12 @@ class ProfileViewModel
                 is ProfileContract.Event.ChangeNickName -> handleChangeNickName(event.text)
                 is ProfileContract.Event.ChangeImage -> handleChangeProfileImage(event.uri)
                 ProfileContract.Event.CheckProfileImageWarning -> handleCheckProfileImageWarning()
+                ProfileContract.Event.RequestFetchUnReadNotification -> handleFetchUnReadNotification()
             }
+
+        private fun handleFetchUnReadNotification() {
+            setState { copy(shouldFetchUnReadNotification = true) }
+        }
 
         private fun handleNotification() {
             val sideEffect = ProfileContract.Effect.NavigateToNotification
