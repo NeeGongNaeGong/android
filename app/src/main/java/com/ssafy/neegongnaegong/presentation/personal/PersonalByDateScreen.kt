@@ -60,6 +60,7 @@ fun PersonalByDateScreen(
                         MaterialTheme.typography.bodyMedium.copy(
                             fontSize = 16.sp,
                             textAlign = TextAlign.Center,
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         ),
                 )
             }
