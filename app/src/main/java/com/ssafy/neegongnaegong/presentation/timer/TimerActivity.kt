@@ -14,7 +14,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -65,28 +64,15 @@ class TimerActivity : ComponentActivity() {
                 val backgroundColor = NeeGongNaeGongTheme.colorScheme.background.toArgb()
                 val isDarkTheme = isSystemInDarkTheme()
 
-                SideEffect {
-                    enableEdgeToEdge(
-                        statusBarStyle =
-                            if (isDarkTheme) {
-                                SystemBarStyle.dark(scrim = backgroundColor)
-                            } else {
-                                SystemBarStyle.light(
-                                    scrim = backgroundColor,
-                                    darkScrim = backgroundColor,
-                                )
-                            },
-                        navigationBarStyle =
-                            if (isDarkTheme) {
-                                SystemBarStyle.dark(scrim = backgroundColor)
-                            } else {
-                                SystemBarStyle.light(
-                                    scrim = backgroundColor,
-                                    darkScrim = backgroundColor,
-                                )
-                            },
-                    )
-                }
+                enableEdgeToEdge(
+                    statusBarStyle =
+                        if (isDarkTheme) {
+                            SystemBarStyle.dark(scrim = backgroundColor)
+                        } else {
+                            SystemBarStyle.light(scrim = backgroundColor, darkScrim = backgroundColor)
+                        },
+                    navigationBarStyle = SystemBarStyle.dark(scrim = backgroundColor),
+                )
 
                 Scaffold(snackbarHost = { NeeGongNaeGongSnackbarHost() }) { innerPadding ->
 

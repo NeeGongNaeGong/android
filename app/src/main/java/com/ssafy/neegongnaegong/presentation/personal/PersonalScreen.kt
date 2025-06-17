@@ -41,9 +41,12 @@ import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDateP
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun PersonalRoute(
@@ -163,6 +166,7 @@ fun PersonalContent(
         onLoadMore = onLoadMore,
         hasTagDataNext = uiState.hasTagDataNext,
         hasDateDataNext = uiState.hasDateDataNext,
+        studiedDates = uiState.studiedDates
     )
 
     if (uiState.isLoading) {
@@ -188,6 +192,8 @@ fun PersonalScreen(
     onLoadMore: () -> Unit,
     hasTagDataNext: Boolean,
     hasDateDataNext: Boolean,
+    // study point
+    studiedDates: ImmutableSet<LocalDate>
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -278,6 +284,7 @@ fun PersonalScreen(
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
                         hasDateDataNext = hasDateDataNext,
+                        studiedDates = studiedDates,
                     )
                 }
             }
@@ -303,6 +310,7 @@ fun PersonalScreenPreview() {
             onLoadMore = {},
             hasTagDataNext = false,
             hasDateDataNext = false,
+            studiedDates = persistentSetOf()
         )
     }
 }

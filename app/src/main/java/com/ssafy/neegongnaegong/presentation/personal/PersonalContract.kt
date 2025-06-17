@@ -5,6 +5,10 @@ import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
+import java.time.LocalDate
 
 class PersonalContract {
     sealed class Event : UiEvent {
@@ -63,6 +67,7 @@ class PersonalContract {
         // calendar
         val selectedDate: String = "",
         val selectedRecordsByDate: List<LearningRecord> = emptyList(),
+        val studiedDates: ImmutableSet<LocalDate> = persistentSetOf(),
         // api
         val isLoading: Boolean = false,
         // api tag

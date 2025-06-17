@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +23,9 @@ import com.ssafy.neegongnaegong.presentation.component.picker.date.DatePickerSta
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
 import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
+import java.time.LocalDate
 
 @Composable
 fun PersonalByDateScreen(
@@ -34,14 +38,17 @@ fun PersonalByDateScreen(
     // Paging3
     onLoadMore: () -> Unit,
     hasDateDataNext: Boolean,
+    // study point
+    studiedDates: ImmutableSet<LocalDate>,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DatePicker(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 300.dp),
             state = datePickerState,
             onDateSelected = { date ->
                 onDateSelected(date.toString())
             },
+            studiedDates = studiedDates,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -88,6 +95,7 @@ fun PersonalByDateScreenPreview() {
             navigateToEditScreen = {},
             onLoadMore = {},
             hasDateDataNext = false,
+            studiedDates = persistentSetOf(),
         )
     }
 }

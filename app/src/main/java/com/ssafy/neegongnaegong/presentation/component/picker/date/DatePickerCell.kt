@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +29,8 @@ fun DatePickerCell(
     date: LocalDate,
     isSelected: Boolean,
     onSelected: (LocalDate) -> Unit = { },
+    // study point
+    isStudied: Boolean? = null,
 ) {
     DatePickerCell(
         modifier = modifier,
@@ -38,6 +42,7 @@ fun DatePickerCell(
                 else -> date.dayOfWeek.color
             },
         onSelected = { onSelected(date) },
+        isStudied = isStudied,
     )
 }
 
@@ -48,25 +53,43 @@ fun DatePickerCell(
     isSelected: Boolean = false,
     dateColor: Color = NeeGongNaeGongTheme.colorScheme.primaryText,
     onSelected: () -> Unit = {},
+    // study point
+    isStudied: Boolean? = null,
 ) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
-        Text(
+        Box(
             modifier =
                 Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .background(
                         if (isSelected) NeeGongNaeGongTheme.colorScheme.blue else Color.Transparent,
-                    )
-                    .clickable { onSelected() }
-                    .padding(vertical = 4.dp, horizontal = 8.dp),
-            text = date.toString(),
-            style = NeeGongNaeGongTheme.typography.labelMedium,
-            color = dateColor,
-            textAlign = TextAlign.Center,
-        )
+                    ).clickable { onSelected() }
+                    .padding(vertical = 10.dp, horizontal = 6.dp),
+        ) {
+            Text(
+                text = date.toString(),
+                style = NeeGongNaeGongTheme.typography.labelMedium,
+                color = dateColor,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        isStudied?.let { isStudied ->
+            if (isStudied) {
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(top = 20.dp, bottom = 4.dp)
+                            .size(4.dp)
+                            .clip(CircleShape)
+                            .background(Color.Red),
+                )
+            }
+        }
     }
 }
 

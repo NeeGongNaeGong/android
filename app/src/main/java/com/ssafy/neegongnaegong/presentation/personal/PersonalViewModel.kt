@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordL
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -129,8 +130,15 @@ class PersonalViewModel
                         setState { copy(isLoading = it) }
                     }.safeCollect { result ->
                         setState {
+                            val studiedDates =
+                                result.content
+                                    .toDomain()
+                                    .map { it.startAt.toLocalDate() }
+                                    .toImmutableSet()
+
                             copy(
                                 selectedRecordsByDate = result.content.toDomain(),
+                                studiedDates = studiedDates,
                                 hasDateDataNext = result.hasNext,
                                 dateCursorId = result.cursorId,
                                 dateCursorCreatedAt = result.cursorCreatedAt,
@@ -178,8 +186,14 @@ class PersonalViewModel
                             val updatedList =
                                 (selectedRecordsByDate + newRecords)
                                     .distinctBy { it.id }
+                            val studiedDates =
+                                updatedList
+                                    .map { it.startAt.toLocalDate() }
+                                    .toImmutableSet()
+
                             copy(
                                 selectedRecordsByDate = updatedList,
+                                studiedDates = studiedDates,
                                 hasDateDataNext = result.hasNext,
                                 dateCursorId = result.cursorId,
                                 dateCursorCreatedAt = result.cursorCreatedAt,

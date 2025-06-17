@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.collections.immutable.ImmutableSet
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
@@ -34,6 +35,8 @@ fun DatePicker(
     minMonth: YearMonth = YearMonth.of(1900, 1),
     maxMonth: YearMonth = YearMonth.of(2100, 12),
     onDateSelected: (LocalDate) -> Unit,
+    // study point
+    studiedDates: ImmutableSet<LocalDate>? = null,
 ) {
     /**
      * pageCount는 전체 달 수
@@ -92,11 +95,14 @@ fun DatePicker(
                     selectedMonth = displayMonth,
                 ) { date ->
                     val isSelected = state.date == date
+                    val isStudied = studiedDates?.contains(date)
+
                     DatePickerCell(
                         modifier = Modifier.fillMaxWidth(),
                         date = date,
                         isSelected = isSelected,
                         onSelected = state::updateDate,
+                        isStudied = isStudied,
                     )
                 }
             }
