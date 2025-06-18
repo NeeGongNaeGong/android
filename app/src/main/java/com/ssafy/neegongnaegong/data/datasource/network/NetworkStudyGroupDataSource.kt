@@ -33,6 +33,11 @@ interface NetworkStudyGroupDataSource {
 
     fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse>
 
+    fun deleteVoteDetail(
+        studyGroupId: Long,
+        voteId: Long,
+    ): Flow<Unit>
+
     fun castVote(
         studyGroupId: Long,
         voteId: Long,

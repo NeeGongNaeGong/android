@@ -83,6 +83,14 @@ class NetworkStudyGroupDataSourceImpl
                 )
             }
 
+        override fun deleteVoteDetail(
+            studyGroupId: Long,
+            noticeId: Long,
+        ): Flow<Unit> =
+            apiFlow {
+                api.deleteVoteDetail(studyGroupId, noticeId)
+            }
+
         override fun castVote(
             studyGroupId: Long,
             voteId: Long,

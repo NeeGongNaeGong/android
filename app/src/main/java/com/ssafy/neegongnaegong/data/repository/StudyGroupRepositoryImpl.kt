@@ -81,6 +81,11 @@ class StudyGroupRepositoryImpl
         override fun getVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailInfo> =
             dataSource.getStudyGroupVoteDetail(voteId).map { it.toDomain() }.flowOn(ioDispatcher)
 
+        override fun deleteVoteDetail(
+            studyGroupId: Long,
+            voteId: Long,
+        ): Flow<Unit> = dataSource.deleteVoteDetail(studyGroupId, voteId).flowOn(ioDispatcher)
+
         override fun castVote(
             studyGroupId: Long,
             voteId: Long,

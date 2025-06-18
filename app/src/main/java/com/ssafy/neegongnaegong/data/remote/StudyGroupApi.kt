@@ -71,6 +71,12 @@ interface StudyGroupApi {
         @Path("vote-id") voteId: Long,
     ): Result<ApiResponse<StudyGroupVoteDetailResponse>>
 
+    @DELETE("$PREFIX/{study-group-id}/posts/vote/{vote-id}")
+    suspend fun deleteVoteDetail(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("vote-id") voteId: Long,
+    ): Result<ApiResponse<Unit>>
+
     @POST("$PREFIX/{study-group-id}/posts/votes/participation/{vote-id}")
     suspend fun castVote(
         @Path("study-group-id") studyGroupId: Long,
