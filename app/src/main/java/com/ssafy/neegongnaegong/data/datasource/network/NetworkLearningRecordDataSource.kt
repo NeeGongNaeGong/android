@@ -5,20 +5,25 @@ import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRec
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordDatesByMonthResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
+import java.time.YearMonth
 
 interface NetworkLearningRecordDataSource {
-    suspend fun updateLearningRecord(
+    fun updateLearningRecord(
         learningRecordId: Long,
         request: UpdateLearningRecordRequest,
     ): Flow<Unit>
 
-    suspend fun deleteLearningRecord(learningRecordId: Long): Flow<DeleteLearningRecordResponse>
+    fun deleteLearningRecord(learningRecordId: Long): Flow<DeleteLearningRecordResponse>
 
-    suspend fun getLearningRecord(learningRecordId: Long): Flow<GetLearningRecordResponse>
+    fun getLearningRecord(learningRecordId: Long): Flow<GetLearningRecordResponse>
 
-    suspend fun createLearningRecord(request: CreateLearningRecordRequest): Flow<Long>
+    fun createLearningRecord(request: CreateLearningRecordRequest): Flow<Long>
 
-    suspend fun getLearningRecordList(request: GetLearningRecordListRequest): Flow<CursorSliceResponse>
+    fun getLearningRecordList(request: GetLearningRecordListRequest): Flow<CursorSliceResponse>
+
+    fun getLearningRecordDatesByMonth(yearMonth: String): Flow<GetLearningRecordDatesByMonthResponse>
 }

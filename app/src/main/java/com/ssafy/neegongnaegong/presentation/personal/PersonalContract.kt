@@ -1,12 +1,12 @@
 package com.ssafy.neegongnaegong.presentation.personal
 
+import androidx.compose.runtime.Stable
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentSetOf
 import java.time.LocalDate
 
@@ -53,6 +53,7 @@ class PersonalContract {
         ) : Event()
     }
 
+    @Stable
     data class State(
         // Drop menu
         val isTagScreen: Boolean = true,
@@ -67,7 +68,8 @@ class PersonalContract {
         // calendar
         val selectedDate: String = "",
         val selectedRecordsByDate: List<LearningRecord> = emptyList(),
-        val studiedDates: ImmutableSet<LocalDate> = persistentSetOf(),
+        val learningDates: ImmutableSet<LocalDate> = persistentSetOf(),
+        val currentMonth: String = "",
         // api
         val isLoading: Boolean = false,
         // api tag

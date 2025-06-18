@@ -166,7 +166,7 @@ fun PersonalContent(
         onLoadMore = onLoadMore,
         hasTagDataNext = uiState.hasTagDataNext,
         hasDateDataNext = uiState.hasDateDataNext,
-        studiedDates = uiState.studiedDates
+        studiedDates = uiState.learningDates
     )
 
     if (uiState.isLoading) {

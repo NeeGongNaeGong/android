@@ -4,11 +4,15 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordDatesByMonthUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
+import com.ssafy.neegongnaegong.presentation.util.toYearMonthTriple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -18,6 +22,7 @@ class PersonalViewModel
     @Inject
     constructor(
         private val getLearningRecordListUseCase: GetLearningRecordListUseCase,
+        private val getLearningRecordDatesByMonthUseCase: GetLearningRecordDatesByMonthUseCase,
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
@@ -130,15 +135,8 @@ class PersonalViewModel
                         setState { copy(isLoading = it) }
                     }.safeCollect { result ->
                         setState {
-                            val studiedDates =
-                                result.content
-                                    .toDomain()
-                                    .map { it.startAt.toLocalDate() }
-                                    .toImmutableSet()
-
                             copy(
                                 selectedRecordsByDate = result.content.toDomain(),
-                                studiedDates = studiedDates,
                                 hasDateDataNext = result.hasNext,
                                 dateCursorId = result.cursorId,
                                 dateCursorCreatedAt = result.cursorCreatedAt,
@@ -186,14 +184,9 @@ class PersonalViewModel
                             val updatedList =
                                 (selectedRecordsByDate + newRecords)
                                     .distinctBy { it.id }
-                            val studiedDates =
-                                updatedList
-                                    .map { it.startAt.toLocalDate() }
-                                    .toImmutableSet()
 
                             copy(
                                 selectedRecordsByDate = updatedList,
-                                studiedDates = studiedDates,
                                 hasDateDataNext = result.hasNext,
                                 dateCursorId = result.cursorId,
                                 dateCursorCreatedAt = result.cursorCreatedAt,
@@ -211,6 +204,41 @@ class PersonalViewModel
             }
 
             loadLearningRecords()
+            loadLearningRecordDates()
+        }
+
+        // 매달 공부 했던 기록을 아래에 빨간점으로 표시 하기 위한 함수
+        private fun loadLearningRecordDates() {
+            viewModelScope.launch {
+                val (prevMonth, currentMonth, nextMonth) = uiState.value.selectedDate.toYearMonthTriple()
+
+                if (uiState.value.currentMonth == currentMonth) return@launch
+
+                val prevDeferred =
+                    async { getLearningRecordDatesByMonthUseCase(prevMonth).firstOrNull() }
+                val currentDeferred =
+                    async { getLearningRecordDatesByMonthUseCase(currentMonth).firstOrNull() }
+                val nextDeferred =
+                    async { getLearningRecordDatesByMonthUseCase(nextMonth).firstOrNull() }
+
+                val prevDates = prevDeferred.await()
+                val currentDates = currentDeferred.await()
+                val nextDates = nextDeferred.await()
+
+                val combinedDates: Set<LocalDate> =
+                    buildSet {
+                        prevDates?.let { addAll(it) }
+                        currentDates?.let { addAll(it) }
+                        nextDates?.let { addAll(it) }
+                    }.toImmutableSet()
+
+                setState {
+                    copy(
+                        learningDates = combinedDates.toImmutableSet(),
+                        currentMonth = currentMonth,
+                    )
+                }
+            }
         }
 
         // tag
