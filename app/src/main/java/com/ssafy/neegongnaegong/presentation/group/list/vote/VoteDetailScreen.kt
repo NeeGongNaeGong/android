@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -202,7 +203,7 @@ private fun VoteDetailScreen(
                 modifier =
                     Modifier
                         .size(50.dp)
-                        .clip(RoundedCornerShape(10.dp)),
+                        .clip(CircleShape),
                 imageOptions =
                     ImageOptions(
                         contentScale = ContentScale.Crop,
@@ -217,7 +218,7 @@ private fun VoteDetailScreen(
                         modifier =
                             Modifier
                                 .size(100.dp)
-                                .clip(RoundedCornerShape(10.dp)),
+                                .clip(CircleShape),
                         contentScale = ContentScale.Crop,
                     )
                 },

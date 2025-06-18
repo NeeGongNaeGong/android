@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -112,7 +112,7 @@ private fun NoticeDetailScreen(
                     modifier =
                         Modifier
                             .size(50.dp)
-                            .clip(RoundedCornerShape(10.dp)),
+                            .clip(CircleShape),
                     imageOptions =
                         ImageOptions(
                             contentScale = ContentScale.Crop,
@@ -127,7 +127,7 @@ private fun NoticeDetailScreen(
                             modifier =
                                 Modifier
                                     .size(100.dp)
-                                    .clip(RoundedCornerShape(10.dp)),
+                                    .clip(CircleShape),
                             contentScale = ContentScale.Crop,
                         )
                     },
