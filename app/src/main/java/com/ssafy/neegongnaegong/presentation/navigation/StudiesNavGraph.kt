@@ -34,7 +34,7 @@ import kotlinx.serialization.json.Json
  */
 fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
     navigation<AppNavigation.Tab.Studies>(
-        startDestination = AppNavigation.Screen.Studies.Main,
+        startDestination = AppNavigation.Screen.Studies.SubTab.Main(0, 6),
     ) {
         composable<AppNavigation.Screen.Studies.Main> {
             StudiesRoute(
@@ -190,7 +190,10 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 popBackStack = navController::popBackStack,
             ) {
                 navController.navigate(
-                    AppNavigation.Screen.Studies.SubTab.Main(startTab = 0, groupId = groupId),
+                    AppNavigation.Screen.Studies.SubTab.Main(
+                        startTab = AppNavigation.Screen.Studies.SubTab.SubTabMenu.NoticeTab.index,
+                        groupId = groupId,
+                    ),
                 ) {
                     popUpTo<AppNavigation.Screen.Studies.SubTab.Main> {
                         inclusive = true
@@ -200,6 +203,8 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         }
 
         composable<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> {
+            val groupId =
+                it.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().groupId
             VoteDetailRoute(
                 backStackEntry = it,
                 viewModel = hiltViewModel(it),
@@ -209,8 +214,18 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                         AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson(title, json),
                     )
                 },
+                popBackStack = navController::popBackStack,
             ) {
-                navController.popBackStack()
+                navController.navigate(
+                    AppNavigation.Screen.Studies.SubTab.Main(
+                        startTab = AppNavigation.Screen.Studies.SubTab.SubTabMenu.VoteTab.index,
+                        groupId = groupId,
+                    ),
+                ) {
+                    popUpTo<AppNavigation.Screen.Studies.SubTab.Main> {
+                        inclusive = true
+                    }
+                }
             }
         }
 
