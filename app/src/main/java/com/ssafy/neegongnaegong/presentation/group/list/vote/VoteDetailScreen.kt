@@ -7,21 +7,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -47,6 +53,22 @@ import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToBackStack
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToSubTab
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToVotedPersonList
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.CastVote
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnCancelAddOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnChangeNewOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnClickAddOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnClickPopBackStackButton
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnClickVotedPersonList
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnConfirmAddOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnDeleteVote
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnDismissPopUp
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnEditVote
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnTogglePopup
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.SelectOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.ToggleCastMode
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.VoteOptions
 import com.ssafy.neegongnaegong.presentation.group.list.vote.component.OptionButton
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -60,21 +82,22 @@ fun VoteDetailRoute(
     viewModel: VoteDetailViewModel = hiltViewModel(backStackEntry),
     navigateToVotedPersonList: (title: String, votedMemberInfo: List<StudyGroupVoteStatusInfo.VotedMemberInfo>) -> Unit,
     popBackStack: () -> Boolean,
+    navigateToSubTab: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.effect) {
         viewModel.effect.collect {
             when (it) {
-                VoteDetailContract.Effect.NavigateToBackStack -> {
-                    popBackStack()
-                }
+                NavigateToBackStack -> popBackStack()
 
-                is VoteDetailContract.Effect.NavigateToVotedPersonList ->
+                is NavigateToVotedPersonList ->
                     navigateToVotedPersonList(
                         it.title,
                         it.votedMemberInfo,
                     )
+
+                NavigateToSubTab -> navigateToSubTab()
             }
         }
     }
@@ -87,7 +110,7 @@ fun VoteDetailRoute(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            onNavigationClick = { viewModel.setEvent(VoteDetailContract.Event.OnClickPopBackStackButton) },
+            onNavigationClick = { viewModel.setEvent(OnClickPopBackStackButton) },
         )
         VoteDetailScreen(
             userName = state.userName,
@@ -95,6 +118,7 @@ fun VoteDetailRoute(
             progressTime = state.progressTime,
             voteTitle = state.voteTitle,
             state = state.state,
+            showPopup = state.showPopup,
             selected = state.selected,
             voteOptions = state.voteOptions,
             voteItems = state.voteItems,
@@ -104,7 +128,7 @@ fun VoteDetailRoute(
             newOptionTitle = state.newOption,
             onClickOption = { optionId, optionName ->
                 viewModel.setEvent(
-                    VoteDetailContract.Event.SelectOption(
+                    SelectOption(
                         optionId,
                         optionName,
                     ),
@@ -112,7 +136,7 @@ fun VoteDetailRoute(
             },
             onClickShowPersonList = { title: String, votedMemberInfos: List<StudyGroupVoteStatusInfo.VotedMemberInfo> ->
                 viewModel.setEvent(
-                    VoteDetailContract.Event.OnClickVotedPersonList(
+                    OnClickVotedPersonList(
                         title,
                         votedMemberInfos,
                     ),
@@ -121,29 +145,34 @@ fun VoteDetailRoute(
             onCastVote = {
                 viewModel.setEvent(
                     if (state.castMode) {
-                        VoteDetailContract.Event.CastVote
+                        CastVote
                     } else {
-                        VoteDetailContract.Event.ToggleCastMode
+                        ToggleCastMode
                     },
                 )
             },
             onClickAddOption = {
-                viewModel.setEvent(VoteDetailContract.Event.OnClickAddOption)
+                viewModel.setEvent(OnClickAddOption)
             },
-            onChangeNewOption = { viewModel.setEvent(VoteDetailContract.Event.OnChangeNewOption(it)) },
-            onCancelNewOption = { viewModel.setEvent(VoteDetailContract.Event.OnCancelAddOption) },
-            onConfirmNewOption = { viewModel.setEvent(VoteDetailContract.Event.OnConfirmAddOption) },
+            onChangeNewOption = { viewModel.setEvent(OnChangeNewOption(it)) },
+            onCancelNewOption = { viewModel.setEvent(OnCancelAddOption) },
+            onConfirmNewOption = { viewModel.setEvent(OnConfirmAddOption) },
+            onClickPopup = { viewModel.setEvent(OnTogglePopup) },
+            onDismissPopup = { viewModel.setEvent(OnDismissPopUp) },
+            onClickDeleteVote = { viewModel.setEvent(OnDeleteVote) },
+            onClickEditNotice = { viewModel.setEvent(OnEditVote) },
         )
     }
 }
 
 @Composable
-fun VoteDetailScreen(
+private fun VoteDetailScreen(
     userName: String,
     userProfileImg: String,
     progressTime: String,
     voteTitle: String,
     state: Boolean,
+    showPopup: Boolean,
     selected: PersistentList<StudyGroupVoteDetailInfo.VoteValue>,
     voteOptions: PersistentList<VoteOptions>,
     voteItems: PersistentList<StudyGroupVoteStatusInfo>,
@@ -158,6 +187,10 @@ fun VoteDetailScreen(
     onChangeNewOption: (String) -> Unit,
     onCancelNewOption: () -> Unit,
     onConfirmNewOption: () -> Unit,
+    onClickPopup: () -> Unit,
+    onDismissPopup: () -> Unit,
+    onClickDeleteVote: () -> Unit,
+    onClickEditNotice: () -> Unit,
 ) {
     Column(
         modifier =
@@ -166,7 +199,10 @@ fun VoteDetailScreen(
                 .padding(horizontal = NeeGongNaeGongTheme.paddingScheme.sp2),
         verticalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp4),
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2)) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             GlideImage(
                 imageModel = { userProfileImg },
                 loading = { CircularProgressIndicator() },
@@ -227,13 +263,66 @@ fun VoteDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2),
                 ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = voteTitle,
-                        overflow = TextOverflow.Ellipsis,
-                        style = NeeGongNaeGongTheme.typography.titleLarge,
-                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    )
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(
+                            modifier = Modifier.weight(1F),
+                            text = voteTitle,
+                            overflow = TextOverflow.Ellipsis,
+                            style = NeeGongNaeGongTheme.typography.titleLarge,
+                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        )
+
+                        Box {
+                            IconButton(
+                                modifier = Modifier.wrapContentSize(),
+                                onClick = onClickPopup,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "더보기 아이콘",
+                                    tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = showPopup,
+                                onDismissRequest = onDismissPopup,
+                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                            ) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentWidth(Alignment.CenterHorizontally),
+                                            text = "삭제하기",
+                                            style = NeeGongNaeGongTheme.typography.labelMedium,
+                                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    },
+                                    contentPadding = PaddingValues(0.dp),
+                                    onClick = onClickDeleteVote,
+                                )
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentWidth(Alignment.CenterHorizontally),
+                                            text = "수정하기",
+                                            style = NeeGongNaeGongTheme.typography.labelMedium,
+                                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    },
+                                    contentPadding = PaddingValues(0.dp),
+                                    onClick = onClickEditNotice,
+                                )
+                            }
+                        }
+                    }
                     if (voteOptions.isNotEmpty()) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
@@ -401,7 +490,7 @@ fun VoteDetailScreen(
 
 @Composable
 @NeeGongNaeGongPreviews
-fun PreviewVoteDetailScreen() {
+private fun PreviewVoteDetailScreen() {
     NeeGongNaeGongTheme {
         VoteDetailScreen(
             userName = "",
@@ -409,6 +498,7 @@ fun PreviewVoteDetailScreen() {
             progressTime = "",
             voteTitle = "가능한 날",
             state = false,
+            showPopup = false,
             voteOptions = persistentListOf(VoteOptions.IS_SECRET, VoteOptions.IS_MULTIPLE),
             voteItems =
                 persistentListOf(
@@ -438,13 +528,17 @@ fun PreviewVoteDetailScreen() {
             onChangeNewOption = {},
             onCancelNewOption = {},
             onConfirmNewOption = {},
+            onClickPopup = {},
+            onClickEditNotice = {},
+            onClickDeleteVote = {},
+            onDismissPopup = {},
         )
     }
 }
 
 @Composable
 @NeeGongNaeGongPreviews
-fun PreviewVoteDetailScreenCastMode() {
+private fun PreviewVoteDetailScreenCastMode() {
     NeeGongNaeGongTheme {
         VoteDetailScreen(
             userName = "",
@@ -452,6 +546,7 @@ fun PreviewVoteDetailScreenCastMode() {
             progressTime = "",
             voteTitle = "가능한 날",
             state = true,
+            showPopup = false,
             voteOptions =
                 persistentListOf(
                     VoteOptions.IS_SECRET,
@@ -486,6 +581,10 @@ fun PreviewVoteDetailScreenCastMode() {
             onChangeNewOption = {},
             onCancelNewOption = {},
             onConfirmNewOption = {},
+            onClickPopup = {},
+            onClickEditNotice = {},
+            onClickDeleteVote = {},
+            onDismissPopup = {},
         )
     }
 }
