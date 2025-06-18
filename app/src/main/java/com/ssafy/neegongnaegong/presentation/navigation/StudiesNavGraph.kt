@@ -34,7 +34,7 @@ import kotlinx.serialization.json.Json
  */
 fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
     navigation<AppNavigation.Tab.Studies>(
-        startDestination = AppNavigation.Screen.Studies.SubTab.Main(0, 6),
+        startDestination = AppNavigation.Screen.Studies.Main,
     ) {
         composable<AppNavigation.Screen.Studies.Main> {
             StudiesRoute(
