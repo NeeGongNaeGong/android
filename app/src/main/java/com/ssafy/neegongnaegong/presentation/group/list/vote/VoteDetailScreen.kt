@@ -7,27 +7,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -53,6 +47,7 @@ import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.list.component.PopupMenu
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToBackStack
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToSubTab
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToVotedPersonList
@@ -151,16 +146,14 @@ fun VoteDetailRoute(
                     },
                 )
             },
-            onClickAddOption = {
-                viewModel.setEvent(OnClickAddOption)
-            },
+            onClickAddOption = { viewModel.setEvent(OnClickAddOption) },
             onChangeNewOption = { viewModel.setEvent(OnChangeNewOption(it)) },
             onCancelNewOption = { viewModel.setEvent(OnCancelAddOption) },
             onConfirmNewOption = { viewModel.setEvent(OnConfirmAddOption) },
             onClickPopup = { viewModel.setEvent(OnTogglePopup) },
             onDismissPopup = { viewModel.setEvent(OnDismissPopUp) },
             onClickDeleteVote = { viewModel.setEvent(OnDeleteVote) },
-            onClickEditNotice = { viewModel.setEvent(OnEditVote) },
+            onClickEditVote = { viewModel.setEvent(OnEditVote) },
         )
     }
 }
@@ -190,7 +183,7 @@ private fun VoteDetailScreen(
     onClickPopup: () -> Unit,
     onDismissPopup: () -> Unit,
     onClickDeleteVote: () -> Unit,
-    onClickEditNotice: () -> Unit,
+    onClickEditVote: () -> Unit,
 ) {
     Column(
         modifier =
@@ -271,57 +264,13 @@ private fun VoteDetailScreen(
                             style = NeeGongNaeGongTheme.typography.titleLarge,
                             color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
-
-                        Box {
-                            IconButton(
-                                modifier = Modifier.wrapContentSize(),
-                                onClick = onClickPopup,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "더보기 아이콘",
-                                    tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = showPopup,
-                                onDismissRequest = onDismissPopup,
-                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
-                            ) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            modifier =
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .wrapContentWidth(Alignment.CenterHorizontally),
-                                            text = "삭제하기",
-                                            style = NeeGongNaeGongTheme.typography.labelMedium,
-                                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    },
-                                    contentPadding = PaddingValues(0.dp),
-                                    onClick = onClickDeleteVote,
-                                )
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            modifier =
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .wrapContentWidth(Alignment.CenterHorizontally),
-                                            text = "수정하기",
-                                            style = NeeGongNaeGongTheme.typography.labelMedium,
-                                            color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    },
-                                    contentPadding = PaddingValues(0.dp),
-                                    onClick = onClickEditNotice,
-                                )
-                            }
-                        }
+                        PopupMenu(
+                            showPopup = showPopup,
+                            onClickPopup = onClickPopup,
+                            onDismissPopup = onDismissPopup,
+                            onClickDeleteMenu = onClickDeleteVote,
+                            onClickEditMenu = onClickEditVote,
+                        )
                     }
                     if (voteOptions.isNotEmpty()) {
                         Text(
@@ -529,7 +478,7 @@ private fun PreviewVoteDetailScreen() {
             onCancelNewOption = {},
             onConfirmNewOption = {},
             onClickPopup = {},
-            onClickEditNotice = {},
+            onClickEditVote = {},
             onClickDeleteVote = {},
             onDismissPopup = {},
         )
@@ -582,7 +531,7 @@ private fun PreviewVoteDetailScreenCastMode() {
             onCancelNewOption = {},
             onConfirmNewOption = {},
             onClickPopup = {},
-            onClickEditNotice = {},
+            onClickEditVote = {},
             onClickDeleteVote = {},
             onDismissPopup = {},
         )

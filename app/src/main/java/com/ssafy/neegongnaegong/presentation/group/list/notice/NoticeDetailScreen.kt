@@ -2,24 +2,14 @@ package com.ssafy.neegongnaegong.presentation.group.list.notice
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +30,7 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.list.component.PopupMenu
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Effect.NavigateToBackStack
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnClickPopBackStackButton
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnDeleteNotice
@@ -156,55 +147,13 @@ private fun NoticeDetailScreen(
                     )
                 }
             }
-            Box {
-                IconButton(
-                    modifier = Modifier.wrapContentSize(),
-                    onClick = onClickPopup,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "더보기 아이콘",
-                    )
-                }
-                DropdownMenu(
-                    expanded = showPopup,
-                    onDismissRequest = onDismissPopup,
-                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentWidth(Alignment.CenterHorizontally),
-                                text = "삭제하기",
-                                style = NeeGongNaeGongTheme.typography.labelMedium,
-                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        },
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = onClickDeleteNotice,
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentWidth(Alignment.CenterHorizontally),
-                                text = "수정하기",
-                                style = NeeGongNaeGongTheme.typography.labelMedium,
-                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        },
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = onClickEditNotice,
-                    )
-                }
-            }
+            PopupMenu(
+                showPopup = showPopup,
+                onClickPopup = onClickPopup,
+                onDismissPopup = onDismissPopup,
+                onClickDeleteMenu = onClickDeleteNotice,
+                onClickEditMenu = onClickEditNotice,
+            )
         }
         Text(
             modifier = Modifier.fillMaxSize(),
