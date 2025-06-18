@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDet
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyLogByTagResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -18,7 +19,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
 
-const val PREFIX = "/api/study-groups"
+private const val PREFIX = "/api/study-groups"
 
 interface StudyGroupApi {
     // 해당 유저의 주간 태그별 학습시간을 반환하는 함수
@@ -53,11 +54,17 @@ interface StudyGroupApi {
         @Query("size") size: Int,
     ): Result<ApiResponse<StudyGroupNoticeListBySliceResponse>>
 
-    @GET("$PREFIX/{study-group-id}/notices/{notices-id}")
+    @GET("$PREFIX/{study-group-id}/notices/{notice-id}")
     suspend fun getNoticeDetail(
         @Path("study-group-id") studyGroupId: Long,
-        @Path("notices-id") noticeId: Long,
+        @Path("notice-id") noticeId: Long,
     ): Result<ApiResponse<StudyGroupNoticeDetailResponse>>
+
+    @DELETE("$PREFIX/{study-group-id}/notices/{notice-id}")
+    suspend fun deleteNoticeDetail(
+        @Path("study-group-id") studyGroupId: Long,
+        @Path("notice-id") noticeId: Long,
+    ): Result<ApiResponse<Unit>>
 
     @GET("$PREFIX/vote/detail/{vote-id}")
     suspend fun getVoteDetail(

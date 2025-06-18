@@ -73,6 +73,11 @@ class StudyGroupRepositoryImpl
             noticeId: Long,
         ): Flow<StudyGroupNoticeDetailInfo> = dataSource.getStudyGroupNoticeDetail(studyGroupId, noticeId).map { it.toDomain() }
 
+        override fun deleteNoticeDetail(
+            studyGroupId: Long,
+            noticeId: Long,
+        ): Flow<Unit> = dataSource.deleteNoticeDetail(studyGroupId, noticeId).flowOn(ioDispatcher)
+
         override fun getVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailInfo> =
             dataSource.getStudyGroupVoteDetail(voteId).map { it.toDomain() }.flowOn(ioDispatcher)
 

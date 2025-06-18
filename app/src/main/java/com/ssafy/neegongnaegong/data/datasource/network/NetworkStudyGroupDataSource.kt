@@ -24,6 +24,11 @@ interface NetworkStudyGroupDataSource {
         noticeId: Long,
     ): Flow<StudyGroupNoticeDetailResponse>
 
+    fun deleteNoticeDetail(
+        studyGroupId: Long,
+        noticeId: Long,
+    ): Flow<Unit>
+
     suspend fun getStudyGroupNoticeList(request: StudyGroupNoticeListRequest): Flow<StudyGroupNoticeListBySliceResponse>
 
     fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse>
