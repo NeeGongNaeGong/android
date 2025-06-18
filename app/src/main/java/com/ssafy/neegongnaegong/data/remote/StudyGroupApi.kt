@@ -19,8 +19,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDateTime
 
-private const val PREFIX = "/api/study-groups"
-
 interface StudyGroupApi {
     // 해당 유저의 주간 태그별 학습시간을 반환하는 함수
     @GET("$PREFIX/{study-group-id}/members/{user-id}/weekly-study-time")
@@ -104,4 +102,8 @@ interface StudyGroupApi {
         @Path("user-id") userId: Long,
         @Query("notification-id") notificationId: Long?,
     ): Result<ApiResponse<Unit>>
+
+    companion object {
+        private const val PREFIX = "/api/study-groups"
+    }
 }
