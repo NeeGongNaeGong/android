@@ -182,11 +182,20 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         }
 
         composable<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail> {
+            val groupId =
+                it.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail>().groupId
             NoticeDetailRoute(
                 backStackEntry = it,
                 viewModel = hiltViewModel(it),
+                popBackStack = navController::popBackStack,
             ) {
-                navController.popBackStack()
+                navController.navigate(
+                    AppNavigation.Screen.Studies.SubTab.Main(startTab = 0, groupId = groupId),
+                ) {
+                    popUpTo<AppNavigation.Screen.Studies.SubTab.Main> {
+                        inclusive = true
+                    }
+                }
             }
         }
 
