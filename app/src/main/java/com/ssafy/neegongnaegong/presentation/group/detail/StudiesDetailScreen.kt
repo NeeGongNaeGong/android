@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,11 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
 import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
+import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
 import com.ssafy.neegongnaegong.presentation.group.component.detail.MedalType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
@@ -52,11 +52,13 @@ fun StudiesDetailRoute(
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(StudiesDetailContract.Event.OnLoad(studyGroupId))
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoadFeeds(studyGroupId))
     }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
         modifier = modifier,
         uiState = uiState.value,
+        onLoadFeeds = { viewModel.setEvent(StudiesDetailContract.Event.OnLoadFeeds(studyGroupId)) },
     )
 }
 
@@ -64,11 +66,15 @@ fun StudiesDetailRoute(
 private fun StudiesContent(
     modifier: Modifier = Modifier,
     uiState: StudiesDetailContract.State,
+    onLoadFeeds: () -> Unit,
 ) {
     StudiesDetailScreen(
         modifier = modifier,
         name = uiState.studies.studyInfo.name,
         members = uiState.members,
+        feeds = uiState.feeds,
+        feedsHasNext = uiState.feedsHasNext,
+        onLoadFeeds = onLoadFeeds,
         onProfileClick = {},
         profiles = listOf(),
     )
@@ -79,10 +85,13 @@ private fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
     name: String,
     members: List<StudiesMember> = emptyList(),
+    feeds: List<LearningRecord> = emptyList(),
+    feedsHasNext: Boolean = false,
+    onLoadFeeds: () -> Unit,
     onProfileClick: (Long) -> Unit = {},
     profiles: List<ProfileData> = emptyList(),
 ) {
-    val scrollState = rememberScrollState()
+//    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -104,11 +113,7 @@ private fun StudiesDetailScreen(
         )
 
         // 콘텐츠 영역
-        Column(
-            modifier =
-                Modifier
-                    .verticalScroll(scrollState),
-        ) {
+        Column(modifier = Modifier) {
             val memberProfileList: List<ProfileData> =
                 members.map { member ->
                     ProfileData(
@@ -120,7 +125,10 @@ private fun StudiesDetailScreen(
                 }
             // 프로필 아이콘 행
             ProfilesSection(modifier, memberProfileList, onProfileClick)
-            Log.d("StudiesDetailScreen", "StudiesDetailScreen: $profiles") // TODO : profile 데이터 삭제 필요
+            Log.d(
+                "StudiesDetailScreen",
+                "StudiesDetailScreen: $profiles",
+            ) // TODO : profile 데이터 삭제 필요
             Spacer(modifier = Modifier.height(12.dp))
             // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(
@@ -141,6 +149,16 @@ private fun StudiesDetailScreen(
                 onVotingClick = {},
             )
             Spacer(modifier = Modifier.height(16.dp))
+            StudyRecordList(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                learningRecords = feeds,
+                hasNext = feedsHasNext,
+                onClick = {},
+                onLoadMore = onLoadFeeds,
+            )
         }
 
         // 플로팅 액션 버튼
@@ -197,6 +215,7 @@ private fun PreviewStudiesDetailScreen() {
         StudiesDetailScreen(
             onProfileClick = {},
             name = "스터디 이름",
+            onLoadFeeds = {},
             profiles = previewProfiles,
         )
     }

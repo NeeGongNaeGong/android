@@ -2,8 +2,10 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesMembersUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -21,6 +23,7 @@ class StudiesDetailViewModel
         private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
         private val deleteStudiesUseCase: DeleteStudiesUseCase,
         private val getStudiesMembersUseCase: GetStudiesMembersUseCase,
+        private val getStudiesFeedsUseCase: GetStudiesFeedsUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -36,6 +39,7 @@ class StudiesDetailViewModel
         override fun handleEvent(event: StudiesDetailContract.Event) {
             when (event) {
                 is StudiesDetailContract.Event.OnLoad -> onLoad(event.studyGroupId)
+                is StudiesDetailContract.Event.OnLoadFeeds -> onLoadFeeds(event.studyGroupId)
                 is StudiesDetailContract.Event.OndDeleteStudies -> deleteStudies(event.studyGroupId)
             }
         }
@@ -59,6 +63,27 @@ class StudiesDetailViewModel
                         setState { copy(members = studiesMembers) }
                     }
             }
+
+        private fun onLoadFeeds(studyGroupId: Long) {
+            viewModelScope.launch {
+                getStudiesFeedsUseCase(
+                    studyGroupId = studyGroupId,
+                    cursorCreatedAt = uiState.value.feedsCursorCreatedAt,
+                    cursorId = uiState.value.feedsCursorId,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect { feed ->
+                    setState {
+                        copy(
+                            feeds = feeds + feed.content,
+                            feedsHasNext = feed.hasNext,
+                            feedsCursorCreatedAt = feed.cursorCreatedAt,
+                            feedsCursorId = feed.cursorId,
+                        )
+                    }
+                }
+            }
+        }
 
         private fun deleteStudies(studyGroupId: Long) {
             viewModelScope.launch {
