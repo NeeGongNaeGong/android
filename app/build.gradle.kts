@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
@@ -127,4 +128,7 @@ dependencies {
     // Room
     implementation(libs.androidx.room.paging)
     ksp(libs.androidx.room.compiler)
+
+    // firebase
+    implementation(libs.firebase.crashlytics)
 }
