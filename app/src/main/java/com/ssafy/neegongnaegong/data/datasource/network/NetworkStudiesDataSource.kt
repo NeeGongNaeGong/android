@@ -8,9 +8,11 @@ import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 interface NetworkStudiesDataSource {
     fun createVote(
@@ -66,4 +68,11 @@ interface NetworkStudiesDataSource {
         studyGroupId: Long,
         userId: Long,
     ): Flow<Unit>
+
+    fun getStudiesFeeds(
+        studyGroupId: Long,
+        cursorCreatedAt: LocalDateTime?,
+        cursorId: Long?,
+        size: Int,
+    ): Flow<GetStudiesFeedsResponse>
 }

@@ -9,10 +9,12 @@ import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -140,6 +142,21 @@ class NetworkStudiesDataSourceImpl
                 studiesApi.expelStudiesMember(
                     studyGroupId = studyGroupId,
                     userId = userId,
+                )
+            }
+
+        override fun getStudiesFeeds(
+            studyGroupId: Long,
+            cursorCreatedAt: LocalDateTime?,
+            cursorId: Long?,
+            size: Int,
+        ): Flow<GetStudiesFeedsResponse> =
+            apiFlow {
+                studiesApi.getStudiesFeeds(
+                    studyGroupId = studyGroupId,
+                    cursorCreatedAt = cursorCreatedAt,
+                    cursorId = cursorId,
+                    size = size,
                 )
             }
     }

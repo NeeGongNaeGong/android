@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.domain.repository
 
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesApplications
+import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesFeeds
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
@@ -8,6 +9,7 @@ import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
 import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 interface StudiesRepository {
     suspend fun getStudies(): List<Studies>
@@ -74,4 +76,11 @@ interface StudiesRepository {
         studyGroupId: Long,
         userId: Long,
     ): Flow<Unit>
+
+    fun getStudiesFeeds(
+        studyGroupId: Long,
+        cursorCreatedAt: LocalDateTime?,
+        cursorId: Long?,
+        size: Int,
+    ): Flow<CursorStudiesFeeds>
 }
