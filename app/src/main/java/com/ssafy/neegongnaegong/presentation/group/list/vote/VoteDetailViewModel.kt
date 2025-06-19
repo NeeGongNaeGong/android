@@ -6,10 +6,28 @@ import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.AddNewVoteOptionUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.CastVoteUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.DeleteVoteDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetVoteDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToBackStack
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToSubTab
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Effect.NavigateToVotedPersonList
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.CastVote
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.InvalidAccess
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnCancelAddOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnChangeNewOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnClickAddOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnClickPopBackStackButton
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnClickVotedPersonList
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnConfirmAddOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnDeleteVote
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnDismissPopUp
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnEditVote
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.OnTogglePopup
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.SelectOption
+import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.Event.ToggleCastMode
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.State
 import com.ssafy.neegongnaegong.presentation.group.list.vote.VoteDetailContract.VoteOptions
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
@@ -27,6 +45,7 @@ class VoteDetailViewModel
         getVoteDetailUseCase: GetVoteDetailUseCase,
         private val addNewVoteOptionUseCase: AddNewVoteOptionUseCase,
         private val castVoteUseCase: CastVoteUseCase,
+        private val deleteVoteDetailUseCase: DeleteVoteDetailUseCase,
     ) :
     BaseViewModel<Event, State, Effect>() {
         override fun createInitialState(): State =
@@ -43,15 +62,16 @@ class VoteDetailViewModel
                 castMode = false,
                 addOptionMode = false,
                 newOption = "",
+                showPopup = false,
             )
 
         override fun handleEvent(event: Event) {
             when (event) {
-                Event.InvalidAccess -> {
-                    setEffect { Effect.NavigateToBackStack }
+                InvalidAccess -> {
+                    setEffect { NavigateToBackStack }
                 }
 
-                is Event.SelectOption -> {
+                is SelectOption -> {
                     val selectedItem =
                         StudyGroupVoteDetailInfo.VoteValue(
                             event.voteItemId,
@@ -86,7 +106,7 @@ class VoteDetailViewModel
                     }
                 }
 
-                is Event.CastVote -> {
+                is CastVote -> {
                     viewModelScope.launch {
                         if (uiState.value.selected != uiState.value.voteValues) {
                             castVoteUseCase(
@@ -102,19 +122,19 @@ class VoteDetailViewModel
                     }
                 }
 
-                is Event.OnClickVotedPersonList -> {
-                    setEffect { Effect.NavigateToVotedPersonList(event.title, event.votedMemberInfo) }
+                is OnClickVotedPersonList -> {
+                    setEffect { NavigateToVotedPersonList(event.title, event.votedMemberInfo) }
                 }
 
-                Event.ToggleCastMode -> setState { copy(castMode = !castMode) }
+                ToggleCastMode -> setState { copy(castMode = !castMode) }
 
-                Event.OnClickAddOption -> setState { copy(addOptionMode = true) }
+                OnClickAddOption -> setState { copy(addOptionMode = true) }
 
-                is Event.OnChangeNewOption -> setState { copy(newOption = event.optionTitle) }
+                is OnChangeNewOption -> setState { copy(newOption = event.optionTitle) }
 
-                Event.OnCancelAddOption -> setState { copy(addOptionMode = false, newOption = "") }
+                OnCancelAddOption -> setState { copy(addOptionMode = false, newOption = "") }
 
-                Event.OnConfirmAddOption -> {
+                OnConfirmAddOption -> {
                     viewModelScope.launch {
                         addNewVoteOptionUseCase(
                             groupId,
@@ -126,7 +146,28 @@ class VoteDetailViewModel
                     }
                 }
 
-                Event.OnClickPopBackStackButton -> setEffect { Effect.NavigateToBackStack }
+                OnClickPopBackStackButton -> setEffect { NavigateToBackStack }
+                OnDeleteVote ->
+                    viewModelScope.launch {
+                        deleteVoteDetailUseCase(
+                            studyGroupId = groupId,
+                            voteId = voteId,
+                        ).safeCollect {
+                            showSuccessMessage("투표를 삭제했습니다!")
+                            // SubTab으로 돌아가기 전 PopUp 메뉴 숨기고 이동
+                            // setState로 처리하지 않으니 Navigation 될 때 잠깐 살아있는 현상 있었음
+                            setState { copy(showPopup = false) }
+                            setEffect { NavigateToSubTab }
+                        }
+                    }
+
+                OnDismissPopUp -> setState { copy(showPopup = false) }
+                OnEditVote -> {
+                    showWarningMessage("아직 추가되지 않은 기능이에요! 삭제를 이용해주세요")
+                    setState { copy(showPopup = false) }
+                }
+
+                OnTogglePopup -> setState { copy(showPopup = !showPopup) }
             }
         }
 

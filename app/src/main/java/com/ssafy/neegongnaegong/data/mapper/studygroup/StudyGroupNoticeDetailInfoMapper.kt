@@ -12,7 +12,6 @@ internal object StudyGroupNoticeDetailInfoMapper {
             content,
             createdAt,
             modifiedAt,
-            userProfileImage,
             writer.toDomain(),
         )
 }

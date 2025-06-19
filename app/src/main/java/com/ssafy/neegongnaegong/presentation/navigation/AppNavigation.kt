@@ -87,6 +87,11 @@ object AppNavigation {
 
             @Serializable
             sealed interface SubTab : Studies {
+                enum class SubTabMenu(val index: Int) {
+                    NoticeTab(0),
+                    VoteTab(1),
+                }
+
                 @Serializable
                 data class Main(val startTab: Int, val groupId: Long) : SubTab
 
