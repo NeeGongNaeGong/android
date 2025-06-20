@@ -136,6 +136,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 }
 
+// ./gradlew assembleRelease -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true 를 이용해서 성능 및 보고서 생성 가능
+// 최상위의 build에 생성됨
 extensions.configure<ComposeCompilerGradlePluginExtension> {
     fun Provider<String>.onlyIfTrue() = flatMap { provider { it.takeIf(String::toBoolean) } }
 
