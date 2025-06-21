@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.room)
@@ -134,6 +135,9 @@ dependencies {
     // Room
     implementation(libs.androidx.room.paging)
     ksp(libs.androidx.room.compiler)
+
+    // firebase
+    implementation(libs.firebase.crashlytics)
 }
 
 // ./gradlew assembleRelease -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true 를 이용해서 성능 및 보고서 생성 가능
