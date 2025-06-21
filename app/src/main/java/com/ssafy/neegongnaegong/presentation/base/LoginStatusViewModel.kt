@@ -2,37 +2,51 @@ package com.ssafy.neegongnaegong.presentation.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.ssafy.neegongnaegong.domain.usecase.user.GetMyProfileUseCase
 import com.ssafy.neegongnaegong.presentation.util.AuthManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginStatusViewModel @Inject constructor(
-    private val authManager: AuthManager
-) : ViewModel() {
-    data class State(val isLoading: Boolean, val isLoginSuccess: Boolean)
+class LoginStatusViewModel
+    @Inject
+    constructor(
+        private val authManager: AuthManager,
+        private val getMyProfileUseCase: GetMyProfileUseCase,
+    ) : ViewModel() {
+        data class State(val isLoading: Boolean, val isLoginSuccess: Boolean)
 
-    private val isLoading = MutableStateFlow(true)
+        private val isLoading = MutableStateFlow(true)
 
-    /**
-     * loading이 되었는지와 login이 성공했는지를 관리하는 상태
-     */
-    val state = combine(isLoading, authManager.isValid) { isLoading, isValid ->
-        State(isLoading = isLoading, isLoginSuccess = isValid)
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly,
-        State(isLoading = true, isLoginSuccess = false)
-    )
+        /**
+         * loading이 되었는지와 login이 성공했는지를 관리하는 상태
+         */
+        val state =
+            combine(isLoading, authManager.isValid) { isLoading, isValid ->
+                if (isValid) {
+                    Firebase.crashlytics.setUserId(getMyProfileUseCase().first().id.toString())
+                } else {
+                    Firebase.crashlytics.setUserId("로그인이 확인되지 않은 사용자")
+                }
 
-    init {
-        viewModelScope.launch {
-            authManager.tryAuth { isLoading.value = it }
+                State(isLoading = isLoading, isLoginSuccess = isValid)
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                State(isLoading = true, isLoginSuccess = false),
+            )
+
+        init {
+            viewModelScope.launch {
+                authManager.tryAuth { isLoading.value = it }
+            }
         }
     }
-}
