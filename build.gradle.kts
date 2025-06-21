@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.crashlytics) apply false
     alias(libs.plugins.serialization) apply false
     alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.room) apply false
     alias(libs.plugins.detekt)
 }
 

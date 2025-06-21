@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import java.util.Properties
 
 plugins {
@@ -10,6 +11,7 @@ plugins {
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.room)
     alias(libs.plugins.detekt)
 }
 
@@ -53,6 +55,11 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    room {
+        // 스키마 파일들을 저장할 디렉터리를 지정합니다.
+        // "$projectDir/schemas"는 'app/schemas' 경로를 의미하며 가장 표준적인 방식입니다.
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
@@ -131,4 +138,27 @@ dependencies {
 
     // firebase
     implementation(libs.firebase.crashlytics)
+}
+
+// ./gradlew assembleRelease -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true 를 이용해서 성능 및 보고서 생성 가능
+// 최상위의 build에 생성됨
+extensions.configure<ComposeCompilerGradlePluginExtension> {
+    fun Provider<String>.onlyIfTrue() = flatMap { provider { it.takeIf(String::toBoolean) } }
+
+    fun Provider<*>.relativeToRootProject(dir: String) =
+        map {
+            isolated.rootProject.projectDirectory
+                .dir("build")
+                .dir(projectDir.toRelativeString(rootDir))
+        }.map { it.dir(dir) }
+
+    // 만약 gradlew를 통해 enableComposeCompilerMetrics라는 옵션이 들어오거면 메트릭 정보를 수집하여 저장함
+    project.providers.gradleProperty("enableComposeCompilerMetrics").onlyIfTrue()
+        .relativeToRootProject("compose-metrics")
+        .let(metricsDestination::set)
+
+    // 만약 gradlew를 통해 enableComposeCompilerReports 옵션이 들어오거면 리컴포지션 비용 등이 있는 리포트 파일들을 생성하여 저장함
+    project.providers.gradleProperty("enableComposeCompilerReports").onlyIfTrue()
+        .relativeToRootProject("compose-reports")
+        .let(reportsDestination::set)
 }
