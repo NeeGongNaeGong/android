@@ -2,11 +2,10 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
-import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesMembersUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.StudiesContract
@@ -22,8 +21,8 @@ class StudiesDetailViewModel
     constructor(
         private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
         private val deleteStudiesUseCase: DeleteStudiesUseCase,
-        private val getStudiesMembersUseCase: GetStudiesMembersUseCase,
         private val getStudiesFeedsUseCase: GetStudiesFeedsUseCase,
+        private val getStudiesWeeklyRankingsUseCase: GetStudiesWeeklyRankingsUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -40,6 +39,7 @@ class StudiesDetailViewModel
             when (event) {
                 is StudiesDetailContract.Event.OnLoad -> onLoad(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadFeeds -> onLoadFeeds(event.studyGroupId)
+                is StudiesDetailContract.Event.OnLoadWeeklyRankings -> onLoadWeeklyRankings(event.studyGroupId)
                 is StudiesDetailContract.Event.OndDeleteStudies -> deleteStudies(event.studyGroupId)
             }
         }
@@ -55,12 +55,6 @@ class StudiesDetailViewModel
                                 studies = studies,
                             )
                         }
-                    }
-                getStudiesMembersUseCase(studyGroupId)
-                    .withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { studiesMembers ->
-                        setState { copy(members = studiesMembers) }
                     }
             }
 
@@ -79,6 +73,30 @@ class StudiesDetailViewModel
                             feedsHasNext = feed.hasNext,
                             feedsCursorCreatedAt = feed.cursorCreatedAt,
                             feedsCursorId = feed.cursorId,
+                        )
+                    }
+                }
+            }
+        }
+
+        private fun onLoadWeeklyRankings(studyGroupId: Long) {
+            if (uiState.value.weeklyRankingsHasNext.not()) return
+            viewModelScope.launch {
+                getStudiesWeeklyRankingsUseCase(
+                    studyGroupId = studyGroupId,
+                    cursorStudyTime = uiState.value.weeklyRankingsCursorStudyTime,
+                    cursorUserId = uiState.value.weeklyRankingsCursorUserId,
+                    firstPageRequestedAt = uiState.value.weeklyRankingsFirstPageRequestedAt,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect { rankings ->
+                    setState {
+                        copy(
+                            weeklyRankings = weeklyRankings + rankings.content,
+                            weeklyRankingsHasNext = rankings.hasNext,
+                            weeklyRankingsCursorStudyTime = rankings.cursorTimeSeconds,
+                            weeklyRankingsCursorUserId = rankings.cursorUserId,
+                            weeklyRankingsFirstPageRequestedAt = rankings.baseTime,
                         )
                     }
                 }
