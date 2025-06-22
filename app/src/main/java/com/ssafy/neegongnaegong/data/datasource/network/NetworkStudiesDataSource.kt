@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesLi
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -75,4 +76,12 @@ interface NetworkStudiesDataSource {
         cursorId: Long?,
         size: Int,
     ): Flow<GetStudiesFeedsResponse>
+
+    fun getStudiesWeeklyRankings(
+        studyGroupId: Long,
+        cursorStudyTime: Long?,
+        cursorUserId: Long?,
+        firstPageRequestedAt: LocalDateTime?,
+        size: Int,
+    ): Flow<GetStudiesWeeklyRankingsResponse>
 }

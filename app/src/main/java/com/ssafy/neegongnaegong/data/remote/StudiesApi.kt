@@ -9,6 +9,7 @@ import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesLi
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
@@ -123,6 +124,15 @@ interface StudiesApi {
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesFeedsResponse>>
+
+    @GET("$PREFIX/{study-group-id}/members/weekly-rankings")
+    suspend fun getStudiesWeeklyRankings(
+        @Path("study-group-id") studyGroupId: Long,
+        @Query("cursor-study-time") cursorStudyTime: Long?,
+        @Query("cursor-user-id") cursorUserId: Long?,
+        @Query("first-page-requested-at") firstPageRequestedAt: LocalDateTime?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<GetStudiesWeeklyRankingsResponse>>
 
     companion object {
         const val PREFIX = "/api/study-groups"

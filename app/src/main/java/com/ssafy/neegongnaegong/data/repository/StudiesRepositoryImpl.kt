@@ -2,10 +2,10 @@ package com.ssafy.neegongnaegong.data.repository
 
 import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
-import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesApplicationsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesFeedsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesMemberMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.studies.StudiesWeeklyRankingsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.vote.VoteMapper.toCreateRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateNoticeRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
@@ -13,9 +13,11 @@ import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplication
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesApplications
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesFeeds
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
+import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesWeeklyRankings
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
@@ -199,5 +201,22 @@ class StudiesRepositoryImpl
                     cursorId = cursorId,
                     size = size,
                 ).map { it.toDomain() }
+                .flowOn(context = ioDispatcher)
+
+        override fun getStudiesWeeklyRankings(
+            studyGroupId: Long,
+            cursorStudyTime: Long?,
+            cursorUserId: Long?,
+            firstPageRequestedAt: LocalDateTime?,
+            size: Int,
+        ): Flow<CursorStudiesWeeklyRankings> =
+            dataSource
+                .getStudiesWeeklyRankings(
+                    studyGroupId = studyGroupId,
+                    cursorStudyTime = cursorStudyTime,
+                    cursorUserId = cursorUserId,
+                    firstPageRequestedAt = firstPageRequestedAt,
+                    size = size,
+                ).map { getStudiesWeeklyRankingsResponse: GetStudiesWeeklyRankingsResponse -> getStudiesWeeklyRankingsResponse.toDomain() }
                 .flowOn(context = ioDispatcher)
     }
