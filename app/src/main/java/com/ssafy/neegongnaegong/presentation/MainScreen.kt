@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
@@ -44,6 +45,7 @@ import com.ssafy.neegongnaegong.presentation.personal.PersonalViewModel
 import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen() {
@@ -123,6 +125,7 @@ fun MainScreen() {
         LocalDrawerState provides studiesDrawerState,
     ) {
         val currentDrawerState = LocalDrawerState.current
+        val scope = rememberCoroutineScope()
         ModalNavigationDrawer(
             modifier =
                 Modifier
@@ -133,35 +136,35 @@ fun MainScreen() {
             drawerContent = {
                 Box(modifier = Modifier.fillMaxWidth(0.75f)) {
                     navBackStackEntry?.let { entry ->
-                        val isStudiesDetail =
-                            entry.destination.hierarchy.any {
-                                it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
+                        val route =
+                            if (entry.destination.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)) {
+                                entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                            } else {
+                                null
                             }
+                        val navigateAndCloseDrawer = { destination: AppNavigation.Screen.Studies ->
+                            navController.navigate(destination)
+                            scope.launch { studiesDrawerState.snapTo(DrawerValue.Closed) }
+                        }
                         StudiesDrawerContent(
                             navBackStackEntry = entry,
                             navigateTodStudiesEdit = {
-                                if (isStudiesDetail) {
-                                    val route =
-                                        entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                                    navController.navigate(
+                                route?.let { route ->
+                                    navigateAndCloseDrawer(
                                         AppNavigation.Screen.Studies.Edit(route.studyGroupId),
                                     )
                                 }
                             },
                             navigateToStudiesMembersRole = {
-                                if (isStudiesDetail) {
-                                    val route =
-                                        entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                                    navController.navigate(
+                                route?.let { route ->
+                                    navigateAndCloseDrawer(
                                         AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
                                     )
                                 }
                             },
                             navigateToStudiesApplications = {
-                                if (isStudiesDetail) {
-                                    val route =
-                                        entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                                    navController.navigate(
+                                route?.let { route ->
+                                    navigateAndCloseDrawer(
                                         AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
                                     )
                                 }
