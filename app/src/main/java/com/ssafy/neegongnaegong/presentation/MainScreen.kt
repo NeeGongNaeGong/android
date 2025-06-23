@@ -127,42 +127,41 @@ fun MainScreen() {
             gesturesEnabled = enableGestures.value,
             drawerContent = {
                 Box(modifier = Modifier.fillMaxWidth(0.75f)) {
-                    navBackStackEntry?.let { entry ->
-                        val route =
-                            if (entry.destination.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)) {
-                                entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                            } else {
-                                null
-                            }
-                        val navigateAndCloseDrawer = { destination: AppNavigation.Screen.Studies ->
-                            navController.navigate(destination)
-                            scope.launch { studiesDrawerState.snapTo(DrawerValue.Closed) }
+                    val entry = navBackStackEntry ?: return@Box
+                    val route =
+                        if (entry.destination.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)) {
+                            entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                        } else {
+                            null
                         }
-                        StudiesDrawerContent(
-                            navBackStackEntry = entry,
-                            navigateTodStudiesEdit = {
-                                route?.let { route ->
-                                    navigateAndCloseDrawer(
-                                        AppNavigation.Screen.Studies.Edit(route.studyGroupId),
-                                    )
-                                }
-                            },
-                            navigateToStudiesMembersRole = {
-                                route?.let { route ->
-                                    navigateAndCloseDrawer(
-                                        AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
-                                    )
-                                }
-                            },
-                            navigateToStudiesApplications = {
-                                route?.let { route ->
-                                    navigateAndCloseDrawer(
-                                        AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
-                                    )
-                                }
-                            },
-                        )
+                    val navigateAndCloseDrawer = { destination: AppNavigation.Screen.Studies ->
+                        navController.navigate(destination)
+                        scope.launch { studiesDrawerState.snapTo(DrawerValue.Closed) }
                     }
+                    StudiesDrawerContent(
+                        navBackStackEntry = entry,
+                        navigateTodStudiesEdit = {
+                            route?.let { route ->
+                                navigateAndCloseDrawer(
+                                    AppNavigation.Screen.Studies.Edit(route.studyGroupId),
+                                )
+                            }
+                        },
+                        navigateToStudiesMembersRole = {
+                            route?.let { route ->
+                                navigateAndCloseDrawer(
+                                    AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
+                                )
+                            }
+                        },
+                        navigateToStudiesApplications = {
+                            route?.let { route ->
+                                navigateAndCloseDrawer(
+                                    AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
+                                )
+                            }
+                        },
+                    )
                 }
             },
         ) {
