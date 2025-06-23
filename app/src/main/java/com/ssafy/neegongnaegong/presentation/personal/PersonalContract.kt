@@ -6,7 +6,9 @@ import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import java.time.LocalDate
 
@@ -59,15 +61,15 @@ class PersonalContract {
         val isTagScreen: Boolean = true,
         val isDateScreen: Boolean = false,
         // tag
-        val tags: List<Tag> = emptyList(),
-        val selectedTags: List<Tag> = emptyList(),
-        val unSelectedTags: List<Tag> = emptyList(),
+        val tags: ImmutableList<Tag> = persistentListOf(),
+        val selectedTags: ImmutableList<Tag> = persistentListOf(),
+        val unSelectedTags: ImmutableList<Tag> = persistentListOf(),
         val isConfirmButtonEnabled: Boolean = false,
         val isDialogShow: Boolean = false,
-        val selectedRecordsByTag: List<LearningRecord> = emptyList(),
+        val selectedRecordsByTag: ImmutableList<LearningRecord> = persistentListOf(),
         // calendar
         val selectedDate: String = "",
-        val selectedRecordsByDate: List<LearningRecord> = emptyList(),
+        val selectedRecordsByDate: ImmutableList<LearningRecord> = persistentListOf(),
         val learningDates: ImmutableSet<LocalDate> = persistentSetOf(),
         val currentMonth: String = "",
         // api
