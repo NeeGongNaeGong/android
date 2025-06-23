@@ -10,6 +10,8 @@ import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
 import com.ssafy.neegongnaegong.presentation.util.toYearMonthTriple
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.firstOrNull
@@ -121,7 +123,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByTag = result.content.toDomain(),
+                                selectedRecordsByTag = result.content.toDomain().toImmutableList(),
                                 hasTagDataNext = result.hasNext,
                                 tagCursorId = result.cursorId,
                                 tagCursorCreatedAt = result.cursorCreatedAt,
@@ -136,7 +138,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByDate = result.content.toDomain(),
+                                selectedRecordsByDate = result.content.toDomain().toImmutableList(),
                                 hasDateDataNext = result.hasNext,
                                 dateCursorId = result.cursorId,
                                 dateCursorCreatedAt = result.cursorCreatedAt,
@@ -164,6 +166,7 @@ class PersonalViewModel
                             val updatedList =
                                 (selectedRecordsByTag + newRecords)
                                     .distinctBy { it.id }
+                                    .toImmutableList()
 
                             copy(
                                 selectedRecordsByTag = updatedList,
@@ -184,6 +187,7 @@ class PersonalViewModel
                             val updatedList =
                                 (selectedRecordsByDate + newRecords)
                                     .distinctBy { it.id }
+                                    .toImmutableList()
 
                             copy(
                                 selectedRecordsByDate = updatedList,
@@ -258,27 +262,27 @@ class PersonalViewModel
 
             setState {
                 copy(
-                    tags = merged.toList(),
-                    selectedTags = emptyList(),
-                    unSelectedTags = emptyList(),
+                    tags = merged.toImmutableList(),
+                    selectedTags = persistentListOf(),
+                    unSelectedTags = persistentListOf(),
                 )
             }
         }
 
-        private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
+        private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = persistentListOf()) }
 
-        private fun clearDialogTags() = setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
+        private fun clearDialogTags() = setState { copy(selectedTags = persistentListOf(), unSelectedTags = persistentListOf()) }
 
         private fun deleteTag(tag: Tag) {
             val newTags = uiState.value.tags - tag
-            setState { copy(tags = newTags) }
+            setState { copy(tags = newTags.toImmutableList()) }
         }
 
         private fun selectTag(tag: Tag) {
             setState {
                 copy(
-                    selectedTags = uiState.value.selectedTags + tag,
-                    unSelectedTags = uiState.value.unSelectedTags - tag,
+                    selectedTags = (uiState.value.selectedTags + tag).toImmutableList(),
+                    unSelectedTags = (uiState.value.unSelectedTags - tag).toImmutableList(),
                 )
             }
         }
@@ -286,15 +290,15 @@ class PersonalViewModel
         private fun deselectTag(tag: Tag) {
             setState {
                 copy(
-                    selectedTags = uiState.value.selectedTags - tag,
-                    unSelectedTags = uiState.value.unSelectedTags + tag,
+                    selectedTags = (uiState.value.selectedTags - tag).toImmutableList(),
+                    unSelectedTags = (uiState.value.unSelectedTags + tag).toImmutableList(),
                 )
             }
         }
 
         private fun updateDialogTagsWithKmp(query: String) {
             if (query.isBlank()) {
-                setState { copy(unSelectedTags = emptyList()) }
+                setState { copy(unSelectedTags = persistentListOf()) }
                 return
             }
 
@@ -319,6 +323,7 @@ class PersonalViewModel
                     addAll(startsWithList)
                     addAll(kmpList.filterNot { it in startsWithList })
                 }.take(10)
+                    .toImmutableList()
 
             setState { copy(unSelectedTags = merged) }
         }
