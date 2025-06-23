@@ -16,6 +16,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +32,7 @@ fun UserSearchTextField(
     TextField(
         modifier =
             modifier
+                .scale(0.9f)
                 .clip(RoundedCornerShape(10.dp)),
         value = content,
         onValueChange = onContentChanged,

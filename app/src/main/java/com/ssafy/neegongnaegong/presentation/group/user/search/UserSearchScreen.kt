@@ -133,7 +133,7 @@ fun UserSearchScreen(
             IconButton(
                 modifier =
                     Modifier
-                        .padding(start = 6.dp, end = 6.dp)
+                        .padding(start = 12.dp)
                         .size(24.dp),
                 onClick = popBackStack,
             ) {
@@ -147,8 +147,7 @@ fun UserSearchScreen(
             UserSearchTextField(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .padding(end = 12.dp),
+                        .fillMaxWidth(),
                 content = query,
                 onContentChanged = onTypeSearch,
             )
