@@ -17,8 +17,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +32,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
 import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawerContent
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
@@ -42,7 +43,6 @@ import com.ssafy.neegongnaegong.presentation.personal.PersonalViewModel
 import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 
 @Composable
 fun MainScreen() {
@@ -97,7 +97,6 @@ fun MainScreen() {
             !isAuthTab && !isEditScreen && !isNotificationScreen
         } != false
 
-    val isStudiesDrawerOpen by StudiesDrawerController.isOpen.collectAsState()
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val context = LocalContext.current
@@ -108,19 +107,11 @@ fun MainScreen() {
         }
     }
 
-    LaunchedEffect(isStudiesDrawerOpen) {
-        if (isStudiesDrawerOpen) {
+    LaunchedEffect(studiesDrawerState.currentValue) {
+        if (studiesDrawerState.isOpen) {
             studiesDrawerState.open()
         } else {
             studiesDrawerState.close()
-        }
-    }
-
-    LaunchedEffect(studiesDrawerState.currentValue) {
-        if (studiesDrawerState.isOpen) {
-            StudiesDrawerController.open()
-        } else {
-            StudiesDrawerController.close()
         }
     }
 
@@ -133,75 +124,83 @@ fun MainScreen() {
         } == true
     }
 
-    ModalNavigationDrawer(
-        modifier =
-            Modifier
-                .background(color = NeeGongNaeGongTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.systemBars),
-        drawerState = studiesDrawerState,
-        gesturesEnabled = enableGestures.value,
-        drawerContent = {
-            navBackStackEntry?.let { entry ->
-                val isStudiesDetail =
-                    entry.destination.hierarchy.any {
-                        it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
-                    }
-                StudiesDrawerContent(
-                    navBackStackEntry = entry,
-                    navigateTodStudiesEdit = {
-                        if (isStudiesDetail) {
-                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                            navController.navigate(
-                                AppNavigation.Screen.Studies.Edit(route.studyGroupId),
-                            )
-                        }
-                    },
-                    navigateToStudiesMembersRole = {
-                        if (isStudiesDetail) {
-                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                            navController.navigate(
-                                AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
-                            )
-                        }
-                    },
-                    navigateToStudiesApplications = {
-                        if (isStudiesDetail) {
-                            val route = entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                            navController.navigate(
-                                AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
-                            )
-                        }
-                    },
-                )
-            }
-        },
+    CompositionLocalProvider(
+        LocalDrawerState provides studiesDrawerState,
     ) {
-        Scaffold(
-            snackbarHost = { NeeGongNaeGongSnackbarHost() },
-            bottomBar = {
-                if (showBottomNavigationBar) {
-                    BottomNavigationBar(
-                        navController = navController,
-                        onFabClick = {
-                            val intent = Intent(context, TimerActivity::class.java)
-                            resultLauncher.launch(intent)
+        val currentDrawerState = LocalDrawerState.current
+        ModalNavigationDrawer(
+            modifier =
+                Modifier
+                    .background(color = NeeGongNaeGongTheme.colorScheme.background)
+                    .windowInsetsPadding(WindowInsets.systemBars),
+            drawerState = currentDrawerState,
+            gesturesEnabled = enableGestures.value,
+            drawerContent = {
+                navBackStackEntry?.let { entry ->
+                    val isStudiesDetail =
+                        entry.destination.hierarchy.any {
+                            it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
+                        }
+                    StudiesDrawerContent(
+                        navBackStackEntry = entry,
+                        navigateTodStudiesEdit = {
+                            if (isStudiesDetail) {
+                                val route =
+                                    entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                                navController.navigate(
+                                    AppNavigation.Screen.Studies.Edit(route.studyGroupId),
+                                )
+                            }
+                        },
+                        navigateToStudiesMembersRole = {
+                            if (isStudiesDetail) {
+                                val route =
+                                    entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                                navController.navigate(
+                                    AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
+                                )
+                            }
+                        },
+                        navigateToStudiesApplications = {
+                            if (isStudiesDetail) {
+                                val route =
+                                    entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                                navController.navigate(
+                                    AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
+                                )
+                            }
                         },
                     )
                 }
             },
-            containerColor = NeeGongNaeGongTheme.colorScheme.background,
-        ) { innerPadding ->
-            // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
-            // 시스템적으로 패딩을 계산할 때 여기에 사용된 Padding을 중복 사용하지 않도록 함
-            // 다른 화면의 Scaffold에서 사용된 값은 빼고서 계산해줌
-            Box(
-                modifier =
-                    Modifier
-                        .padding(innerPadding)
-                        .consumeWindowInsets(innerPadding)
-                        .background(NeeGongNaeGongTheme.colorScheme.background),
-            ) {
-                MainNavigationGraph(navController = navController)
+        ) {
+            Scaffold(
+                snackbarHost = { NeeGongNaeGongSnackbarHost() },
+                bottomBar = {
+                    if (showBottomNavigationBar) {
+                        BottomNavigationBar(
+                            navController = navController,
+                            onFabClick = {
+                                val intent = Intent(context, TimerActivity::class.java)
+                                resultLauncher.launch(intent)
+                            },
+                        )
+                    }
+                },
+                containerColor = NeeGongNaeGongTheme.colorScheme.background,
+            ) { innerPadding ->
+                // Scaffold에서 계산해서 내려준 innerPadding 값을 사용하고, 이걸 사용했다고 명시하여서, Box 하위의 Composable에서
+                // 시스템적으로 패딩을 계산할 때 여기에 사용된 Padding을 중복 사용하지 않도록 함
+                // 다른 화면의 Scaffold에서 사용된 값은 빼고서 계산해줌
+                Box(
+                    modifier =
+                        Modifier
+                            .padding(innerPadding)
+                            .consumeWindowInsets(innerPadding)
+                            .background(NeeGongNaeGongTheme.colorScheme.background),
+                ) {
+                    MainNavigationGraph(navController = navController)
+                }
             }
         }
     }
