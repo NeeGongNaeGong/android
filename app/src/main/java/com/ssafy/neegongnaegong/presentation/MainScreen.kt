@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -100,12 +101,6 @@ fun MainScreen() {
     val studiesDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val context = LocalContext.current
-    LaunchedEffect(navBackStackEntry) {
-        // TODO : 드로어 상태 관리 임시 처리 -> 애니메이션 없이 닫기
-        if (navBackStackEntry != null) {
-            studiesDrawerState.snapTo(DrawerValue.Closed)
-        }
-    }
 
     LaunchedEffect(studiesDrawerState.currentValue) {
         if (studiesDrawerState.isOpen) {
@@ -136,41 +131,43 @@ fun MainScreen() {
             drawerState = currentDrawerState,
             gesturesEnabled = enableGestures.value,
             drawerContent = {
-                navBackStackEntry?.let { entry ->
-                    val isStudiesDetail =
-                        entry.destination.hierarchy.any {
-                            it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
-                        }
-                    StudiesDrawerContent(
-                        navBackStackEntry = entry,
-                        navigateTodStudiesEdit = {
-                            if (isStudiesDetail) {
-                                val route =
-                                    entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                                navController.navigate(
-                                    AppNavigation.Screen.Studies.Edit(route.studyGroupId),
-                                )
+                Box(modifier = Modifier.fillMaxWidth(0.75f)) {
+                    navBackStackEntry?.let { entry ->
+                        val isStudiesDetail =
+                            entry.destination.hierarchy.any {
+                                it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
                             }
-                        },
-                        navigateToStudiesMembersRole = {
-                            if (isStudiesDetail) {
-                                val route =
-                                    entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                                navController.navigate(
-                                    AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
-                                )
-                            }
-                        },
-                        navigateToStudiesApplications = {
-                            if (isStudiesDetail) {
-                                val route =
-                                    entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
-                                navController.navigate(
-                                    AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
-                                )
-                            }
-                        },
-                    )
+                        StudiesDrawerContent(
+                            navBackStackEntry = entry,
+                            navigateTodStudiesEdit = {
+                                if (isStudiesDetail) {
+                                    val route =
+                                        entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                                    navController.navigate(
+                                        AppNavigation.Screen.Studies.Edit(route.studyGroupId),
+                                    )
+                                }
+                            },
+                            navigateToStudiesMembersRole = {
+                                if (isStudiesDetail) {
+                                    val route =
+                                        entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                                    navController.navigate(
+                                        AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
+                                    )
+                                }
+                            },
+                            navigateToStudiesApplications = {
+                                if (isStudiesDetail) {
+                                    val route =
+                                        entry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
+                                    navController.navigate(
+                                        AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
+                                    )
+                                }
+                            },
+                        )
+                    }
                 }
             },
         ) {
