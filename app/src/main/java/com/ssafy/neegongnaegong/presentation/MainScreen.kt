@@ -104,14 +104,6 @@ fun MainScreen() {
 
     val context = LocalContext.current
 
-    LaunchedEffect(studiesDrawerState.currentValue) {
-        if (studiesDrawerState.isOpen) {
-            studiesDrawerState.open()
-        } else {
-            studiesDrawerState.close()
-        }
-    }
-
     val currentTabRoute = currentDestination?.route
     val enableGestures = remember { mutableStateOf(false) }
 
