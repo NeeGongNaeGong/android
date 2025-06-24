@@ -127,8 +127,7 @@ fun UserSearchScreen(
         Row(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                    .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Spacer(modifier = Modifier.width(4.dp))
