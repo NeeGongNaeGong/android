@@ -10,7 +10,6 @@ object UserUiModelMapper {
             id = id,
             nickname = nickname,
             profileImg = profileImg,
-            email = email,
         )
 
     fun PagingData<User>.toUiModel() = map { it.toUiModel() }

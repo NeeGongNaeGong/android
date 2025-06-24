@@ -125,7 +125,10 @@ fun UserSearchScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Spacer(modifier = Modifier.width(4.dp))
@@ -176,7 +179,7 @@ fun UserSearchScreen(
 @Composable
 fun UserSearchScreenPreview() {
     val fakeModel =
-        UserUiModel(1, "John Doe", "john.doe@example.com", "https://example.com/avatar.jpg")
+        UserUiModel(1, "John Doe", "john.doe@example.com")
     val fakeList = List(10) { fakeModel }
     val fakeFlow = flowOf(PagingData.from(fakeList)).collectAsLazyPagingItems()
 

@@ -84,7 +84,6 @@ fun UserItemPreview() {
                 UserUiModel(
                     id = 1,
                     nickname = "닉네임",
-                    email = "이메일",
                     profileImg = "",
                 ),
             onReportClick = {},
