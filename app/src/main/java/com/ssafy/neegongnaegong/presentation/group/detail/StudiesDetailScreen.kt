@@ -17,13 +17,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
-<<<<<<< feat/#123-studies-detail-api
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
-=======
-import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
-import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
->>>>>>> develop
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
@@ -32,13 +27,9 @@ import com.ssafy.neegongnaegong.presentation.group.component.detail.section.Noti
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-<<<<<<< feat/#123-studies-detail-api
-import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
-=======
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
->>>>>>> develop
 
 @Composable
 fun StudiesDetailRoute(
@@ -113,12 +104,8 @@ private fun StudiesDetailScreen(
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
 ) {
-<<<<<<< feat/#123-studies-detail-api
-=======
-    val scrollState = rememberScrollState()
     val currentDrawerState = LocalDrawerState.current
     val scope = rememberCoroutineScope()
->>>>>>> develop
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -143,7 +130,6 @@ private fun StudiesDetailScreen(
         // 콘텐츠 영역
         Column(modifier = Modifier) {
             // 프로필 아이콘 행
-<<<<<<< feat/#123-studies-detail-api
             ProfilesSection(
                 modifier = modifier,
                 weeklyRankings = weeklyRankings,
@@ -151,13 +137,7 @@ private fun StudiesDetailScreen(
                 onLoadMore = onLoadWeeklyRankings,
                 onProfileClick = onProfileClick,
             )
-=======
-            ProfilesSection(modifier, memberProfileList, onProfileClick)
-            Log.d(
-                "StudiesDetailScreen",
-                "StudiesDetailScreen: $profiles",
-            ) // TODO : profile 데이터 삭제 필요
->>>>>>> develop
+
             Spacer(modifier = Modifier.height(12.dp))
             // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(
