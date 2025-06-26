@@ -7,7 +7,9 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
@@ -18,6 +20,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.time.LocalDateTime
 
 interface StudiesApi {
     @GET("/studies")
@@ -113,6 +116,23 @@ interface StudiesApi {
         @Path("study-group-id") studyGroupId: Long,
         @Path("user-id") userId: Long,
     ): Result<ApiResponse<Unit>>
+
+    @GET("$PREFIX/{study-group-id}/feeds")
+    suspend fun getStudiesFeeds(
+        @Path("study-group-id") studyGroupId: Long,
+        @Query("cursor-created-at") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-id") cursorId: Long?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<GetStudiesFeedsResponse>>
+
+    @GET("$PREFIX/{study-group-id}/members/weekly-rankings")
+    suspend fun getStudiesWeeklyRankings(
+        @Path("study-group-id") studyGroupId: Long,
+        @Query("cursor-study-time") cursorStudyTime: Long?,
+        @Query("cursor-user-id") cursorUserId: Long?,
+        @Query("first-page-requested-at") firstPageRequestedAt: LocalDateTime?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<GetStudiesWeeklyRankingsResponse>>
 
     companion object {
         const val PREFIX = "/api/study-groups"

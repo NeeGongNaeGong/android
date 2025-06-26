@@ -1,38 +1,44 @@
 package com.ssafy.neegongnaegong.presentation.group.detail
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
+<<<<<<< feat/#123-studies-detail-api
+import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
+=======
 import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
+>>>>>>> develop
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
+import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
-import com.ssafy.neegongnaegong.presentation.group.component.detail.MedalType
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+<<<<<<< feat/#123-studies-detail-api
+import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
+import com.ssafy.neegongnaegong.presentation.util.TimeUnit
+=======
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+>>>>>>> develop
 
 @Composable
 fun StudiesDetailRoute(
@@ -59,11 +65,19 @@ fun StudiesDetailRoute(
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(StudiesDetailContract.Event.OnLoad(studyGroupId))
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoadFeeds(studyGroupId))
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId))
     }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
         modifier = modifier,
         uiState = uiState.value,
+        onLoadFeeds = { viewModel.setEvent(StudiesDetailContract.Event.OnLoadFeeds(studyGroupId)) },
+        onLoadWeeklyRankings = {
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId),
+            )
+        },
     )
 }
 
@@ -71,13 +85,19 @@ fun StudiesDetailRoute(
 private fun StudiesContent(
     modifier: Modifier = Modifier,
     uiState: StudiesDetailContract.State,
+    onLoadFeeds: () -> Unit,
+    onLoadWeeklyRankings: () -> Unit,
 ) {
     StudiesDetailScreen(
         modifier = modifier,
         name = uiState.studies.studyInfo.name,
-        members = uiState.members,
+        feeds = uiState.feeds,
+        feedsHasNext = uiState.feedsHasNext,
+        onLoadFeeds = onLoadFeeds,
+        weeklyRankings = uiState.weeklyRankings,
+        studyGoalTime = uiState.studies.studyInfo.targetStudyTime,
         onProfileClick = {},
-        profiles = listOf(),
+        onLoadWeeklyRankings = onLoadWeeklyRankings,
     )
 }
 
@@ -85,13 +105,20 @@ private fun StudiesContent(
 private fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
     name: String,
-    members: List<StudiesMember> = emptyList(),
+    feeds: List<LearningRecord> = emptyList(),
+    feedsHasNext: Boolean = false,
+    onLoadFeeds: () -> Unit,
+    weeklyRankings: List<WeeklyRankingsMember> = emptyList(),
+    studyGoalTime: Int = (TimeUnit.HOUR.seconds * 7).toInt(),
     onProfileClick: (Long) -> Unit = {},
-    profiles: List<ProfileData> = emptyList(),
+    onLoadWeeklyRankings: () -> Unit,
 ) {
+<<<<<<< feat/#123-studies-detail-api
+=======
     val scrollState = rememberScrollState()
     val currentDrawerState = LocalDrawerState.current
     val scope = rememberCoroutineScope()
+>>>>>>> develop
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -114,26 +141,23 @@ private fun StudiesDetailScreen(
         )
 
         // 콘텐츠 영역
-        Column(
-            modifier =
-                Modifier
-                    .verticalScroll(scrollState),
-        ) {
-            val memberProfileList: List<ProfileData> =
-                members.map { member ->
-                    ProfileData(
-                        id = member.userId,
-                        imageUrl = member.profileImg,
-                        name = member.name,
-                        progress = 0.7f,
-                    )
-                }
+        Column(modifier = Modifier) {
             // 프로필 아이콘 행
+<<<<<<< feat/#123-studies-detail-api
+            ProfilesSection(
+                modifier = modifier,
+                weeklyRankings = weeklyRankings,
+                studyGoalTime = studyGoalTime,
+                onLoadMore = onLoadWeeklyRankings,
+                onProfileClick = onProfileClick,
+            )
+=======
             ProfilesSection(modifier, memberProfileList, onProfileClick)
             Log.d(
                 "StudiesDetailScreen",
                 "StudiesDetailScreen: $profiles",
             ) // TODO : profile 데이터 삭제 필요
+>>>>>>> develop
             Spacer(modifier = Modifier.height(12.dp))
             // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(
@@ -154,6 +178,16 @@ private fun StudiesDetailScreen(
                 onVotingClick = {},
             )
             Spacer(modifier = Modifier.height(16.dp))
+            StudyRecordList(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                learningRecords = feeds,
+                hasNext = feedsHasNext,
+                onClick = {},
+                onLoadMore = onLoadFeeds,
+            )
         }
 
         // 플로팅 액션 버튼
@@ -164,53 +198,12 @@ private fun StudiesDetailScreen(
 @NeeGongNaeGongPreviews
 @Composable
 private fun PreviewStudiesDetailScreen() {
-    val previewProfiles =
-        listOf(
-            ProfileData(
-                id = 1,
-                medalType = MedalType.GOLD,
-                imageUrl = "https://i.pravatar.cc/150?img=1",
-                name = "김철수",
-                progress = 0.75f,
-                ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-            ),
-            ProfileData(
-                id = 2,
-                medalType = MedalType.SILVER,
-                imageUrl = "https://i.pravatar.cc/150?img=2",
-                name = "이영희",
-                progress = 0.45f,
-                ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-            ),
-            ProfileData(
-                id = 3,
-                medalType = MedalType.BRONZE,
-                imageUrl = "https://i.pravatar.cc/150?img=3",
-                name = "박민수",
-                progress = 0.9f,
-                ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-            ),
-            ProfileData(
-                id = 4,
-                imageUrl = "https://i.pravatar.cc/150?img=4",
-                name = "정지원",
-                progress = 0.3f,
-                ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-            ),
-            ProfileData(
-                id = 5,
-                imageUrl = "https://i.pravatar.cc/150?img=5",
-                name = "최현우",
-                progress = 0.6f,
-                ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-            ),
-        )
-
     NeeGongNaeGongTheme {
         StudiesDetailScreen(
-            onProfileClick = {},
             name = "스터디 이름",
-            profiles = previewProfiles,
+            onLoadFeeds = {},
+            onProfileClick = {},
+            onLoadWeeklyRankings = {},
         )
     }
 }
