@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.repository
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toCreateRequest
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toLocalDates
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toUpdateRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
@@ -11,8 +12,11 @@ import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import javax.inject.Inject
 
 class LearningRecordRepositoryImpl
@@ -72,4 +76,10 @@ class LearningRecordRepositoryImpl
                         )
                     }
             }
+
+        override fun getLearningRecordDatesByMonth(yearMonth: String): Flow<List<LocalDate>> =
+            dataSource
+                .getLearningRecordDatesByMonth(yearMonth = yearMonth)
+                .map { it.toLocalDates() }
+                .flowOn(context = ioDispatcher)
     }

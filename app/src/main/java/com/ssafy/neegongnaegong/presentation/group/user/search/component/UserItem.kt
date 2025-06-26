@@ -1,7 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.user.search.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,13 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -73,27 +70,8 @@ fun UserItem(
                             color = NeeGongNaeGongTheme.colorScheme.primaryText,
                         ),
                 )
-                // 추후 이메일도 표시 하려면 이렇게
-//                Text(
-//                    text = user.email,
-//                    style = NeeGongNaeGongTheme.typography.bodySmall.copy(
-//                        fontSize = 16.sp,
-//                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-//                    ),
-//                )
             }
         }
-
-        // 오른쪽 끝에 고정된 신고 아이콘
-        Icon(
-            modifier =
-                Modifier
-                    .padding(end = 16.dp)
-                    .clickable(onClick = { onReportClick(user) }),
-            painter = painterResource(id = R.drawable.ic_siren),
-            contentDescription = "신고 아이콘",
-            tint = Color.Red,
-        )
     }
 }
 
@@ -106,7 +84,6 @@ fun UserItemPreview() {
                 UserUiModel(
                     id = 1,
                     nickname = "닉네임",
-                    email = "이메일",
                     profileImg = "",
                 ),
             onReportClick = {},

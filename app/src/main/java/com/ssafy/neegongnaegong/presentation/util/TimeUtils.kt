@@ -1,6 +1,8 @@
 package com.ssafy.neegongnaegong.presentation.util
 
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 /**
@@ -51,3 +53,21 @@ fun LocalDateTime.toHourMinuteString(): String {
 
     return "${hour12}시 ${minute}분"
 }
+
+
+/**
+ * 2025-06-18 같이 년,월,일로 표기된 String의 월까지만 추출
+ * ex) 2025-06-18 -> 2025-06
+ */
+fun String.toYearMonthTriple(): Triple<String, String, String> {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val date = LocalDate.parse(this, formatter)
+
+    val prevMonth = date.minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"))
+    val currentMonth = date.format(DateTimeFormatter.ofPattern("yyyy-MM"))
+    val nextMonth = date.plusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"))
+
+    return Triple(prevMonth, currentMonth, nextMonth)
+}
+
+

@@ -5,7 +5,6 @@ import androidx.compose.runtime.Stable
 @Stable
 data class UserUiModel(
     val id: Long,
-    val email: String,
     val nickname: String,
     val profileImg: String,
 ) {
@@ -13,7 +12,6 @@ data class UserUiModel(
         fun toDefault() =
             UserUiModel(
                 id = -1,
-                email = "",
                 nickname = "",
                 profileImg = "",
             )

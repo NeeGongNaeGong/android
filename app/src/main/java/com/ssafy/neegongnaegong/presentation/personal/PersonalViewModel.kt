@@ -4,10 +4,17 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordDatesByMonthUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
+import com.ssafy.neegongnaegong.presentation.util.toYearMonthTriple
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -17,6 +24,7 @@ class PersonalViewModel
     @Inject
     constructor(
         private val getLearningRecordListUseCase: GetLearningRecordListUseCase,
+        private val getLearningRecordDatesByMonthUseCase: GetLearningRecordDatesByMonthUseCase,
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
@@ -115,7 +123,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByTag = result.content.toDomain(),
+                                selectedRecordsByTag = result.content.toDomain().toImmutableList(),
                                 hasTagDataNext = result.hasNext,
                                 tagCursorId = result.cursorId,
                                 tagCursorCreatedAt = result.cursorCreatedAt,
@@ -130,7 +138,7 @@ class PersonalViewModel
                     }.safeCollect { result ->
                         setState {
                             copy(
-                                selectedRecordsByDate = result.content.toDomain(),
+                                selectedRecordsByDate = result.content.toDomain().toImmutableList(),
                                 hasDateDataNext = result.hasNext,
                                 dateCursorId = result.cursorId,
                                 dateCursorCreatedAt = result.cursorCreatedAt,
@@ -158,6 +166,7 @@ class PersonalViewModel
                             val updatedList =
                                 (selectedRecordsByTag + newRecords)
                                     .distinctBy { it.id }
+                                    .toImmutableList()
 
                             copy(
                                 selectedRecordsByTag = updatedList,
@@ -178,6 +187,8 @@ class PersonalViewModel
                             val updatedList =
                                 (selectedRecordsByDate + newRecords)
                                     .distinctBy { it.id }
+                                    .toImmutableList()
+
                             copy(
                                 selectedRecordsByDate = updatedList,
                                 hasDateDataNext = result.hasNext,
@@ -197,6 +208,41 @@ class PersonalViewModel
             }
 
             loadLearningRecords()
+            loadLearningRecordDates()
+        }
+
+        // 매달 공부 했던 기록을 아래에 빨간점으로 표시 하기 위한 함수
+        private fun loadLearningRecordDates() {
+            viewModelScope.launch {
+                val (prevMonth, currentMonth, nextMonth) = uiState.value.selectedDate.toYearMonthTriple()
+
+                if (uiState.value.currentMonth == currentMonth) return@launch
+
+                val prevDeferred =
+                    async { getLearningRecordDatesByMonthUseCase(prevMonth).firstOrNull() }
+                val currentDeferred =
+                    async { getLearningRecordDatesByMonthUseCase(currentMonth).firstOrNull() }
+                val nextDeferred =
+                    async { getLearningRecordDatesByMonthUseCase(nextMonth).firstOrNull() }
+
+                val prevDates = prevDeferred.await()
+                val currentDates = currentDeferred.await()
+                val nextDates = nextDeferred.await()
+
+                val combinedDates: Set<LocalDate> =
+                    buildSet {
+                        prevDates?.let { addAll(it) }
+                        currentDates?.let { addAll(it) }
+                        nextDates?.let { addAll(it) }
+                    }.toImmutableSet()
+
+                setState {
+                    copy(
+                        learningDates = combinedDates.toImmutableSet(),
+                        currentMonth = currentMonth,
+                    )
+                }
+            }
         }
 
         // tag
@@ -216,27 +262,27 @@ class PersonalViewModel
 
             setState {
                 copy(
-                    tags = merged.toList(),
-                    selectedTags = emptyList(),
-                    unSelectedTags = emptyList(),
+                    tags = merged.toImmutableList(),
+                    selectedTags = persistentListOf(),
+                    unSelectedTags = persistentListOf(),
                 )
             }
         }
 
-        private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = emptyList()) }
+        private fun moveFromTagsToSelectedTags() = setState { copy(selectedTags = uiState.value.tags, unSelectedTags = persistentListOf()) }
 
-        private fun clearDialogTags() = setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
+        private fun clearDialogTags() = setState { copy(selectedTags = persistentListOf(), unSelectedTags = persistentListOf()) }
 
         private fun deleteTag(tag: Tag) {
             val newTags = uiState.value.tags - tag
-            setState { copy(tags = newTags) }
+            setState { copy(tags = newTags.toImmutableList()) }
         }
 
         private fun selectTag(tag: Tag) {
             setState {
                 copy(
-                    selectedTags = uiState.value.selectedTags + tag,
-                    unSelectedTags = uiState.value.unSelectedTags - tag,
+                    selectedTags = (uiState.value.selectedTags + tag).toImmutableList(),
+                    unSelectedTags = (uiState.value.unSelectedTags - tag).toImmutableList(),
                 )
             }
         }
@@ -244,15 +290,15 @@ class PersonalViewModel
         private fun deselectTag(tag: Tag) {
             setState {
                 copy(
-                    selectedTags = uiState.value.selectedTags - tag,
-                    unSelectedTags = uiState.value.unSelectedTags + tag,
+                    selectedTags = (uiState.value.selectedTags - tag).toImmutableList(),
+                    unSelectedTags = (uiState.value.unSelectedTags + tag).toImmutableList(),
                 )
             }
         }
 
         private fun updateDialogTagsWithKmp(query: String) {
             if (query.isBlank()) {
-                setState { copy(unSelectedTags = emptyList()) }
+                setState { copy(unSelectedTags = persistentListOf()) }
                 return
             }
 
@@ -277,6 +323,7 @@ class PersonalViewModel
                     addAll(startsWithList)
                     addAll(kmpList.filterNot { it in startsWithList })
                 }.take(10)
+                    .toImmutableList()
 
             setState { copy(unSelectedTags = merged) }
         }

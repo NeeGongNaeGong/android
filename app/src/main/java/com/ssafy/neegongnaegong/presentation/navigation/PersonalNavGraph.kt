@@ -30,7 +30,10 @@ fun NavGraphBuilder.personalNavGraph(navController: NavController) {
             val route = backStackEntry.toRoute<AppNavigation.Screen.Personal.Edit>()
             StudyRecordEditRoute(
                 popBackStack = {
-                    navController.previousBackStackEntry?.savedStateHandle?.set("refreshNeeded", true)
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        "refreshNeeded",
+                        true,
+                    )
                     navController.popBackStack()
                 },
                 studyRecordId = route.studyRecordId,

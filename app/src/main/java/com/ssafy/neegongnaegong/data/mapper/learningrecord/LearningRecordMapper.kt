@@ -3,8 +3,10 @@ package com.ssafy.neegongnaegong.data.mapper.learningrecord
 import com.ssafy.neegongnaegong.data.mapper.tag.LearningRecordTagMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordDatesByMonthResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
+import java.time.LocalDate
 
 internal object LearningRecordMapper {
     fun LearningRecord.toCreateRequest() =
@@ -34,4 +36,10 @@ internal object LearningRecordMapper {
         )
 
     fun List<GetLearningRecordResponse>.toDomain() = map { it.toDomain() }
+
+    fun GetLearningRecordDatesByMonthResponse.toLocalDates(): List<LocalDate> =
+        days.mapNotNull { dateList ->
+            val (year, month, day) = dateList
+            LocalDate.of(year, month, day)
+        }
 }

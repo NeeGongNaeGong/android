@@ -10,7 +10,6 @@ internal object UserMapper {
     fun UserDetailResponse.toDomain() =
         User(
             id = id,
-            email = email,
             nickname = nickname,
             profileImg = profileImg ?: "",
         )
@@ -18,7 +17,6 @@ internal object UserMapper {
     fun UserResponse.toDomain() =
         User(
             id = id,
-            email = email,
             nickname = nickName,
             profileImg = profileImg ?: "",
         )
