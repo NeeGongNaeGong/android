@@ -5,7 +5,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
-import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Effect
 import kotlinx.collections.immutable.PersistentList
 
 class VoteDetailContract {
@@ -33,6 +33,14 @@ class VoteDetailContract {
         data object OnConfirmAddOption : Event
 
         data object OnClickPopBackStackButton : Event
+
+        data object OnDismissPopUp : Event
+
+        data object OnTogglePopup : Event
+
+        data object OnDeleteVote : Event
+
+        data object OnEditVote : Event
     }
 
     enum class VoteOptions(val option: String, val description: String) {
@@ -60,6 +68,7 @@ class VoteDetailContract {
         val castMode: Boolean,
         val addOptionMode: Boolean,
         val newOption: String,
+        val showPopup: Boolean,
     ) : UiState
 
     sealed interface Effect : UiEffect {
@@ -69,5 +78,7 @@ class VoteDetailContract {
             val title: String,
             val votedMemberInfo: List<StudyGroupVoteStatusInfo.VotedMemberInfo>,
         ) : Effect
+
+        data object NavigateToSubTab : Effect
     }
 }

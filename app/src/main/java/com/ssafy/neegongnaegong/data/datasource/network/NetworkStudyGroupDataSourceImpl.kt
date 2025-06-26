@@ -68,11 +68,27 @@ class NetworkStudyGroupDataSourceImpl
                 )
             }
 
+        override fun deleteNoticeDetail(
+            studyGroupId: Long,
+            noticeId: Long,
+        ): Flow<Unit> =
+            apiFlow {
+                api.deleteNoticeDetail(studyGroupId, noticeId)
+            }
+
         override fun getStudyGroupVoteDetail(voteId: Long): Flow<StudyGroupVoteDetailResponse> =
             apiFlow {
                 api.getVoteDetail(
                     voteId = voteId,
                 )
+            }
+
+        override fun deleteVoteDetail(
+            studyGroupId: Long,
+            noticeId: Long,
+        ): Flow<Unit> =
+            apiFlow {
+                api.deleteVoteDetail(studyGroupId, noticeId)
             }
 
         override fun castVote(
@@ -90,7 +106,11 @@ class NetworkStudyGroupDataSourceImpl
             voteItem: String,
         ): Flow<StudyGroupVoteDetailResponse> =
             apiFlow {
-                api.addNewVoteOption(studyId = studyGroupId, voteId = voteId, voteItem = VoteItemRequest(voteItem))
+                api.addNewVoteOption(
+                    studyId = studyGroupId,
+                    voteId = voteId,
+                    voteItem = VoteItemRequest(voteItem),
+                )
             }
 
         override fun approveStudyGroupJoin(

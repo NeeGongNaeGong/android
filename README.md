@@ -28,5 +28,8 @@
 ./gradlew detektStaged -PstagedFiles="app/src/main/java/com/ssafy/neegongnaegong/presentation/group/record/RecordScreen.kt"
 ```
 
-
-
+## Metrics & Report
+최상위의 build에 생성됨
+```
+./gradlew assembleRelease -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true
+```

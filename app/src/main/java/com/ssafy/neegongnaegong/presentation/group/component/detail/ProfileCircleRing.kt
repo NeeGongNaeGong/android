@@ -17,14 +17,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,20 +34,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import com.ssafy.neegongnaegong.presentation.ui.theme.Typography
 import kotlinx.coroutines.delay
-
-enum class MedalType {
-    NONE,
-    GOLD,
-    SILVER,
-    BRONZE,
-}
 
 @Composable
 fun ProfileCircleRing(
@@ -69,16 +59,11 @@ fun ProfileCircleRing(
     val imageSizeDp = (size * imageSizeRatio).dp // 이미지 크기를 전체 크기의 비율로 계산
     val isPreviewMode = LocalInspectionMode.current
 
-    // 처음 로드될 때 애니메이션 시작을 위한 상태
-    var shouldAnimate by remember { mutableStateOf(true) }
-
-    // 초기 진행률(0)과 목표 진행률 사이의 애니메이션을 위한 값
-    var startProgress by remember { mutableFloatStateOf(0f) }
-    var targetProgress by remember { mutableFloatStateOf(0f) }
+    var animate by rememberSaveable { mutableStateOf(false) }
 
     // 목표 진행률에 도달하기 위한 애니메이션 적용
     val animatedProgress by animateFloatAsState(
-        targetValue = targetProgress,
+        targetValue = if (animate) progress else 0f,
         animationSpec =
             tween(
                 durationMillis = animationDuration,
@@ -91,8 +76,9 @@ fun ProfileCircleRing(
     LaunchedEffect(Unit) {
         // 컴포넌트가 나타나면 약간 지연 후 애니메이션 시작
         delay(100) // 100ms 지연 (필요시 조정)
-        targetProgress = progress // 목표 진행률 설정
+        animate = true
     }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,13 +117,12 @@ fun ProfileCircleRing(
             }
 
             // 프로필 이미지
-            Surface(
+            Box(
                 modifier =
                     Modifier
                         .size(imageSizeDp)
                         .clip(CircleShape)
                         .clickable { onClick() },
-                shape = CircleShape,
             ) {
                 if (isPreviewMode) {
                     // 프리뷰 모드에서는 로컬 리소스 사용
@@ -197,16 +182,15 @@ fun ProfileCircleRing(
         Text(
             text = name,
             style = NeeGongNaeGongTheme.typography.labelSmall,
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
         )
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewProfileCircleRing() {
-    Box(
-        modifier = Modifier.padding(16.dp),
-    ) {
+    NeeGongNaeGongTheme {
         ProfileCircleRing(
             imageUrl = "https://example.com/image.jpg",
             name = "크롱",
@@ -217,39 +201,55 @@ fun PreviewProfileCircleRing() {
     }
 }
 
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 @Composable
 fun PreviewMultipleProfileCircleRing() {
-    Row(
-        modifier = Modifier.padding(8.dp),
-    ) {
-        ProfileCircleRing(
-            imageUrl = "https://example.com/image1.jpg",
-            name = "포비",
-            progress = 0.25f,
-            ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
-            medalType = MedalType.GOLD,
-        )
-        ProfileCircleRing(
-            imageUrl = "https://example.com/image2.jpg",
-            name = "루피",
-            progress = 0.5f,
-            ringColors = listOf(Color(0xFF4CAF50), Color(0xFF8BC34A)),
-            medalType = MedalType.SILVER,
-        )
-        ProfileCircleRing(
-            imageUrl = "https://example.com/image3.jpg",
-            name = "에디",
-            progress = 0.75f,
-            ringColors = listOf(Color(0xFF2196F3), Color(0xFF03A9F4)),
-            medalType = MedalType.BRONZE,
-        )
-        ProfileCircleRing(
-            imageUrl = "https://example.com/image4.jpg",
-            name = "뽀로로",
-            progress = 1.0f,
-            ringColors = listOf(Color(0xFF9C27B0), Color(0xFFE91E63)),
-            medalType = MedalType.NONE,
-        )
+    NeeGongNaeGongTheme {
+        Row {
+            ProfileCircleRing(
+                imageUrl = "https://example.com/image1.jpg",
+                name = "포비",
+                progress = 0.25f,
+                ringColors = listOf(Color(0xFFFF9800), Color(0xFFFF5722)),
+                medalType = MedalType.GOLD,
+            )
+            ProfileCircleRing(
+                imageUrl = "https://example.com/image2.jpg",
+                name = "루피",
+                progress = 0.5f,
+                ringColors = listOf(Color(0xFF4CAF50), Color(0xFF8BC34A)),
+                medalType = MedalType.SILVER,
+            )
+            ProfileCircleRing(
+                imageUrl = "https://example.com/image3.jpg",
+                name = "에디",
+                progress = 0.75f,
+                ringColors = listOf(Color(0xFF2196F3), Color(0xFF03A9F4)),
+                medalType = MedalType.BRONZE,
+            )
+            ProfileCircleRing(
+                imageUrl = "https://example.com/image4.jpg",
+                name = "뽀로로",
+                progress = 1.0f,
+                ringColors = listOf(Color(0xFF9C27B0), Color(0xFFE91E63)),
+                medalType = MedalType.NONE,
+            )
+        }
     }
+}
+
+enum class MedalType {
+    NONE,
+    GOLD,
+    SILVER,
+    BRONZE,
+}
+
+enum class RingColor(
+    val colors: List<Color>,
+) {
+    SPRING(listOf(Color(0xFF4CAF50), Color(0xFF8BC34A))),
+    SUMMER(listOf(Color(0xFF9C27B0), Color(0xFFE91E63))),
+    AUTUMN(listOf(Color(0xFFFF9800), Color(0xFFFF5722))),
+    WINTER(listOf(Color(0xFF2196F3), Color(0xFF03A9F4))),
 }

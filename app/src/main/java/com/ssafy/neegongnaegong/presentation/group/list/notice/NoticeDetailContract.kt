@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.presentation.group.list.notice
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
-import com.ssafy.neegongnaegong.presentation.group.vote.VoteContract.Event
 
 class NoticeDetailContract {
     sealed interface Event : UiEvent {
@@ -11,6 +10,14 @@ class NoticeDetailContract {
         data object InvalidAccess : Event
 
         data object OnClickPopBackStackButton : Event
+
+        data object OnDismissPopUp : Event
+
+        data object OnTogglePopup : Event
+
+        data object OnDeleteNotice : Event
+
+        data object OnEditNotice : Event
     }
 
     data class State(
@@ -18,9 +25,12 @@ class NoticeDetailContract {
         val writerProfileImage: String,
         val createdAt: String,
         val content: String,
+        val showPopup: Boolean,
     ) : UiState
 
     sealed interface Effect : UiEffect {
         data object NavigateToBackStack : Effect
+
+        data object NavigateToSubTab : Effect
     }
 }
