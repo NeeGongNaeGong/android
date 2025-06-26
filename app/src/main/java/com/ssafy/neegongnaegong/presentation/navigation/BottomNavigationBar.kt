@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -81,7 +82,7 @@ fun BottomNavigationBar(
                     interactionSource = NoRippleInteractionSource,
                     icon = {
                         Icon(
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(32.dp).offset(y = 4.dp),
                             painter =
                                 painterResource(
                                     id = if (selected) screen.iconSelected else screen.icon,
@@ -102,6 +103,7 @@ fun BottomNavigationBar(
                                 labelDp.toSp()
                             }
                         Text(
+                            modifier = Modifier.offset(y = (-2).dp),
                             text = stringResource(id = screen.title),
                             style =
                                 if (selected) {
