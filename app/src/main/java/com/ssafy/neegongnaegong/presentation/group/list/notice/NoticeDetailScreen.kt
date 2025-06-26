@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,7 +30,13 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.list.component.PopupMenu
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Effect.NavigateToBackStack
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnClickPopBackStackButton
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnDeleteNotice
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnDismissPopUp
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnEditNotice
+import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailContract.Event.OnTogglePopup
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -38,15 +45,16 @@ fun NoticeDetailRoute(
     backStackEntry: NavBackStackEntry,
     viewModel: NoticeDetailViewModel = hiltViewModel(backStackEntry),
     popBackStack: () -> Boolean,
+    navigateToSubTab: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel.effect) {
         viewModel.effect.collect {
             when (it) {
-                NavigateToBackStack -> {
-                    popBackStack()
-                }
+                NavigateToBackStack -> popBackStack()
+
+                NoticeDetailContract.Effect.NavigateToSubTab -> navigateToSubTab()
             }
         }
     }
@@ -60,67 +68,92 @@ fun NoticeDetailRoute(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            onNavigationClick = { viewModel.setEvent(NoticeDetailContract.Event.OnClickPopBackStackButton) },
+            onNavigationClick = { viewModel.setEvent(OnClickPopBackStackButton) },
         )
         NoticeDetailScreen(
             writer = state.writer,
             writerProfileImage = state.writerProfileImage,
             createdAt = state.createdAt,
+            showPopup = state.showPopup,
+            onClickPopup = { viewModel.setEvent(OnTogglePopup) },
+            onDismissPopup = { viewModel.setEvent(OnDismissPopUp) },
+            onClickDeleteNotice = { viewModel.setEvent(OnDeleteNotice) },
+            onClickEditNotice = { viewModel.setEvent(OnEditNotice) },
             content = state.content,
         )
     }
 }
 
 @Composable
-fun NoticeDetailScreen(
+private fun NoticeDetailScreen(
     writer: String,
     writerProfileImage: String,
     createdAt: String,
+    showPopup: Boolean,
+    onClickPopup: () -> Unit,
+    onDismissPopup: () -> Unit,
+    onClickDeleteNotice: () -> Unit,
+    onClickEditNotice: () -> Unit,
     content: String,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp3),
         modifier = Modifier.padding(NeeGongNaeGongTheme.paddingScheme.sp3),
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2)) {
-            GlideImage(
-                imageModel = { writerProfileImage },
-                loading = { CircularProgressIndicator() },
-                modifier =
-                    Modifier
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                imageOptions =
-                    ImageOptions(
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.Center,
-                    ),
-                requestOptions = { RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL) },
-                failure = {
-                    // 이미지 로드 실패 시 플레이스홀더
-                    Image(
-                        painter = painterResource(id = R.drawable.img_default_profile),
-                        contentDescription = "Profile Image",
-                        modifier =
-                            Modifier
-                                .size(100.dp)
-                                .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop,
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.weight(1F),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(NeeGongNaeGongTheme.paddingScheme.sp2),
+            ) {
+                GlideImage(
+                    imageModel = { writerProfileImage },
+                    loading = { CircularProgressIndicator() },
+                    modifier =
+                        Modifier
+                            .size(50.dp)
+                            .clip(CircleShape),
+                    imageOptions =
+                        ImageOptions(
+                            contentScale = ContentScale.Crop,
+                            alignment = Alignment.Center,
+                        ),
+                    requestOptions = { RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL) },
+                    failure = {
+                        // 이미지 로드 실패 시 플레이스홀더
+                        Image(
+                            painter = painterResource(id = R.drawable.img_default_profile),
+                            contentDescription = "Profile Image",
+                            modifier =
+                                Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape),
+                            contentScale = ContentScale.Crop,
+                        )
+                    },
+                )
+                Column(Modifier.weight(1F), verticalArrangement = Arrangement.Center) {
+                    Text(
+                        text = writer,
+                        overflow = TextOverflow.Ellipsis,
+                        style = NeeGongNaeGongTheme.typography.titleSmall,
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
-                },
-            )
-            Column(Modifier.fillMaxWidth()) {
-                Text(
-                    text = writer,
-                    style = NeeGongNaeGongTheme.typography.titleSmall,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                )
-                Text(
-                    text = createdAt,
-                    style = NeeGongNaeGongTheme.typography.labelMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                )
+                    Text(
+                        text = createdAt,
+                        overflow = TextOverflow.Ellipsis,
+                        style = NeeGongNaeGongTheme.typography.labelMedium,
+                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                    )
+                }
             }
+            PopupMenu(
+                showPopup = showPopup,
+                onClickPopup = onClickPopup,
+                onDismissPopup = onDismissPopup,
+                onClickDeleteMenu = onClickDeleteNotice,
+                onClickEditMenu = onClickEditNotice,
+            )
         }
         Text(
             modifier = Modifier.fillMaxSize(),
@@ -133,12 +166,17 @@ fun NoticeDetailScreen(
 
 @Composable
 @NeeGongNaeGongPreviews
-fun PreviewNoticeDetailScreen() {
+private fun PreviewNoticeDetailScreen() {
     NeeGongNaeGongTheme {
         NoticeDetailScreen(
             "테스트",
             "ㅈㄷㄹㅈㄷㄹ",
             "ㅈㄷㄹㅈㄷㄹ",
+            true,
+            {},
+            {},
+            {},
+            {},
             "ㅈㄷㄹㅈㄷㄹ",
         )
     }

@@ -80,7 +80,6 @@ private fun StudiesDrawer(
         modifier =
             modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.75f)
                 .background(NeeGongNaeGongTheme.colorScheme.background),
     ) {
         Box(

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,7 +17,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
+<<<<<<< feat/#123-studies-detail-api
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
+=======
+import com.ssafy.neegongnaegong.domain.model.studies.ProfileData
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
+import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
+>>>>>>> develop
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordList
@@ -25,8 +32,13 @@ import com.ssafy.neegongnaegong.presentation.group.component.detail.section.Noti
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+<<<<<<< feat/#123-studies-detail-api
 import com.ssafy.neegongnaegong.presentation.util.StudiesDrawerController
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
+=======
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+>>>>>>> develop
 
 @Composable
 fun StudiesDetailRoute(
@@ -36,12 +48,16 @@ fun StudiesDetailRoute(
     popBackStack: () -> Unit = {},
 ) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
+    val currentDrawerState = LocalDrawerState.current
+    val scope = rememberCoroutineScope()
     BackHandler {
         /* 드로어가 열려 있으면 드로어를 우선 닫음
          * 드로어가 닫혀 있으면 popBackStack 실행
          */
-        if (StudiesDrawerController.isOpen.value) {
-            StudiesDrawerController.close()
+        if (currentDrawerState.isOpen) {
+            scope.launch(Dispatchers.Main.immediate) {
+                currentDrawerState.close()
+            }
         } else {
             popBackStack()
         }
@@ -97,6 +113,12 @@ private fun StudiesDetailScreen(
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
 ) {
+<<<<<<< feat/#123-studies-detail-api
+=======
+    val scrollState = rememberScrollState()
+    val currentDrawerState = LocalDrawerState.current
+    val scope = rememberCoroutineScope()
+>>>>>>> develop
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -112,13 +134,16 @@ private fun StudiesDetailScreen(
             },
             navigationType = TopAppBarNavigationType.Menu,
             onNavigationClick = {
-                StudiesDrawerController.open()
+                scope.launch(Dispatchers.Main.immediate) {
+                    currentDrawerState.open()
+                }
             },
         )
 
         // 콘텐츠 영역
         Column(modifier = Modifier) {
             // 프로필 아이콘 행
+<<<<<<< feat/#123-studies-detail-api
             ProfilesSection(
                 modifier = modifier,
                 weeklyRankings = weeklyRankings,
@@ -126,6 +151,13 @@ private fun StudiesDetailScreen(
                 onLoadMore = onLoadWeeklyRankings,
                 onProfileClick = onProfileClick,
             )
+=======
+            ProfilesSection(modifier, memberProfileList, onProfileClick)
+            Log.d(
+                "StudiesDetailScreen",
+                "StudiesDetailScreen: $profiles",
+            ) // TODO : profile 데이터 삭제 필요
+>>>>>>> develop
             Spacer(modifier = Modifier.height(12.dp))
             // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
             NotificationsSection(

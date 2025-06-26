@@ -26,3 +26,6 @@ local.properties
 app/google-services.json
 node_modules/
 .idea/studiobot.xml
+.idea/csv-editor.xml
+app/schemas/
+

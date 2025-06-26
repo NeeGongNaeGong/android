@@ -8,6 +8,5 @@ data class StudyGroupNoticeDetailInfo(
     val content: String,
     val createdAt: LocalDateTime,
     val modifiedAt: LocalDateTime,
-    val userProfileImage: String,
     val writer: Writer,
 )
