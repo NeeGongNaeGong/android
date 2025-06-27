@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.data.repository
 import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesApplicationsMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.studies.StudiesContentsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesFeedsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesMemberMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesWeeklyRankingsMapper.toDomain
@@ -19,6 +20,7 @@ import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesFeeds
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesWeeklyRankings
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContents
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
@@ -218,5 +220,12 @@ class StudiesRepositoryImpl
                     firstPageRequestedAt = firstPageRequestedAt,
                     size = size,
                 ).map { getStudiesWeeklyRankingsResponse: GetStudiesWeeklyRankingsResponse -> getStudiesWeeklyRankingsResponse.toDomain() }
+                .flowOn(context = ioDispatcher)
+
+        override fun getStudiesLatestContents(studyGroupId: Long): Flow<StudiesLatestContents> =
+            dataSource
+                .getStudiesLatestContents(
+                    studyGroupId = studyGroupId,
+                ).map { it.toDomain() }
                 .flowOn(context = ioDispatcher)
     }

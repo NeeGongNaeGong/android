@@ -8,6 +8,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
@@ -133,6 +134,11 @@ interface StudiesApi {
         @Query("first-page-requested-at") firstPageRequestedAt: LocalDateTime?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesWeeklyRankingsResponse>>
+
+    @GET("$PREFIX/{study-group-id}/latest-notice-and-vote")
+    suspend fun getStudiesLatestContents(
+        @Path("study-group-id") studyGroupId: Long,
+    ): Result<ApiResponse<GetStudiesLatestContentResponse>>
 
     companion object {
         const val PREFIX = "/api/study-groups"
