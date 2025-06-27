@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
@@ -20,6 +21,10 @@ class StudiesDetailContract {
         ) : Event
 
         data class OnLoadWeeklyRankings(
+            val studyGroupId: Long,
+        ) : Event
+
+        data class OnLoadLatestContents(
             val studyGroupId: Long,
         ) : Event
 
@@ -42,6 +47,9 @@ class StudiesDetailContract {
         val weeklyRankingsCursorStudyTime: Long? = null,
         val weeklyRankingsCursorUserId: Long? = null,
         val weeklyRankingsFirstPageRequestedAt: LocalDateTime? = null,
+        // latest-contents
+        val latestNotice: StudiesLatestContent.LatestNotice? = null,
+        val latestVote: StudiesLatestContent.LatestVote? = null,
     ) : UiState
 
     sealed interface Effect : UiEffect

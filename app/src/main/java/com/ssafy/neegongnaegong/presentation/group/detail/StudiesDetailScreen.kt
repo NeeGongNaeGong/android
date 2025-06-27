@@ -16,7 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
-import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent.LatestNotice
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent.LatestVote
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
 import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
@@ -58,6 +59,7 @@ fun StudiesDetailRoute(
         viewModel.setEvent(StudiesDetailContract.Event.OnLoad(studyGroupId))
         viewModel.setEvent(StudiesDetailContract.Event.OnLoadFeeds(studyGroupId))
         viewModel.setEvent(StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId))
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoadLatestContents(studyGroupId))
     }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
@@ -87,6 +89,8 @@ private fun StudiesContent(
         onLoadFeeds = onLoadFeeds,
         weeklyRankings = uiState.weeklyRankings,
         studyGoalTime = uiState.studies.studyInfo.targetStudyTime,
+        latestNotice = uiState.latestNotice,
+        latestVote = uiState.latestVote,
         onProfileClick = {},
         onLoadWeeklyRankings = onLoadWeeklyRankings,
     )
@@ -101,6 +105,10 @@ private fun StudiesDetailScreen(
     onLoadFeeds: () -> Unit,
     weeklyRankings: List<WeeklyRankingsMember> = emptyList(),
     studyGoalTime: Int = (TimeUnit.HOUR.seconds * 7).toInt(),
+    latestNotice: LatestNotice? = null,
+    latestVote: LatestVote? = null,
+    onLatestNoticeClick: () -> Unit = {},
+    onLatestVoteClick: () -> Unit = {},
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
 ) {
@@ -138,26 +146,16 @@ private fun StudiesDetailScreen(
                 onProfileClick = onProfileClick,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-            // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
+            Spacer(modifier = Modifier.height(4.dp))
+            // 스터디 공지사항 카드
             NotificationsSection(
                 modifier = Modifier.padding(5.dp),
-                announcements =
-                    NotificationData(
-                        id = 1,
-                        title = "5월 모임 공지",
-                        dateTime = "2025.04.11 09:30:00",
-                    ),
-                voting =
-                    NotificationData(
-                        id = 1,
-                        title = "점메추 투표",
-                        dateTime = "2025.04.01 09:30:00",
-                    ),
-                onAnnouncementClick = {},
-                onVotingClick = {},
+                notice = latestNotice,
+                voting = latestVote,
+                onNoticeClick = onLatestNoticeClick,
+                onVotingClick = onLatestVoteClick,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             StudyRecordList(
                 modifier =
                     Modifier

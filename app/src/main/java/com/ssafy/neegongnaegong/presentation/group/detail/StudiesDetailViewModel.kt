@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesLatestContentsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -20,9 +21,10 @@ class StudiesDetailViewModel
     @Inject
     constructor(
         private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
-        private val deleteStudiesUseCase: DeleteStudiesUseCase,
         private val getStudiesFeedsUseCase: GetStudiesFeedsUseCase,
         private val getStudiesWeeklyRankingsUseCase: GetStudiesWeeklyRankingsUseCase,
+        private val getStudiesLatestContentsUseCase: GetStudiesLatestContentsUseCase,
+        private val deleteStudiesUseCase: DeleteStudiesUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -40,6 +42,7 @@ class StudiesDetailViewModel
                 is StudiesDetailContract.Event.OnLoad -> onLoad(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadFeeds -> onLoadFeeds(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadWeeklyRankings -> onLoadWeeklyRankings(event.studyGroupId)
+                is StudiesDetailContract.Event.OnLoadLatestContents -> onLoadLatestContents(event.studyGroupId)
                 is StudiesDetailContract.Event.OndDeleteStudies -> deleteStudies(event.studyGroupId)
             }
         }
@@ -100,6 +103,22 @@ class StudiesDetailViewModel
                         )
                     }
                 }
+            }
+        }
+
+        private fun onLoadLatestContents(studyGroupId: Long) {
+            viewModelScope.launch {
+                getStudiesLatestContentsUseCase(studyGroupId)
+                    .withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { contents ->
+                        setState {
+                            copy(
+                                latestNotice = contents.latestNotice,
+                                latestVote = contents.latestVote,
+                            )
+                        }
+                    }
             }
         }
 
