@@ -1,64 +1,65 @@
 package com.ssafy.neegongnaegong.presentation.group.component.detail.section
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
-import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
-import com.ssafy.neegongnaegong.presentation.group.component.detail.NotificationWindow
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent
+import com.ssafy.neegongnaegong.presentation.group.component.detail.LatestContentWindow
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import java.time.LocalDateTime
 
 @Composable
 fun NotificationsSection(
     modifier: Modifier = Modifier,
-    announcements: NotificationData,
-    voting: NotificationData,
-    onAnnouncementClick: () -> Unit,
+    notice: StudiesLatestContent.LatestNotice?,
+    voting: StudiesLatestContent.LatestVote?,
+    onNoticeClick: () -> Unit,
     onVotingClick: () -> Unit,
 ) {
-    Row(
+    Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        NotificationWindow(
-            modifier = Modifier.weight(1f).padding(2.dp),
-            icon = R.drawable.ic_studies_detail_announcement,
-            notification = announcements,
-            onNotificationClick = onAnnouncementClick,
+        LatestContentWindow(
+            modifier = Modifier.fillMaxWidth(),
+            icon = R.drawable.ic_studies_detail_notice,
+            iconColor = NeeGongNaeGongTheme.colorScheme.blue,
+            notification = notice,
+            readStatus = true,
+            onNotificationClick = onNoticeClick,
         )
-        NotificationWindow(
-            modifier = Modifier.weight(1f).padding(2.dp),
+        LatestContentWindow(
+            modifier = Modifier.fillMaxWidth(),
             icon = R.drawable.ic_studies_detail_voting,
+            iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
             notification = voting,
+            readStatus = true,
             onNotificationClick = onVotingClick,
         )
     }
 }
 
 @Composable
-@Preview(showBackground = true)
+@NeeGongNaeGongPreviews
 fun PreviewNotificationsSection() {
     NeeGongNaeGongTheme {
         NotificationsSection(
             modifier = Modifier,
-            announcements =
-                NotificationData(
+            notice =
+                StudiesLatestContent.LatestNotice(
                     id = 1,
                     title = "5월 모임 공지",
-                    dateTime = "2023.11.01 09:30:00",
+                    createdAt = LocalDateTime.now(),
                 ),
             voting =
-                NotificationData(
-                    id = 1,
+                StudiesLatestContent.LatestVote(
+                    id = 2,
                     title = "점메추 투표",
-                    dateTime = "2023.11.01 09:30:00",
+                    endTime = LocalDateTime.now().plusDays(3),
                 ),
-            onAnnouncementClick = {},
+            onNoticeClick = {},
             onVotingClick = {},
         )
     }

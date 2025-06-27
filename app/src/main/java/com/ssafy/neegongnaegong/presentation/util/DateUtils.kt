@@ -1,7 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.util
 
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 /**
@@ -11,20 +10,15 @@ import java.time.temporal.ChronoUnit
  *      - `3일전`
  *      - `1년 전`
  */
-fun getRelativeTimeString(dateTimeString: String): String =
+fun getRelativeTimeString(dateTime: LocalDateTime): String =
     runCatching {
-        val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
-        val dateTime = LocalDateTime.parse(dateTimeString, formatter)
         val now = LocalDateTime.now()
-
         val seconds = ChronoUnit.SECONDS.between(dateTime, now)
         TimeUnit.getRelativeTimeLabel(seconds)
     }.getOrElse {
         // 날짜 파싱에 실패한 경우 원본 문자열 반환
-        dateTimeString
+        dateTime.toTimeString()
     }
-
-
 
 enum class TimeUnit(
     val seconds: Long,
@@ -41,7 +35,7 @@ enum class TimeUnit(
     companion object {
         fun getRelativeTimeLabel(seconds: Long): String =
             when {
-                seconds < MINUTE.seconds -> "방금"
+                seconds < MINUTE.seconds -> "방금 전"
                 seconds < HOUR.seconds -> "${seconds / MINUTE.seconds}${MINUTE.label} 전"
                 seconds < DAY.seconds -> "${seconds / HOUR.seconds}${HOUR.label} 전"
                 seconds < WEEK.seconds -> "${seconds / DAY.seconds}${DAY.label} 전"
