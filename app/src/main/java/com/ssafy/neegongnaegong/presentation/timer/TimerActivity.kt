@@ -6,17 +6,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteRoute
@@ -59,27 +56,14 @@ class TimerActivity : ComponentActivity() {
 
         registerReceiver(screenReceiver, filter)
 
+        enableEdgeToEdge()
+
         setContent {
             NeeGongNaeGongTheme {
-                val backgroundColor = NeeGongNaeGongTheme.colorScheme.background.toArgb()
-                val isDarkTheme = isSystemInDarkTheme()
-
-                enableEdgeToEdge(
-                    statusBarStyle =
-                        if (isDarkTheme) {
-                            SystemBarStyle.dark(scrim = backgroundColor)
-                        } else {
-                            SystemBarStyle.light(scrim = backgroundColor, darkScrim = backgroundColor)
-                        },
-                    navigationBarStyle = SystemBarStyle.dark(scrim = backgroundColor),
-                )
-
                 Scaffold(snackbarHost = { NeeGongNaeGongSnackbarHost() }) { innerPadding ->
-
                     LearningRoute(
                         modifier =
-                            Modifier
-                                .padding(innerPadding),
+                            Modifier.padding(innerPadding),
                         viewModel = viewModel,
                         onCloseActivity = {
                             val resultIntent =
@@ -111,12 +95,10 @@ fun LearningRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     if (uiState.isTimerScreen) {
         TimerRoute(
-            modifier = modifier,
             onCloseActivity = onCloseActivity,
         )
     } else {
         LearningRecordWriteRoute(
-            modifier = modifier,
             learningRecord = uiState.learningRecord,
             onCloseActivity = onCloseActivity,
         )
