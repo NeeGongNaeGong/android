@@ -166,7 +166,7 @@ fun PersonalContent(
         onLoadMore = onLoadMore,
         hasTagDataNext = uiState.hasTagDataNext,
         hasDateDataNext = uiState.hasDateDataNext,
-        studiedDates = uiState.learningDates
+        studiedDates = uiState.learningDates,
     )
 
     if (uiState.isLoading) {
@@ -193,7 +193,7 @@ fun PersonalScreen(
     hasTagDataNext: Boolean,
     hasDateDataNext: Boolean,
     // study point
-    studiedDates: ImmutableSet<LocalDate>
+    studiedDates: ImmutableSet<LocalDate>,
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -204,7 +204,7 @@ fun PersonalScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 16.dp),
+                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
     ) {
         TabRow(
             modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
@@ -310,7 +310,7 @@ fun PersonalScreenPreview() {
             onLoadMore = {},
             hasTagDataNext = false,
             hasDateDataNext = false,
-            studiedDates = persistentSetOf()
+            studiedDates = persistentSetOf(),
         )
     }
 }
