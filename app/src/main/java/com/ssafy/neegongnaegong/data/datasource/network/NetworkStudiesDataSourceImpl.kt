@@ -11,6 +11,7 @@ import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesLi
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentsReadStatusResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
@@ -182,5 +183,10 @@ class NetworkStudiesDataSourceImpl
         override fun getStudiesLatestContents(studyGroupId: Long): Flow<GetStudiesLatestContentResponse> =
             apiFlow {
                 studiesApi.getStudiesLatestContents(studyGroupId = studyGroupId)
+            }
+
+        override fun getStudiesLatestContentsReadStatus(studyGroupId: Long): Flow<GetStudiesLatestContentsReadStatusResponse> =
+            apiFlow {
+                studiesApi.getStudiesLatestContentsReadStatus(studyGroupId = studyGroupId)
             }
     }

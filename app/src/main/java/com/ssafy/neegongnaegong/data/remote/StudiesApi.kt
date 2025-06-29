@@ -9,9 +9,11 @@ import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesLi
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentsReadStatusResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
+import com.ssafy.neegongnaegong.data.remote.StudiesApi.Companion.PREFIX
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -139,6 +141,11 @@ interface StudiesApi {
     suspend fun getStudiesLatestContents(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<GetStudiesLatestContentResponse>>
+
+    @GET("$PREFIX/{study-groups-id}/me/read-status")
+    suspend fun getStudiesLatestContentsReadStatus(
+        @Path("study-groups-id") studyGroupId: Long,
+    ): Result<ApiResponse<GetStudiesLatestContentsReadStatusResponse>>
 
     companion object {
         const val PREFIX = "/api/study-groups"

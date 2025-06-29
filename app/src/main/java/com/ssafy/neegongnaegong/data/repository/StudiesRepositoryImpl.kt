@@ -21,6 +21,7 @@ import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesPage
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesWeeklyRankings
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContents
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContentsReadStatus
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.VoteInfo
@@ -225,6 +226,13 @@ class StudiesRepositoryImpl
         override fun getStudiesLatestContents(studyGroupId: Long): Flow<StudiesLatestContents> =
             dataSource
                 .getStudiesLatestContents(
+                    studyGroupId = studyGroupId,
+                ).map { it.toDomain() }
+                .flowOn(context = ioDispatcher)
+
+        override fun getStudiesLatestContentsReadStatus(studyGroupId: Long): Flow<StudiesLatestContentsReadStatus> =
+            dataSource
+                .getStudiesLatestContentsReadStatus(
                     studyGroupId = studyGroupId,
                 ).map { it.toDomain() }
                 .flowOn(context = ioDispatcher)
