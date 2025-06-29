@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -79,8 +81,10 @@ private fun StudiesContent(
     onLoadFeeds: () -> Unit,
     onLoadWeeklyRankings: () -> Unit,
 ) {
+    val currentDrawerState = LocalDrawerState.current
     StudiesDetailScreen(
         modifier = modifier,
+        currentDrawerState = currentDrawerState,
         name = uiState.studies.studyInfo.name,
         feeds = uiState.feeds,
         feedsHasNext = uiState.feedsHasNext,
@@ -95,6 +99,7 @@ private fun StudiesContent(
 @Composable
 private fun StudiesDetailScreen(
     modifier: Modifier = Modifier,
+    currentDrawerState: DrawerState = DrawerState(DrawerValue.Closed),
     name: String,
     feeds: List<LearningRecord> = emptyList(),
     feedsHasNext: Boolean = false,
@@ -104,7 +109,6 @@ private fun StudiesDetailScreen(
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
 ) {
-    val currentDrawerState = LocalDrawerState.current
     val scope = rememberCoroutineScope()
     Column(
         modifier = modifier.fillMaxSize(),
