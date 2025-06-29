@@ -90,4 +90,10 @@ interface NetworkStudiesDataSource {
     fun getStudiesLatestContents(studyGroupId: Long): Flow<GetStudiesLatestContentResponse>
 
     fun getStudiesLatestContentsReadStatus(studyGroupId: Long): Flow<GetStudiesLatestContentsReadStatusResponse>
+
+    fun patchStudiesLatestContentsReadStatus(
+        studyGroupId: Long,
+        readNotice: Boolean?,
+        readVote: Boolean?,
+    ): Flow<Unit>
 }

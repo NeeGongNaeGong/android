@@ -147,6 +147,13 @@ interface StudiesApi {
         @Path("study-groups-id") studyGroupId: Long,
     ): Result<ApiResponse<GetStudiesLatestContentsReadStatusResponse>>
 
+    @PATCH("$PREFIX/{study-groups-id}/me/read-status")
+    suspend fun patchStudiesLatestContentsReadStatus(
+        @Path("study-groups-id") studyGroupId: Long,
+        @Query("read-notice") readNotice: Boolean?,
+        @Query("read-vote") readVote: Boolean?,
+    ): Result<ApiResponse<Unit>>
+
     companion object {
         const val PREFIX = "/api/study-groups"
     }

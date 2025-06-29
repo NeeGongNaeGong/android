@@ -98,4 +98,10 @@ interface StudiesRepository {
     fun getStudiesLatestContents(studyGroupId: Long): Flow<StudiesLatestContents>
 
     fun getStudiesLatestContentsReadStatus(studyGroupId: Long): Flow<StudiesLatestContentsReadStatus>
+
+    fun patchStudiesLatestContentsReadStatus(
+        studyGroupId: Long,
+        readNotice: Boolean?,
+        readVote: Boolean?,
+    ): Flow<Unit>
 }

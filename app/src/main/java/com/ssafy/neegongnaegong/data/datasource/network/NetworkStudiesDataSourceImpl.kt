@@ -189,4 +189,17 @@ class NetworkStudiesDataSourceImpl
             apiFlow {
                 studiesApi.getStudiesLatestContentsReadStatus(studyGroupId = studyGroupId)
             }
+
+        override fun patchStudiesLatestContentsReadStatus(
+            studyGroupId: Long,
+            readNotice: Boolean?,
+            readVote: Boolean?,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.patchStudiesLatestContentsReadStatus(
+                    studyGroupId = studyGroupId,
+                    readNotice = readNotice,
+                    readVote = readVote,
+                )
+            }
     }

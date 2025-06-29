@@ -236,4 +236,16 @@ class StudiesRepositoryImpl
                     studyGroupId = studyGroupId,
                 ).map { it.toDomain() }
                 .flowOn(context = ioDispatcher)
+
+        override fun patchStudiesLatestContentsReadStatus(
+            studyGroupId: Long,
+            readNotice: Boolean?,
+            readVote: Boolean?,
+        ): Flow<Unit> =
+            dataSource
+                .patchStudiesLatestContentsReadStatus(
+                    studyGroupId = studyGroupId,
+                    readNotice = readNotice,
+                    readVote = readVote,
+                ).flowOn(context = ioDispatcher)
     }
