@@ -16,8 +16,8 @@ fun NotificationsSection(
     modifier: Modifier = Modifier,
     notice: StudiesLatestContent.LatestNotice?,
     voting: StudiesLatestContent.LatestVote?,
-    onNoticeClick: () -> Unit,
-    onVotingClick: () -> Unit,
+    onNoticeClick: (Long) -> Unit,
+    onVotingClick: (Long) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -28,7 +28,7 @@ fun NotificationsSection(
             iconColor = NeeGongNaeGongTheme.colorScheme.blue,
             notification = notice,
             readStatus = true,
-            onNotificationClick = onNoticeClick,
+            onClick = onNoticeClick,
         )
         LatestContentWindow(
             modifier = Modifier.fillMaxWidth(),
@@ -36,7 +36,7 @@ fun NotificationsSection(
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
             notification = voting,
             readStatus = true,
-            onNotificationClick = onVotingClick,
+            onClick = onVotingClick,
         )
     }
 }

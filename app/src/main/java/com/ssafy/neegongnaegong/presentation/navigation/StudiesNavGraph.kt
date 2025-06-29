@@ -55,6 +55,12 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 modifier = Modifier,
                 navBackStackEntry = backStackEntry,
                 studyGroupId = route.studyGroupId,
+                navigateToLatestNoticeDetail = { studyGroupId, noticeId ->
+                    navController.navigate(AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(studyGroupId, noticeId))
+                },
+                navigateToLatestVoteDetail = { studyGroupId, voteId ->
+                    navController.navigate(AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(studyGroupId, voteId))
+                },
                 popBackStack = navController::popBackStack,
             )
         }

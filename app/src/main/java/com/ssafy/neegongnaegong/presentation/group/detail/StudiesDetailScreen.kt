@@ -39,6 +39,8 @@ fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
     studyGroupId: Long,
+    navigateToLatestNoticeDetail: (Long, Long) -> Unit,
+    navigateToLatestVoteDetail: (Long, Long) -> Unit,
     popBackStack: () -> Unit = {},
 ) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
@@ -63,6 +65,24 @@ fun StudiesDetailRoute(
         viewModel.setEvent(StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId))
         viewModel.setEvent(StudiesDetailContract.Event.OnLoadLatestContents(studyGroupId))
     }
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is StudiesDetailContract.Effect.NavigateToLatestNoticeDetail ->
+                    navigateToLatestNoticeDetail(
+                        studyGroupId,
+                        effect.noticeId,
+                    )
+
+                is StudiesDetailContract.Effect.NavigateToLatestVoteDetail ->
+                    navigateToLatestVoteDetail(
+                        studyGroupId,
+                        effect.voteId,
+                    )
+            }
+        }
+    }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
         modifier = modifier,
@@ -71,6 +91,16 @@ fun StudiesDetailRoute(
         onLoadWeeklyRankings = {
             viewModel.setEvent(
                 StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId),
+            )
+        },
+        onLatestNoticeClick = { noticeId ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickLatestNotice(noticeId),
+            )
+        },
+        onLatestVoteClick = { voteId ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickLatestVote(voteId),
             )
         },
     )
@@ -82,6 +112,8 @@ private fun StudiesContent(
     uiState: StudiesDetailContract.State,
     onLoadFeeds: () -> Unit,
     onLoadWeeklyRankings: () -> Unit,
+    onLatestNoticeClick: (Long) -> Unit,
+    onLatestVoteClick: (Long) -> Unit,
 ) {
     val currentDrawerState = LocalDrawerState.current
     StudiesDetailScreen(
@@ -97,6 +129,8 @@ private fun StudiesContent(
         latestVote = uiState.latestVote,
         onProfileClick = {},
         onLoadWeeklyRankings = onLoadWeeklyRankings,
+        onLatestNoticeClick = onLatestNoticeClick,
+        onLatestVoteClick = onLatestVoteClick,
     )
 }
 
@@ -112,10 +146,10 @@ private fun StudiesDetailScreen(
     studyGoalTime: Int = (TimeUnit.HOUR.seconds * 7).toInt(),
     latestNotice: LatestNotice? = null,
     latestVote: LatestVote? = null,
-    onLatestNoticeClick: () -> Unit = {},
-    onLatestVoteClick: () -> Unit = {},
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
+    onLatestNoticeClick: (Long) -> Unit = {},
+    onLatestVoteClick: (Long) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     Column(

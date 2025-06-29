@@ -31,6 +31,14 @@ class StudiesDetailContract {
         data class OndDeleteStudies(
             val studyGroupId: Long,
         ) : Event
+
+        data class OnClickLatestNotice(
+            val noticeId: Long,
+        ) : Event
+
+        data class OnClickLatestVote(
+            val voteId: Long,
+        ) : Event
     }
 
     data class State(
@@ -52,7 +60,15 @@ class StudiesDetailContract {
         val latestVote: StudiesLatestContent.LatestVote? = null,
     ) : UiState
 
-    sealed interface Effect : UiEffect
+    sealed interface Effect : UiEffect {
+        data class NavigateToLatestNoticeDetail(
+            val noticeId: Long,
+        ) : Effect
+
+        data class NavigateToLatestVoteDetail(
+            val voteId: Long,
+        ) : Effect
+    }
 
     sealed interface Error : ErrorContext
 }

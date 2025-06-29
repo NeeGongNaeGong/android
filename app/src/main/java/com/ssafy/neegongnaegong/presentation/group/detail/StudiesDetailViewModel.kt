@@ -44,6 +44,21 @@ class StudiesDetailViewModel
                 is StudiesDetailContract.Event.OnLoadWeeklyRankings -> onLoadWeeklyRankings(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadLatestContents -> onLoadLatestContents(event.studyGroupId)
                 is StudiesDetailContract.Event.OndDeleteStudies -> deleteStudies(event.studyGroupId)
+                is StudiesDetailContract.Event.OnClickLatestNotice -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToLatestNoticeDetail(
+                            event.noticeId,
+                        )
+                    }
+                }
+
+                is StudiesDetailContract.Event.OnClickLatestVote -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToLatestVoteDetail(
+                            event.voteId,
+                        )
+                    }
+                }
             }
         }
 

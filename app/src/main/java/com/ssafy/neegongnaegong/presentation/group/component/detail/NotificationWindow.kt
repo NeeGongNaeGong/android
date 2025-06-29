@@ -39,12 +39,12 @@ fun LatestContentWindow(
     iconColor: Color,
     notification: StudiesLatestContent?,
     readStatus: Boolean,
-    onNotificationClick: () -> Unit = {},
+    onClick: (Long) -> Unit = {},
 ) {
     Box(
         modifier =
             modifier
-                .clickable(onClick = onNotificationClick),
+                .clickable(onClick = { if (notification != null) onClick(notification.id) }),
     ) {
         Row(
             modifier =
@@ -150,7 +150,7 @@ private fun PreviewStudiesNoticeWindow() {
             iconColor = NeeGongNaeGongTheme.colorScheme.blue,
             notification = sampleAnnouncement,
             readStatus = true,
-            onNotificationClick = { },
+            onClick = { },
         )
     }
 }
@@ -170,7 +170,7 @@ private fun PreviewStudiesVotingWindow() {
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
             notification = sampleVoting,
             readStatus = false,
-            onNotificationClick = { },
+            onClick = { },
         )
     }
 }
@@ -184,7 +184,7 @@ private fun PreviewStudiesEmptyWindow() {
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
             notification = null,
             readStatus = false,
-            onNotificationClick = { },
+            onClick = { },
         )
     }
 }
