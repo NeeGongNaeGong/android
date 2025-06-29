@@ -126,11 +126,13 @@ class StudiesDetailViewModel
                 getStudiesLatestContentsUseCase(studyGroupId)
                     .withLoading {
                         setState { copy(isLoading = it) }
-                    }.safeCollect { contents ->
+                    }.safeCollect { result ->
                         setState {
                             copy(
-                                latestNotice = contents.latestNotice,
-                                latestVote = contents.latestVote,
+                                latestNotice = result.contents.latestNotice,
+                                latestNoticeReadChecked = result.readStatus.lastNoticeChecked,
+                                latestVote = result.contents.latestVote,
+                                latestVoteReadChecked = result.readStatus.lastVoteChecked,
                             )
                         }
                     }

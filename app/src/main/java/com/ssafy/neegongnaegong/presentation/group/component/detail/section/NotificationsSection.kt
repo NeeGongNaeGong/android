@@ -15,7 +15,9 @@ import java.time.LocalDateTime
 fun NotificationsSection(
     modifier: Modifier = Modifier,
     notice: StudiesLatestContent.LatestNotice?,
-    voting: StudiesLatestContent.LatestVote?,
+    noticeReadCheck: Boolean,
+    vote: StudiesLatestContent.LatestVote?,
+    voteReadCheck: Boolean,
     onNoticeClick: (Long) -> Unit,
     onVotingClick: (Long) -> Unit,
 ) {
@@ -27,15 +29,15 @@ fun NotificationsSection(
             icon = R.drawable.ic_studies_detail_notice,
             iconColor = NeeGongNaeGongTheme.colorScheme.blue,
             notification = notice,
-            readStatus = true,
+            readStatus = noticeReadCheck,
             onClick = onNoticeClick,
         )
         LatestContentWindow(
             modifier = Modifier.fillMaxWidth(),
             icon = R.drawable.ic_studies_detail_voting,
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
-            notification = voting,
-            readStatus = true,
+            notification = vote,
+            readStatus = voteReadCheck,
             onClick = onVotingClick,
         )
     }
@@ -53,12 +55,14 @@ fun PreviewNotificationsSection() {
                     title = "5월 모임 공지",
                     createdAt = LocalDateTime.now(),
                 ),
-            voting =
+            noticeReadCheck = true,
+            vote =
                 StudiesLatestContent.LatestVote(
                     id = 2,
                     title = "점메추 투표",
                     endTime = LocalDateTime.now().plusDays(3),
                 ),
+            voteReadCheck = false,
             onNoticeClick = {},
             onVotingClick = {},
         )

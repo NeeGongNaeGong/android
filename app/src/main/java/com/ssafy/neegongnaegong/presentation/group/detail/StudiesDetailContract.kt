@@ -57,7 +57,9 @@ class StudiesDetailContract {
         val weeklyRankingsFirstPageRequestedAt: LocalDateTime? = null,
         // latest-contents
         val latestNotice: StudiesLatestContent.LatestNotice? = null,
+        val latestNoticeReadChecked: Boolean = false,
         val latestVote: StudiesLatestContent.LatestVote? = null,
+        val latestVoteReadChecked: Boolean = false,
     ) : UiState
 
     sealed interface Effect : UiEffect {
