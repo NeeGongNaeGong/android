@@ -7,6 +7,7 @@ import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesLatestContentsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.PatchStudiesLatestContentsReadStatusUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.StudiesContract
@@ -24,6 +25,7 @@ class StudiesDetailViewModel
         private val getStudiesFeedsUseCase: GetStudiesFeedsUseCase,
         private val getStudiesWeeklyRankingsUseCase: GetStudiesWeeklyRankingsUseCase,
         private val getStudiesLatestContentsUseCase: GetStudiesLatestContentsUseCase,
+        private val patchStudiesLatestContentsReadStatusUseCase: PatchStudiesLatestContentsReadStatusUseCase,
         private val deleteStudiesUseCase: DeleteStudiesUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         override fun handleException(
@@ -50,6 +52,7 @@ class StudiesDetailViewModel
                             event.noticeId,
                         )
                     }
+                    readContents(studyGroupId = uiState.value.studies.id, readNotice = true)
                 }
 
                 is StudiesDetailContract.Event.OnClickLatestVote -> {
@@ -58,6 +61,7 @@ class StudiesDetailViewModel
                             event.voteId,
                         )
                     }
+                    readContents(studyGroupId = uiState.value.studies.id, readVote = true)
                 }
             }
         }
@@ -147,6 +151,26 @@ class StudiesDetailViewModel
                     }.safeCollect {
                         showMessage("스터디가 삭제되었습니다.")
                     }
+            }
+        }
+
+        private fun readContents(
+            studyGroupId: Long,
+            readNotice: Boolean? = null,
+            readVote: Boolean? = null,
+        ) {
+            viewModelScope.launch {
+                Log.d(TAG, "readContents: [$readNotice, $readVote]")
+                patchStudiesLatestContentsReadStatusUseCase(
+                    studyGroupId = studyGroupId,
+                    readNotice = readNotice,
+                    readVote = readVote,
+                ).withLoading {
+                    Log.d(TAG, "readContents: 진행")
+                    setState { copy(isLoading = it) }
+                }.safeCollect {
+                    Log.d(TAG, "readContents: 성공")
+                }
             }
         }
     }

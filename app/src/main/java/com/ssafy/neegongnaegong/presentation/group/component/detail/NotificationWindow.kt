@@ -30,7 +30,9 @@ import com.ssafy.neegongnaegong.presentation.util.toDateString
 import java.time.LocalDateTime
 
 /**
- * 스터디 알림 창
+ * 공지 및 투표
+ *
+ * @param readStatus 읽음 상태 `true` 읽음, `false` 안읽음
  */
 @Composable
 fun LatestContentWindow(
@@ -88,7 +90,7 @@ fun LatestContentWindow(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                 )
-                if (readStatus) {
+                if (readStatus.not()) {
                     Text(
                         modifier =
                             Modifier
