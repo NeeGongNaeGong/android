@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.group.detail
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -107,7 +108,7 @@ private fun StudiesDetailScreen(
     val currentDrawerState = LocalDrawerState.current
     val scope = rememberCoroutineScope()
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().background(color = NeeGongNaeGongTheme.colorScheme.gray2),
     ) {
         // 커스텀 앱바
         TopAppBar(
@@ -131,7 +132,7 @@ private fun StudiesDetailScreen(
         Column(modifier = Modifier) {
             // 프로필 아이콘 행
             ProfilesSection(
-                modifier = modifier,
+                modifier = Modifier.background(color = NeeGongNaeGongTheme.colorScheme.background),
                 weeklyRankings = weeklyRankings,
                 studyGoalTime = studyGoalTime,
                 onLoadMore = onLoadWeeklyRankings,

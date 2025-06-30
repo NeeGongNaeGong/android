@@ -137,10 +137,10 @@ private fun StudyFeedItem(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .shadow(4.dp, RoundedCornerShape(8.dp))
+//                .shadow(4.dp, RoundedCornerShape(8.dp))
                 .background(
                     NeeGongNaeGongTheme.colorScheme.recordBackground,
-                    RoundedCornerShape(8.dp),
+                    RoundedCornerShape(4.dp),
                 ).clickable(onClick = { onClick(record.id) })
                 .padding(vertical = 8.dp, horizontal = 16.dp),
     ) {
@@ -227,6 +227,7 @@ private fun StudyFeedItem(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 // 태그
