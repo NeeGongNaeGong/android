@@ -167,6 +167,7 @@ private fun StudiesDetailScreen(
                 hasNext = feedsHasNext,
                 onClick = {},
                 onLoadMore = onLoadFeeds,
+                isStudyFeed = true,
             )
         }
 
