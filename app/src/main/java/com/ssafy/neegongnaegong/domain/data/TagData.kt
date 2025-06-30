@@ -6,7 +6,7 @@ object TagData {
     val tags: List<Tag> =
         listOf(
             // 프로그래밍
-            Tag(1L, "CS", "Computer Science"),
+            Tag(1L, "CS", "Computer Science CS"),
             Tag(2L, "프론트엔드", "Frontend"),
             Tag(3L, "백엔드", "Backend"),
             Tag(4L, "모바일", "Mobile"),
