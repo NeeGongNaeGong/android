@@ -28,6 +28,7 @@ import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordLi
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
+import com.ssafy.neegongnaegong.presentation.group.detail.component.StudiesDetailKebabMenu
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
@@ -39,6 +40,7 @@ fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
     studyGroupId: Long,
+    navigateToContents: (Int, Long) -> Unit,
     navigateToLatestNoticeDetail: (Long, Long) -> Unit,
     navigateToLatestVoteDetail: (Long, Long) -> Unit,
     popBackStack: () -> Unit = {},
@@ -80,6 +82,12 @@ fun StudiesDetailRoute(
                         studyGroupId,
                         effect.voteId,
                     )
+
+                is StudiesDetailContract.Effect.NavigateToContents ->
+                    navigateToContents(
+                        effect.startTabIndex,
+                        studyGroupId,
+                    )
             }
         }
     }
@@ -91,6 +99,11 @@ fun StudiesDetailRoute(
         onLoadWeeklyRankings = {
             viewModel.setEvent(
                 StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId),
+            )
+        },
+        onContentsClick = { startTabIndex ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickContents(startTabIndex),
             )
         },
         onLatestNoticeClick = { noticeId ->
@@ -112,6 +125,7 @@ private fun StudiesContent(
     uiState: StudiesDetailContract.State,
     onLoadFeeds: () -> Unit,
     onLoadWeeklyRankings: () -> Unit,
+    onContentsClick: (Int) -> Unit,
     onLatestNoticeClick: (Long) -> Unit,
     onLatestVoteClick: (Long) -> Unit,
 ) {
@@ -131,6 +145,7 @@ private fun StudiesContent(
         latestVoteReadChecked = uiState.latestVoteReadChecked,
         onProfileClick = {},
         onLoadWeeklyRankings = onLoadWeeklyRankings,
+        onContentsClick = onContentsClick,
         onLatestNoticeClick = onLatestNoticeClick,
         onLatestVoteClick = onLatestVoteClick,
     )
@@ -152,6 +167,7 @@ private fun StudiesDetailScreen(
     latestVoteReadChecked: Boolean = false,
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
+    onContentsClick: (Int) -> Unit = {},
     onLatestNoticeClick: (Long) -> Unit = {},
     onLatestVoteClick: (Long) -> Unit = {},
 ) {
@@ -174,6 +190,13 @@ private fun StudiesDetailScreen(
                 scope.launch(Dispatchers.Main.immediate) {
                     currentDrawerState.open()
                 }
+            },
+            actionButtons = {
+                StudiesDetailKebabMenu(
+                    modifier = Modifier,
+                    onNoticeClick = { onContentsClick(0) },
+                    onVoteClick = { onContentsClick(1) },
+                )
             },
         )
 

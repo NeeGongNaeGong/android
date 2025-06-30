@@ -55,11 +55,29 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 modifier = Modifier,
                 navBackStackEntry = backStackEntry,
                 studyGroupId = route.studyGroupId,
+                navigateToContents = { startTabIndex, studyGroupId ->
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.SubTab.Main(
+                            startTabIndex,
+                            studyGroupId,
+                        ),
+                    )
+                },
                 navigateToLatestNoticeDetail = { studyGroupId, noticeId ->
-                    navController.navigate(AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(studyGroupId, noticeId))
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(
+                            studyGroupId,
+                            noticeId,
+                        ),
+                    )
                 },
                 navigateToLatestVoteDetail = { studyGroupId, voteId ->
-                    navController.navigate(AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(studyGroupId, voteId))
+                    navController.navigate(
+                        AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(
+                            studyGroupId,
+                            voteId,
+                        ),
+                    )
                 },
                 popBackStack = navController::popBackStack,
             )
@@ -150,7 +168,8 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 startTabIdx = startTabIndex,
                 navigateToNoticeDetail = {
                     navController.navigate(
-                        AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(groupId, it),
+                        AppNavigation.Screen.Studies.SubTab.Screen
+                            .NoticeDetail(groupId, it),
                     ) {
                         popUpTo<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail> {
                             inclusive = false
@@ -159,7 +178,8 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 },
                 navigateToVoteDetail = {
                     navController.navigate(
-                        AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(groupId, it),
+                        AppNavigation.Screen.Studies.SubTab.Screen
+                            .VoteDetail(groupId, it),
                     ) {
                         popUpTo<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> {
                             inclusive = false
@@ -217,7 +237,8 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 navigateToVotedPersonList = { title, votedPersonList ->
                     val json = Json.encodeToString(votedPersonList)
                     navController.navigate(
-                        AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson(title, json),
+                        AppNavigation.Screen.Studies.SubTab.Screen
+                            .VotedPerson(title, json),
                     )
                 },
                 popBackStack = navController::popBackStack,
@@ -237,7 +258,8 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
 
         composable<AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson> { backStackEntry ->
             val (title, votedPersonList) =
-                backStackEntry.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson>()
+                backStackEntry
+                    .toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VotedPerson>()
                     .let {
                         Pair(
                             it.title,

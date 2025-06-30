@@ -39,6 +39,10 @@ class StudiesDetailContract {
         data class OnClickLatestVote(
             val voteId: Long,
         ) : Event
+
+        data class OnClickContents(
+            val startTabIndex: Int,
+        ) : Event
     }
 
     data class State(
@@ -69,6 +73,10 @@ class StudiesDetailContract {
 
         data class NavigateToLatestVoteDetail(
             val voteId: Long,
+        ) : Effect
+
+        data class NavigateToContents(
+            val startTabIndex: Int,
         ) : Effect
     }
 

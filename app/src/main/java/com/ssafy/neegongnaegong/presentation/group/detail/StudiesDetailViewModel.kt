@@ -63,6 +63,14 @@ class StudiesDetailViewModel
                     }
                     readContents(studyGroupId = uiState.value.studies.id, readVote = true)
                 }
+
+                is StudiesDetailContract.Event.OnClickContents -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToContents(
+                            event.startTabIndex,
+                        )
+                    }
+                }
             }
         }
 
