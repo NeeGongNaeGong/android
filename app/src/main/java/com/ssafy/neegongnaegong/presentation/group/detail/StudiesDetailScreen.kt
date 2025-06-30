@@ -2,9 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -211,7 +209,6 @@ private fun StudiesDetailScreen(
                 onProfileClick = onProfileClick,
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
             // 스터디 공지사항 카드
             NotificationsSection(
                 modifier = Modifier.padding(5.dp),
@@ -222,7 +219,6 @@ private fun StudiesDetailScreen(
                 onNoticeClick = onLatestNoticeClick,
                 onVotingClick = onLatestVoteClick,
             )
-            Spacer(modifier = Modifier.height(4.dp))
             StudyRecordList(
                 modifier =
                     Modifier
