@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
 import com.ssafy.neegongnaegong.data.mapper.tag.TagInfoMapper.toDomain
+import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import java.time.LocalDateTime
 
@@ -25,4 +26,5 @@ fun StudyContentInfo.toLearningRecord() =
         startAt = startAt,
         endAt = endAt,
         tags = tags.toDomain(),
+        author = User.default(),
     )

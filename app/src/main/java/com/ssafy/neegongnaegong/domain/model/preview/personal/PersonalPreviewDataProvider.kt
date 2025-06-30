@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.domain.model.preview.personal
 
+import com.ssafy.neegongnaegong.domain.model.User
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import java.time.LocalDateTime
@@ -34,6 +35,12 @@ class PersonalPreviewDataProvider {
             startAt = LocalDateTime.parse("2025-04-14T18:33:02.856Z", formatter),
             endAt = LocalDateTime.parse("2025-04-14T20:33:02.856Z", formatter),
             tags = tagByKo("CS", "네트워크", "Kotlin"),
+            author =
+                User(
+                    id = 0,
+                    nickname = "공부하는 호랑이23",
+                    profileImg = "",
+                ),
         )
 
     fun getStudyRecords(): List<LearningRecord> =
@@ -45,6 +52,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T04:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 tags = tagByKo("재테크", "미술"),
+                author = User.default(),
             ),
             LearningRecord(
                 id = 2,
@@ -53,6 +61,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T08:33:02.856Z", formatter),
                 tags = tagByKo("회계"),
+                author = User.default(),
             ),
             LearningRecord(
                 id = 3,
@@ -61,6 +70,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T04:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 tags = tagByKo("CS", "미술"),
+                author = User.default(),
             ),
             LearningRecord(
                 id = 4,
@@ -69,6 +79,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T04:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 tags = tagByKo("백엔드", "네트워크"),
+                author = User.default(),
             ),
             LearningRecord(
                 id = 5,
@@ -77,6 +88,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T04:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 tags = tagByKo("백엔드"),
+                author = User.default(),
             ),
             LearningRecord(
                 id = 6,
@@ -85,6 +97,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T04:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 tags = tagByKo("CS", "네트워크"),
+                author = User.default(),
             ),
             LearningRecord(
                 id = 7,
@@ -93,6 +106,7 @@ class PersonalPreviewDataProvider {
                 startAt = LocalDateTime.parse("2025-04-14T04:33:02.856Z", formatter),
                 endAt = LocalDateTime.parse("2025-04-14T06:33:02.856Z", formatter),
                 tags = tagByKo("CS", "네트워크"),
+                author = User.default(),
             ),
         )
 }
