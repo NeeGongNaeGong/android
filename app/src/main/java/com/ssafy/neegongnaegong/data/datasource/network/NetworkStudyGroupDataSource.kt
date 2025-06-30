@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
@@ -61,4 +62,6 @@ interface NetworkStudyGroupDataSource {
         userId: Long,
         notificationId: Long?,
     ): Flow<Unit>
+
+    fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailResponse>
 }

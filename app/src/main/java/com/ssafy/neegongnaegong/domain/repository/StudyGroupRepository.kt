@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.domain.repository
 import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
@@ -59,4 +60,6 @@ interface StudyGroupRepository {
         userId: Long,
         notificationId: Long?,
     ): Flow<Unit>
+
+    fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailInfo>
 }

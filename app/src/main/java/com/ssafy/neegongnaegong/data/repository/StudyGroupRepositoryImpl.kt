@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
+import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupDetailMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupNoticeDetailInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupVoteDetailInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyLogByTagInfoMapper.toDomain
@@ -12,6 +13,7 @@ import com.ssafy.neegongnaegong.data.paging.StudyGroupNoticeListPagingSource
 import com.ssafy.neegongnaegong.data.paging.StudyGroupVoteListPagingSource
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteDetailInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyLogByTagInfo
@@ -123,4 +125,8 @@ class StudyGroupRepositoryImpl
                 userId = userId,
                 notificationId = notificationId,
             ).flowOn(context = ioDispatcher)
+
+        override fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailInfo> =
+            dataSource.getStudyGroupDetail(studyGroupId = studyGroupId).map { it.toDomain() }
+                .flowOn(context = ioDispatcher)
     }
