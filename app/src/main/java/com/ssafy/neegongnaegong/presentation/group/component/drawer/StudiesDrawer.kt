@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.component.drawer
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,42 +15,59 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.ErrorItem
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.LoadingItem
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.NoDataItem
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailContract
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.time.LocalDate
 
 @Composable
 fun StudiesDrawerContent(
     navBackStackEntry: NavBackStackEntry,
+    viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry),
     navigateTodStudiesEdit: () -> Unit,
     navigateToStudiesMembersRole: () -> Unit,
     navigateToStudiesApplications: () -> Unit,
 ) {
-    val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val myStudyList = viewModel.myStudyList.collectAsLazyPagingItems()
+
     StudiesDrawer(
         headerImageUrl = uiState.value.studies.studyInfo.profileImg,
         name = uiState.value.studies.studyInfo.name,
         description = uiState.value.studies.studyInfo.description,
+        myStudyList = myStudyList,
         onStudyDeleteClick = {
             viewModel.setEvent(
                 StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
@@ -67,8 +85,8 @@ private fun StudiesDrawer(
     headerImageUrl: String? = null,
     name: String = "",
     description: String = "",
+    myStudyList: LazyPagingItems<MyStudyGroupInfo>,
     onMyStudyClick: () -> Unit = {},
-    onStudyItemClick: (Long) -> Unit = {},
     onStudyDeleteClick: () -> Unit = {},
     navigateTodStudiesEdit: () -> Unit = {},
     navigateToStudiesMembersRole: () -> Unit = {},
@@ -83,7 +101,10 @@ private fun StudiesDrawer(
         item {
             GlideImage(
                 imageModel = { headerImageUrl ?: R.drawable.img_main_character },
-                modifier = Modifier.fillMaxWidth().height(240.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(240.dp),
                 loading = {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -210,17 +231,72 @@ private fun StudiesDrawer(
 
         item {
             // 스터디 아이콘들
-            Row(
+            LazyRow(
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 5.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
             ) {
-                // TODO(스터디) : 예시 스터디 아이콘들 - 실제 데이터로 교체 필요
-                CircleIcon(R.drawable.ic_app_logo_332_81) { onStudyItemClick(1) }
-                CircleIcon(R.drawable.ic_app_logo_332_81) { onStudyItemClick(2) }
-                CircleIcon(R.drawable.ic_app_logo_332_81) { onStudyItemClick(3) }
+                items(
+                    count = myStudyList.itemCount,
+                    key = myStudyList.itemKey(MyStudyGroupInfo::id),
+                ) { idx ->
+                    myStudyList[idx]?.let { item ->
+                        GlideImage(
+                            imageModel = item::profileImg,
+                            loading = { CircularProgressIndicator() },
+                            modifier =
+                                Modifier
+                                    .size(67.dp)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                    },
+                            imageOptions =
+                                ImageOptions(
+                                    contentScale = ContentScale.Crop,
+                                    alignment = Alignment.Center,
+                                ),
+                            requestOptions = { RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL) },
+                            failure = {
+                                // 이미지 로드 실패 시 플레이스홀더
+                                Image(
+                                    painter = painterResource(id = R.drawable.img_default_profile),
+                                    contentDescription = "Profile Image",
+                                    modifier =
+                                        Modifier
+                                            .size(100.dp)
+                                            .clip(CircleShape),
+                                    contentScale = ContentScale.Crop,
+                                )
+                            },
+                        )
+                    }
+                }
+                when {
+                    myStudyList.loadState.refresh is LoadState.Loading -> item { LoadingItem() }
+                    myStudyList.loadState.append is LoadState.Loading -> item { LoadingItem() }
+                    myStudyList.loadState.refresh is LoadState.Error ->
+                        item {
+                            val e = myStudyList.loadState.refresh as LoadState.Error
+                            ErrorItem(
+                                e.error.localizedMessage.orEmpty(),
+                            ) { myStudyList.retry() }
+                        }
+
+                    myStudyList.loadState.append is LoadState.Error ->
+                        item {
+                            val e = myStudyList.loadState.append as LoadState.Error
+                            ErrorItem(
+                                e.error.localizedMessage.orEmpty(),
+                            ) { myStudyList.retry() }
+                        }
+
+                    myStudyList.itemCount == 0 ->
+                        item {
+                            NoDataItem()
+                        }
+                }
             }
         }
 
@@ -240,40 +316,48 @@ private fun StudiesDrawer(
     }
 }
 
-@Composable
-fun CircleIcon(
-    iconRes: Int,
-    onClick: () -> Unit = {},
-) {
-    Box(
-        modifier =
-            Modifier
-                .size(48.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = CircleShape,
-                )
-                .clickable {
-                    onClick()
-                },
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            tint = Color.Unspecified,
-        )
-    }
-}
-
 @NeeGongNaeGongPreviews
 @Composable
 private fun PreviewLightModeStudiesDrawer() {
+    val sampleItems =
+        mutableListOf<MyStudyGroupInfo>().apply {
+            for (i in 0..4) {
+                add(
+                    MyStudyGroupInfo(
+                        id = i.toLong(),
+                        leader =
+                            MyStudyGroupInfo.LeaderInfo(
+                                id = i.toLong(),
+                                name = "이름",
+                            ),
+                        name = "Araceli McLaughlin",
+                        maxMembers = 1905,
+                        currentMembers = 6511,
+                        description = "leo",
+                        profileImg = "inimicus",
+                        isPublic = false,
+                        targetStudyTime = 4273,
+                        category =
+                            MyStudyGroupInfo.CategoryInfo(
+                                id = i.toLong(),
+                                name = "Raymond Frank",
+                            ),
+                        createdDate = LocalDate.now(),
+                        tags = listOf(),
+                    ),
+                )
+            }
+        }
+
+    val pagingData = PagingData.from(sampleItems)
+    val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
+
     NeeGongNaeGongTheme {
         StudiesDrawer(
             modifier = Modifier.fillMaxWidth(0.75F),
             name = "화이트 스터디",
             description = "하얗습니다.",
+            myStudyList = lazyItems,
         )
     }
 }
