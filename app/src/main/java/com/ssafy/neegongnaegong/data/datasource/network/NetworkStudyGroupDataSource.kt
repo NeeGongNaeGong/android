@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.MyStudyGroupListResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
@@ -12,6 +13,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequ
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 interface NetworkStudyGroupDataSource {
     fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagResponse>>
@@ -64,4 +66,10 @@ interface NetworkStudyGroupDataSource {
     ): Flow<Unit>
 
     fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailResponse>
+
+    fun getMyStudyGroupList(
+        cursorCreatedAt: LocalDateTime?,
+        cursorId: Long?,
+        size: Int,
+    ): Flow<MyStudyGroupListResponse>
 }
