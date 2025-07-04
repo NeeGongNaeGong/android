@@ -19,11 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -32,6 +32,7 @@ private const val TAG = "StudiesApplicationJoinU"
 @Composable
 fun StudiesApplicationJoinUnit(
     modifier: Modifier = Modifier,
+    role: Role,
     status: StudiesJoinApplicationStatus,
     userId: Long,
     name: String,
@@ -39,25 +40,24 @@ fun StudiesApplicationJoinUnit(
     onApproval: (Long) -> Unit = {},
     onReject: (Long) -> Unit = {},
 ) {
-    val backgroundColor: Color
-    val visibleButton: Boolean
+    val (backgroundColor, visibleButton) =
+        if (role in listOf(Role.MEMBER, Role.PENDING)) {
+            Pair(NeeGongNaeGongTheme.colorScheme.background, false)
+        } else {
+            when (status) {
+                StudiesJoinApplicationStatus.PENDING -> {
+                    Pair(NeeGongNaeGongTheme.colorScheme.background, true)
+                }
 
-    when (status) {
-        StudiesJoinApplicationStatus.PENDING -> {
-            backgroundColor = NeeGongNaeGongTheme.colorScheme.background
-            visibleButton = true
-        }
+                StudiesJoinApplicationStatus.APPROVED -> {
+                    Pair(NeeGongNaeGongTheme.colorScheme.blue, false)
+                }
 
-        StudiesJoinApplicationStatus.APPROVED -> {
-            backgroundColor = NeeGongNaeGongTheme.colorScheme.blue
-            visibleButton = false
+                StudiesJoinApplicationStatus.REJECTED -> {
+                    Pair(NeeGongNaeGongTheme.colorScheme.secondaryText, false)
+                }
+            }
         }
-
-        StudiesJoinApplicationStatus.REJECTED -> {
-            backgroundColor = NeeGongNaeGongTheme.colorScheme.secondaryText
-            visibleButton = false
-        }
-    }
 
     Row(
         modifier =
@@ -164,6 +164,7 @@ private fun PreviewPendingStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
+            role = Role.MANAGER,
             status = StudiesJoinApplicationStatus.PENDING,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
@@ -179,6 +180,7 @@ private fun PreviewApprovedStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
+            role = Role.MEMBER,
             status = StudiesJoinApplicationStatus.APPROVED,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
@@ -194,6 +196,7 @@ private fun PreviewRejectedStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
+            role = Role.MEMBER,
             status = StudiesJoinApplicationStatus.REJECTED,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
