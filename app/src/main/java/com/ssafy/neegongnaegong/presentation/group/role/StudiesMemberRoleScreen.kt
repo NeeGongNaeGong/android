@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.group.role.component.ExpelMemberDialog
 import com.ssafy.neegongnaegong.presentation.group.role.component.RoleChangeDialog
 import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
@@ -33,6 +34,7 @@ fun StudiesMemberRoleRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesMemberRoleViewModel = hiltViewModel(),
     studyGroupId: Long,
+    role: Role,
     popBackStack: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -44,6 +46,7 @@ fun StudiesMemberRoleRoute(
     StudiesMemberRoleContent(
         modifier = modifier,
         effect = viewModel.effect,
+        role = role,
         uiState = uiState.value,
         onSelectedMember = { viewModel.setEvent(StudiesMemberRoleContract.Event.OnSelectedMember(it)) },
         // Change Role Dialog
@@ -77,6 +80,7 @@ fun StudiesMemberRoleRoute(
 private fun StudiesMemberRoleContent(
     modifier: Modifier = Modifier,
     effect: Flow<StudiesMemberRoleContract.Effect>,
+    role: Role,
     uiState: StudiesMemberRoleContract.State,
     onSelectedMember: (StudiesMember) -> Unit,
     // Change Role Dialog
@@ -124,6 +128,7 @@ private fun StudiesMemberRoleContent(
     StudiesMemberRoleScreen(
         modifier = modifier,
         isLoading = uiState.isLoading,
+        role = role,
         studiesMembers = uiState.studiesMembers,
         onSelectedMember = onSelectedMember,
         onChangeRoleDialogShow = onChangeRoleDialogShow,
@@ -136,6 +141,7 @@ private fun StudiesMemberRoleContent(
 private fun StudiesMemberRoleScreen(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
+    role: Role,
     studiesMembers: List<StudiesMember>,
     onSelectedMember: (StudiesMember) -> Unit,
     onChangeRoleDialogShow: () -> Unit,
@@ -162,7 +168,8 @@ private fun StudiesMemberRoleScreen(
             itemsIndexed(studiesMembers) { index, member ->
                 StudiesMemberRoleUnit(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    role = member.groupRole,
+                    myRole = role,
+                    memberRole = member.groupRole,
                     name = member.name,
                     profileImageUrl = member.profileImg,
                     onChangeRole = {
@@ -197,10 +204,27 @@ private fun StudiesMemberRoleScreen(
 
 @Composable
 @NeeGongNaeGongPreviews
-private fun PreviewStudiesMemberRoleScreen() {
+private fun Preview_Leader_StudiesMemberRoleScreen() {
     NeeGongNaeGongTheme {
         StudiesMemberRoleScreen(
             isLoading = false,
+            role = Role.LEADER,
+            studiesMembers = StudiesPreviewDataProvider().getStudiesMembers(),
+            onSelectedMember = {},
+            onChangeRoleDialogShow = {},
+            onExpelMemberDialogShow = {},
+            popBackStack = {},
+        )
+    }
+}
+
+@Composable
+@NeeGongNaeGongPreviews
+private fun Preview_Member_StudiesMemberRoleScreen() {
+    NeeGongNaeGongTheme {
+        StudiesMemberRoleScreen(
+            isLoading = false,
+            role = Role.MEMBER,
             studiesMembers = StudiesPreviewDataProvider().getStudiesMembers(),
             onSelectedMember = {},
             onChangeRoleDialogShow = {},
