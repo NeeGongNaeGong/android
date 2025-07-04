@@ -45,6 +45,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.ErrorItem
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.NoDataItem
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailContract
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -56,26 +57,27 @@ import java.time.LocalDate
 fun StudiesDrawerContent(
     navBackStackEntry: NavBackStackEntry,
     viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry),
-    navigateTodStudiesEdit: () -> Unit,
-    navigateToStudiesMembersRole: () -> Unit,
-    navigateToStudiesApplications: () -> Unit,
+    navigateTodStudiesEdit: (Role) -> Unit,
+    navigateToStudiesMembersRole: (Role) -> Unit,
+    navigateToStudiesApplications: (Role) -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val myStudyList = viewModel.myStudyList.collectAsLazyPagingItems()
-
+    val role = Role.MANAGER
     StudiesDrawer(
         headerImageUrl = uiState.value.studies.studyInfo.profileImg,
         name = uiState.value.studies.studyInfo.name,
         description = uiState.value.studies.studyInfo.description,
+        role = role,
         myStudyList = myStudyList,
         onStudyDeleteClick = {
             viewModel.setEvent(
                 StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
             )
         },
-        navigateTodStudiesEdit = navigateTodStudiesEdit,
-        navigateToStudiesMembersRole = navigateToStudiesMembersRole,
-        navigateToStudiesApplications = navigateToStudiesApplications,
+        navigateTodStudiesEdit = { navigateTodStudiesEdit(role) },
+        navigateToStudiesMembersRole = { navigateToStudiesMembersRole(role) },
+        navigateToStudiesApplications = { navigateToStudiesApplications(role) },
     )
 }
 
@@ -85,6 +87,7 @@ private fun StudiesDrawer(
     headerImageUrl: String? = null,
     name: String = "",
     description: String = "",
+    role: Role,
     myStudyList: LazyPagingItems<MyStudyGroupInfo>,
     onMyStudyClick: () -> Unit = {},
     onStudyDeleteClick: () -> Unit = {},
@@ -164,13 +167,15 @@ private fun StudiesDrawer(
             )
         }
 
-        item {
-            // 스터디 삭제 버튼
-            DrawerMenuItem(
-                icon = R.drawable.ic_studies_drw_studies_delete,
-                title = stringResource(R.string.studies_drw_studies_delete),
-                onClick = onStudyDeleteClick,
-            )
+        if (role == Role.LEADER) {
+            item {
+                // 스터디 삭제 버튼
+                DrawerMenuItem(
+                    icon = R.drawable.ic_studies_drw_studies_delete,
+                    title = stringResource(R.string.studies_drw_studies_delete),
+                    onClick = onStudyDeleteClick,
+                )
+            }
         }
 
         item {
@@ -357,6 +362,7 @@ private fun PreviewLightModeStudiesDrawer() {
             modifier = Modifier.fillMaxWidth(0.75F),
             name = "화이트 스터디",
             description = "하얗습니다.",
+            role = Role.MANAGER,
             myStudyList = lazyItems,
         )
     }

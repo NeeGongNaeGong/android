@@ -64,6 +64,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             StudiesWaitingToJoinRoute(
                 modifier = Modifier,
                 studyGroupId = route.studyGroupId,
+                role = route.role,
                 popBackStack = navController::popBackStack,
             )
         }
@@ -73,6 +74,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             StudiesMemberRoleRoute(
                 modifier = Modifier,
                 studyGroupId = route.studyGroupId,
+                role = route.role,
                 popBackStack = navController::popBackStack,
             )
         }
@@ -88,6 +90,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             StudiesEditRoute(
                 modifier = Modifier,
                 studyGroupId = route.studyGroupId,
+                role = route.role,
                 popBackStack = navController::popBackStack,
             )
         }
