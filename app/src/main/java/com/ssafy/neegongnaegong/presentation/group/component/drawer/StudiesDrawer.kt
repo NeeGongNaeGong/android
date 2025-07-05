@@ -323,7 +323,54 @@ private fun StudiesDrawer(
 
 @NeeGongNaeGongPreviews
 @Composable
-private fun PreviewLightModeStudiesDrawer() {
+private fun Preview_Leader_StudiesDrawer() {
+    val sampleItems =
+        mutableListOf<MyStudyGroupInfo>().apply {
+            for (i in 0..4) {
+                add(
+                    MyStudyGroupInfo(
+                        id = i.toLong(),
+                        leader =
+                            MyStudyGroupInfo.LeaderInfo(
+                                id = i.toLong(),
+                                name = "이름",
+                            ),
+                        name = "Araceli McLaughlin",
+                        maxMembers = 1905,
+                        currentMembers = 6511,
+                        description = "leo",
+                        profileImg = "inimicus",
+                        isPublic = false,
+                        targetStudyTime = 4273,
+                        category =
+                            MyStudyGroupInfo.CategoryInfo(
+                                id = i.toLong(),
+                                name = "Raymond Frank",
+                            ),
+                        createdDate = LocalDate.now(),
+                        tags = listOf(),
+                    ),
+                )
+            }
+        }
+
+    val pagingData = PagingData.from(sampleItems)
+    val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
+
+    NeeGongNaeGongTheme {
+        StudiesDrawer(
+            modifier = Modifier.fillMaxWidth(0.75F),
+            name = "화이트 스터디",
+            description = "하얗습니다.",
+            role = Role.LEADER,
+            myStudyList = lazyItems,
+        )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun Preview_Manager_StudiesDrawer() {
     val sampleItems =
         mutableListOf<MyStudyGroupInfo>().apply {
             for (i in 0..4) {
