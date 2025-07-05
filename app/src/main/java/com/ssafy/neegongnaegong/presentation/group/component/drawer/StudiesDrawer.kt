@@ -241,7 +241,7 @@ private fun StudiesDrawer(
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 5.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 items(
                     count = myStudyList.itemCount,
