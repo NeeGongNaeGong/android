@@ -39,14 +39,14 @@ fun LatestContentWindow(
     modifier: Modifier = Modifier,
     @DrawableRes icon: Int,
     iconColor: Color,
-    notification: StudiesLatestContent?,
+    latestContent: StudiesLatestContent?,
     readStatus: Boolean,
     onClick: (Long) -> Unit = {},
 ) {
     Box(
         modifier =
             modifier
-                .clickable(onClick = { if (notification != null) onClick(notification.id) }),
+                .clickable(onClick = { if (latestContent != null) onClick(latestContent.id) }),
     ) {
         Row(
             modifier =
@@ -62,7 +62,7 @@ fun LatestContentWindow(
                 tint = iconColor,
                 contentDescription = "",
             )
-            if (notification == null) {
+            if (latestContent == null) {
                 Text(
                     modifier =
                         Modifier
@@ -85,7 +85,7 @@ fun LatestContentWindow(
                     modifier =
                         Modifier
                             .padding(start = 8.dp, end = 4.dp),
-                    text = notification.title,
+                    text = latestContent.title,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
@@ -113,9 +113,9 @@ fun LatestContentWindow(
                     )
                 }
             }
-            when (notification) {
+            when (latestContent) {
                 is StudiesLatestContent.LatestNotice -> {
-                    val relativeTime = getRelativeTimeString(notification.createdAt)
+                    val relativeTime = getRelativeTimeString(latestContent.createdAt)
                     // 상대적 시간
                     Text(
                         text = relativeTime,
@@ -127,7 +127,7 @@ fun LatestContentWindow(
                 is StudiesLatestContent.LatestVote -> {
                     // 종료 시간
                     Text(
-                        text = "종료 : ${notification.endTime.toDateString()}",
+                        text = "종료 : ${latestContent.endTime.toDateString()}",
                         color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                         fontSize = 14.sp,
                     )
@@ -150,7 +150,7 @@ private fun PreviewStudiesNoticeWindow() {
         LatestContentWindow(
             icon = R.drawable.ic_studies_detail_notice,
             iconColor = NeeGongNaeGongTheme.colorScheme.blue,
-            notification = sampleAnnouncement,
+            latestContent = sampleAnnouncement,
             readStatus = true,
             onClick = { },
         )
@@ -170,7 +170,7 @@ private fun PreviewStudiesVotingWindow() {
         LatestContentWindow(
             icon = R.drawable.ic_studies_detail_voting,
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
-            notification = sampleVoting,
+            latestContent = sampleVoting,
             readStatus = false,
             onClick = { },
         )
@@ -184,7 +184,7 @@ private fun PreviewStudiesEmptyWindow() {
         LatestContentWindow(
             icon = R.drawable.ic_studies_detail_voting,
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
-            notification = null,
+            latestContent = null,
             readStatus = false,
             onClick = { },
         )

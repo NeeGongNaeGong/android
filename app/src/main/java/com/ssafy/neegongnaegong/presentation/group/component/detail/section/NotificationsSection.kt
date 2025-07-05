@@ -28,7 +28,7 @@ fun NotificationsSection(
             modifier = Modifier.fillMaxWidth(),
             icon = R.drawable.ic_studies_detail_notice,
             iconColor = NeeGongNaeGongTheme.colorScheme.blue,
-            notification = notice,
+            latestContent = notice,
             readStatus = noticeReadCheck,
             onClick = onNoticeClick,
         )
@@ -36,7 +36,7 @@ fun NotificationsSection(
             modifier = Modifier.fillMaxWidth(),
             icon = R.drawable.ic_studies_detail_voting,
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
-            notification = vote,
+            latestContent = vote,
             readStatus = voteReadCheck,
             onClick = onVotingClick,
         )
