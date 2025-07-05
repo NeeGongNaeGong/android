@@ -54,8 +54,8 @@ jobs:
             const approversList = Array.from(approvers).join(', ');
             console.log(`승인자 목록: ${approversList}`);
             
-            // 정확히 2명이 승인했고, 그 승인이 방금 2개가 되었는지 확인
-            const exactlyTwoApprovals = approvalCount === 2;
+            // 정확히 1명이 승인했고, 그 승인이 방금 1개가 되었는지 확인
+            const exactlyTwoApprovals = approvalCount === 1;
             
             return { 
               count: approvalCount, 
@@ -85,7 +85,7 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "[APPROVED✅] PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}"
           body: |
-            ${{ fromJSON(steps.get-pr-info.outputs.result).author }}님의 Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 2명의 승인을 받았습니다.
+            ${{ fromJSON(steps.get-pr-info.outputs.result).author }}님의 Pull Request #${{ github.event.pull_request.number }} "${{ github.event.pull_request.title }}"가 1명의 승인을 받았습니다.
             
             승인자 목록: ${{ fromJSON(steps.get-pr-info.outputs.result).users }}
             
