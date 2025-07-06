@@ -43,6 +43,8 @@ class MyStudyGroupListPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<CursorSliceKey, MyStudyGroupInfo>): CursorSliceKey? {
-        return null
+        return state.firstItemOrNull()?.let {
+            CursorSliceKey(it.cursorCreatedAt, it.cursorId)
+        }
     }
 }

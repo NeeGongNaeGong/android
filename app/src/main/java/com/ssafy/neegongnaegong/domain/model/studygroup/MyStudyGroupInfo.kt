@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class MyStudyGroupInfo(
     val id: Long,
@@ -15,6 +16,8 @@ data class MyStudyGroupInfo(
     val category: CategoryInfo,
     val createdDate: LocalDate,
     val tags: List<TagInfo>,
+    val cursorCreatedAt: LocalDateTime,
+    val cursorId: Long,
 ) {
     data class LeaderInfo(
         val id: Long,

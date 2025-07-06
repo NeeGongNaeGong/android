@@ -56,6 +56,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun StudiesDrawerContent(
@@ -361,6 +362,8 @@ private fun Preview_Leader_StudiesDrawer() {
                             ),
                         createdDate = LocalDate.now(),
                         tags = listOf(),
+                        cursorCreatedAt = LocalDateTime.now(),
+                        cursorId = 0L,
                     ),
                 )
             }
@@ -408,6 +411,8 @@ private fun Preview_Manager_StudiesDrawer() {
                             ),
                         createdDate = LocalDate.now(),
                         tags = listOf(),
+                        cursorCreatedAt = LocalDateTime.now(),
+                        cursorId = 0L,
                     ),
                 )
             }

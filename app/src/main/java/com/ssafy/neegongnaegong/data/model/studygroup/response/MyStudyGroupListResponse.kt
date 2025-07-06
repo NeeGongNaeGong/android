@@ -22,6 +22,8 @@ data class MyStudyGroupListResponse(
         val category: CategoryResponse,
         val createdDate: LocalDate,
         val tags: List<TagResponse>,
+        val cursorCreatedAt: LocalDateTime,
+        val cursorId: Long,
     ) {
         data class LeaderResponse(
             val id: Long,

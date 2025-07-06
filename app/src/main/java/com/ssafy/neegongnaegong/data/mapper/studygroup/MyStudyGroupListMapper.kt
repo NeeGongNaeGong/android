@@ -18,6 +18,8 @@ internal object MyStudyGroupListMapper {
             category = category.toDomain(),
             createdDate = createdDate,
             tags = tags.map { it.toDomain() },
+            cursorCreatedAt = cursorCreatedAt,
+            cursorId = cursorId,
         )
 
     fun MyStudyGroupListResponse.MyStudyGroupResponse.LeaderResponse.toDomain() =
