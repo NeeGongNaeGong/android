@@ -51,7 +51,6 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         composable<AppNavigation.Screen.Studies.StudiesFind> {
             StudiesFindRoute(
                 modifier = Modifier,
-                popBackStack = { },
                 navigateToStudiesDetail = {
                     navController.navigate(AppNavigation.Screen.Studies.StudiesDetail(it))
                 },

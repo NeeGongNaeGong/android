@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.group.find
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,14 +36,9 @@ import kotlinx.coroutines.flow.collectLatest
 fun StudiesFindRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesFindViewModel = hiltViewModel(),
-    popBackStack: () -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
 ) {
-    BackHandler {
-        popBackStack()
-    }
-
     LaunchedEffect(Unit) {
         viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies)
     }
@@ -129,8 +123,7 @@ private fun StudiesFindScreen(
                                 Modifier
                                     .noRippleClickable {
                                         navigateToStudiesManagement()
-                                    }
-                                    .padding(8.dp),
+                                    }.padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_studies_create),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -143,8 +136,7 @@ private fun StudiesFindScreen(
                                 Modifier
                                     .noRippleClickable {
                                         navigateToStudiesDetail(-1) // TODO : 검색기능 구현 후 적용
-                                    }
-                                    .padding(8.dp),
+                                    }.padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_serach),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
