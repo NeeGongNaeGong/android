@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
 import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -65,16 +66,16 @@ object AppNavigation {
             data class StudiesDetail(val studyGroupId: Long) : Studies
 
             @Serializable
-            data class StudiesApplication(val studyGroupId: Long) : Studies
+            data class StudiesApplication(val role: Role, val studyGroupId: Long) : Studies
 
             @Serializable
-            data class StudiesMembersRole(val studyGroupId: Long) : Studies
+            data class StudiesMembersRole(val role: Role, val studyGroupId: Long) : Studies
 
             @Serializable
             data object Create : Studies
 
             @Serializable
-            data class Edit(val studyGroupId: Long) : Studies
+            data class Edit(val role: Role, val studyGroupId: Long) : Studies
 
             @Serializable
             data class MakeVote(val studyGroupId: Long) : Studies

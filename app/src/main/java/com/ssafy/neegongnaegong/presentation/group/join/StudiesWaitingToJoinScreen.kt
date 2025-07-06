@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesApplicationsMember
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.group.join.component.StudiesApplicationJoinUnit
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -30,6 +31,7 @@ fun StudiesWaitingToJoinRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesWaitingToJoinViewModel = hiltViewModel(),
     studyGroupId: Long,
+    role: Role,
     popBackStack: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -41,6 +43,7 @@ fun StudiesWaitingToJoinRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
+        role = role,
         onLoadApplicationsList = {
             viewModel.setEvent(
                 StudiesWaitingToJoinContract.Event.OnLoadStudiesApplications(studyGroupId),
@@ -65,6 +68,7 @@ private fun StudiesWaitingToJoinContent(
     modifier: Modifier = Modifier,
     effect: Flow<StudiesWaitingToJoinContract.Effect>,
     uiState: StudiesWaitingToJoinContract.State,
+    role: Role,
     onLoadApplicationsList: () -> Unit,
     onApproval: (Long) -> Unit,
     onReject: (Long) -> Unit,
@@ -74,6 +78,7 @@ private fun StudiesWaitingToJoinContent(
 
     StudiesWaitingToJoinScreen(
         modifier = modifier,
+        role = role,
         isLoading = uiState.isLoading,
         applicationsList = uiState.applicationsList,
         onLoadApplicationsList = onLoadApplicationsList,
@@ -86,6 +91,7 @@ private fun StudiesWaitingToJoinContent(
 @Composable
 private fun StudiesWaitingToJoinScreen(
     modifier: Modifier = Modifier,
+    role: Role,
     isLoading: Boolean,
     applicationsList: List<StudiesApplicationsMember>,
     onLoadApplicationsList: () -> Unit,
@@ -113,6 +119,7 @@ private fun StudiesWaitingToJoinScreen(
             itemsIndexed(applicationsList) { index, application ->
                 StudiesApplicationJoinUnit(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    role = role,
                     status = application.status,
                     userId = application.userId,
                     name = application.name,
@@ -149,11 +156,28 @@ private fun StudiesWaitingToJoinScreen(
 
 @Composable
 @NeeGongNaeGongPreviews
-private fun PreviewStudiesWaitingToJoinScreen() {
+private fun Preview_Manager_StudiesWaitingToJoinScreen() {
     NeeGongNaeGongTheme {
         StudiesWaitingToJoinScreen(
             applicationsList = StudiesPreviewDataProvider().getStudiesApplications(),
             isLoading = false,
+            role = Role.MANAGER,
+            onLoadApplicationsList = {},
+            onApproval = {},
+            onReject = {},
+            popBackStack = {},
+        )
+    }
+}
+
+@Composable
+@NeeGongNaeGongPreviews
+private fun Preview_Member_StudiesWaitingToJoinScreen() {
+    NeeGongNaeGongTheme {
+        StudiesWaitingToJoinScreen(
+            applicationsList = StudiesPreviewDataProvider().getStudiesApplications(),
+            isLoading = false,
+            role = Role.MEMBER,
             onLoadApplicationsList = {},
             onApproval = {},
             onReject = {},

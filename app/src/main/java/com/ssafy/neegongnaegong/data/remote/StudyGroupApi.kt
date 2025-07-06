@@ -4,6 +4,8 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemsRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.MyStudyGroupListResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
@@ -102,6 +104,18 @@ interface StudyGroupApi {
         @Path("user-id") userId: Long,
         @Query("notification-id") notificationId: Long?,
     ): Result<ApiResponse<Unit>>
+
+    @GET("$PREFIX/{study-group-id}")
+    fun getStudyGroupDetail(
+        @Path("study-group-id") studyGroupId: Long,
+    ): Result<ApiResponse<StudyGroupDetailResponse>>
+
+    @GET("$PREFIX/my/list")
+    suspend fun getMyStudyGroupList(
+        @Query("cursor-created-at") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-id") cursorId: Long?,
+        @Query("size") size: Int,
+    ): Result<ApiResponse<MyStudyGroupListResponse>>
 
     companion object {
         private const val PREFIX = "/api/study-groups"
