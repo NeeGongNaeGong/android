@@ -106,7 +106,7 @@ interface StudyGroupApi {
     ): Result<ApiResponse<Unit>>
 
     @GET("$PREFIX/{study-group-id}")
-    fun getStudyGroupDetail(
+    suspend fun getStudyGroupDetail(
         @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<StudyGroupDetailResponse>>
 

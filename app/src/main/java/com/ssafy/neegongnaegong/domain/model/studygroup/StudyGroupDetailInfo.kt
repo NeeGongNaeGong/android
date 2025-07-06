@@ -1,5 +1,7 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse.Category
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import java.time.LocalDate
 
 data class StudyGroupDetailInfo(
@@ -9,13 +11,16 @@ data class StudyGroupDetailInfo(
     val profileImg: String,
     val isPublic: Boolean,
     val maxMembers: Int,
+    val currentMembers: Int,
     val targetStudyTime: Int,
-    val categoryName: String,
+    val category: Category,
     val leaderId: Long,
     val leaderName: String,
     val createdDate: LocalDate,
     val tags: List<Tag>,
-    val myGroupRole: String,
+    val myGroupRole: Role,
 ) {
+    data class Category(val id: Long, val name: String)
+
     data class Tag(val id: Long, val name: String)
 }
