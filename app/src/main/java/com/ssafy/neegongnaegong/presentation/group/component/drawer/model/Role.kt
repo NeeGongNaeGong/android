@@ -1,7 +1,5 @@
 package com.ssafy.neegongnaegong.presentation.group.component.drawer.model
 
-const val TEAM_LEADER = "TEAM_LEADER"
-
 enum class Role(val role: String) {
     LEADER("TEAM_LEADER"),
     MANAGER("TEAM_MANAGER"),
