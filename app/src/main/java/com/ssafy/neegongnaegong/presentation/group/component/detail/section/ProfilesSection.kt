@@ -31,7 +31,7 @@ fun ProfilesSection(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(vertical = 4.dp),
     ) {
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),

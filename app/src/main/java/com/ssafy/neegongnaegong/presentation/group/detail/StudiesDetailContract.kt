@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
@@ -23,8 +24,24 @@ class StudiesDetailContract {
             val studyGroupId: Long,
         ) : Event
 
+        data class OnLoadLatestContents(
+            val studyGroupId: Long,
+        ) : Event
+
         data class OndDeleteStudies(
             val studyGroupId: Long,
+        ) : Event
+
+        data class OnClickLatestNotice(
+            val noticeId: Long,
+        ) : Event
+
+        data class OnClickLatestVote(
+            val voteId: Long,
+        ) : Event
+
+        data class OnClickContents(
+            val startTabIndex: Int,
         ) : Event
     }
 
@@ -42,9 +59,26 @@ class StudiesDetailContract {
         val weeklyRankingsCursorStudyTime: Long? = null,
         val weeklyRankingsCursorUserId: Long? = null,
         val weeklyRankingsFirstPageRequestedAt: LocalDateTime? = null,
+        // latest-contents
+        val latestNotice: StudiesLatestContent.LatestNotice? = null,
+        val latestNoticeReadChecked: Boolean = false,
+        val latestVote: StudiesLatestContent.LatestVote? = null,
+        val latestVoteReadChecked: Boolean = false,
     ) : UiState
 
-    sealed interface Effect : UiEffect
+    sealed interface Effect : UiEffect {
+        data class NavigateToLatestNoticeDetail(
+            val noticeId: Long,
+        ) : Effect
+
+        data class NavigateToLatestVoteDetail(
+            val voteId: Long,
+        ) : Effect
+
+        data class NavigateToContents(
+            val startTabIndex: Int,
+        ) : Effect
+    }
 
     sealed interface Error : ErrorContext
 }

@@ -8,9 +8,12 @@ import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentsReadStatusResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
+import com.ssafy.neegongnaegong.data.remote.StudiesApi.Companion.PREFIX
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -133,6 +136,23 @@ interface StudiesApi {
         @Query("first-page-requested-at") firstPageRequestedAt: LocalDateTime?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesWeeklyRankingsResponse>>
+
+    @GET("$PREFIX/{study-group-id}/latest-notice-and-vote")
+    suspend fun getStudiesLatestContents(
+        @Path("study-group-id") studyGroupId: Long,
+    ): Result<ApiResponse<GetStudiesLatestContentResponse>>
+
+    @GET("$PREFIX/{study-groups-id}/me/read-status")
+    suspend fun getStudiesLatestContentsReadStatus(
+        @Path("study-groups-id") studyGroupId: Long,
+    ): Result<ApiResponse<GetStudiesLatestContentsReadStatusResponse>>
+
+    @PATCH("$PREFIX/{study-groups-id}/me/read-status")
+    suspend fun patchStudiesLatestContentsReadStatus(
+        @Path("study-groups-id") studyGroupId: Long,
+        @Query("read-notice") readNotice: Boolean?,
+        @Query("read-vote") readVote: Boolean?,
+    ): Result<ApiResponse<Unit>>
 
     companion object {
         const val PREFIX = "/api/study-groups"

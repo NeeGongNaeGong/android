@@ -10,6 +10,8 @@ import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesFeedsResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentResponse
+import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentsReadStatusResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
@@ -175,6 +177,29 @@ class NetworkStudiesDataSourceImpl
                     cursorUserId = cursorUserId,
                     firstPageRequestedAt = firstPageRequestedAt,
                     size = size,
+                )
+            }
+
+        override fun getStudiesLatestContents(studyGroupId: Long): Flow<GetStudiesLatestContentResponse> =
+            apiFlow {
+                studiesApi.getStudiesLatestContents(studyGroupId = studyGroupId)
+            }
+
+        override fun getStudiesLatestContentsReadStatus(studyGroupId: Long): Flow<GetStudiesLatestContentsReadStatusResponse> =
+            apiFlow {
+                studiesApi.getStudiesLatestContentsReadStatus(studyGroupId = studyGroupId)
+            }
+
+        override fun patchStudiesLatestContentsReadStatus(
+            studyGroupId: Long,
+            readNotice: Boolean?,
+            readVote: Boolean?,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.patchStudiesLatestContentsReadStatus(
+                    studyGroupId = studyGroupId,
+                    readNotice = readNotice,
+                    readVote = readVote,
                 )
             }
     }

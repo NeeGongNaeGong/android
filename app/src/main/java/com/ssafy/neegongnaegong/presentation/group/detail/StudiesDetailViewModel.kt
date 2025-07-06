@@ -8,7 +8,9 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesLatestContentsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.PatchStudiesLatestContentsReadStatusUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetMyStudyListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -26,9 +28,11 @@ class StudiesDetailViewModel
     @Inject
     constructor(
         private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
-        private val deleteStudiesUseCase: DeleteStudiesUseCase,
         private val getStudiesFeedsUseCase: GetStudiesFeedsUseCase,
         private val getStudiesWeeklyRankingsUseCase: GetStudiesWeeklyRankingsUseCase,
+        private val getStudiesLatestContentsUseCase: GetStudiesLatestContentsUseCase,
+        private val patchStudiesLatestContentsReadStatusUseCase: PatchStudiesLatestContentsReadStatusUseCase,
+        private val deleteStudiesUseCase: DeleteStudiesUseCase,
         private val getMyStudyListUseCase: GetMyStudyListUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         var myStudyList: Flow<PagingData<MyStudyGroupInfo>> = emptyFlow()
@@ -49,7 +53,33 @@ class StudiesDetailViewModel
                 is StudiesDetailContract.Event.OnLoad -> onLoad(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadFeeds -> onLoadFeeds(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadWeeklyRankings -> onLoadWeeklyRankings(event.studyGroupId)
+                is StudiesDetailContract.Event.OnLoadLatestContents -> onLoadLatestContents(event.studyGroupId)
                 is StudiesDetailContract.Event.OndDeleteStudies -> deleteStudies(event.studyGroupId)
+                is StudiesDetailContract.Event.OnClickLatestNotice -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToLatestNoticeDetail(
+                            event.noticeId,
+                        )
+                    }
+                    readContents(studyGroupId = uiState.value.studies.id, readNotice = true)
+                }
+
+                is StudiesDetailContract.Event.OnClickLatestVote -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToLatestVoteDetail(
+                            event.voteId,
+                        )
+                    }
+                    readContents(studyGroupId = uiState.value.studies.id, readVote = true)
+                }
+
+                is StudiesDetailContract.Event.OnClickContents -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToContents(
+                            event.startTabIndex,
+                        )
+                    }
+                }
             }
         }
 
@@ -117,6 +147,24 @@ class StudiesDetailViewModel
             }
         }
 
+        private fun onLoadLatestContents(studyGroupId: Long) {
+            viewModelScope.launch {
+                getStudiesLatestContentsUseCase(studyGroupId)
+                    .withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
+                        setState {
+                            copy(
+                                latestNotice = result.contents.latestNotice,
+                                latestNoticeReadChecked = result.readStatus.lastNoticeChecked,
+                                latestVote = result.contents.latestVote,
+                                latestVoteReadChecked = result.readStatus.lastVoteChecked,
+                            )
+                        }
+                    }
+            }
+        }
+
         private fun deleteStudies(studyGroupId: Long) {
             viewModelScope.launch {
                 deleteStudiesUseCase(studyGroupId)
@@ -125,6 +173,26 @@ class StudiesDetailViewModel
                     }.safeCollect {
                         showMessage("스터디가 삭제되었습니다.")
                     }
+            }
+        }
+
+        private fun readContents(
+            studyGroupId: Long,
+            readNotice: Boolean? = null,
+            readVote: Boolean? = null,
+        ) {
+            viewModelScope.launch {
+                Log.d(TAG, "readContents: [$readNotice, $readVote]")
+                patchStudiesLatestContentsReadStatusUseCase(
+                    studyGroupId = studyGroupId,
+                    readNotice = readNotice,
+                    readVote = readVote,
+                ).withLoading {
+                    Log.d(TAG, "readContents: 진행")
+                    setState { copy(isLoading = it) }
+                }.safeCollect {
+                    Log.d(TAG, "readContents: 성공")
+                }
             }
         }
     }

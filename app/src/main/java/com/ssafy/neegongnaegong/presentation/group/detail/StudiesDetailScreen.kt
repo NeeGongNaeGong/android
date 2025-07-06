@@ -2,9 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -18,7 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
-import com.ssafy.neegongnaegong.domain.model.studies.NotificationData
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent.LatestNotice
+import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent.LatestVote
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
 import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
@@ -27,6 +26,7 @@ import com.ssafy.neegongnaegong.presentation.component.studyrecord.StudyRecordLi
 import com.ssafy.neegongnaegong.presentation.group.component.detail.CustomStudiesFAB
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.NotificationsSection
 import com.ssafy.neegongnaegong.presentation.group.component.detail.section.ProfilesSection
+import com.ssafy.neegongnaegong.presentation.group.detail.component.StudiesDetailKebabMenu
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
@@ -38,6 +38,9 @@ fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
     studyGroupId: Long,
+    navigateToContents: (Int, Long) -> Unit,
+    navigateToLatestNoticeDetail: (Long, Long) -> Unit,
+    navigateToLatestVoteDetail: (Long, Long) -> Unit,
     popBackStack: () -> Unit = {},
 ) {
     val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
@@ -60,6 +63,31 @@ fun StudiesDetailRoute(
         viewModel.setEvent(StudiesDetailContract.Event.OnLoad(studyGroupId))
         viewModel.setEvent(StudiesDetailContract.Event.OnLoadFeeds(studyGroupId))
         viewModel.setEvent(StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId))
+        viewModel.setEvent(StudiesDetailContract.Event.OnLoadLatestContents(studyGroupId))
+    }
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is StudiesDetailContract.Effect.NavigateToLatestNoticeDetail ->
+                    navigateToLatestNoticeDetail(
+                        studyGroupId,
+                        effect.noticeId,
+                    )
+
+                is StudiesDetailContract.Effect.NavigateToLatestVoteDetail ->
+                    navigateToLatestVoteDetail(
+                        studyGroupId,
+                        effect.voteId,
+                    )
+
+                is StudiesDetailContract.Effect.NavigateToContents ->
+                    navigateToContents(
+                        effect.startTabIndex,
+                        studyGroupId,
+                    )
+            }
+        }
     }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     StudiesContent(
@@ -71,6 +99,21 @@ fun StudiesDetailRoute(
                 StudiesDetailContract.Event.OnLoadWeeklyRankings(studyGroupId),
             )
         },
+        onContentsClick = { startTabIndex ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickContents(startTabIndex),
+            )
+        },
+        onLatestNoticeClick = { noticeId ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickLatestNotice(noticeId),
+            )
+        },
+        onLatestVoteClick = { voteId ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickLatestVote(voteId),
+            )
+        },
     )
 }
 
@@ -80,6 +123,9 @@ private fun StudiesContent(
     uiState: StudiesDetailContract.State,
     onLoadFeeds: () -> Unit,
     onLoadWeeklyRankings: () -> Unit,
+    onContentsClick: (Int) -> Unit,
+    onLatestNoticeClick: (Long) -> Unit,
+    onLatestVoteClick: (Long) -> Unit,
 ) {
     val currentDrawerState = LocalDrawerState.current
     StudiesDetailScreen(
@@ -91,8 +137,15 @@ private fun StudiesContent(
         onLoadFeeds = onLoadFeeds,
         weeklyRankings = uiState.weeklyRankings,
         studyGoalTime = uiState.studies.studyInfo.targetStudyTime,
+        latestNotice = uiState.latestNotice,
+        latestNoticeReadChecked = uiState.latestNoticeReadChecked,
+        latestVote = uiState.latestVote,
+        latestVoteReadChecked = uiState.latestVoteReadChecked,
         onProfileClick = {},
         onLoadWeeklyRankings = onLoadWeeklyRankings,
+        onContentsClick = onContentsClick,
+        onLatestNoticeClick = onLatestNoticeClick,
+        onLatestVoteClick = onLatestVoteClick,
     )
 }
 
@@ -106,8 +159,15 @@ private fun StudiesDetailScreen(
     onLoadFeeds: () -> Unit,
     weeklyRankings: List<WeeklyRankingsMember> = emptyList(),
     studyGoalTime: Int = (TimeUnit.HOUR.seconds * 7).toInt(),
+    latestNotice: LatestNotice? = null,
+    latestNoticeReadChecked: Boolean = false,
+    latestVote: LatestVote? = null,
+    latestVoteReadChecked: Boolean = false,
     onProfileClick: (Long) -> Unit = {},
     onLoadWeeklyRankings: () -> Unit,
+    onContentsClick: (Int) -> Unit = {},
+    onLatestNoticeClick: (Long) -> Unit = {},
+    onLatestVoteClick: (Long) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     Column(
@@ -129,6 +189,13 @@ private fun StudiesDetailScreen(
                     currentDrawerState.open()
                 }
             },
+            actionButtons = {
+                StudiesDetailKebabMenu(
+                    modifier = Modifier,
+                    onNoticeClick = { onContentsClick(0) },
+                    onVoteClick = { onContentsClick(1) },
+                )
+            },
         )
 
         // 콘텐츠 영역
@@ -142,26 +209,16 @@ private fun StudiesDetailScreen(
                 onProfileClick = onProfileClick,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-            // 스터디 공지사항 카드 TODO : 실제 데이터 삽입 필요
+            // 스터디 공지사항 카드
             NotificationsSection(
                 modifier = Modifier.padding(5.dp),
-                announcements =
-                    NotificationData(
-                        id = 1,
-                        title = "5월 모임 공지",
-                        dateTime = "2025.04.11 09:30:00",
-                    ),
-                voting =
-                    NotificationData(
-                        id = 1,
-                        title = "점메추 투표",
-                        dateTime = "2025.04.01 09:30:00",
-                    ),
-                onAnnouncementClick = {},
-                onVotingClick = {},
+                notice = latestNotice,
+                noticeReadCheck = latestNoticeReadChecked,
+                vote = latestVote,
+                voteReadCheck = latestVoteReadChecked,
+                onNoticeClick = onLatestNoticeClick,
+                onVotingClick = onLatestVoteClick,
             )
-            Spacer(modifier = Modifier.height(16.dp))
             StudyRecordList(
                 modifier =
                     Modifier
