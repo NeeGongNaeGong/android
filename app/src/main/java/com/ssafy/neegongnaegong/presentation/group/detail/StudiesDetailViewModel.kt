@@ -2,16 +2,22 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesLatestContentsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.PatchStudiesLatestContentsReadStatusUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetMyStudyListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.StudiesContract
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +33,10 @@ class StudiesDetailViewModel
         private val getStudiesLatestContentsUseCase: GetStudiesLatestContentsUseCase,
         private val patchStudiesLatestContentsReadStatusUseCase: PatchStudiesLatestContentsReadStatusUseCase,
         private val deleteStudiesUseCase: DeleteStudiesUseCase,
+        private val getMyStudyListUseCase: GetMyStudyListUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
+        var myStudyList: Flow<PagingData<MyStudyGroupInfo>> = emptyFlow()
+
         override fun handleException(
             e: Throwable,
             errorContext: ErrorContext,
@@ -76,16 +85,21 @@ class StudiesDetailViewModel
 
         private fun onLoad(studyGroupId: Long) =
             viewModelScope.launch {
-                getStudiesDetailUseCase(studyGroupId)
-                    .withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect { studies ->
-                        setState {
-                            copy(
-                                studies = studies,
-                            )
+                launch {
+                    getStudiesDetailUseCase(studyGroupId)
+                        .withLoading {
+                            setState { copy(isLoading = it) }
+                        }.safeCollect { studies ->
+                            setState {
+                                copy(
+                                    studies = studies,
+                                )
+                            }
                         }
-                    }
+                }
+                launch {
+                    myStudyList = getMyStudyListUseCase().cachedIn(viewModelScope)
+                }
             }
 
         private fun onLoadFeeds(studyGroupId: Long) {

@@ -35,7 +35,7 @@ fun ContentTextField(
                 letterSpacing = 0.2.sp,
             )
         },
-        maxLines = 5,
+        maxLines = 40,
         colors =
             TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,

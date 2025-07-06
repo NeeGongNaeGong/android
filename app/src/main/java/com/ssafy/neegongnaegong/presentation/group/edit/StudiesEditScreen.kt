@@ -8,6 +8,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,12 +27,15 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
@@ -44,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +58,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.Tag
@@ -61,10 +68,12 @@ import com.ssafy.neegongnaegong.presentation.group.component.StudiesCategoryDrop
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesImagePicker
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesMaxMemberDropdown
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesTimeDropdown
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.FileUtils.getFileExtension
 import com.ssafy.neegongnaegong.presentation.util.FileUtils.uriToRequestBody
+import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import okhttp3.RequestBody
@@ -74,6 +83,7 @@ fun StudiesEditRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesEditViewModel = hiltViewModel(),
     studyGroupId: Long,
+    role: Role,
     popBackStack: () -> Unit,
 ) {
     BackHandler {
@@ -89,6 +99,7 @@ fun StudiesEditRoute(
     StudiesEditContent(
         modifier = modifier,
         effect = viewModel.effect,
+        role = role,
         uiState = uiState.value,
         onNameChanged = { viewModel.setEvent(StudiesEditContract.Event.OnNameChanged(it)) },
         onIsPublicChanged = {
@@ -146,6 +157,7 @@ fun StudiesEditRoute(
 private fun StudiesEditContent(
     modifier: Modifier = Modifier,
     effect: Flow<StudiesEditContract.Effect>,
+    role: Role,
     uiState: StudiesEditContract.State,
     onNameChanged: (String) -> Unit,
     onIsPublicChanged: (Boolean) -> Unit,
@@ -172,6 +184,7 @@ private fun StudiesEditContent(
     }
     StudiesEditScreen(
         modifier = modifier,
+        enable = role == Role.LEADER,
         name = uiState.studyInfo.name,
         isPublic = uiState.studyInfo.isPublic,
         targetStudyTime = uiState.studyInfo.targetStudyTime,
@@ -183,7 +196,7 @@ private fun StudiesEditContent(
         tags = uiState.tags,
         description = uiState.studyInfo.description,
         profileImg = uiState.studyInfo.profileImg,
-        validateCreateStudies = uiState.validateCreateStudies,
+        validateCreateStudies = role == Role.LEADER && uiState.validateCreateStudies,
         onNameChanged = onNameChanged,
         onIsPublicChanged = onIsPublicChanged,
         onTargetStudyTimeChanged = onTargetStudyTimeChanged,
@@ -206,6 +219,7 @@ private fun StudiesEditContent(
 @Composable
 private fun StudiesEditScreen(
     modifier: Modifier = Modifier,
+    enable: Boolean,
     name: String,
     isPublic: Boolean,
     targetStudyTime: Int,
@@ -246,9 +260,7 @@ private fun StudiesEditScreen(
             },
         )
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
             title = {
                 Text(
@@ -277,11 +289,8 @@ private fun StudiesEditScreen(
             val nameMaxLength = 20
             OutlinedTextField(
                 value = name,
-                onValueChange = {
-                    if (it.length <= nameMaxLength) {
-                        onNameChanged(it)
-                    }
-                },
+                enabled = enable,
+                onValueChange = { if (it.length <= nameMaxLength) onNameChanged(it) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -341,6 +350,7 @@ private fun StudiesEditScreen(
                         contentDescription = null,
                     )
                     Switch(
+                        enabled = enable,
                         checked = isPublic,
                         onCheckedChange = { onIsPublicChanged(it) },
                         colors =
@@ -363,11 +373,18 @@ private fun StudiesEditScreen(
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
-                StudiesTimeDropdown(
-                    modifier = modifier,
-                    targetStudyTime = targetStudyTime,
-                    onTargetStudyTimeChanged = onTargetStudyTimeChanged,
-                )
+                if (enable) {
+                    StudiesTimeDropdown(
+                        modifier = modifier,
+                        targetStudyTime = targetStudyTime,
+                        onTargetStudyTimeChanged = onTargetStudyTimeChanged,
+                    )
+                } else {
+                    Text(
+                        text = "주 ${targetStudyTime / TimeUnit.HOUR.seconds} 시간",
+                        style = NeeGongNaeGongTheme.typography.bodySmall,
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(10.dp))
             Row(
@@ -380,18 +397,23 @@ private fun StudiesEditScreen(
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
-                StudiesMaxMemberDropdown(
-                    modifier = Modifier,
-                    currentMembers = currentMembers,
-                    maxMembers = maxMembers,
-                    onMaxMembersChanged = onMaxMembersChanged,
-                )
+                if (enable) {
+                    StudiesMaxMemberDropdown(
+                        modifier = Modifier,
+                        currentMembers = currentMembers,
+                        maxMembers = maxMembers,
+                        onMaxMembersChanged = onMaxMembersChanged,
+                    )
+                } else {
+                    Text(
+                        text = "$maxMembers 명",
+                        style = NeeGongNaeGongTheme.typography.bodyLarge,
+                    )
+                }
             }
 
             HorizontalDivider(
-                modifier =
-                    Modifier
-                        .padding(vertical = 10.dp),
+                modifier = Modifier.padding(vertical = 10.dp),
                 color = NeeGongNaeGongTheme.colorScheme.gray3,
             )
             // 카테고리 선택
@@ -402,22 +424,29 @@ private fun StudiesEditScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = stringResource(R.string.studies_edit_select_category),
+                    text = if (enable)stringResource(R.string.studies_edit_select_category) else "카테고리",
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
-                StudiesCategoryDropdown(
-                    modifier = Modifier,
-                    selectedCategory = selectedCategory,
-                    categories = categories,
-                    onCategorySelected = onCategorySelected,
-                )
+                if (enable) {
+                    StudiesCategoryDropdown(
+                        modifier = Modifier,
+                        selectedCategory = selectedCategory,
+                        categories = categories,
+                        onCategorySelected = onCategorySelected,
+                    )
+                } else {
+                    Text(
+                        text = selectedCategory?.name ?: "",
+                        style = NeeGongNaeGongTheme.typography.bodyLarge,
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(10.dp))
             // 태그 선택
             Text(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = stringResource(R.string.studies_edit_select_tags),
+                text = if (enable) stringResource(R.string.studies_edit_select_tags) else "태그",
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
@@ -428,7 +457,7 @@ private fun StudiesEditScreen(
                         Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
-                    text = "카레고리를 선택해주세요",
+                    text = if (enable) "카테고리를 선택해주세요" else "선택된 카테고리가 없습니다",
                     style = NeeGongNaeGongTheme.typography.bodySmall,
                     color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                     textAlign = TextAlign.Center,
@@ -442,43 +471,47 @@ private fun StudiesEditScreen(
             ) {
                 tags.forEach { tag ->
                     val isSelected = tag in selectedTags
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = {
-                            if (isSelected) {
-                                onTagUnSelected(tag)
-                            } else {
-                                onTagSelected(tag)
-                            }
-                        },
-                        label = { Text(tag.name) },
-                        leadingIcon =
-                            if (isSelected) {
-                                {
-                                    Icon(
-                                        Icons.Default.Check,
-                                        contentDescription = null,
-                                        tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                    )
+                    if (enable || (isSelected)) {
+                        FilterChip(
+                            enabled = enable,
+                            selected = isSelected,
+                            onClick = {
+                                if (isSelected) {
+                                    onTagUnSelected(tag)
+                                } else {
+                                    onTagSelected(tag)
                                 }
-                            } else {
-                                null
                             },
-                        colors =
-                            FilterChipDefaults.filterChipColors(
-                                labelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                containerColor = NeeGongNaeGongTheme.colorScheme.background,
-                                selectedLabelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
-                                selectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
-                            ),
-                    )
+                            label = { Text(tag.name) },
+                            leadingIcon =
+                                if (isSelected) {
+                                    {
+                                        Icon(
+                                            Icons.Default.Check,
+                                            contentDescription = null,
+                                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                        )
+                                    }
+                                } else {
+                                    null
+                                },
+                            colors =
+                                FilterChipDefaults.filterChipColors(
+                                    labelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                                    selectedLabelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    selectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                                    disabledLabelColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    disabledContainerColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                    disabledSelectedContainerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                                ),
+                        )
+                    }
                 }
             }
 
             HorizontalDivider(
-                modifier =
-                    Modifier
-                        .padding(vertical = 10.dp),
+                modifier = Modifier.padding(vertical = 10.dp),
                 color = NeeGongNaeGongTheme.colorScheme.gray3,
             )
 
@@ -491,19 +524,16 @@ private fun StudiesEditScreen(
             )
             val descriptionMaxLength = 200
             OutlinedTextField(
+                enabled = enable,
                 value = description,
-                onValueChange = {
-                    if (it.length <= descriptionMaxLength) {
-                        onDescriptionChanged(it)
-                    }
-                },
+                onValueChange = { if (it.length <= descriptionMaxLength) onDescriptionChanged(it) },
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .wrapContentHeight(),
                 placeholder = {
                     Text(
-                        text = "스터디 설명을 입력하세요",
+                        text = if (enable) "스터디 설명을 입력하세요" else "그룹 설명이 없습니다",
                         style = NeeGongNaeGongTheme.typography.bodySmall,
                         color = NeeGongNaeGongTheme.colorScheme.secondaryText,
                     )
@@ -537,15 +567,13 @@ private fun StudiesEditScreen(
             )
 
             HorizontalDivider(
-                modifier =
-                    Modifier
-                        .padding(vertical = 10.dp),
+                modifier = Modifier.padding(vertical = 10.dp),
                 color = NeeGongNaeGongTheme.colorScheme.gray3,
             )
 
             Text(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = stringResource(R.string.studies_edit_add_photo),
+                text = if (enable) stringResource(R.string.studies_edit_add_photo) else "사진",
                 style = NeeGongNaeGongTheme.typography.titleSmall,
                 color = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
@@ -554,58 +582,92 @@ private fun StudiesEditScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                StudiesImagePicker(
-                    modifier = Modifier,
-                    selectedImageUri = selectedImageUri,
-                    profileImage = profileImg,
-                    onClick = {
-                        photoFromAlbumLauncher.launch(
-                            PickVisualMediaRequest(
-                                ActivityResultContracts.PickVisualMedia.ImageOnly,
-                            ),
-                        )
-                    },
-                    clearSelectedImage = { selectedImageUri = null },
-                    clearProfileImage = onClearProfileImg,
-                )
+                val imageModifier =
+                    Modifier
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                if (enable) {
+                    StudiesImagePicker(
+                        modifier = imageModifier,
+                        selectedImageUri = selectedImageUri,
+                        profileImage = profileImg,
+                        onClick = {
+                            photoFromAlbumLauncher.launch(
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly,
+                                ),
+                            )
+                        },
+                        clearSelectedImage = { selectedImageUri = null },
+                        clearProfileImage = onClearProfileImg,
+                    )
+                } else {
+                    GlideImage(
+                        modifier = imageModifier,
+                        imageModel = { selectedImageUri ?: profileImg },
+                        loading = {
+                            Box(modifier = Modifier.matchParentSize()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center),
+                                )
+                            }
+                        },
+                        failure = {
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .background(MaterialTheme.colorScheme.errorContainer),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Error,
+                                    contentDescription = "이미지 로드 실패",
+                                    modifier = Modifier.align(Alignment.Center),
+                                    tint = MaterialTheme.colorScheme.error,
+                                )
+                            }
+                        },
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 생성하기 버튼
-            Button(
-                onClick = onCreateStudies,
-                enabled = validateCreateStudies,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = NeeGongNaeGongTheme.colorScheme.blue,
-                        contentColor = NeeGongNaeGongTheme.colorScheme.background,
-                        disabledContainerColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                        disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray3,
-                    ),
-                shape = RoundedCornerShape(8.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.studies_edit_update),
-                    style = NeeGongNaeGongTheme.typography.bodyMedium,
-                )
+            if (enable) { // 생성하기 버튼
+                Button(
+                    onClick = onCreateStudies,
+                    enabled = validateCreateStudies,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                            contentColor = NeeGongNaeGongTheme.colorScheme.background,
+                            disabledContainerColor = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                            disabledContentColor = NeeGongNaeGongTheme.colorScheme.gray3,
+                        ),
+                    shape = RoundedCornerShape(8.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.studies_edit_update),
+                        style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @NeeGongNaeGongPreviews
 @Composable
-private fun PreviewStudiesComponentScreen() {
+private fun PreviewEditStudiesComponentScreen() {
     NeeGongNaeGongTheme {
         StudiesEditScreen(
             modifier = Modifier,
+            enable = true,
             name = "",
             isPublic = true,
             targetStudyTime = 60 * 60 * 7,
@@ -618,6 +680,42 @@ private fun PreviewStudiesComponentScreen() {
             description = "",
             profileImg = "",
             validateCreateStudies = true,
+            onNameChanged = {},
+            onIsPublicChanged = {},
+            onTargetStudyTimeChanged = {},
+            onMaxMembersChanged = {},
+            onCategorySelected = {},
+            onTagSelected = {},
+            onTagUnSelected = {},
+            onDescriptionChanged = {},
+            onClearProfileImg = {},
+            onSelectedImage = { _, _ -> },
+            onSelectedImageRequest = {},
+            onCreateStudies = {},
+            popBackStack = {},
+        )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun PreviewDisabledEditStudiesComponentScreen() {
+    NeeGongNaeGongTheme {
+        StudiesEditScreen(
+            modifier = Modifier,
+            enable = false,
+            name = "",
+            isPublic = true,
+            targetStudyTime = 60 * 60 * 7,
+            currentMembers = 2,
+            maxMembers = 10,
+            selectedCategory = null,
+            categories = emptyList(),
+            selectedTags = emptyList(),
+            tags = emptyList(),
+            description = "",
+            profileImg = "",
+            validateCreateStudies = false,
             onNameChanged = {},
             onIsPublicChanged = {},
             onTargetStudyTimeChanged = {},

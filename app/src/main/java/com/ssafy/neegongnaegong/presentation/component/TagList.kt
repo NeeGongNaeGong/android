@@ -72,6 +72,7 @@ fun TagList(
             modifier =
                 Modifier
                     .size(32.dp)
+                    .align(Alignment.CenterVertically)
                     .clickable { onTagPlusClicked() },
             shape = RoundedCornerShape(4.dp),
             color = NeeGongNaeGongTheme.colorScheme.blue,

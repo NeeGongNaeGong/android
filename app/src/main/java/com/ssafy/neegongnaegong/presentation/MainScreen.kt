@@ -140,24 +140,24 @@ fun MainScreen() {
                     }
                     StudiesDrawerContent(
                         navBackStackEntry = entry,
-                        navigateTodStudiesEdit = {
+                        navigateTodStudiesEdit = { role ->
                             route?.let { route ->
                                 navigateAndCloseDrawer(
-                                    AppNavigation.Screen.Studies.Edit(route.studyGroupId),
+                                    AppNavigation.Screen.Studies.Edit(role, route.studyGroupId),
                                 )
                             }
                         },
-                        navigateToStudiesMembersRole = {
+                        navigateToStudiesMembersRole = { role ->
                             route?.let { route ->
                                 navigateAndCloseDrawer(
-                                    AppNavigation.Screen.Studies.StudiesMembersRole(route.studyGroupId),
+                                    AppNavigation.Screen.Studies.StudiesMembersRole(role, route.studyGroupId),
                                 )
                             }
                         },
-                        navigateToStudiesApplications = {
+                        navigateToStudiesApplications = { role ->
                             route?.let { route ->
                                 navigateAndCloseDrawer(
-                                    AppNavigation.Screen.Studies.StudiesApplication(route.studyGroupId),
+                                    AppNavigation.Screen.Studies.StudiesApplication(role, route.studyGroupId),
                                 )
                             }
                         },

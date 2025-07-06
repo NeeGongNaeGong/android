@@ -23,18 +23,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun StudiesMemberRoleUnit(
     modifier: Modifier = Modifier,
-    role: StudiesMemberRole,
+    myRole: Role,
+    memberRole: StudiesMemberRole,
     name: String,
     profileImageUrl: String,
     onChangeRole: () -> Unit = {},
     onExpel: () -> Unit = {},
 ) {
+    val enable = myRole == Role.LEADER
     Row(
         modifier =
             modifier
@@ -89,53 +92,72 @@ fun StudiesMemberRoleUnit(
             )
             // 역할
             Text(
-                text = role.label,
+                text = memberRole.label,
                 style = NeeGongNaeGongTheme.typography.labelMedium,
                 color = NeeGongNaeGongTheme.colorScheme.secondaryText,
             )
         }
-        Button(
-            modifier = Modifier.padding(horizontal = 4.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = NeeGongNaeGongTheme.colorScheme.blue,
-                    contentColor = NeeGongNaeGongTheme.colorScheme.background,
-                ),
-            onClick = onChangeRole,
-        ) {
-            Text(
-                text = "직책",
-                style = NeeGongNaeGongTheme.typography.bodyMedium,
-            )
-        }
-        // 거절 버튼
-        Button(
-            modifier = Modifier.padding(horizontal = 4.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = NeeGongNaeGongTheme.colorScheme.peach,
-                    contentColor = NeeGongNaeGongTheme.colorScheme.background,
-                ),
-            onClick = onExpel,
-        ) {
-            Text(
-                text = "강퇴",
-                style = NeeGongNaeGongTheme.typography.bodyMedium,
-            )
+        if (enable) {
+            Button(
+                modifier = Modifier.padding(horizontal = 4.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = NeeGongNaeGongTheme.colorScheme.blue,
+                        contentColor = NeeGongNaeGongTheme.colorScheme.background,
+                        disabledContentColor = NeeGongNaeGongTheme.colorScheme.blue,
+                        disabledContainerColor = NeeGongNaeGongTheme.colorScheme.background,
+                    ),
+                enabled = enable,
+                onClick = onChangeRole,
+            ) {
+                Text(
+                    text = "직책",
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                )
+            }
+            // 거절 버튼
+            Button(
+                modifier = Modifier.padding(horizontal = 4.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = NeeGongNaeGongTheme.colorScheme.peach,
+                        contentColor = NeeGongNaeGongTheme.colorScheme.background,
+                    ),
+                onClick = onExpel,
+            ) {
+                Text(
+                    text = "강퇴",
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                )
+            }
         }
     }
 }
 
 @Composable
 @NeeGongNaeGongPreviews
-private fun PreviewStudiesMemberRoleUnit() {
+private fun Preview_Leader_StudiesMemberRoleUnit() {
     NeeGongNaeGongTheme {
         StudiesMemberRoleUnit(
-            role = StudiesMemberRole.TEAM_MEMBER,
+            myRole = Role.LEADER,
+            memberRole = StudiesMemberRole.TEAM_MEMBER,
+            name = "심터디",
+            profileImageUrl = "https://example.com/profile.jpg",
+        )
+    }
+}
+
+@Composable
+@NeeGongNaeGongPreviews
+private fun Preview_Member_StudiesMemberRoleUnit() {
+    NeeGongNaeGongTheme {
+        StudiesMemberRoleUnit(
+            myRole = Role.MEMBER,
+            memberRole = StudiesMemberRole.TEAM_MEMBER,
             name = "심터디",
             profileImageUrl = "https://example.com/profile.jpg",
         )

@@ -4,6 +4,8 @@ import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.request.VoteItemsRequest
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MemberWeeklyStudyContentBySliceResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.MyStudyGroupListResponse
+import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeDetailResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupNoticeListBySliceResponse
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupVoteDetailResponse
@@ -15,6 +17,7 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequ
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class NetworkStudyGroupDataSourceImpl
@@ -136,6 +139,24 @@ class NetworkStudyGroupDataSourceImpl
                     studyGroupId = studyGroupId,
                     userId = userId,
                     notificationId = notificationId,
+                )
+            }
+
+        override fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailResponse> =
+            apiFlow {
+                api.getStudyGroupDetail(studyGroupId)
+            }
+
+        override fun getMyStudyGroupList(
+            cursorCreatedAt: LocalDateTime?,
+            cursorId: Long?,
+            size: Int,
+        ): Flow<MyStudyGroupListResponse> =
+            apiFlow {
+                api.getMyStudyGroupList(
+                    cursorCreatedAt = cursorCreatedAt,
+                    cursorId = cursorId,
+                    size = size,
                 )
             }
     }
