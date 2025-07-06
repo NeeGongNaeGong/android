@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.component.drawer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,14 +68,14 @@ fun StudiesDrawerContent(
     navigateToStudiesMembersRole: (Role) -> Unit,
     navigateToStudiesApplications: (Role) -> Unit,
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showDeleteStudyGroupDialog by remember { mutableStateOf(false) }
     val myStudyList = viewModel.myStudyList.collectAsLazyPagingItems()
-    val role = Role.LEADER
+    val role = uiState.studyGroupDetailInfo.myGroupRole
     StudiesDrawer(
-        headerImageUrl = uiState.value.studies.studyInfo.profileImg,
-        name = uiState.value.studies.studyInfo.name,
-        description = uiState.value.studies.studyInfo.description,
+        headerImageUrl = uiState.studyGroupDetailInfo.profileImg,
+        name = uiState.studyGroupDetailInfo.name,
+        description = uiState.studyGroupDetailInfo.description,
         role = role,
         myStudyList = myStudyList,
         onStudyDeleteClick = { showDeleteStudyGroupDialog = true },
@@ -87,7 +89,7 @@ fun StudiesDrawerContent(
             onDismiss = { showDeleteStudyGroupDialog = false },
             onConfirm = {
                 viewModel.setEvent(
-                    StudiesDetailContract.Event.OndDeleteStudies(uiState.value.studies.id),
+                    StudiesDetailContract.Event.OndDeleteStudies(uiState.studyGroupDetailInfo.id),
                 )
             },
         )
@@ -145,10 +147,12 @@ private fun StudiesDrawer(
                     Text(
                         modifier = Modifier.padding(bottom = 10.dp),
                         text = name,
+                        overflow = TextOverflow.Ellipsis,
                         style = NeeGongNaeGongTheme.typography.titleMedium,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                     Text(
+                        modifier = Modifier.basicMarquee(),
                         text = description,
                         style = NeeGongNaeGongTheme.typography.bodyMedium,
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,

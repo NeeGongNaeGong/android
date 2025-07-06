@@ -9,8 +9,8 @@ import com.ssafy.neegongnaegong.domain.usecase.category.GetCategoriesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.category.GetTagsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.file.IssuePresignedUrlUseCase
 import com.ssafy.neegongnaegong.domain.usecase.s3.UploadImageToS3UseCase
-import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.UpdateStudiesUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetStudyGroupDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class StudiesEditViewModel
     @Inject
     constructor(
-        private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
+        private val getStudyGroupDetailUseCase: GetStudyGroupDetailUseCase,
         private val updateStudiesUseCase: UpdateStudiesUseCase,
         private val getCategoriesUseCase: GetCategoriesUseCase,
         private val getTagsUseCase: GetTagsUseCase,
@@ -84,15 +84,29 @@ class StudiesEditViewModel
         private fun onLoad(studyGroupId: Long) {
             setState { copy(studyGroupId = studyGroupId) }
             viewModelScope.launch {
-                getStudiesDetailUseCase(studyGroupId)
+                getStudyGroupDetailUseCase(studyGroupId)
                     .withLoading {
                         setState { copy(isLoading = it) }
                     }.safeCollect { result ->
-                        setState { copy(studyInfo = result.studyInfo) }
+                        setState {
+                            copy(
+                                studyInfo =
+                                    StudyInfo(
+                                        result.name,
+                                        result.maxMembers,
+                                        result.description,
+                                        result.profileImg,
+                                        result.isPublic,
+                                        result.targetStudyTime,
+                                        Category(result.category.id, result.category.name),
+                                        result.tags.map { Tag(it.id, it.name) },
+                                    ),
+                            )
+                        }
                         setState { copy(currentMembers = result.currentMembers) }
-                        setState { copy(selectedCategory = result.studyInfo.category) }
-                        setState { copy(selectedTags = result.studyInfo.tags) }
-                        selectedCategory(result.studyInfo.category!!)
+                        setState { copy(selectedCategory = Category(result.category.id, result.category.name)) }
+                        setState { copy(selectedTags = result.tags.map { Tag(it.id, it.name) }) }
+                        selectedCategory(Category(result.category.id, result.category.name))
                     }
             }
 

@@ -36,8 +36,6 @@ interface StudiesRepository {
 
     suspend fun createStudies(studyInfo: StudyInfo): Flow<Unit>
 
-    suspend fun getStudiesDetail(studyGroupId: Long): Flow<Studies>
-
     suspend fun updateStudies(
         studyGroupId: Long,
         studyInfo: StudyInfo,

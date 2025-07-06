@@ -10,8 +10,9 @@ data class StudyGroupDetailResponse(
     val profileImg: String,
     val isPublic: Boolean,
     val maxMembers: Int,
+    val currentMembers: Int,
     val targetStudyTime: Int,
-    val categoryName: String,
+    val category: Category,
     val leaderId: Long,
     val leaderName: String,
     val createdDate: LocalDate,
@@ -19,5 +20,7 @@ data class StudyGroupDetailResponse(
     @SerializedName("myGrouprole")
     val myGroupRole: String,
 ) {
+    data class Category(val id: Long, val name: String)
+
     data class Tag(val id: Long, val name: String)
 }

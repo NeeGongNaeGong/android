@@ -38,13 +38,13 @@ import kotlinx.coroutines.launch
 fun StudiesDetailRoute(
     modifier: Modifier = Modifier,
     navBackStackEntry: NavBackStackEntry,
+    viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry),
     studyGroupId: Long,
     navigateToContents: (Int, Long) -> Unit,
     navigateToLatestNoticeDetail: (Long, Long) -> Unit,
     navigateToLatestVoteDetail: (Long, Long) -> Unit,
     popBackStack: () -> Unit = {},
 ) {
-    val viewModel: StudiesDetailViewModel = hiltViewModel(navBackStackEntry)
     val currentDrawerState = LocalDrawerState.current
     val scope = rememberCoroutineScope()
     BackHandler {
@@ -132,12 +132,12 @@ private fun StudiesContent(
     StudiesDetailScreen(
         modifier = modifier,
         currentDrawerState = currentDrawerState,
-        name = uiState.studies.studyInfo.name,
+        name = uiState.studyGroupDetailInfo.name,
         feeds = uiState.feeds,
         feedsHasNext = uiState.feedsHasNext,
         onLoadFeeds = onLoadFeeds,
         weeklyRankings = uiState.weeklyRankings,
-        studyGoalTime = uiState.studies.studyInfo.targetStudyTime,
+        studyGoalTime = uiState.studyGroupDetailInfo.targetStudyTime,
         latestNotice = uiState.latestNotice,
         latestNoticeReadChecked = uiState.latestNoticeReadChecked,
         latestVote = uiState.latestVote,

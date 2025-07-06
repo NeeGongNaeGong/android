@@ -5,7 +5,7 @@ import com.ssafy.neegongnaegong.domain.repository.StudyGroupRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetStudyDetailUseCase
+class GetStudyGroupDetailUseCase
     @Inject
     constructor(
         private val studyGroupRepository: StudyGroupRepository,

@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
@@ -42,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
@@ -179,11 +179,9 @@ fun StudiesCard(
                                         .fillMaxSize()
                                         .background(MaterialTheme.colorScheme.errorContainer),
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Error,
-                                    contentDescription = "이미지 로드 실패",
-                                    modifier = Modifier.align(Alignment.Center),
-                                    tint = MaterialTheme.colorScheme.error,
+                                GlideImage(
+                                    imageModel = { R.drawable.img_main_character },
+                                    modifier = Modifier.fillMaxSize(),
                                 )
                             }
                         },
