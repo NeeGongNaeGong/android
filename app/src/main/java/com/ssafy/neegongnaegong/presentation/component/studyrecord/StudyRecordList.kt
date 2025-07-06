@@ -38,6 +38,7 @@ fun StudyRecordList(
     // paging
     onLoadMore: () -> Unit,
     hasNext: Boolean,
+    isStudyFeed: Boolean = false,
 ) {
     if (learningRecords.isEmpty()) {
         Box(
@@ -92,7 +93,7 @@ fun StudyRecordList(
                 }
 
                 items(recordsForDate) { record ->
-                    StudyRecordItem(record = record, onClick = onClick)
+                    StudyRecordItem(record = record, isStudyFeed = isStudyFeed, onClick = onClick)
                 }
             }
 

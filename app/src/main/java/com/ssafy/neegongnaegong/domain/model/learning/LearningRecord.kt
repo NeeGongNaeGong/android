@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.domain.model.learning
 
+import com.ssafy.neegongnaegong.domain.model.User
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -11,6 +12,7 @@ data class LearningRecord(
     val startAt: LocalDateTime,
     val endAt: LocalDateTime,
     val tags: List<Tag>,
+    val author: User,
 ) {
     companion object {
         private val formatter = DateTimeFormatter.ISO_DATE_TIME
@@ -33,6 +35,7 @@ data class LearningRecord(
                         formatter.withZone(ZoneOffset.UTC),
                     ),
                 tags = emptyList(),
+                author = User.default(),
             )
     }
 }
