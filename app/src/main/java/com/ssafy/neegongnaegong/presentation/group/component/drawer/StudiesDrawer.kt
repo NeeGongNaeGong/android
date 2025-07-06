@@ -102,7 +102,6 @@ private fun StudiesDrawer(
     description: String = "",
     role: Role,
     myStudyList: LazyPagingItems<MyStudyGroupInfo>,
-    onMyStudyClick: () -> Unit = {},
     onStudyDeleteClick: () -> Unit = {},
     navigateTodStudiesEdit: () -> Unit = {},
     navigateToStudiesMembersRole: () -> Unit = {},
@@ -233,12 +232,6 @@ private fun StudiesDrawer(
                     text = stringResource(R.string.studies_drw_my_studies),
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                )
-                Text(
-                    text = stringResource(R.string.studies_drw_see_more),
-                    style = NeeGongNaeGongTheme.typography.bodySmall,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    modifier = Modifier.clickable { onMyStudyClick() },
                 )
             }
         }
