@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
+import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.create.StudiesCreateRoute
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.edit.StudiesEditRoute
@@ -37,14 +38,13 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         startDestination = AppNavigation.Screen.Studies.Main,
     ) {
         composable<AppNavigation.Screen.Studies.Main> {
-            StudiesFindRoute(
+            StudiesRoute(
                 modifier = Modifier,
-                popBackStack = { },
                 navigateToStudiesDetail = {
                     navController.navigate(AppNavigation.Screen.Studies.StudiesDetail(it))
                 },
-                navigateToStudiesManagement = {
-                    navController.navigate(AppNavigation.Screen.Studies.Create)
+                navigateToStudiesFind = {
+                    navController.navigate(AppNavigation.Screen.Studies.StudiesFind)
                 },
             )
         }
