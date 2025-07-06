@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group
+package com.ssafy.neegongnaegong.presentation.group.find
 
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
@@ -6,7 +6,7 @@ import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 
-class StudiesContract {
+class StudiesFindContract {
     sealed class Event : UiEvent {
         data object OnLoadStudies : Event()
 

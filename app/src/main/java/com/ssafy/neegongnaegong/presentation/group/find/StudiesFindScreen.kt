@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group
+package com.ssafy.neegongnaegong.presentation.group.find
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +34,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun StudiesRoute(
+fun StudiesFindRoute(
     modifier: Modifier = Modifier,
-    viewModel: StudiesViewModel = hiltViewModel(),
+    viewModel: StudiesFindViewModel = hiltViewModel(),
     popBackStack: () -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
@@ -46,27 +46,27 @@ fun StudiesRoute(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(StudiesContract.Event.OnLoadStudies)
+        viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies)
     }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    StudiesContent(
+    StudiesFindContent(
         modifier = modifier,
         uiState = uiState,
         effect = viewModel.effect,
-        onLoadStudies = { viewModel.setEvent(StudiesContract.Event.OnLoadStudies) },
-        onApplyStudies = { viewModel.setEvent(StudiesContract.Event.OnStudiesApplyClicked(it)) },
+        onLoadStudies = { viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies) },
+        onApplyStudies = { viewModel.setEvent(StudiesFindContract.Event.OnStudiesApplyClicked(it)) },
         navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
     )
 }
 
 @Composable
-fun StudiesContent(
+private fun StudiesFindContent(
     modifier: Modifier = Modifier,
-    uiState: StudiesContract.State,
-    effect: Flow<StudiesContract.Effect>,
+    uiState: StudiesFindContract.State,
+    effect: Flow<StudiesFindContract.Effect>,
     onLoadStudies: () -> Unit,
     onApplyStudies: (Long) -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
@@ -76,16 +76,16 @@ fun StudiesContent(
         effect.collectLatest { effect ->
             // TODO : effect 처리
             when (effect) {
-                is StudiesContract.Effect.ShowStudies -> {
+                is StudiesFindContract.Effect.ShowStudies -> {
                 }
 
-                is StudiesContract.Effect.NavigateToGroupDetail -> {
+                is StudiesFindContract.Effect.NavigateToGroupDetail -> {
                 }
             }
         }
     }
 
-    StudiesScreen(
+    StudiesFindScreen(
         modifier = modifier,
         studiesList = uiState.studiesList,
         isLoading = uiState.isLoading,
@@ -97,7 +97,7 @@ fun StudiesContent(
 }
 
 @Composable
-fun StudiesScreen(
+private fun StudiesFindScreen(
     modifier: Modifier = Modifier,
     studiesList: List<Studies>,
     isLoading: Boolean,
@@ -113,7 +113,7 @@ fun StudiesScreen(
             title = {
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    text = "스터디 목록",
+                    text = "스터디 검색",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
@@ -209,9 +209,9 @@ fun StudiesScreen(
 
 @NeeGongNaeGongPreviews
 @Composable
-private fun PreviewStudiesScreen() {
+private fun PreviewStudiesFindScreen() {
     NeeGongNaeGongTheme {
-        StudiesScreen(
+        StudiesFindScreen(
             studiesList = StudiesPreviewDataProvider().getStudies(),
             isLoading = false,
             onLoadStudies = {},

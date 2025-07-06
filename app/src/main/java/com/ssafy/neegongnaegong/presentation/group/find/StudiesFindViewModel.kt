@@ -1,4 +1,4 @@
-package com.ssafy.neegongnaegong.presentation.group
+package com.ssafy.neegongnaegong.presentation.group.find
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -15,21 +15,21 @@ import javax.inject.Inject
 private const val TAG = "StudiesViewModel"
 
 @HiltViewModel
-class StudiesViewModel
+class StudiesFindViewModel
     @Inject
     constructor(
         private val getStudiesListUseCase: GetStudiesListUseCase,
         private val applyStudiesUseCase: ApplyStudiesUseCase,
         private val cancelApplyStudiesUseCase: CancelApplicationsStudiesUseCase,
-    ) : BaseViewModel<StudiesContract.Event, StudiesContract.State, StudiesContract.Effect>() {
+    ) : BaseViewModel<StudiesFindContract.Event, StudiesFindContract.State, StudiesFindContract.Effect>() {
         override fun handleException(
             e: Throwable,
             errorContext: ErrorContext,
             retry: () -> Unit,
         ) {
-            val error = errorContext as? StudiesContract.Error ?: return
+            val error = errorContext as? StudiesFindContract.Error ?: return
             when (error) {
-                StudiesContract.Error.GetStudiesListError -> {
+                StudiesFindContract.Error.GetStudiesListError -> {
                     Log.d(TAG, "handleException: GetStudiesListError")
                     showErrorMessage(
                         "스터디 목록을 가져오지 못했습니다.",
@@ -37,7 +37,7 @@ class StudiesViewModel
                     )
                 }
 
-                is StudiesContract.Error.ApplyStudiesError -> { // TODO : 가입된 스터디, 가입 신청한 스터디 구분 필요 (현재 가입 신청한)
+                is StudiesFindContract.Error.ApplyStudiesError -> { // TODO : 가입된 스터디, 가입 신청한 스터디 구분 필요 (현재 가입 신청한)
                     showErrorMessage(
                         "이미 신청된 스터디입니다.",
                         SnackbarManager.Action(label = "신청철회") { cancelApplyStudies(error.studyGroupId) },
@@ -46,16 +46,16 @@ class StudiesViewModel
             }
         }
 
-        override fun createInitialState(): StudiesContract.State = StudiesContract.State()
+        override fun createInitialState(): StudiesFindContract.State = StudiesFindContract.State()
 
-        override fun handleEvent(event: StudiesContract.Event) {
+        override fun handleEvent(event: StudiesFindContract.Event) {
             when (event) {
-                is StudiesContract.Event.OnLoadStudies -> loadStudies()
-                is StudiesContract.Event.StudiesClicked -> {
-                    setEffect { StudiesContract.Effect.NavigateToGroupDetail(event.studiesId) }
+                is StudiesFindContract.Event.OnLoadStudies -> loadStudies()
+                is StudiesFindContract.Event.StudiesClicked -> {
+                    setEffect { StudiesFindContract.Effect.NavigateToGroupDetail(event.studiesId) }
                 }
 
-                is StudiesContract.Event.OnStudiesApplyClicked -> {
+                is StudiesFindContract.Event.OnStudiesApplyClicked -> {
                     applyStudies(event.studiesId)
                 }
             }
@@ -72,7 +72,7 @@ class StudiesViewModel
                     cursorId = uiState.value.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }
-                }.safeCollect(StudiesContract.Error.GetStudiesListError) { result ->
+                }.safeCollect(StudiesFindContract.Error.GetStudiesListError) { result ->
                     setState {
                         copy(
                             studiesList = studiesList + result.content,
@@ -94,7 +94,7 @@ class StudiesViewModel
                 applyStudiesUseCase(studyGroupId)
                     .withLoading {
                         setState { copy(isLoading = it) }
-                    }.safeCollect(StudiesContract.Error.ApplyStudiesError(studyGroupId)) { result ->
+                    }.safeCollect(StudiesFindContract.Error.ApplyStudiesError(studyGroupId)) { result ->
                         showMessage("가입 신청이 완료되었습니다.")
                     }
             }

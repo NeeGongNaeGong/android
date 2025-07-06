@@ -9,10 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
-import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.create.StudiesCreateRoute
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.edit.StudiesEditRoute
+import com.ssafy.neegongnaegong.presentation.group.find.StudiesFindRoute
 import com.ssafy.neegongnaegong.presentation.group.join.StudiesWaitingToJoinRoute
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailRoute
@@ -37,7 +37,19 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         startDestination = AppNavigation.Screen.Studies.Main,
     ) {
         composable<AppNavigation.Screen.Studies.Main> {
-            StudiesRoute(
+            StudiesFindRoute(
+                modifier = Modifier,
+                popBackStack = { },
+                navigateToStudiesDetail = {
+                    navController.navigate(AppNavigation.Screen.Studies.StudiesDetail(it))
+                },
+                navigateToStudiesManagement = {
+                    navController.navigate(AppNavigation.Screen.Studies.Create)
+                },
+            )
+        }
+        composable<AppNavigation.Screen.Studies.StudiesFind> {
+            StudiesFindRoute(
                 modifier = Modifier,
                 popBackStack = { },
                 navigateToStudiesDetail = {

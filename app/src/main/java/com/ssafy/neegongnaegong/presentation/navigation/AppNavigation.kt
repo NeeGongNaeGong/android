@@ -63,6 +63,9 @@ object AppNavigation {
             data object Main : Studies
 
             @Serializable
+            data object StudiesFind : Studies
+
+            @Serializable
             data class StudiesDetail(val studyGroupId: Long) : Studies
 
             @Serializable
