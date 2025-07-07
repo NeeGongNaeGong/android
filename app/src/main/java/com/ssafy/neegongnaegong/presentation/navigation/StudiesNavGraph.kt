@@ -54,6 +54,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 navigateToStudiesManagement = {
                     navController.navigate(AppNavigation.Screen.Studies.Create)
                 },
+                popBackStack = navController::popBackStack,
             )
         }
 

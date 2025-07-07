@@ -38,6 +38,7 @@ fun StudiesFindRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesFindViewModel = hiltViewModel(),
     navigateToStudiesManagement: () -> Unit,
+    popBackStack: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies)
@@ -66,6 +67,7 @@ fun StudiesFindRoute(
         onStudiesInfoDialogDismiss = {
             viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogDismiss)
         },
+        popBackStack = popBackStack,
     )
 }
 
@@ -81,6 +83,7 @@ private fun StudiesFindContent(
     onStudiesInfoDialogConfirm: (Long) -> Unit,
     onStudiesInfoDialogCancel: () -> Unit,
     onStudiesInfoDialogDismiss: () -> Unit,
+    popBackStack: () -> Unit,
 ) {
     if (uiState.isStudiesInfoDialogShow) {
         if (uiState.selectedStudies == null) return
@@ -114,6 +117,7 @@ private fun StudiesFindContent(
         onSelectedStudies = onSelectedStudies,
         onStudiesInfoDialogShow = onStudiesInfoDialogShow,
         navigateToStudiesManagement = navigateToStudiesManagement,
+        popBackStack = popBackStack,
     )
 }
 
@@ -126,6 +130,7 @@ private fun StudiesFindScreen(
     onSelectedStudies: (Studies) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     navigateToStudiesManagement: () -> Unit,
+    popBackStack: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -139,7 +144,8 @@ private fun StudiesFindScreen(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            navigationType = TopAppBarNavigationType.None,
+            navigationType = TopAppBarNavigationType.Back,
+            onNavigationClick = popBackStack,
             actionButtons = {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -223,6 +229,7 @@ private fun PreviewStudiesFindScreen() {
             onSelectedStudies = {},
             onStudiesInfoDialogShow = {},
             navigateToStudiesManagement = {},
+            popBackStack = {},
         )
     }
 }
