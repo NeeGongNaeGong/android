@@ -133,7 +133,8 @@ private fun StudiesScreen(
                     StudiesWindow(
                         modifier =
                             Modifier
-                                .padding(bottom = 12.dp)
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 8.dp)
                                 .noRippleClickable {
                                     onClickMyStudies(studies.id)
                                 },
@@ -144,7 +145,6 @@ private fun StudiesScreen(
                         maxMembers = studies.maxMembers,
                         leader = studies.leader.name,
                         createdDate = studies.createdDate.toString(),
-                        description = studies.description,
                         profileImageUrl = studies.profileImg,
                     )
                 }

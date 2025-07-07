@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun StudiesFindRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesFindViewModel = hiltViewModel(),
-    navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -51,8 +50,6 @@ fun StudiesFindRoute(
         uiState = uiState,
         effect = viewModel.effect,
         onLoadStudies = { viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies) },
-        onApplyStudies = { viewModel.setEvent(StudiesFindContract.Event.OnStudiesApplyClicked(it)) },
-        navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
         onSelectedStudies = { studies ->
             viewModel.setEvent(StudiesFindContract.Event.OnSelectedStudies(studies))
@@ -78,8 +75,6 @@ private fun StudiesFindContent(
     uiState: StudiesFindContract.State,
     effect: Flow<StudiesFindContract.Effect>,
     onLoadStudies: () -> Unit,
-    onApplyStudies: (Long) -> Unit,
-    navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
@@ -118,8 +113,6 @@ private fun StudiesFindContent(
         onLoadStudies = onLoadStudies,
         onSelectedStudies = onSelectedStudies,
         onStudiesInfoDialogShow = onStudiesInfoDialogShow,
-        onApplyStudies = onApplyStudies,
-        navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
     )
 }
@@ -132,8 +125,6 @@ private fun StudiesFindScreen(
     onLoadStudies: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
-    onApplyStudies: (Long) -> Unit,
-    navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
 ) {
     Column(
@@ -157,28 +148,12 @@ private fun StudiesFindScreen(
                         Icon(
                             modifier =
                                 Modifier
-                                    .noRippleClickable {
-                                        navigateToStudiesManagement()
-                                    }
+                                    .noRippleClickable { navigateToStudiesManagement() }
                                     .padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_studies_create),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
                             contentDescription = "스터디 생성",
-                        )
-                    }
-                    Box {
-                        Icon(
-                            modifier =
-                                Modifier
-                                    .noRippleClickable {
-                                        navigateToStudiesDetail(-1) // TODO : 검색기능 구현 후 적용
-                                    }
-                                    .padding(8.dp),
-                            // 클릭 영역을 더 크게 만들기 위한 패딩
-                            painter = painterResource(R.drawable.ic_topbar_serach),
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            contentDescription = "스터디 검색",
                         )
                     }
                 }
@@ -193,7 +168,8 @@ private fun StudiesFindScreen(
                     StudiesWindow(
                         modifier =
                             Modifier
-                                .padding(bottom = 20.dp)
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 8.dp)
                                 .noRippleClickable {
                                     onSelectedStudies(studies)
                                     onStudiesInfoDialogShow()
@@ -205,9 +181,7 @@ private fun StudiesFindScreen(
                         maxMembers = studies.studyInfo.maxMembers,
                         leader = studies.leader.name,
                         createdDate = studies.createdDate,
-                        description = studies.studyInfo.description,
                         profileImageUrl = studies.studyInfo.profileImg,
-                        onApplyClick = { onApplyStudies(studies.id) },
                     )
 
                     if (index == studiesList.lastIndex) {
@@ -248,8 +222,6 @@ private fun PreviewStudiesFindScreen() {
             onLoadStudies = {},
             onSelectedStudies = {},
             onStudiesInfoDialogShow = {},
-            onApplyStudies = {},
-            navigateToStudiesDetail = {},
             navigateToStudiesManagement = {},
         )
     }
