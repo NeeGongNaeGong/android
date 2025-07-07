@@ -17,6 +17,21 @@ class StudiesFindContract {
         data class OnStudiesApplyClicked(
             val studiesId: Long,
         ) : Event()
+
+        data class OnSelectedStudies(
+            val studies: Studies,
+        ) : Event()
+
+        // 스터디 정보 다이어로그
+        data object OnStudiesInfoDialogShow : Event()
+
+        data class OnStudiesInfoDialogConfirm(
+            val studyGroupId: Long,
+        ) : Event()
+
+        data object OnStudiesInfoDialogCancel : Event()
+
+        data object OnStudiesInfoDialogDismiss : Event()
     }
 
     data class State(
@@ -25,6 +40,9 @@ class StudiesFindContract {
         val hasNext: Boolean = true,
         val cursorCreateAt: String? = null,
         val cursorId: Long? = null,
+        // 선택한 스터디 및 다이어로그 상태
+        val selectedStudies: Studies? = null,
+        val isStudiesInfoDialogShow: Boolean = false,
     ) : UiState
 
     sealed class Effect : UiEffect {

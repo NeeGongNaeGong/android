@@ -32,9 +32,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.TimeUnit
+
+@Composable
+fun StudiesInfoDialog(
+    modifier: Modifier = Modifier,
+    studies: Studies,
+    onConfirm: (Long) -> Unit,
+    onCancel: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    StudiesInfoDialog(
+        modifier = modifier,
+        studyGroupId = studies.id,
+        profileImageUrl = studies.studyInfo.profileImg ?: "",
+        name = studies.studyInfo.name,
+        leader = studies.leader.name,
+        category = studies.studyInfo.category?.name ?: "",
+        targetStudyTime = studies.studyInfo.targetStudyTime,
+        currentMembers = studies.currentMembers,
+        maxMembers = studies.studyInfo.maxMembers,
+        description = studies.studyInfo.description,
+        onApplyClick = onConfirm,
+        onCancel = onCancel,
+        onDismiss = onDismiss,
+    )
+}
 
 /**
  * [StudiesWindow] 클릭시 나오는 다이어로그
@@ -52,8 +78,9 @@ import com.ssafy.neegongnaegong.presentation.util.TimeUnit
  * @param onDismiss 다이어로그 닫기
  */
 @Composable
-fun StudiesInfoDialog(
+private fun StudiesInfoDialog(
     modifier: Modifier = Modifier,
+    studyGroupId: Long,
     profileImageUrl: String,
     name: String,
     leader: String,
@@ -62,7 +89,7 @@ fun StudiesInfoDialog(
     currentMembers: Int,
     maxMembers: Int,
     description: String,
-    onApplyClick: () -> Unit,
+    onApplyClick: (Long) -> Unit,
     onCancel: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -244,7 +271,7 @@ fun StudiesInfoDialog(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TextButton(
-                        onClick = onApplyClick,
+                        onClick = { onApplyClick(studyGroupId) },
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(
@@ -265,6 +292,7 @@ private fun PreviewStudiesInfoDialog() {
     NeeGongNaeGongTheme {
         StudiesInfoDialog(
             profileImageUrl = "https://duckduckgo.com/?q=vix",
+            studyGroupId = 1,
             name = "정보처리기사 실기 스터디",
             leader = "구미 백호랑이",
             category = "취업",

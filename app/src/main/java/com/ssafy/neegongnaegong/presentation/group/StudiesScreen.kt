@@ -25,7 +25,7 @@ import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
-import com.ssafy.neegongnaegong.presentation.group.component.StudiesCard
+import com.ssafy.neegongnaegong.presentation.group.component.StudiesWindow
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
@@ -130,7 +130,7 @@ private fun StudiesScreen(
                 key = myStudyList.itemKey(MyStudyGroupInfo::id),
             ) { idx ->
                 myStudyList[idx]?.let { studies ->
-                    StudiesCard(
+                    StudiesWindow(
                         modifier =
                             Modifier
                                 .padding(bottom = 12.dp)

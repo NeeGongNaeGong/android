@@ -25,7 +25,8 @@ import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataP
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
-import com.ssafy.neegongnaegong.presentation.group.component.StudiesCard
+import com.ssafy.neegongnaegong.presentation.group.component.StudiesWindow
+import com.ssafy.neegongnaegong.presentation.group.component.dialog.StudiesInfoDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
@@ -53,6 +54,21 @@ fun StudiesFindRoute(
         onApplyStudies = { viewModel.setEvent(StudiesFindContract.Event.OnStudiesApplyClicked(it)) },
         navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
+        onSelectedStudies = { studies ->
+            viewModel.setEvent(StudiesFindContract.Event.OnSelectedStudies(studies))
+        },
+        onStudiesInfoDialogShow = {
+            viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogShow)
+        },
+        onStudiesInfoDialogConfirm = {
+            viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogConfirm(it))
+        },
+        onStudiesInfoDialogCancel = {
+            viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogCancel)
+        },
+        onStudiesInfoDialogDismiss = {
+            viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogDismiss)
+        },
     )
 }
 
@@ -65,7 +81,23 @@ private fun StudiesFindContent(
     onApplyStudies: (Long) -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
+    onSelectedStudies: (Studies) -> Unit,
+    onStudiesInfoDialogShow: () -> Unit,
+    onStudiesInfoDialogConfirm: (Long) -> Unit,
+    onStudiesInfoDialogCancel: () -> Unit,
+    onStudiesInfoDialogDismiss: () -> Unit,
 ) {
+    if (uiState.isStudiesInfoDialogShow) {
+        if (uiState.selectedStudies == null) return
+        StudiesInfoDialog(
+            modifier = modifier,
+            studies = uiState.selectedStudies,
+            onConfirm = onStudiesInfoDialogConfirm,
+            onCancel = onStudiesInfoDialogCancel,
+            onDismiss = onStudiesInfoDialogDismiss,
+        )
+    }
+
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             // TODO : effect 처리
@@ -84,6 +116,8 @@ private fun StudiesFindContent(
         studiesList = uiState.studiesList,
         isLoading = uiState.isLoading,
         onLoadStudies = onLoadStudies,
+        onSelectedStudies = onSelectedStudies,
+        onStudiesInfoDialogShow = onStudiesInfoDialogShow,
         onApplyStudies = onApplyStudies,
         navigateToStudiesDetail = navigateToStudiesDetail,
         navigateToStudiesManagement = navigateToStudiesManagement,
@@ -96,6 +130,8 @@ private fun StudiesFindScreen(
     studiesList: List<Studies>,
     isLoading: Boolean,
     onLoadStudies: () -> Unit,
+    onSelectedStudies: (Studies) -> Unit,
+    onStudiesInfoDialogShow: () -> Unit,
     onApplyStudies: (Long) -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesManagement: () -> Unit,
@@ -123,7 +159,8 @@ private fun StudiesFindScreen(
                                 Modifier
                                     .noRippleClickable {
                                         navigateToStudiesManagement()
-                                    }.padding(8.dp),
+                                    }
+                                    .padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_studies_create),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -136,7 +173,8 @@ private fun StudiesFindScreen(
                                 Modifier
                                     .noRippleClickable {
                                         navigateToStudiesDetail(-1) // TODO : 검색기능 구현 후 적용
-                                    }.padding(8.dp),
+                                    }
+                                    .padding(8.dp),
                             // 클릭 영역을 더 크게 만들기 위한 패딩
                             painter = painterResource(R.drawable.ic_topbar_serach),
                             tint = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -152,12 +190,13 @@ private fun StudiesFindScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 itemsIndexed(studiesList) { index, studies ->
-                    StudiesCard(
+                    StudiesWindow(
                         modifier =
                             Modifier
                                 .padding(bottom = 20.dp)
                                 .noRippleClickable {
-                                    navigateToStudiesDetail(studies.id)
+                                    onSelectedStudies(studies)
+                                    onStudiesInfoDialogShow()
                                 },
                         category = studies.studyInfo.category?.name ?: "없음",
                         name = studies.studyInfo.name,
@@ -207,6 +246,8 @@ private fun PreviewStudiesFindScreen() {
             studiesList = StudiesPreviewDataProvider().getStudies(),
             isLoading = false,
             onLoadStudies = {},
+            onSelectedStudies = {},
+            onStudiesInfoDialogShow = {},
             onApplyStudies = {},
             navigateToStudiesDetail = {},
             navigateToStudiesManagement = {},

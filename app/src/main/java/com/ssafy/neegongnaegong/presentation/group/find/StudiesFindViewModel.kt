@@ -58,6 +58,21 @@ class StudiesFindViewModel
                 is StudiesFindContract.Event.OnStudiesApplyClicked -> {
                     applyStudies(event.studiesId)
                 }
+
+                is StudiesFindContract.Event.OnSelectedStudies -> setState { copy(selectedStudies = event.studies) }
+                is StudiesFindContract.Event.OnStudiesInfoDialogShow ->
+                    setState { copy(isStudiesInfoDialogShow = true) }
+
+                is StudiesFindContract.Event.OnStudiesInfoDialogConfirm -> {
+                    setState { copy(isStudiesInfoDialogShow = false) }
+                    applyStudies(event.studyGroupId)
+                }
+
+                is StudiesFindContract.Event.OnStudiesInfoDialogCancel ->
+                    setState { copy(isStudiesInfoDialogShow = false) }
+
+                is StudiesFindContract.Event.OnStudiesInfoDialogDismiss ->
+                    setState { copy(isStudiesInfoDialogShow = false) }
             }
         }
 

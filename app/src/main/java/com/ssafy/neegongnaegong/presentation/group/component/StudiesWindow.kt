@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -48,7 +47,7 @@ import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
 
 @Composable
-fun StudiesCard(
+fun StudiesWindow(
     modifier: Modifier = Modifier,
     category: String = "",
     name: String = "",
@@ -257,7 +256,7 @@ fun StudiesCard(
 @Composable
 private fun PreviewStudiesCardExpanded() {
     NeeGongNaeGongTheme {
-        StudiesCard(
+        StudiesWindow(
             category = "대학생",
             name = "개발, 코딩(프론트, 백엔드 등) 취준방",
             targetStudyTime = (TimeUnit.HOUR.seconds * 7).toInt(),
@@ -274,9 +273,9 @@ private fun PreviewStudiesCardExpanded() {
 
 @NeeGongNaeGongPreviews
 @Composable
-private fun PreviewStudiesCard() {
+private fun PreviewStudiesWindow() {
     NeeGongNaeGongTheme {
-        StudiesCard(
+        StudiesWindow(
             category = "대학생",
             name = "개발, 코딩(프론트, 백엔드 등) 취준방",
             targetStudyTime = (TimeUnit.HOUR.seconds * 7).toInt(),
