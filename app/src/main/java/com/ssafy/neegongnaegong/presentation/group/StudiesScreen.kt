@@ -139,6 +139,7 @@ private fun StudiesScreen(
                                     onClickMyStudies(studies.id)
                                 },
                         category = studies.category.name,
+                        isPublic = studies.isPublic,
                         name = studies.name,
                         targetStudyTime = studies.targetStudyTime,
                         currentMembers = studies.currentMembers,

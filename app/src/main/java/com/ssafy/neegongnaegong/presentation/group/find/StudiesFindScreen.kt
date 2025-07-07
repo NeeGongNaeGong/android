@@ -177,10 +177,12 @@ private fun StudiesFindScreen(
                                 .padding(horizontal = 12.dp)
                                 .padding(bottom = 8.dp)
                                 .noRippleClickable {
+                                    if (studies.studyInfo.isPublic.not()) return@noRippleClickable
                                     onSelectedStudies(studies)
                                     onStudiesInfoDialogShow()
                                 },
                         category = studies.studyInfo.category?.name ?: "없음",
+                        isPublic = studies.studyInfo.isPublic,
                         name = studies.studyInfo.name,
                         targetStudyTime = studies.studyInfo.targetStudyTime,
                         currentMembers = studies.currentMembers,
