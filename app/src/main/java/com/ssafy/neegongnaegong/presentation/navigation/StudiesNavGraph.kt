@@ -1,13 +1,16 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
 import VotedPersonListRoute
+import android.content.Intent
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.ssafy.neegongnaegong.BuildConfig
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteStatusInfo
 import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.create.StudiesCreateRoute
@@ -49,7 +52,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             )
         }
 
-        composable<AppNavigation.Screen.Studies.StudiesDetail> { backStackEntry ->
+        composable<AppNavigation.Screen.Studies.StudiesDetail>(
+            deepLinks =
+                listOf(
+                    navDeepLink {
+                        uriPattern = "$BASE_DEEP_LINK/study/{studyGroupId}"
+                        action = Intent.ACTION_VIEW
+                    },
+                ),
+        ) { backStackEntry ->
             val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesDetail>()
             StudiesDetailRoute(
                 modifier = Modifier,
@@ -210,7 +221,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             )
         }
 
-        composable<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail> {
+        composable<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail>(
+            deepLinks =
+                listOf(
+                    navDeepLink {
+                        uriPattern = "$BASE_DEEP_LINK/study/{groupId}/notice/{noticeId}"
+                        action = Intent.ACTION_VIEW
+                    },
+                ),
+        ) {
             val groupId =
                 it.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail>().groupId
             NoticeDetailRoute(
@@ -231,7 +250,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             }
         }
 
-        composable<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> {
+        composable<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> (
+            deepLinks =
+                listOf(
+                    navDeepLink {
+                        uriPattern = "$BASE_DEEP_LINK/study/{groupId}/vote/{voteId}"
+                        action = Intent.ACTION_VIEW
+                    },
+                ),
+        ) {
             val groupId =
                 it.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().groupId
             VoteDetailRoute(
@@ -282,3 +309,5 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         }
     }
 }
+
+val BASE_DEEP_LINK: String = BuildConfig.BASE_URL
