@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
@@ -48,9 +49,7 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
-
+fun MainScreen(navController: NavHostController) {
     val resultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val needRefresh = result.data?.getBooleanExtra("needRefreshRecordList", false) ?: false
@@ -232,6 +231,6 @@ fun CalendarScreen() {
 @Composable
 fun PreviewMainScreen() {
     NeeGongNaeGongTheme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }
