@@ -94,7 +94,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             )
         }
 
-        composable<AppNavigation.Screen.Studies.StudiesApplication> { backStackEntry ->
+        composable<AppNavigation.Screen.Studies.StudiesApplication>(
+            deepLinks =
+                listOf(
+                    navDeepLink {
+                        uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}/manage/{role}"
+                        action = Intent.ACTION_VIEW
+                    },
+                ),
+        ) { backStackEntry ->
             val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesApplication>()
             StudiesWaitingToJoinRoute(
                 modifier = Modifier,
