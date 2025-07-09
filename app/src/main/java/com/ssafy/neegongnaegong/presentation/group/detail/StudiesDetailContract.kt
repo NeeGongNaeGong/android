@@ -3,12 +3,12 @@ package com.ssafy.neegongnaegong.presentation.group.detail
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupDetailInfo
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import java.time.LocalDate
 import java.time.LocalDateTime
 

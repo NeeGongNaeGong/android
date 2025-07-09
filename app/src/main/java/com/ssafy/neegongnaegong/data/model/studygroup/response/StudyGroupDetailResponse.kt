@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.data.model.studygroup.response
 
 import com.google.gson.annotations.SerializedName
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import java.time.LocalDate
 
 data class StudyGroupDetailResponse(
@@ -18,7 +19,7 @@ data class StudyGroupDetailResponse(
     val createdDate: LocalDate,
     val tags: List<Tag>,
     @SerializedName("myGrouprole")
-    val myGroupRole: String,
+    val myGroupRole: Role,
 ) {
     data class Category(val id: Long, val name: String)
 

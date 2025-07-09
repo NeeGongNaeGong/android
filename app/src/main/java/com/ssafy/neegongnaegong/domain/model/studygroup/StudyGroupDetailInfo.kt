@@ -1,7 +1,5 @@
 package com.ssafy.neegongnaegong.domain.model.studygroup
 
-import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse.Category
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import java.time.LocalDate
 
 data class StudyGroupDetailInfo(

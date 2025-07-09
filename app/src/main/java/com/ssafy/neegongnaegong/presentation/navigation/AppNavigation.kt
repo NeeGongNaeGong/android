@@ -1,7 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.calendar.component.form.ScheduleInputFormFocus
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

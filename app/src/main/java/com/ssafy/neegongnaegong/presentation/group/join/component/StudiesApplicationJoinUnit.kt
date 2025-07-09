@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -41,7 +41,7 @@ fun StudiesApplicationJoinUnit(
     onReject: (Long) -> Unit = {},
 ) {
     val (backgroundColor, visibleButton) =
-        if (role in listOf(Role.MEMBER, Role.PENDING)) {
+        if (role in listOf(Role.TEAM_MANAGER, Role.PENDING)) {
             Pair(NeeGongNaeGongTheme.colorScheme.background, false)
         } else {
             when (status) {
@@ -164,7 +164,7 @@ private fun PreviewPendingStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
-            role = Role.MANAGER,
+            role = Role.TEAM_MANAGER,
             status = StudiesJoinApplicationStatus.PENDING,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
@@ -180,7 +180,7 @@ private fun PreviewApprovedStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
-            role = Role.MEMBER,
+            role = Role.TEAM_MEMBER,
             status = StudiesJoinApplicationStatus.APPROVED,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
@@ -196,7 +196,7 @@ private fun PreviewRejectedStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
-            role = Role.MEMBER,
+            role = Role.TEAM_MEMBER,
             status = StudiesJoinApplicationStatus.REJECTED,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",

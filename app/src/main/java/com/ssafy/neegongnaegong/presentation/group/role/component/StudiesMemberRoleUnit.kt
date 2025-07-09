@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
@@ -37,7 +37,7 @@ fun StudiesMemberRoleUnit(
     onChangeRole: () -> Unit = {},
     onExpel: () -> Unit = {},
 ) {
-    val enable = myRole == Role.LEADER
+    val enable = myRole == Role.TEAM_LEADER
     Row(
         modifier =
             modifier
@@ -143,7 +143,7 @@ fun StudiesMemberRoleUnit(
 private fun Preview_Leader_StudiesMemberRoleUnit() {
     NeeGongNaeGongTheme {
         StudiesMemberRoleUnit(
-            myRole = Role.LEADER,
+            myRole = Role.TEAM_LEADER,
             memberRole = StudiesMemberRole.TEAM_MEMBER,
             name = "심터디",
             profileImageUrl = "https://example.com/profile.jpg",
@@ -156,7 +156,7 @@ private fun Preview_Leader_StudiesMemberRoleUnit() {
 private fun Preview_Member_StudiesMemberRoleUnit() {
     NeeGongNaeGongTheme {
         StudiesMemberRoleUnit(
-            myRole = Role.MEMBER,
+            myRole = Role.TEAM_MEMBER,
             memberRole = StudiesMemberRole.TEAM_MEMBER,
             name = "심터디",
             profileImageUrl = "https://example.com/profile.jpg",

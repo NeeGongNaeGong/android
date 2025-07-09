@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesMember
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.group.role.component.ExpelMemberDialog
 import com.ssafy.neegongnaegong.presentation.group.role.component.RoleChangeDialog
 import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
@@ -208,7 +208,7 @@ private fun Preview_Leader_StudiesMemberRoleScreen() {
     NeeGongNaeGongTheme {
         StudiesMemberRoleScreen(
             isLoading = false,
-            role = Role.LEADER,
+            role = Role.TEAM_LEADER,
             studiesMembers = StudiesPreviewDataProvider().getStudiesMembers(),
             onSelectedMember = {},
             onChangeRoleDialogShow = {},
@@ -224,7 +224,7 @@ private fun Preview_Member_StudiesMemberRoleScreen() {
     NeeGongNaeGongTheme {
         StudiesMemberRoleScreen(
             isLoading = false,
-            role = Role.MEMBER,
+            role = Role.TEAM_MEMBER,
             studiesMembers = StudiesPreviewDataProvider().getStudiesMembers(),
             onSelectedMember = {},
             onChangeRoleDialogShow = {},

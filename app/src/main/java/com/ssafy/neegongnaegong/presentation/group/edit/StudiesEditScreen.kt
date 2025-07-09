@@ -62,13 +62,13 @@ import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.Tag
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesCategoryDropdown
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesImagePicker
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesMaxMemberDropdown
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesTimeDropdown
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.FileUtils.getFileExtension
@@ -184,7 +184,7 @@ private fun StudiesEditContent(
     }
     StudiesEditScreen(
         modifier = modifier,
-        enable = role == Role.LEADER,
+        enable = role == Role.TEAM_LEADER,
         name = uiState.studyInfo.name,
         isPublic = uiState.studyInfo.isPublic,
         targetStudyTime = uiState.studyInfo.targetStudyTime,
@@ -196,7 +196,7 @@ private fun StudiesEditContent(
         tags = uiState.tags,
         description = uiState.studyInfo.description,
         profileImg = uiState.studyInfo.profileImg,
-        validateCreateStudies = role == Role.LEADER && uiState.validateCreateStudies,
+        validateCreateStudies = role == Role.TEAM_LEADER && uiState.validateCreateStudies,
         onNameChanged = onNameChanged,
         onIsPublicChanged = onIsPublicChanged,
         onTargetStudyTimeChanged = onTargetStudyTimeChanged,
