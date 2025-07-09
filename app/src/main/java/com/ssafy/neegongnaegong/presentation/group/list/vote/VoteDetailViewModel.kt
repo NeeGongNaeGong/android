@@ -172,7 +172,7 @@ class VoteDetailViewModel
         }
 
         private val groupId: Long =
-            savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().groupId
+            savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().studyGroupId
         private val voteId: Long =
             savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>().voteId
 

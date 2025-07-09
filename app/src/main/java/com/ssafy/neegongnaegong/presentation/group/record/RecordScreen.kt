@@ -63,13 +63,13 @@ private const val TAG = "RecordScreen"
 
 @Composable
 fun RecordRoute(
-    groupId: Long,
+    studyGroupId: Long,
     memberId: Long,
     popBackStack: () -> Boolean,
     modifier: Modifier = Modifier,
     viewModel: RecordViewModel = hiltViewModel(),
 ) {
-    Log.d(TAG, "RecordRoute: $groupId $memberId") // TODO : dekekt 통과 임시 적용
+    Log.d(TAG, "RecordRoute: $studyGroupId $memberId") // TODO : dekekt 통과 임시 적용
     val pagingItem = viewModel.studyLogFlow.collectAsLazyPagingItems()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

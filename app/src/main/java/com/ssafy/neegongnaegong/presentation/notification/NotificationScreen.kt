@@ -30,7 +30,7 @@ import com.ssafy.neegongnaegong.presentation.component.refresh.DefaultRefreshBox
 import com.ssafy.neegongnaegong.presentation.notification.component.NotificationList
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,7 +116,7 @@ fun NotificationScreen(
 @Composable
 @Preview
 fun NotificationPreviewScreen() {
-    val testModel =
+    val testModel = {
         NotificationUiModel(
             id = Random.nextLong(),
             image =
@@ -132,19 +132,22 @@ fun NotificationPreviewScreen() {
             studyGroupId = null,
             studyGroupName = null,
         )
-    val testList = List<NotificationUiModel>(500) { testModel }
-    val fakeFlow = flowOf(PagingData.from(testList)).collectAsLazyPagingItems()
+    }
+    val testList = List<NotificationUiModel>(500) { testModel() }
+    val fakeFlow = MutableStateFlow(PagingData.from(testList)).collectAsLazyPagingItems()
 
-    NotificationScreen(
-        isRefresh = false,
-        listState = rememberLazyListState(),
-        notificationList = fakeFlow,
-        onNavigateUp = {},
-        onRefresh = {},
-        onDeleteAll = {},
-        onDeleteNotification = {},
-        onMoveNotification = {},
-        onAcceptGroupJoinRequest = {},
-        onRejectGroupJoinRequest = {},
-    )
+    NeeGongNaeGongTheme {
+        NotificationScreen(
+            isRefresh = false,
+            listState = rememberLazyListState(),
+            notificationList = fakeFlow,
+            onNavigateUp = {},
+            onRefresh = {},
+            onDeleteAll = {},
+            onDeleteNotification = {},
+            onMoveNotification = {},
+            onAcceptGroupJoinRequest = {},
+            onRejectGroupJoinRequest = {},
+        )
+    }
 }

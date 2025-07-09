@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.data.mapper.studygroup
 
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyGroupDetailResponse
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupDetailInfo
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 
 internal object StudyGroupDetailMapper {
     fun StudyGroupDetailResponse.toDomain() =
@@ -20,7 +19,7 @@ internal object StudyGroupDetailMapper {
             leaderName = leaderName,
             createdDate = createdDate,
             tags = tags.toDomain(),
-            myGroupRole = runCatching<Role> { Role.valueOf(myGroupRole) }.getOrDefault(Role.PENDING),
+            myGroupRole = myGroupRole,
         )
 
     fun StudyGroupDetailResponse.Category.toDomain() = StudyGroupDetailInfo.Category(id = id, name = name)

@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.list.main
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
@@ -11,9 +12,9 @@ import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetVoteListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Effect
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListContract.Index
+import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,25 +62,18 @@ class ListViewModel
         val voteListFlow: Flow<PagingData<VoteHistoryInfo>>
 
         init {
-            val groupId: Long? = savedStateHandle["groupId"]
-            val startTabIdx: Int? = savedStateHandle["startTab"]
-            if (groupId != null && startTabIdx != null) {
-                setState { copy(groupId = groupId) }
+            val studyGroupId = savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Main>().studyGroupId
 
-                noticeListFlow =
-                    getNoticeListUseCase(groupId).cachedIn(
-                        viewModelScope,
-                    )
+            setState { copy(groupId = studyGroupId) }
 
-                voteListFlow =
-                    getVoteListUseCase(groupId).cachedIn(
-                        viewModelScope,
-                    )
-            } else {
-                noticeListFlow = flow {}
-                voteListFlow = flow {}
-                showErrorMessage("잘못된 접근입니다")
-                setEvent(ListContract.Event.InvalidAccess)
-            }
+            noticeListFlow =
+                getNoticeListUseCase(studyGroupId).cachedIn(
+                    viewModelScope,
+                )
+
+            voteListFlow =
+                getVoteListUseCase(studyGroupId).cachedIn(
+                    viewModelScope,
+                )
         }
     }

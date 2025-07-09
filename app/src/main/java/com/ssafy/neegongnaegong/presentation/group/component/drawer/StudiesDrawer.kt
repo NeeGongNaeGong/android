@@ -48,10 +48,10 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.ErrorItem
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.LoadingItem
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.component.NoDataItem
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailContract
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailViewModel
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -183,7 +183,7 @@ private fun StudiesDrawer(
             )
         }
 
-        if (role == Role.LEADER) {
+        if (role == Role.TEAM_LEADER) {
             item {
                 // 스터디 삭제 버튼
                 DrawerMenuItem(
@@ -374,7 +374,7 @@ private fun Preview_Leader_StudiesDrawer() {
             modifier = Modifier.fillMaxWidth(0.75F),
             name = "화이트 스터디",
             description = "하얗습니다.",
-            role = Role.LEADER,
+            role = Role.TEAM_LEADER,
             myStudyList = lazyItems,
         )
     }
@@ -423,7 +423,7 @@ private fun Preview_Manager_StudiesDrawer() {
             modifier = Modifier.fillMaxWidth(0.75F),
             name = "화이트 스터디",
             description = "하얗습니다.",
-            role = Role.MANAGER,
+            role = Role.TEAM_MANAGER,
             myStudyList = lazyItems,
         )
     }
