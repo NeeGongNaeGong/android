@@ -56,7 +56,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             deepLinks =
                 listOf(
                     navDeepLink {
-                        uriPattern = "$BASE_DEEP_LINK/study/{studyGroupId}"
+                        uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}"
                         action = Intent.ACTION_VIEW
                     },
                 ),
@@ -225,7 +225,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             deepLinks =
                 listOf(
                     navDeepLink {
-                        uriPattern = "$BASE_DEEP_LINK/study/{groupId}/notice/{noticeId}"
+                        uriPattern = "$BASE_DEEP_LINK/study-group/{groupId}/notice/{noticeId}"
                         action = Intent.ACTION_VIEW
                     },
                 ),
@@ -254,7 +254,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             deepLinks =
                 listOf(
                     navDeepLink {
-                        uriPattern = "$BASE_DEEP_LINK/study/{groupId}/vote/{voteId}"
+                        uriPattern = "$BASE_DEEP_LINK/study-group/{groupId}/vote/{voteId}"
                         action = Intent.ACTION_VIEW
                     },
                 ),
