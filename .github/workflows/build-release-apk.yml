@@ -1,5 +1,5 @@
 # 워크플로우의 전체 이름을 지정합니다. GitHub Actions 탭에 이 이름이 표시됩니다.
-name: CI and Build on Release Branch (Java 11)
+name: Build on Release Branch (Java 11)
 
 # 'on'은 이 워크플로우가 언제 실행될지를 정의하는 트리거(trigger)입니다.
 on:
