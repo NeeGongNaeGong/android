@@ -6,12 +6,12 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
-import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesDetailUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesLatestContentsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.PatchStudiesLatestContentsReadStatusUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetMyStudyListUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetStudyGroupDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.find.StudiesFindContract
@@ -27,7 +27,7 @@ private const val TAG = "StudiesDetailViewModel"
 class StudiesDetailViewModel
     @Inject
     constructor(
-        private val getStudiesDetailUseCase: GetStudiesDetailUseCase,
+        private val getStudyGroupDetailUseCase: GetStudyGroupDetailUseCase,
         private val getStudiesFeedsUseCase: GetStudiesFeedsUseCase,
         private val getStudiesWeeklyRankingsUseCase: GetStudiesWeeklyRankingsUseCase,
         private val getStudiesLatestContentsUseCase: GetStudiesLatestContentsUseCase,
@@ -61,7 +61,7 @@ class StudiesDetailViewModel
                             event.noticeId,
                         )
                     }
-                    readContents(studyGroupId = uiState.value.studies.id, readNotice = true)
+                    readContents(studyGroupId = uiState.value.studyGroupDetailInfo.id, readNotice = true)
                 }
 
                 is StudiesDetailContract.Event.OnClickLatestVote -> {
@@ -70,7 +70,7 @@ class StudiesDetailViewModel
                             event.voteId,
                         )
                     }
-                    readContents(studyGroupId = uiState.value.studies.id, readVote = true)
+                    readContents(studyGroupId = uiState.value.studyGroupDetailInfo.id, readVote = true)
                 }
 
                 is StudiesDetailContract.Event.OnClickContents -> {
@@ -86,13 +86,13 @@ class StudiesDetailViewModel
         private fun onLoad(studyGroupId: Long) =
             viewModelScope.launch {
                 launch {
-                    getStudiesDetailUseCase(studyGroupId)
+                    getStudyGroupDetailUseCase(studyGroupId)
                         .withLoading {
                             setState { copy(isLoading = it) }
-                        }.safeCollect { studies ->
+                        }.safeCollect { studyGroupDetailInfo ->
                             setState {
                                 copy(
-                                    studies = studies,
+                                    studyGroupDetailInfo = studyGroupDetailInfo,
                                 )
                             }
                         }

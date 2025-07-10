@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesApplicationsMember
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
-import com.ssafy.neegongnaegong.presentation.group.component.drawer.model.Role
 import com.ssafy.neegongnaegong.presentation.group.join.component.StudiesApplicationJoinUnit
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -161,7 +161,7 @@ private fun Preview_Manager_StudiesWaitingToJoinScreen() {
         StudiesWaitingToJoinScreen(
             applicationsList = StudiesPreviewDataProvider().getStudiesApplications(),
             isLoading = false,
-            role = Role.MANAGER,
+            role = Role.TEAM_MANAGER,
             onLoadApplicationsList = {},
             onApproval = {},
             onReject = {},
@@ -177,7 +177,7 @@ private fun Preview_Member_StudiesWaitingToJoinScreen() {
         StudiesWaitingToJoinScreen(
             applicationsList = StudiesPreviewDataProvider().getStudiesApplications(),
             isLoading = false,
-            role = Role.MEMBER,
+            role = Role.TEAM_MEMBER,
             onLoadApplicationsList = {},
             onApproval = {},
             onReject = {},

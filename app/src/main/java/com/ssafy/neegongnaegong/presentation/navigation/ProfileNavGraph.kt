@@ -37,7 +37,7 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
                     val detail = AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId)
                     val notice =
                         AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(
-                            groupId = groupId,
+                            studyGroupId = groupId,
                             noticeId = noticeId,
                         )
                     navController.navigate(route = detail)
@@ -47,7 +47,7 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
                     val detail = AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId)
                     val vote =
                         AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(
-                            groupId = groupId,
+                            studyGroupId = groupId,
                             voteId = voteId,
                         )
                     navController.navigate(route = detail)

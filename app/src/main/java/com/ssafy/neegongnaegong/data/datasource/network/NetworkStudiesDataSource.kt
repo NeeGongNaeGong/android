@@ -13,7 +13,6 @@ import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestCont
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentsReadStatusResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
-import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
@@ -31,8 +30,6 @@ interface NetworkStudiesDataSource {
     suspend fun getStudiesList(request: GetStudiesListRequest): Flow<CursorSliceStudiesListResponse>
 
     suspend fun createStudies(request: CreateStudiesRequest): Flow<Unit>
-
-    suspend fun getStudies(studyGroupId: Long): Flow<StudiesResponse>
 
     suspend fun updateStudies(
         studyGroupId: Long,

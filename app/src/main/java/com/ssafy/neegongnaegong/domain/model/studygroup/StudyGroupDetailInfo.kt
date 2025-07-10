@@ -9,13 +9,16 @@ data class StudyGroupDetailInfo(
     val profileImg: String,
     val isPublic: Boolean,
     val maxMembers: Int,
+    val currentMembers: Int,
     val targetStudyTime: Int,
-    val categoryName: String,
+    val category: Category,
     val leaderId: Long,
     val leaderName: String,
     val createdDate: LocalDate,
     val tags: List<Tag>,
-    val myGroupRole: String,
+    val myGroupRole: Role,
 ) {
+    data class Category(val id: Long, val name: String)
+
     data class Tag(val id: Long, val name: String)
 }

@@ -68,7 +68,7 @@ class NoticeDetailViewModel
         }
 
         private val groupId: Long =
-            savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail>().groupId
+            savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail>().studyGroupId
         private val noticeId: Long =
             savedStateHandle.toRoute<AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail>().noticeId
 

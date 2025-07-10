@@ -12,14 +12,17 @@ internal object StudyGroupDetailMapper {
             profileImg = profileImg,
             isPublic = isPublic,
             maxMembers = maxMembers,
+            currentMembers = currentMembers,
             targetStudyTime = targetStudyTime,
-            categoryName = categoryName,
+            category = category.toDomain(),
             leaderId = leaderId,
             leaderName = leaderName,
-            createdDate = TODO(),
+            createdDate = createdDate,
             tags = tags.toDomain(),
             myGroupRole = myGroupRole,
         )
+
+    fun StudyGroupDetailResponse.Category.toDomain() = StudyGroupDetailInfo.Category(id = id, name = name)
 
     fun StudyGroupDetailResponse.Tag.toDomain() = StudyGroupDetailInfo.Tag(id = id, name = name)
 

@@ -1,13 +1,15 @@
 package com.ssafy.neegongnaegong.presentation.group.detail
 
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
-import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
+import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupDetailInfo
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class StudiesDetailContract {
@@ -47,7 +49,27 @@ class StudiesDetailContract {
 
     data class State(
         val isLoading: Boolean = false,
-        val studies: Studies = Studies.empty(),
+        val studyGroupDetailInfo: StudyGroupDetailInfo =
+            StudyGroupDetailInfo(
+                id = 8666,
+                name = "올바른 접근이 아닙니다",
+                description = "올바른 접근이 아닙니다",
+                profileImg = "",
+                isPublic = false,
+                maxMembers = 1,
+                currentMembers = 1,
+                targetStudyTime = 1,
+                category =
+                    StudyGroupDetailInfo.Category(
+                        id = -1,
+                        name = "",
+                    ),
+                leaderId = -1,
+                leaderName = "",
+                createdDate = LocalDate.now(),
+                tags = listOf(),
+                myGroupRole = Role.PENDING,
+            ),
         // feed
         val feeds: List<LearningRecord> = emptyList(),
         val feedsHasNext: Boolean = true,

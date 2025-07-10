@@ -1,7 +1,8 @@
 #!/bin/sh
 
+# 이렇게 하니 ktlint, detekt 통해서 자동 정렬이 실행되고 나서 다시 stash pop 될 때 conflict 나면서 문제가 복잡해지는 현상 발견
 # 스테이징 하지 않은 사항은 잠시 보관 ( 청크 단위로 add 했을 때 나중에 파일 단위로 add 되는 것을 막기 위함)
-git stash --keep-index --include-untracked
+#git stash --keep-index --include-untracked
 
 # 1) 스테이지된 Kotlin 파일만
 FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.kts?$' || true)
@@ -29,13 +30,13 @@ echo "🔧 detekt auto-correct..."
 
 if [ $? -ne 0 ]; then
   # 검사가 끝났으니 pop으로 보관했던 것 불러옴
-  git stash pop --index
+#  git stash pop --index
   echo "✖️ Detekt violations detected. Detekt Check Failed..."
   set -e
   exit 1
 else
   git add $FILES
-  git stash pop --index
+#  git stash pop --index
   echo "✅ Detekt checks passed."
   exit 0
 fi

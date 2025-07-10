@@ -14,7 +14,6 @@ import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestCont
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestContentsReadStatusResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
-import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
 import com.ssafy.neegongnaegong.data.remote.StudiesApi
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -52,11 +51,6 @@ class NetworkStudiesDataSourceImpl
         override suspend fun createStudies(request: CreateStudiesRequest): Flow<Unit> =
             apiFlow {
                 studiesApi.createStudies(request)
-            }
-
-        override suspend fun getStudies(studyGroupId: Long): Flow<StudiesResponse> =
-            apiFlow {
-                studiesApi.getStudies(studyGroupId)
             }
 
         override suspend fun updateStudies(
