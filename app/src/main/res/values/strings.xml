@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NeeGongNaeGong</string>
+    <string name="app_name">니공내공</string>
 
     <!-- Timer Screen-->
     <string name="txt_timer_guide">휴대폰을 덮으면 자동으로 공부 시간이 측정돼요!</string>
