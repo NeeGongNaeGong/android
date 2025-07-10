@@ -27,6 +27,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -46,6 +47,8 @@
 
         <activity
             android:name=".presentation.timer.TimerActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.NeeGongNaeGong"
             android:exported="false" />
     </application>
 </manifest>

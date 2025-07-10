@@ -22,7 +22,7 @@ fun DateTimeHeader(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, start = 12.dp, end = 12.dp, bottom = 20.dp),
+                .padding(start = 12.dp, end = 12.dp, bottom = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom,
     ) {

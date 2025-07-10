@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -60,10 +62,17 @@ class TimerActivity : ComponentActivity() {
 
         setContent {
             NeeGongNaeGongTheme {
-                Scaffold(snackbarHost = { NeeGongNaeGongSnackbarHost() }) { innerPadding ->
+                Scaffold(
+                    snackbarHost = { NeeGongNaeGongSnackbarHost() },
+                    containerColor = NeeGongNaeGongTheme.colorScheme.background,
+                ) { innerPadding ->
+                    Log.e("싸피", "onCreate: $innerPadding")
                     LearningRoute(
                         modifier =
-                            Modifier.padding(innerPadding),
+                            Modifier
+                                .padding(innerPadding)
+                                // imePadding()에서 bottomNavBar 크기만큼 패딩이 중복되는 것을 막기 위함
+                                .consumeWindowInsets(innerPadding),
                         viewModel = viewModel,
                         onCloseActivity = {
                             val resultIntent =
@@ -99,6 +108,7 @@ fun LearningRoute(
         )
     } else {
         LearningRecordWriteRoute(
+            modifier = modifier,
             learningRecord = uiState.learningRecord,
             onCloseActivity = onCloseActivity,
         )
