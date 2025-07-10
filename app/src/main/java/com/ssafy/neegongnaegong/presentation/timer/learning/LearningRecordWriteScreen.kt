@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -113,8 +115,6 @@ fun LearningRecordWriteContent(
     // activity
     onCloseActivity: () -> Unit,
 ) {
-    val context = LocalContext.current
-
     LaunchedEffect(effect) {
         effect.collectLatest { effect ->
             when (effect) {
@@ -161,7 +161,6 @@ fun LearningRecordWriteContent(
 }
 
 // 처음에 태그 선택할때 (ex.CS,알고리즘.. ) user -> 관련스터디 -> 카테고리
-
 @Composable
 fun LearningRecordWriteScreen(
     modifier: Modifier = Modifier,
@@ -175,16 +174,18 @@ fun LearningRecordWriteScreen(
     onConfirmClicked: () -> Unit,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
+    val scroll = rememberScrollState()
     Column(
         modifier =
             modifier
                 .fillMaxSize()
                 .background(color = NeeGongNaeGongTheme.colorScheme.background)
-                .padding(top = 16.dp, start = 8.dp, end = 8.dp),
+                .imePadding().padding(start = 8.dp, end = 8.dp).verticalScroll(scroll),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.SpaceAround,
+        ) {
             DateTimeHeader(
                 dateText = learningRecord.startAt.toDateString(),
                 timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
