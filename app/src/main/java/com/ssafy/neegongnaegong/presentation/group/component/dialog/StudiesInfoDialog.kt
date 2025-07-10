@@ -117,7 +117,7 @@ private fun StudiesInfoDialog(
             fontWeight = NeeGongNaeGongTheme.typography.bodyMedium.fontWeight,
             letterSpacing = NeeGongNaeGongTheme.typography.bodyMedium.letterSpacing,
         )
-    Dialog(onDismissRequest = { onCancel.invoke() }) {
+    Dialog(onDismissRequest = onCancel) {
         Box(
             modifier =
                 modifier
