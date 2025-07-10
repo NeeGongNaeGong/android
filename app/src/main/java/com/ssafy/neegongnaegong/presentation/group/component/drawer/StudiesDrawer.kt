@@ -276,13 +276,8 @@ private fun StudiesDrawer(
                             failure = {
                                 // 이미지 로드 실패 시 플레이스홀더
                                 Image(
-                                    painter = painterResource(id = R.drawable.img_default_profile),
-                                    contentDescription = "Profile Image",
-                                    modifier =
-                                        Modifier
-                                            .size(100.dp)
-                                            .clip(CircleShape),
-                                    contentScale = ContentScale.Crop,
+                                    painter = painterResource(id = R.drawable.img_main_character),
+                                    contentDescription = "Group Profile Image",
                                 )
                             },
                         )
