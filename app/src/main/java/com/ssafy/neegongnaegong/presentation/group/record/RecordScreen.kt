@@ -222,7 +222,7 @@ fun PieChartScreen(
 
             // 조각 그리기
             drawArc(
-                color = colors.getOrElse(index) { Color.Black },
+                color = colors.getOrElse(index % 5) { Color.Black },
                 startAngle = startAngle,
                 sweepAngle = drawSweep,
                 useCenter = true,
