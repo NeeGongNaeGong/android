@@ -43,6 +43,7 @@ fun StudiesDetailRoute(
     navigateToContents: (Int, Long) -> Unit,
     navigateToLatestNoticeDetail: (Long, Long) -> Unit,
     navigateToLatestVoteDetail: (Long, Long) -> Unit,
+    navigateToMemberRecord: (Long) -> Unit,
     popBackStack: () -> Unit = {},
 ) {
     val currentDrawerState = LocalDrawerState.current
@@ -87,6 +88,9 @@ fun StudiesDetailRoute(
                         effect.startTabIndex,
                         studyGroupId,
                     )
+
+                is StudiesDetailContract.Effect.NavigateToProfile ->
+                    navigateToMemberRecord(effect.memberId)
             }
         }
     }
@@ -115,6 +119,11 @@ fun StudiesDetailRoute(
                 StudiesDetailContract.Event.OnClickLatestVote(voteId),
             )
         },
+        onProfileClick = { memberId ->
+            viewModel.setEvent(
+                StudiesDetailContract.Event.OnClickProfile(memberId),
+            )
+        },
     )
 }
 
@@ -127,6 +136,7 @@ private fun StudiesContent(
     onContentsClick: (Int) -> Unit,
     onLatestNoticeClick: (Long) -> Unit,
     onLatestVoteClick: (Long) -> Unit,
+    onProfileClick: (Long) -> Unit,
 ) {
     val currentDrawerState = LocalDrawerState.current
     StudiesDetailScreen(
@@ -142,7 +152,7 @@ private fun StudiesContent(
         latestNoticeReadChecked = uiState.latestNoticeReadChecked,
         latestVote = uiState.latestVote,
         latestVoteReadChecked = uiState.latestVoteReadChecked,
-        onProfileClick = {},
+        onProfileClick = onProfileClick,
         onLoadWeeklyRankings = onLoadWeeklyRankings,
         onContentsClick = onContentsClick,
         onLatestNoticeClick = onLatestNoticeClick,
@@ -164,7 +174,7 @@ private fun StudiesDetailScreen(
     latestNoticeReadChecked: Boolean = false,
     latestVote: LatestVote? = null,
     latestVoteReadChecked: Boolean = false,
-    onProfileClick: (Long) -> Unit = {},
+    onProfileClick: (Long) -> Unit,
     onLoadWeeklyRankings: () -> Unit,
     onContentsClick: (Int) -> Unit = {},
     onLatestNoticeClick: (Long) -> Unit = {},

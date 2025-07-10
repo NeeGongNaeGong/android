@@ -80,6 +80,14 @@ class StudiesDetailViewModel
                         )
                     }
                 }
+
+                is StudiesDetailContract.Event.OnClickProfile -> {
+                    setEffect {
+                        StudiesDetailContract.Effect.NavigateToProfile(
+                            event.memberId,
+                        )
+                    }
+                }
             }
         }
 

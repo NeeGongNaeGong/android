@@ -102,6 +102,14 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                             ),
                         )
                     },
+                    navigateToMemberRecord = { memberId ->
+                        navController.navigate(
+                            AppNavigation.Screen.Studies.Record(
+                                route.studyGroupId,
+                                memberId,
+                            ),
+                        )
+                    },
                     popBackStack = navController::popBackStack,
                 )
             }
