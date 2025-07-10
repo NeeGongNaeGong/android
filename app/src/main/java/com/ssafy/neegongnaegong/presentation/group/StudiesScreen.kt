@@ -1,15 +1,11 @@
 package com.ssafy.neegongnaegong.presentation.group
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,185 +17,153 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.ssafy.neegongnaegong.R
-import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
-import com.ssafy.neegongnaegong.domain.model.studies.Studies
+import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
-import com.ssafy.neegongnaegong.presentation.group.component.StudiesCard
+import com.ssafy.neegongnaegong.presentation.group.component.StudiesWindow
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun StudiesRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesViewModel = hiltViewModel(),
-    popBackStack: () -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
-    navigateToStudiesManagement: () -> Unit,
+    navigateToStudiesFind: () -> Unit,
 ) {
-    BackHandler {
-        popBackStack()
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.setEvent(StudiesContract.Event.OnLoadStudies)
-    }
-
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val myStudyList = viewModel.myStudyList.collectAsLazyPagingItems()
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(StudiesContract.Event.OnLoadMyStudies)
+    }
 
-    StudiesContent(
-        modifier = modifier,
-        uiState = uiState,
-        effect = viewModel.effect,
-        onLoadStudies = { viewModel.setEvent(StudiesContract.Event.OnLoadStudies) },
-        onApplyStudies = { viewModel.setEvent(StudiesContract.Event.OnStudiesApplyClicked(it)) },
-        navigateToStudiesDetail = navigateToStudiesDetail,
-        navigateToStudiesManagement = navigateToStudiesManagement,
-    )
-}
-
-@Composable
-fun StudiesContent(
-    modifier: Modifier = Modifier,
-    uiState: StudiesContract.State,
-    effect: Flow<StudiesContract.Effect>,
-    onLoadStudies: () -> Unit,
-    onApplyStudies: (Long) -> Unit,
-    navigateToStudiesDetail: (Long) -> Unit,
-    navigateToStudiesManagement: () -> Unit,
-) {
-    LaunchedEffect(effect) {
-        effect.collectLatest { effect ->
-            // TODO : effect 처리
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
             when (effect) {
-                is StudiesContract.Effect.ShowStudies -> {
-                }
+                is StudiesContract.Effect.NavigateToStudiesDetail ->
+                    navigateToStudiesDetail(effect.studyGroupId)
 
-                is StudiesContract.Effect.NavigateToGroupDetail -> {
-                }
+                is StudiesContract.Effect.NavigateToStudiesSearch ->
+                    navigateToStudiesFind()
             }
         }
     }
 
-    StudiesScreen(
+    StudiesContent(
         modifier = modifier,
-        studiesList = uiState.studiesList,
-        isLoading = uiState.isLoading,
-        onLoadStudies = onLoadStudies,
-        onApplyStudies = onApplyStudies,
-        navigateToStudiesDetail = navigateToStudiesDetail,
-        navigateToStudiesManagement = navigateToStudiesManagement,
+        uiState = uiState,
+        myStudyList = myStudyList,
+        onClickMyStudies = { studyGroupId ->
+            viewModel.setEvent(
+                StudiesContract.Event.OnClickMyStudies(studyGroupId),
+            )
+        },
+        onClickStudiesFind = {
+            viewModel.setEvent(StudiesContract.Event.OnClickSearchStudies)
+        },
     )
 }
 
 @Composable
-fun StudiesScreen(
+private fun StudiesContent(
     modifier: Modifier = Modifier,
-    studiesList: List<Studies>,
-    isLoading: Boolean,
-    onLoadStudies: () -> Unit,
-    onApplyStudies: (Long) -> Unit,
-    navigateToStudiesDetail: (Long) -> Unit,
-    navigateToStudiesManagement: () -> Unit,
+    uiState: StudiesContract.State,
+    myStudyList: LazyPagingItems<MyStudyGroupInfo>,
+    onClickMyStudies: (Long) -> Unit,
+    onClickStudiesFind: () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-    ) {
+    StudiesScreen(
+        modifier = modifier,
+        isLoading = uiState.isLoading,
+        myStudyList = myStudyList,
+        onClickMyStudies = onClickMyStudies,
+        onClickStudiesFind = onClickStudiesFind,
+    )
+}
+
+@Composable
+private fun StudiesScreen(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean,
+    myStudyList: LazyPagingItems<MyStudyGroupInfo>,
+    onClickMyStudies: (Long) -> Unit,
+    onClickStudiesFind: () -> Unit,
+) {
+    Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
             title = {
                 Text(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    text = "스터디 목록",
+                    text = "가입한 스터디",
                     style = NeeGongNaeGongTheme.typography.bodyMedium,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             navigationType = TopAppBarNavigationType.None,
             actionButtons = {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Box {
-                        Icon(
-                            modifier =
-                                Modifier
-                                    .noRippleClickable {
-                                        navigateToStudiesManagement()
-                                    }
-                                    .padding(8.dp),
-                            // 클릭 영역을 더 크게 만들기 위한 패딩
-                            painter = painterResource(R.drawable.ic_topbar_studies_create),
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            contentDescription = "스터디 생성",
-                        )
-                    }
-                    Box {
-                        Icon(
-                            modifier =
-                                Modifier
-                                    .noRippleClickable {
-                                        navigateToStudiesDetail(-1) // TODO : 검색기능 구현 후 적용
-                                    }
-                                    .padding(8.dp),
-                            // 클릭 영역을 더 크게 만들기 위한 패딩
-                            painter = painterResource(R.drawable.ic_topbar_serach),
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            contentDescription = "스터디 검색",
-                        )
-                    }
+                Box {
+                    Icon(
+                        modifier =
+                            Modifier
+                                .noRippleClickable { onClickStudiesFind() }
+                                .padding(8.dp),
+                        // 클릭 영역을 더 크게 만들기 위한 패딩
+                        painter = painterResource(R.drawable.ic_topbar_serach),
+                        tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        contentDescription = "스터디 검색",
+                    )
                 }
             },
         )
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                itemsIndexed(studiesList) { index, studies ->
-                    StudiesCard(
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(
+                count = myStudyList.itemCount,
+                key = myStudyList.itemKey(MyStudyGroupInfo::id),
+            ) { idx ->
+                myStudyList[idx]?.let { studies ->
+                    StudiesWindow(
                         modifier =
                             Modifier
-                                .padding(bottom = 20.dp)
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 8.dp)
                                 .noRippleClickable {
-                                    navigateToStudiesDetail(studies.id)
+                                    onClickMyStudies(studies.id)
                                 },
-                        category = studies.studyInfo.category?.name ?: "없음",
-                        name = studies.studyInfo.name,
-                        targetStudyTime = studies.studyInfo.targetStudyTime,
+                        category = studies.category.name,
+                        isPublic = studies.isPublic,
+                        name = studies.name,
+                        targetStudyTime = studies.targetStudyTime,
                         currentMembers = studies.currentMembers,
-                        maxMembers = studies.studyInfo.maxMembers,
+                        maxMembers = studies.maxMembers,
                         leader = studies.leader.name,
-                        createdDate = studies.createdDate,
-                        description = studies.studyInfo.description,
-                        profileImageUrl = studies.studyInfo.profileImg,
-                        onApplyClick = { onApplyStudies(studies.id) },
+                        createdDate = studies.createdDate.toString(),
+                        profileImageUrl = studies.profileImg,
                     )
-
-                    if (index == studiesList.lastIndex) {
-                        LaunchedEffect(Unit) {
-                            onLoadStudies()
-                        }
-                    }
                 }
+            }
 
-                if (isLoading) {
-                    item {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator(
-                                strokeWidth = 4.dp,
-                                color = NeeGongNaeGongTheme.colorScheme.blue,
-                            )
-                        }
+            if (isLoading) {
+                item {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(
+                            strokeWidth = 4.dp,
+                            color = NeeGongNaeGongTheme.colorScheme.blue,
+                        )
                     }
                 }
             }
@@ -210,14 +174,46 @@ fun StudiesScreen(
 @NeeGongNaeGongPreviews
 @Composable
 private fun PreviewStudiesScreen() {
+    val sampleItems =
+        mutableListOf<MyStudyGroupInfo>().apply {
+            for (i in 0..4) {
+                add(
+                    MyStudyGroupInfo(
+                        id = i.toLong(),
+                        leader =
+                            MyStudyGroupInfo.LeaderInfo(
+                                id = i.toLong(),
+                                name = "이름",
+                            ),
+                        name = "Araceli McLaughlin",
+                        maxMembers = 1905,
+                        currentMembers = 6511,
+                        description = "leo",
+                        profileImg = "inimicus",
+                        isPublic = false,
+                        targetStudyTime = 4273,
+                        category =
+                            MyStudyGroupInfo.CategoryInfo(
+                                id = i.toLong(),
+                                name = "Raymond Frank",
+                            ),
+                        createdDate = LocalDate.now(),
+                        tags = listOf(),
+                        cursorCreatedAt = LocalDateTime.now(),
+                        cursorId = 0L,
+                    ),
+                )
+            }
+        }
+    val pagingData = PagingData.from(sampleItems)
+    val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
+
     NeeGongNaeGongTheme {
         StudiesScreen(
-            studiesList = StudiesPreviewDataProvider().getStudies(),
             isLoading = false,
-            onLoadStudies = {},
-            onApplyStudies = {},
-            navigateToStudiesDetail = {},
-            navigateToStudiesManagement = {},
+            myStudyList = lazyItems,
+            onClickMyStudies = {},
+            onClickStudiesFind = {},
         )
     }
 }

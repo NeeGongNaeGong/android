@@ -16,6 +16,7 @@ import com.ssafy.neegongnaegong.presentation.group.StudiesRoute
 import com.ssafy.neegongnaegong.presentation.group.create.StudiesCreateRoute
 import com.ssafy.neegongnaegong.presentation.group.detail.StudiesDetailRoute
 import com.ssafy.neegongnaegong.presentation.group.edit.StudiesEditRoute
+import com.ssafy.neegongnaegong.presentation.group.find.StudiesFindRoute
 import com.ssafy.neegongnaegong.presentation.group.join.StudiesWaitingToJoinRoute
 import com.ssafy.neegongnaegong.presentation.group.list.main.ListRoute
 import com.ssafy.neegongnaegong.presentation.group.list.notice.NoticeDetailRoute
@@ -42,13 +43,21 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
         composable<AppNavigation.Screen.Studies.Main> {
             StudiesRoute(
                 modifier = Modifier,
-                popBackStack = { },
                 navigateToStudiesDetail = {
                     navController.navigate(AppNavigation.Screen.Studies.StudiesDetail(it))
                 },
+                navigateToStudiesFind = {
+                    navController.navigate(AppNavigation.Screen.Studies.StudiesFind)
+                },
+            )
+        }
+        composable<AppNavigation.Screen.Studies.StudiesFind> {
+            StudiesFindRoute(
+                modifier = Modifier,
                 navigateToStudiesManagement = {
                     navController.navigate(AppNavigation.Screen.Studies.Create)
                 },
+                popBackStack = navController::popBackStack,
             )
         }
 

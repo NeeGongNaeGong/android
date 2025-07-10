@@ -14,7 +14,7 @@ import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetMyStudyListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetStudyGroupDetailUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
-import com.ssafy.neegongnaegong.presentation.group.StudiesContract
+import com.ssafy.neegongnaegong.presentation.group.find.StudiesFindContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -42,7 +42,7 @@ class StudiesDetailViewModel
             errorContext: ErrorContext,
             retry: () -> Unit,
         ) {
-            val error = errorContext as? StudiesContract.Error ?: return
+            val error = errorContext as? StudiesFindContract.Error ?: return
             Log.d(TAG, "handleException: $error")
         }
 

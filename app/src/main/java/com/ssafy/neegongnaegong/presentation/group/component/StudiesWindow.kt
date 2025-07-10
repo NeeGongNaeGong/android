@@ -1,0 +1,260 @@
+package com.ssafy.neegongnaegong.presentation.group.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.skydoves.landscapist.glide.GlideImage
+import com.ssafy.neegongnaegong.R
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.TimeUnit
+
+@Composable
+fun StudiesWindow(
+    modifier: Modifier = Modifier,
+    category: String = "",
+    isPublic: Boolean = true,
+    name: String = "",
+    targetStudyTime: Int,
+    currentMembers: Int,
+    maxMembers: Int,
+    leader: String = "",
+    createdDate: String = "",
+    profileImageUrl: String?,
+) {
+    val labelStyle =
+        SpanStyle(
+            color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+            fontSize = 14.sp,
+            fontStyle = NeeGongNaeGongTheme.typography.labelSmall.fontStyle,
+            fontWeight = NeeGongNaeGongTheme.typography.labelSmall.fontWeight,
+            letterSpacing = NeeGongNaeGongTheme.typography.labelSmall.letterSpacing,
+        )
+    val defaultStyle =
+        SpanStyle(
+            color = NeeGongNaeGongTheme.colorScheme.primaryText,
+            fontSize = 14.sp,
+            fontStyle = NeeGongNaeGongTheme.typography.bodySmall.fontStyle,
+            fontWeight = NeeGongNaeGongTheme.typography.bodySmall.fontWeight,
+            letterSpacing = NeeGongNaeGongTheme.typography.bodySmall.letterSpacing,
+        )
+
+    Box(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = NeeGongNaeGongTheme.colorScheme.gray2,
+                    shape = RoundedCornerShape(4.dp),
+                ),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
+        ) {
+            // 상단 정보와 이미지를 가로로 배치
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // 왼쪽 정보 영역
+                Column(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 16.dp, top = 20.dp, bottom = 20.dp, end = 16.dp),
+                ) {
+                    // 상단 카테고리 (예: "대학생")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(end = 4.dp),
+                            text = category,
+                            style =
+                                NeeGongNaeGongTheme.typography.bodyMedium,
+                            color = NeeGongNaeGongTheme.colorScheme.peach,
+                        )
+                        if (isPublic.not()) {
+                            Icon(
+                                modifier = Modifier.size(16.dp),
+                                painter = painterResource(R.drawable.ic_studies_private),
+                                tint = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                                contentDescription = "비공개",
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // 그룹 제목
+                    Text(
+                        text = name,
+                        style = NeeGongNaeGongTheme.typography.titleSmall.copy(fontSize = 16.sp), // 제목 크기 약간 축소
+                        color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        // 목표 시간 | 인원수
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text =
+                                    buildAnnotatedString {
+                                        withStyle(style = labelStyle) {
+                                            append("목표  ")
+                                        }
+                                        withStyle(style = defaultStyle) {
+                                            append("주 ${targetStudyTime / TimeUnit.HOUR.seconds}시간")
+                                        }
+                                    },
+                            )
+                            Text(
+                                text =
+                                    buildAnnotatedString {
+                                        withStyle(style = labelStyle) {
+                                            append("인원  ")
+                                        }
+                                        withStyle(style = defaultStyle) {
+                                            append("$currentMembers / $maxMembers 명")
+                                        }
+                                    },
+                            )
+                        }
+                        // 그룹장 | 생성일"
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(
+                                text =
+                                    buildAnnotatedString {
+                                        withStyle(style = labelStyle) {
+                                            append("그룹장  ")
+                                        }
+                                        withStyle(style = defaultStyle) {
+                                            append(leader)
+                                        }
+                                    },
+                            )
+                            Text(
+                                text =
+                                    buildAnnotatedString {
+                                        withStyle(style = labelStyle) {
+                                            append("생성일  ")
+                                        }
+                                        withStyle(style = defaultStyle) {
+                                            append(createdDate)
+                                        }
+                                    },
+                            )
+                        }
+                    }
+                }
+
+                // 오른쪽 이미지 영역
+                Box(
+                    modifier =
+                        Modifier
+                            .padding(end = 16.dp)
+                            .size(width = 80.dp, height = 80.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(NeeGongNaeGongTheme.colorScheme.gray3),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    GlideImage(
+                        imageModel = { profileImageUrl },
+                        modifier = Modifier.fillMaxSize(),
+                        loading = {
+                            Box(modifier = Modifier.matchParentSize()) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center),
+                                )
+                            }
+                        },
+                        failure = {
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .background(MaterialTheme.colorScheme.errorContainer),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Error,
+                                    contentDescription = "이미지 로드 실패",
+                                    modifier = Modifier.align(Alignment.Center),
+                                    tint = MaterialTheme.colorScheme.error,
+                                )
+                            }
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun PreviewStudiesWindowPrivate() {
+    NeeGongNaeGongTheme {
+        StudiesWindow(
+            category = "대학생",
+            isPublic = false,
+            name = "개발, 코딩(프론트, 백엔드 등) 취준방",
+            targetStudyTime = (TimeUnit.HOUR.seconds * 7).toInt(),
+            currentMembers = 3,
+            maxMembers = 20,
+            leader = "박준식",
+            createdDate = "2025-05-05",
+            profileImageUrl = null,
+        )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun PreviewStudiesWindowPublic() {
+    NeeGongNaeGongTheme {
+        StudiesWindow(
+            category = "예술",
+            isPublic = true,
+            name = "자연과 사진",
+            targetStudyTime = (TimeUnit.HOUR.seconds * 3).toInt(),
+            currentMembers = 10,
+            maxMembers = 30,
+            leader = "피카소",
+            createdDate = "2025-07-05",
+            profileImageUrl = null,
+        )
+    }
+}

@@ -7,39 +7,30 @@ import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 
 class StudiesContract {
-    sealed class Event : UiEvent {
-        data object OnLoadStudies : Event()
+    sealed interface Event : UiEvent {
+        data object OnLoadMyStudies : Event
 
-        data class StudiesClicked(
-            val studiesId: Long,
-        ) : Event()
+        data class OnClickMyStudies(
+            val studyGroupId: Long,
+        ) : Event
 
-        data class OnStudiesApplyClicked(
-            val studiesId: Long,
-        ) : Event()
+        data object OnClickSearchStudies : Event
     }
 
     data class State(
         val isLoading: Boolean = false,
-        val studiesList: List<Studies> = emptyList(),
-        val hasNext: Boolean = true,
-        val cursorCreateAt: String? = null,
-        val cursorId: Long? = null,
+        val joinedStudies: List<Studies> = emptyList(),
     ) : UiState
 
-    sealed class Effect : UiEffect {
-        data object ShowStudies : Effect()
+    sealed interface Effect : UiEffect {
+        data class NavigateToStudiesDetail(
+            val studyGroupId: Long,
+        ) : Effect
 
-        data class NavigateToGroupDetail(
-            val studiesId: Long,
-        ) : Effect()
+        data object NavigateToStudiesSearch : Effect
     }
 
-    sealed class Error : ErrorContext {
-        data object GetStudiesListError : Error()
-
-        data class ApplyStudiesError(
-            val studyGroupId: Long,
-        ) : Error()
+    sealed interface Error : ErrorContext {
+        data object MyStudiesLoadError : Error
     }
 }
