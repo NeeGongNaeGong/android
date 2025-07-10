@@ -87,7 +87,7 @@ fun RecordRoute(
         TopAppBar(
             title = {
                 Text(
-                    text = "박준식 이번주 공부내용",
+                    text = "이번주 공부내용",
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                 )
             },

@@ -45,6 +45,10 @@ class StudiesDetailContract {
         data class OnClickContents(
             val startTabIndex: Int,
         ) : Event
+
+        data class OnClickProfile(
+            val memberId: Long,
+        ) : Event
     }
 
     data class State(
@@ -99,6 +103,10 @@ class StudiesDetailContract {
 
         data class NavigateToContents(
             val startTabIndex: Int,
+        ) : Effect
+
+        data class NavigateToProfile(
+            val memberId: Long,
         ) : Effect
     }
 
