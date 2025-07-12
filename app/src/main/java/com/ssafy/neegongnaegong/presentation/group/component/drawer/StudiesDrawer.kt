@@ -23,8 +23,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,7 +67,6 @@ fun StudiesDrawerContent(
     navigateToStudiesApplications: (Role) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showDeleteStudyGroupDialog by remember { mutableStateOf(false) }
     val myStudyList = viewModel.myStudyList.collectAsLazyPagingItems()
     val role = uiState.studyGroupDetailInfo.myGroupRole
     StudiesDrawer(
@@ -78,15 +75,16 @@ fun StudiesDrawerContent(
         description = uiState.studyGroupDetailInfo.description,
         role = role,
         myStudyList = myStudyList,
-        onStudyDeleteClick = { showDeleteStudyGroupDialog = true },
+        onStudyDeleteClick = { viewModel.setEvent(StudiesDetailContract.Event.OnDeleteMenuClick) },
         navigateTodStudiesEdit = { navigateTodStudiesEdit(role) },
         navigateToStudiesMembersRole = { navigateToStudiesMembersRole(role) },
         navigateToStudiesApplications = { navigateToStudiesApplications(role) },
     )
-    if (showDeleteStudyGroupDialog) {
+
+    if (uiState.showDeleteDialog) {
         DeleteStudiesDialog(
-            onCancel = { showDeleteStudyGroupDialog = false },
-            onDismiss = { showDeleteStudyGroupDialog = false },
+            onCancel = { viewModel.setEvent(StudiesDetailContract.Event.OnDeleteDialogDismiss) },
+            onDismiss = { viewModel.setEvent(StudiesDetailContract.Event.OnDeleteDialogDismiss) },
             onConfirm = {
                 viewModel.setEvent(
                     StudiesDetailContract.Event.OndDeleteStudies(uiState.studyGroupDetailInfo.id),

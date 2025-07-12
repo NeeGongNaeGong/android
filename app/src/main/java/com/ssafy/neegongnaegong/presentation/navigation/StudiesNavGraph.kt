@@ -110,6 +110,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                             ),
                         )
                     },
+                    navigateToMain = {
+                        navController.navigate(
+                            AppNavigation.Screen.Studies.Main,
+                        ) {
+                            popUpTo<AppNavigation.Screen.Studies.Main> {
+                                inclusive = true
+                            }
+                        }
+                    },
                     popBackStack = navController::popBackStack,
                 )
             }
