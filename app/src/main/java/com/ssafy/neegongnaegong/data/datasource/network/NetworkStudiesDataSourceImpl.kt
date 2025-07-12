@@ -49,7 +49,7 @@ class NetworkStudiesDataSourceImpl
                 )
             }
 
-        override suspend fun createStudies(request: CreateStudiesRequest): Flow<Long> =
+        override fun createStudies(request: CreateStudiesRequest): Flow<Long> =
             apiFlow {
                 studiesApi.createStudies(request)
             }

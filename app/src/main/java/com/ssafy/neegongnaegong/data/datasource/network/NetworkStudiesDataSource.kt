@@ -30,7 +30,7 @@ interface NetworkStudiesDataSource {
 
     suspend fun getStudiesList(request: GetStudiesListRequest): Flow<CursorSliceStudiesListResponse>
 
-    suspend fun createStudies(request: CreateStudiesRequest): Flow<Long>
+    fun createStudies(request: CreateStudiesRequest): Flow<Long>
 
     fun changeStudiesProfileImage(
         studyGroupId: Long,

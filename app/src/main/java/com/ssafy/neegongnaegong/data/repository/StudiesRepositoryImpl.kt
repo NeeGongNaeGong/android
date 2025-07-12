@@ -81,10 +81,10 @@ class StudiesRepositoryImpl
                     }
             }
 
-        override suspend fun createStudies(studyInfo: StudyInfo): Flow<Long> =
-            withContext(ioDispatcher) {
-                dataSource.createStudies(request = CreateStudiesRequest.fromDomain(studyInfo))
-            }
+        override fun createStudies(studyInfo: StudyInfo): Flow<Long> =
+            dataSource.createStudies(request = CreateStudiesRequest.fromDomain(studyInfo)).flowOn(
+                context = ioDispatcher,
+            )
 
         override fun changeStudiesProfileImage(
             studyGroupId: Long,
