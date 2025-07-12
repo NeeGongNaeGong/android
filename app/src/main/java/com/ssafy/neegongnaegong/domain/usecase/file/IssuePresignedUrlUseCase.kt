@@ -8,11 +8,12 @@ class IssuePresignedUrlUseCase(
     private val fileRepository: FileRepository,
 ) {
     suspend operator fun invoke(
+        studyGroupId: Long,
         uploadPathType: String,
         imageExtension: String,
     ): Flow<PresignedUrlInfo> =
         fileRepository.issuePresignedUrl(
-            id = 0,
+            id = studyGroupId,
             uploadPathType = uploadPathType,
             imageExtension = imageExtension,
         )

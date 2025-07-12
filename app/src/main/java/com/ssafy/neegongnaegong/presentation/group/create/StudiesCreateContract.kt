@@ -70,15 +70,19 @@ class StudiesCreateContract {
         val selectedCategory: Category? = null,
         val selectedTags: List<Tag> = emptyList(),
         val tags: List<Tag> = emptyList(),
+        // 이미지
         val selectedImageUri: Uri? = null,
         val presignedUrl: String? = null,
         val requestImage: RequestBody? = null,
+        val imageExtension: String? = null,
         val validateCreateStudies: Boolean = false,
         val studyInfo: StudyInfo = StudyInfo.empty(),
     ) : UiState
 
     sealed class Effect : UiEffect {
         data object NavigateToBack : Effect()
+
+        data object NavigateToMyStudies : Effect()
     }
 
     sealed class Error : ErrorContext {

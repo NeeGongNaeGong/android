@@ -1,7 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.create
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -87,12 +86,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import okhttp3.RequestBody
 
-private const val TAG = "StudiesManagementScreen"
 
 @Composable
 fun StudiesCreateRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesCreateViewModel = hiltViewModel(),
+    navigateToMyStudies: () -> Unit,
     popBackStack: () -> Unit,
 ) {
     BackHandler {
@@ -152,6 +151,7 @@ fun StudiesCreateRoute(
                 StudiesCreateContract.Event.OnCreateStudiesClicked,
             )
         },
+        navigateToMyStudies = navigateToMyStudies,
         popBackStack = popBackStack,
     )
 }
@@ -172,6 +172,7 @@ private fun StudiesCreateContent(
     onSelectedImage: (Uri, String?) -> Unit,
     onSelectedImageRequest: (RequestBody?) -> Unit,
     onCreateStudies: () -> Unit,
+    navigateToMyStudies: () -> Unit,
     popBackStack: () -> Unit,
 ) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -180,6 +181,7 @@ private fun StudiesCreateContent(
         effect.collectLatest { effect ->
             when (effect) {
                 StudiesCreateContract.Effect.NavigateToBack -> backDispatcher?.onBackPressed()
+                StudiesCreateContract.Effect.NavigateToMyStudies -> navigateToMyStudies()
             }
         }
     }
@@ -250,12 +252,7 @@ private fun StudiesCreateScreen(
             onResult = { uri ->
                 uri?.let {
                     selectedImageUri = it
-                    val encodeUri = Uri.encode(it.toString())
-                    Log.d(TAG, "image uri: $uri")
-                    Log.d(TAG, "encoded uri: $encodeUri")
                     onSelectedImage(it, context.getFileExtension(it))
-                    Log.d(TAG, "extension: ${context.getFileExtension(it)}")
-                    Log.d(TAG, "request: ${context.uriToRequestBody(it)}")
                     onSelectedImageRequest(context.uriToRequestBody(it))
                 }
             },

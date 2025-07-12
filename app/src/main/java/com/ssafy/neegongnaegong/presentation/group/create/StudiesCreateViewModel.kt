@@ -1,14 +1,11 @@
 package com.ssafy.neegongnaegong.presentation.group.create
 
 import androidx.lifecycle.viewModelScope
-import com.ssafy.neegongnaegong.domain.model.file.UploadPathType
 import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.StudyInfo
 import com.ssafy.neegongnaegong.domain.model.studies.Tag
 import com.ssafy.neegongnaegong.domain.usecase.category.GetCategoriesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.category.GetTagsUseCase
-import com.ssafy.neegongnaegong.domain.usecase.file.IssuePresignedUrlUseCase
-import com.ssafy.neegongnaegong.domain.usecase.s3.UploadImageToS3UseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CreateStudiesUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +20,6 @@ class StudiesCreateViewModel
         private val createStudiesUseCase: CreateStudiesUseCase,
         private val getCategoriesUseCase: GetCategoriesUseCase,
         private val getTagsUseCase: GetTagsUseCase,
-        private val issuePresignedUrlUseCase: IssuePresignedUrlUseCase,
-        private val uploadImageToS3UseCase: UploadImageToS3UseCase,
     ) : BaseViewModel<StudiesCreateContract.Event, StudiesCreateContract.State, StudiesCreateContract.Effect>() {
         override fun createInitialState(): StudiesCreateContract.State = StudiesCreateContract.State()
 
@@ -63,7 +58,7 @@ class StudiesCreateViewModel
 
                 is StudiesCreateContract.Event.OnProfileImgChanged -> setStudyInfo(profileImg = event.profileImg)
                 is StudiesCreateContract.Event.OnSelectedImage ->
-                    issuePresignedUrl(
+                    setImageExtension(
                         event.extension,
                     )
 
@@ -83,25 +78,10 @@ class StudiesCreateViewModel
             }
         }
 
-        private fun issuePresignedUrl(extension: String?) {
-            if (extension == null) {
-                return
-            }
-            viewModelScope.launch {
-                issuePresignedUrlUseCase(
-                    uploadPathType = UploadPathType.PROFILE_STUDY_TEMP.path,
-                    imageExtension = extension,
-                ).withLoading {
-                }.safeCollect { result ->
-                    setState { copy(presignedUrl = result.presignedUrl) }
-                    setStudyInfo(profileImg = result.imageUrl)
-                    val currentState = uiState.value
-                    if (currentState.presignedUrl == null || currentState.requestImage == null) return@safeCollect
-                    uploadImageToS3UseCase(
-                        presignedUrl = currentState.presignedUrl,
-                        request = currentState.requestImage,
-                    )
-                }
+        private fun setImageExtension(extension: String?) {
+            if (extension == null) return
+            setState {
+                copy(imageExtension = extension)
             }
         }
 
@@ -189,10 +169,12 @@ class StudiesCreateViewModel
                 with(uiState.value) {
                     createStudiesUseCase(
                         studyInfo = studyInfo,
+                        imageRequestBody = requestImage,
+                        imageExtension = imageExtension,
                     ).withLoading {
                         setState { copy(isOnCreate = it) }
                     }.safeCollect {
-                        setEffect { StudiesCreateContract.Effect.NavigateToBack }
+                        setEffect { StudiesCreateContract.Effect.NavigateToMyStudies }
                     }
                 }
             }

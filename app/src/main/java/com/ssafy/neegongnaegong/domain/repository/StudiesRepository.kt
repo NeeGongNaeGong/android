@@ -34,7 +34,12 @@ interface StudiesRepository {
         size: Int,
     ): Flow<CursorStudiesPage>
 
-    suspend fun createStudies(studyInfo: StudyInfo): Flow<Unit>
+    fun createStudies(studyInfo: StudyInfo): Flow<Long>
+
+    fun changeStudiesProfileImage(
+        studyGroupId: Long,
+        profileImage: String,
+    ): Flow<Unit>
 
     suspend fun updateStudies(
         studyGroupId: Long,
