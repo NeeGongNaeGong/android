@@ -1,6 +1,5 @@
 package com.ssafy.neegongnaegong.data.repository
 
-import android.util.Log
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesApplicationsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesContentsMapper.toDomain
@@ -31,7 +30,6 @@ import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -96,10 +94,7 @@ class StudiesRepositoryImpl
                 .changeStudiesProfileImage(
                     studyGroupId = studyGroupId,
                     request = PatchStudiesProfileImage(profileImage),
-                ).catch { e ->
-                    Log.e("Repository_Error", "API 호출 실패: studyGroupId=$studyGroupId", e)
-                    throw e
-                }.flowOn(context = ioDispatcher)
+                ).flowOn(context = ioDispatcher)
 
         override suspend fun updateStudies(
             studyGroupId: Long,
