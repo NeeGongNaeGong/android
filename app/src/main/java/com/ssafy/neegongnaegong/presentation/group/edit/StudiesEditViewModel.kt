@@ -126,6 +126,7 @@ class StudiesEditViewModel
             }
             viewModelScope.launch {
                 issuePresignedUrlUseCase(
+                    studyGroupId = uiState.value.studyGroupId,
                     uploadPathType = UploadPathType.PROFILE_STUDY_TEMP.path,
                     imageExtension = extension,
                 ).withLoading {

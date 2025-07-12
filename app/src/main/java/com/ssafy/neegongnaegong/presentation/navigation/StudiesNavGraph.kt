@@ -128,6 +128,11 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             composable<AppNavigation.Screen.Studies.Create> {
                 StudiesCreateRoute(
                     modifier = Modifier,
+                    navigateToMyStudies = {
+                        navController.navigate(
+                            AppNavigation.Screen.Studies.Main,
+                        ) { popUpTo<AppNavigation.Screen.Studies.Main> { inclusive = true } }
+                    },
                     popBackStack = navController::popBackStack,
                 )
             }
