@@ -6,6 +6,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplicationsMembersRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.PatchStudiesProfileImage
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
@@ -48,9 +49,17 @@ class NetworkStudiesDataSourceImpl
                 )
             }
 
-        override suspend fun createStudies(request: CreateStudiesRequest): Flow<Unit> =
+        override suspend fun createStudies(request: CreateStudiesRequest): Flow<Long> =
             apiFlow {
                 studiesApi.createStudies(request)
+            }
+
+        override fun changeStudiesProfileImage(
+            studyGroupId: Long,
+            request: PatchStudiesProfileImage,
+        ): Flow<Unit> =
+            apiFlow {
+                studiesApi.changeStudiesProfileImage(studyGroupId, request)
             }
 
         override suspend fun updateStudies(

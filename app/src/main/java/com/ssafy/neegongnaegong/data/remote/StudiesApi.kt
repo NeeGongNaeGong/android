@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateNoticeRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateVoteRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.PatchStudiesProfileImage
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
@@ -13,7 +14,6 @@ import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesLatestCont
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesMemberListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesResponse
-import com.ssafy.neegongnaegong.data.remote.StudiesApi.Companion.PREFIX
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -53,6 +53,12 @@ interface StudiesApi {
     @POST(PREFIX)
     suspend fun createStudies(
         @Body request: CreateStudiesRequest,
+    ): Result<ApiResponse<Long>>
+
+    @PATCH("$PREFIX/{study-group-id}/profile-img")
+    suspend fun changeStudiesProfileImage(
+        @Path("study-group-id") studyGroupId: Long,
+        @Body request: PatchStudiesProfileImage,
     ): Result<ApiResponse<Unit>>
 
     @GET("$PREFIX/{study-group-id}")

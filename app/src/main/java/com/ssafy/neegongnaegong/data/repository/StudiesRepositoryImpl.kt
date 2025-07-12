@@ -12,6 +12,7 @@ import com.ssafy.neegongnaegong.data.model.studies.request.CreateNoticeRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.CreateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesApplicationsMembersRequest
 import com.ssafy.neegongnaegong.data.model.studies.request.GetStudiesListRequest
+import com.ssafy.neegongnaegong.data.model.studies.request.PatchStudiesProfileImage
 import com.ssafy.neegongnaegong.data.model.studies.request.UpdateStudiesRequest
 import com.ssafy.neegongnaegong.data.model.studies.response.CursorSliceStudiesListResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
@@ -30,6 +31,7 @@ import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -72,7 +74,6 @@ class StudiesRepositoryImpl
                             size = size,
                         ),
                     ).map { slice ->
-                        Log.d("StudiesRepositoryImpl", "응답 수신: ${slice.content.size}개 항목")
                         CursorSliceStudiesListResponse(
                             content = slice.content,
                             cursorCreatedAt = slice.cursorCreatedAt,
@@ -82,10 +83,23 @@ class StudiesRepositoryImpl
                     }
             }
 
-        override suspend fun createStudies(studyInfo: StudyInfo): Flow<Unit> =
+        override suspend fun createStudies(studyInfo: StudyInfo): Flow<Long> =
             withContext(ioDispatcher) {
                 dataSource.createStudies(request = CreateStudiesRequest.fromDomain(studyInfo))
             }
+
+        override fun changeStudiesProfileImage(
+            studyGroupId: Long,
+            profileImage: String,
+        ): Flow<Unit> =
+            dataSource
+                .changeStudiesProfileImage(
+                    studyGroupId = studyGroupId,
+                    request = PatchStudiesProfileImage(profileImage),
+                ).catch { e ->
+                    Log.e("Repository_Error", "API 호출 실패: studyGroupId=$studyGroupId", e)
+                    throw e
+                }.flowOn(context = ioDispatcher)
 
         override suspend fun updateStudies(
             studyGroupId: Long,
