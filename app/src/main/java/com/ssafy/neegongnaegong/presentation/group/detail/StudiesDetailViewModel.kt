@@ -54,7 +54,9 @@ class StudiesDetailViewModel
                 is StudiesDetailContract.Event.OnLoadFeeds -> onLoadFeeds(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadWeeklyRankings -> onLoadWeeklyRankings(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadLatestContents -> onLoadLatestContents(event.studyGroupId)
-                is StudiesDetailContract.Event.OndDeleteStudies -> deleteStudies(event.studyGroupId)
+                is StudiesDetailContract.Event.OndDeleteStudies -> {
+                    deleteStudies(event.studyGroupId)
+                }
                 is StudiesDetailContract.Event.OnClickLatestNotice -> {
                     setEffect {
                         StudiesDetailContract.Effect.NavigateToLatestNoticeDetail(
@@ -88,6 +90,10 @@ class StudiesDetailViewModel
                         )
                     }
                 }
+
+                StudiesDetailContract.Event.OnDeleteDialogDismiss -> setState { copy(showDeleteDialog = false) }
+
+                StudiesDetailContract.Event.OnDeleteMenuClick -> setState { copy(showDeleteDialog = true) }
             }
         }
 
@@ -179,7 +185,8 @@ class StudiesDetailViewModel
                     .withLoading {
                         setState { copy(isLoading = it) }
                     }.safeCollect {
-                        showMessage("스터디가 삭제되었습니다.")
+                        showSuccessMessage("스터디가 삭제되었습니다.")
+                        setEffect { StudiesDetailContract.Effect.NavigateToMain }
                     }
             }
         }

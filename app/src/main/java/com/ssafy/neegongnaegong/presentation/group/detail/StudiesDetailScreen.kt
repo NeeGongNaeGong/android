@@ -44,6 +44,7 @@ fun StudiesDetailRoute(
     navigateToLatestNoticeDetail: (Long, Long) -> Unit,
     navigateToLatestVoteDetail: (Long, Long) -> Unit,
     navigateToMemberRecord: (Long) -> Unit,
+    navigateToMain: () -> Unit,
     popBackStack: () -> Unit = {},
 ) {
     val currentDrawerState = LocalDrawerState.current
@@ -91,6 +92,12 @@ fun StudiesDetailRoute(
 
                 is StudiesDetailContract.Effect.NavigateToProfile ->
                     navigateToMemberRecord(effect.memberId)
+
+                StudiesDetailContract.Effect.NavigateToMain -> {
+                    currentDrawerState.snapTo(DrawerValue.Closed)
+
+                    navigateToMain()
+                }
             }
         }
     }
@@ -182,7 +189,10 @@ private fun StudiesDetailScreen(
 ) {
     val scope = rememberCoroutineScope()
     Column(
-        modifier = modifier.fillMaxSize().background(color = NeeGongNaeGongTheme.colorScheme.gray2),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
     ) {
         // 커스텀 앱바
         TopAppBar(

@@ -49,10 +49,15 @@ class StudiesDetailContract {
         data class OnClickProfile(
             val memberId: Long,
         ) : Event
+
+        data object OnDeleteMenuClick : Event
+
+        data object OnDeleteDialogDismiss : Event
     }
 
     data class State(
         val isLoading: Boolean = false,
+        val showDeleteDialog: Boolean = false,
         val studyGroupDetailInfo: StudyGroupDetailInfo =
             StudyGroupDetailInfo(
                 id = 8666,
@@ -108,6 +113,8 @@ class StudiesDetailContract {
         data class NavigateToProfile(
             val memberId: Long,
         ) : Effect
+
+        data object NavigateToMain : Effect
     }
 
     sealed interface Error : ErrorContext
