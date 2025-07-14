@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -240,11 +241,12 @@ private fun StudiesDetailScreen(
                 onNoticeClick = onLatestNoticeClick,
                 onVotingClick = onLatestVoteClick,
             )
+            HorizontalDivider(thickness = 1.dp, color = NeeGongNaeGongTheme.colorScheme.secondaryText)
             StudyRecordList(
                 modifier =
                     Modifier
                         .fillMaxSize()
-                        .padding(12.dp),
+                        .padding(horizontal = 12.dp),
                 learningRecords = feeds,
                 hasNext = feedsHasNext,
                 onClick = {},
