@@ -39,6 +39,7 @@ fun LatestContentWindow(
     modifier: Modifier = Modifier,
     @DrawableRes icon: Int,
     iconColor: Color,
+    emoji: String,
     latestContent: StudiesLatestContent?,
     readStatus: Boolean,
     onClick: (Long) -> Unit = {},
@@ -56,11 +57,17 @@ fun LatestContentWindow(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // 아이콘
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(icon),
-                tint = iconColor,
-                contentDescription = "",
+            if (emoji.isBlank()) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(icon),
+                    tint = iconColor,
+                    contentDescription = "",
+                )
+            }
+            Text(
+                modifier = Modifier,
+                text = emoji,
             )
             if (latestContent == null) {
                 Text(
@@ -97,8 +104,7 @@ fun LatestContentWindow(
                                 .background(
                                     color = NeeGongNaeGongTheme.colorScheme.peach,
                                     shape = RoundedCornerShape(4.dp),
-                                )
-                                .padding(horizontal = 2.dp),
+                                ).padding(horizontal = 2.dp),
                         text = "new",
                         color = NeeGongNaeGongTheme.colorScheme.background,
                         fontWeight = FontWeight.SemiBold,
@@ -150,6 +156,7 @@ private fun PreviewStudiesNoticeWindow() {
         LatestContentWindow(
             icon = R.drawable.ic_studies_detail_notice,
             iconColor = NeeGongNaeGongTheme.colorScheme.blue,
+            emoji = "\uD83D\uDCE2",
             latestContent = sampleAnnouncement,
             readStatus = true,
             onClick = { },
@@ -170,6 +177,7 @@ private fun PreviewStudiesVotingWindow() {
         LatestContentWindow(
             icon = R.drawable.ic_studies_detail_voting,
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
+            emoji = "\uD83D\uDDF3\uFE0F",
             latestContent = sampleVoting,
             readStatus = false,
             onClick = { },
@@ -184,6 +192,7 @@ private fun PreviewStudiesEmptyWindow() {
         LatestContentWindow(
             icon = R.drawable.ic_studies_detail_voting,
             iconColor = NeeGongNaeGongTheme.colorScheme.lightGreen,
+            emoji = "\uD83D\uDDF3\uFE0F",
             latestContent = null,
             readStatus = false,
             onClick = { },

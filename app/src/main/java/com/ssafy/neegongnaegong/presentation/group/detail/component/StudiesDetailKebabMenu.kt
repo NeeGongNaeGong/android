@@ -3,7 +3,6 @@ package com.ssafy.neegongnaegong.presentation.group.detail.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -18,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -49,11 +47,10 @@ fun StudiesDetailKebabMenu(
             DropdownMenuItem(
                 leadingIcon =
                     {
-                        Icon(
-                            modifier = Modifier.size(20.dp),
-                            painter = painterResource(R.drawable.ic_studies_detail_notice),
-                            contentDescription = "공지사항",
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        Text(
+                            modifier = Modifier,
+                            text = "\uD83D\uDCE2",
+                            style = NeeGongNaeGongTheme.typography.bodySmall,
                         )
                     },
                 text = { Text(text = "공지사항", style = NeeGongNaeGongTheme.typography.bodySmall) },
@@ -71,11 +68,10 @@ fun StudiesDetailKebabMenu(
             DropdownMenuItem(
                 leadingIcon =
                     {
-                        Icon(
-                            modifier = Modifier.size(20.dp),
-                            painter = painterResource(R.drawable.ic_studies_detail_voting),
-                            contentDescription = "공지사항",
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        Text(
+                            modifier = Modifier,
+                            text = "\uD83D\uDDF3\uFE0F",
+                            style = NeeGongNaeGongTheme.typography.bodySmall,
                         )
                     },
                 text = { Text(text = "투표", style = NeeGongNaeGongTheme.typography.bodySmall) },
