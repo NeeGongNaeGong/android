@@ -49,7 +49,10 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(
+    navController: NavHostController,
+    startDestination: AppNavigation.Tab,
+) {
     val resultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val needRefresh = result.data?.getBooleanExtra("needRefreshRecordList", false) ?: false
@@ -189,7 +192,7 @@ fun MainScreen(navController: NavHostController) {
                             .consumeWindowInsets(innerPadding)
                             .background(NeeGongNaeGongTheme.colorScheme.background),
                 ) {
-                    MainNavigationGraph(navController = navController)
+                    MainNavigationGraph(navController = navController, startDestination = startDestination)
                 }
             }
         }
@@ -231,6 +234,6 @@ fun CalendarScreen() {
 @Composable
 fun PreviewMainScreen() {
     NeeGongNaeGongTheme {
-        MainScreen(rememberNavController())
+        MainScreen(rememberNavController(), AppNavigation.Tab.Studies)
     }
 }
