@@ -137,6 +137,7 @@ class FcmService : FirebaseMessagingService() {
 
             val shortcut =
                 ShortcutInfoCompat.Builder(this@FcmService, studyGroupId)
+                    // 알림창에서 Bold로 Title로 나오는 내용
                     .setShortLabel(title)
                     .setIcon(IconCompat.createWithAdaptiveBitmap(bitmap))
                     // 앱을 길게 눌러서 바로가기를 눌렀을 때 실행되는 것
