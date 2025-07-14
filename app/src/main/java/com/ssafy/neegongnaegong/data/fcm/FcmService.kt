@@ -105,14 +105,27 @@ class FcmService : FirebaseMessagingService() {
                     .setIcon(IconCompat.createWithBitmap(bitmap))
                     .build()
 
+            /**
+             * 들어오는 메세지에서 나와 상대를 구분하기 위해 MessagingStyle에서 Person 객체를 생성자로 넣음
+             * key를 우선으로 구분하기 때문에 addMessage에 넣는 Person객체에는 setKey를 넣지 않았다면 null이기 때문에
+             * setKey를 비교할 때 나는 Key 값을 가지고 있는데, addMessage의 객체는 key가 없기 때문에 절대 나로 판단하지 않음
+             */
+            val default =
+                Person.Builder()
+                    .setKey(System.currentTimeMillis().toString())
+                    // 알림 뜰 때 Bold 처리돼서 보일 부분
+                    .setName(title)
+                    .build()
+
             // 메시지 내용을 정의
             val message =
-                NotificationCompat.MessagingStyle(me).also {
+                NotificationCompat.MessagingStyle(default).also {
 //                GroupConversation을 true로 설정하는 순간 확장 버튼을 눌렀을 때 좌측의 아이콘이 조그만해지고,
 //                message의 sender의 아이콘이 body의 왼쪽에 아이콘으로 내려옴
 //                shorcut에 Icon이 있을 경우에는 sender의 아이콘은 나오지 않고, ShortCut의 Icon으로 설정됨
 //                디스코드처럼 채널별로 확장했을 때 나열하고 싶으면 설정해야 함
 //                this.setGroupConversation(true)
+                    it.setGroupConversation(false)
                     it.addMessage(
                         NotificationCompat.MessagingStyle.Message(
                             body,
@@ -170,16 +183,5 @@ class FcmService : FirebaseMessagingService() {
 
         // 안드로이드의 알림 아이콘의 최대 크기가 xxxhdpi에서 96픽셀로 알려져 있기 때문에 오는 이미지를 96픽젤로 다운스케일링 하기 위한 값
         private const val ICON_SIZE = 96
-
-        /**
-         * 들어오는 메세지에서 나와 상대를 구분하기 위해 MessagingStyle에서 Person 객체를 생성자로 넣음
-         * key를 우선으로 구분하기 때문에 addMessage에 넣는 Person객체에는 setKey를 넣지 않았다면 null이기 때문에
-         * setKey를 비교할 때 나는 Key 값을 가지고 있는데, addMessage의 객체는 key가 없기 때문에 절대 나로 판단하지 않음
-         */
-        private val me =
-            Person.Builder()
-                .setKey("Client")
-                .setName("Client")
-                .build()
     }
 }
