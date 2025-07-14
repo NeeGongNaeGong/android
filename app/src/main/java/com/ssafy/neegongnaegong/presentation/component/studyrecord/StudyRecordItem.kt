@@ -139,7 +139,7 @@ private fun StudyFeedItem(
                 .fillMaxWidth()
 //                .shadow(4.dp, RoundedCornerShape(8.dp))
                 .background(
-                    NeeGongNaeGongTheme.colorScheme.recordBackground,
+                    NeeGongNaeGongTheme.colorScheme.gray2,
                     RoundedCornerShape(4.dp),
                 ).clickable(onClick = { onClick(record.id) })
                 .padding(vertical = 8.dp, horizontal = 16.dp),

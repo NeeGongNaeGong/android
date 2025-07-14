@@ -193,7 +193,7 @@ private fun StudiesDetailScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(color = NeeGongNaeGongTheme.colorScheme.gray2),
+                .background(color = NeeGongNaeGongTheme.colorScheme.background),
     ) {
         // 커스텀 앱바
         TopAppBar(
