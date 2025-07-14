@@ -46,6 +46,9 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 navigateToStudiesDetail = {
                     navController.navigate(AppNavigation.Screen.Studies.StudiesDetail(it))
                 },
+                navigateToStudiesCreate = {
+                    navController.navigate(AppNavigation.Screen.Studies.Create)
+                },
                 navigateToStudiesFind = {
                     navController.navigate(AppNavigation.Screen.Studies.StudiesFind)
                 },

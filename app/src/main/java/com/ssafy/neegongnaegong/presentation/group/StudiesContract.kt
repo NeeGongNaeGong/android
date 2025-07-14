@@ -14,6 +14,8 @@ class StudiesContract {
             val studyGroupId: Long,
         ) : Event
 
+        data object OnClickCreateStudies : Event
+
         data object OnClickSearchStudies : Event
     }
 
@@ -26,6 +28,8 @@ class StudiesContract {
         data class NavigateToStudiesDetail(
             val studyGroupId: Long,
         ) : Effect
+
+        data object NavigateToStudiesCreate : Effect
 
         data object NavigateToStudiesSearch : Effect
     }

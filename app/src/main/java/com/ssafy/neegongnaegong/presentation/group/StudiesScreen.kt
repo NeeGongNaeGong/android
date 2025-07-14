@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,7 @@ import java.time.LocalDateTime
 fun StudiesRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesViewModel = hiltViewModel(),
+    navigateToStudiesCreate: () -> Unit,
     navigateToStudiesDetail: (Long) -> Unit,
     navigateToStudiesFind: () -> Unit,
 ) {
@@ -51,6 +53,9 @@ fun StudiesRoute(
             when (effect) {
                 is StudiesContract.Effect.NavigateToStudiesDetail ->
                     navigateToStudiesDetail(effect.studyGroupId)
+
+                is StudiesContract.Effect.NavigateToStudiesCreate ->
+                    navigateToStudiesCreate()
 
                 is StudiesContract.Effect.NavigateToStudiesSearch ->
                     navigateToStudiesFind()
@@ -67,6 +72,9 @@ fun StudiesRoute(
                 StudiesContract.Event.OnClickMyStudies(studyGroupId),
             )
         },
+        onClickStudiesCreate = {
+            viewModel.setEvent(StudiesContract.Event.OnClickCreateStudies)
+        },
         onClickStudiesFind = {
             viewModel.setEvent(StudiesContract.Event.OnClickSearchStudies)
         },
@@ -79,6 +87,7 @@ private fun StudiesContent(
     uiState: StudiesContract.State,
     myStudyList: LazyPagingItems<MyStudyGroupInfo>,
     onClickMyStudies: (Long) -> Unit,
+    onClickStudiesCreate: () -> Unit,
     onClickStudiesFind: () -> Unit,
 ) {
     StudiesScreen(
@@ -86,6 +95,7 @@ private fun StudiesContent(
         isLoading = uiState.isLoading,
         myStudyList = myStudyList,
         onClickMyStudies = onClickMyStudies,
+        onClickStudiesCreate = onClickStudiesCreate,
         onClickStudiesFind = onClickStudiesFind,
     )
 }
@@ -96,6 +106,7 @@ private fun StudiesScreen(
     isLoading: Boolean,
     myStudyList: LazyPagingItems<MyStudyGroupInfo>,
     onClickMyStudies: (Long) -> Unit,
+    onClickStudiesCreate: () -> Unit,
     onClickStudiesFind: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -110,17 +121,34 @@ private fun StudiesScreen(
             },
             navigationType = TopAppBarNavigationType.None,
             actionButtons = {
-                Box {
-                    Icon(
-                        modifier =
-                            Modifier
-                                .noRippleClickable { onClickStudiesFind() }
-                                .padding(8.dp),
-                        // 클릭 영역을 더 크게 만들기 위한 패딩
-                        painter = painterResource(R.drawable.ic_topbar_serach),
-                        tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                        contentDescription = "스터디 검색",
-                    )
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box {
+                        Icon(
+                            modifier =
+                                Modifier
+                                    .noRippleClickable { onClickStudiesCreate() }
+                                    .padding(8.dp),
+                            // 클릭 영역을 더 크게 만들기 위한 패딩
+                            painter = painterResource(R.drawable.ic_topbar_studies_create),
+                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            contentDescription = "스터디 생성",
+                        )
+                    }
+                    Box {
+                        Icon(
+                            modifier =
+                                Modifier
+                                    .noRippleClickable { onClickStudiesFind() }
+                                    .padding(8.dp),
+                            // 클릭 영역을 더 크게 만들기 위한 패딩
+                            painter = painterResource(R.drawable.ic_topbar_serach),
+                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            contentDescription = "스터디 검색",
+                        )
+                    }
                 }
             },
         )
@@ -213,6 +241,7 @@ private fun PreviewStudiesScreen() {
             isLoading = false,
             myStudyList = lazyItems,
             onClickMyStudies = {},
+            onClickStudiesCreate = {},
             onClickStudiesFind = {},
         )
     }

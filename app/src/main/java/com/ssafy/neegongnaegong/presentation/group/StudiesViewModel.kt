@@ -31,6 +31,7 @@ class StudiesViewModel
                             event.studyGroupId,
                         )
                     }
+                is StudiesContract.Event.OnClickCreateStudies -> setEffect { StudiesContract.Effect.NavigateToStudiesCreate }
 
                 is StudiesContract.Event.OnClickSearchStudies -> setEffect { StudiesContract.Effect.NavigateToStudiesSearch }
             }
