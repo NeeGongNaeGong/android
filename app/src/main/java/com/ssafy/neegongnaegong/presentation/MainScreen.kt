@@ -103,13 +103,10 @@ fun MainScreen(navController: NavHostController) {
 
     val context = LocalContext.current
 
-    val currentTabRoute = currentDestination?.route
     val enableGestures = remember { mutableStateOf(false) }
 
-    LaunchedEffect(currentTabRoute) {
-        enableGestures.value = currentDestination?.hierarchy?.any {
-            it.hasRoute(AppNavigation.Screen.Studies.StudiesDetail::class)
-        } == true
+    LaunchedEffect(studiesDrawerState.currentValue) {
+        enableGestures.value = studiesDrawerState.isOpen
     }
 
     CompositionLocalProvider(
@@ -149,14 +146,20 @@ fun MainScreen(navController: NavHostController) {
                         navigateToStudiesMembersRole = { role ->
                             route?.let { route ->
                                 navigateAndCloseDrawer(
-                                    AppNavigation.Screen.Studies.StudiesMembersRole(role, route.studyGroupId),
+                                    AppNavigation.Screen.Studies.StudiesMembersRole(
+                                        role,
+                                        route.studyGroupId,
+                                    ),
                                 )
                             }
                         },
                         navigateToStudiesApplications = { role ->
                             route?.let { route ->
                                 navigateAndCloseDrawer(
-                                    AppNavigation.Screen.Studies.StudiesApplication(role, route.studyGroupId),
+                                    AppNavigation.Screen.Studies.StudiesApplication(
+                                        role,
+                                        route.studyGroupId,
+                                    ),
                                 )
                             }
                         },
