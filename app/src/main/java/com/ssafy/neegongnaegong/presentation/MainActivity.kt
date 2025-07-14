@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,35 +56,12 @@ class MainActivity : ComponentActivity() {
 
             val state by viewModel.state.collectAsStateWithLifecycle()
 
-            /*
-            UI 없이 isLoading이 true로 즉 로딩되는 동안 계속해서 여기에 위치해 있다가
-            isLoading이 끝나는 순간 isLoginSuccess의 값에 따라 Login or Studies로 이동하도록
-             */
-            LaunchedEffect(state) {
-                println("싸피 $state $intent")
-                if (!state.isLoading) {
-                    // 알림을 눌러서 딥링크를 통해 들어온게 아닐 때
-                    if (intent.data == null) {
-                        navController.navigate(
-                            if (state.isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Tab.Auth,
-                        ) {
-                            popUpTo("splash") { inclusive = true }
-                        }
-                    } else {
-                        if (state.isLoginSuccess) {
-                            navController.handleDeepLink(intent)
-                        } else {
-                            navController.navigate(AppNavigation.Tab.Auth) {
-                                popUpTo("splash") { inclusive = false }
-                            }
-                        }
+            if (!state.isLoading) {
+                val destination: AppNavigation.Tab = if (state.isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Tab.Auth
+                NeeGongNaeGongTheme {
+                    Surface(color = NeeGongNaeGongTheme.colorScheme.background) {
+                        MainScreen(navController, destination)
                     }
-                }
-            }
-
-            NeeGongNaeGongTheme {
-                Surface(color = NeeGongNaeGongTheme.colorScheme.background) {
-                    MainScreen(navController)
                 }
             }
         }

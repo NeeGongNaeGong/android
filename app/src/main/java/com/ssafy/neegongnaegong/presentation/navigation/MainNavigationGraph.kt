@@ -6,17 +6,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 
 @Composable
-fun MainNavigationGraph(navController: NavHostController) {
+fun MainNavigationGraph(
+    navController: NavHostController,
+    startDestination: AppNavigation.Tab,
+) {
     NavHost(
         navController = navController,
-        startDestination = "splash",
+        startDestination = startDestination,
         popExitTransition = { ExitTransition.None },
         enterTransition = { EnterTransition.None },
     ) {
-        composable("splash") {}
         authNavGraph(navController)
         studiesNavGraph(navController)
         personalNavGraph(navController)
