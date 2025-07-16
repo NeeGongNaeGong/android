@@ -136,7 +136,7 @@ class NotificationViewModel
             }
 
             when (data.type) {
-                NotificationType.GROUP_JOIN_APPROVE -> {
+                NotificationType.GROUP_JOIN_APPROVE, NotificationType.GROUP_INVITE_ACCEPT -> {
                     val effect = NotificationContract.Effect.NavigateToGroup(groupId = data.senderId)
                     setEffect { effect }
                 }
@@ -151,17 +151,7 @@ class NotificationViewModel
                     setEffect { effect }
                 }
 
-                NotificationType.VOTE_CREATED -> {
-                    if (data.studyGroupId == null) throw InvalidGroupIdException()
-                    val effect =
-                        NotificationContract.Effect.NavigateToVote(
-                            groupId = data.studyGroupId,
-                            voteId = data.senderId,
-                        )
-                    setEffect { effect }
-                }
-
-                NotificationType.VOTE_ENDED -> {
+                NotificationType.VOTE_REMINDER, NotificationType.VOTE_CREATED, NotificationType.VOTE_ENDED -> {
                     if (data.studyGroupId == null) throw InvalidGroupIdException()
                     val effect =
                         NotificationContract.Effect.NavigateToVote(
