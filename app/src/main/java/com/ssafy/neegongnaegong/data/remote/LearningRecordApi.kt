@@ -4,7 +4,6 @@ import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordDatesByMonthResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import retrofit2.http.Body
@@ -14,7 +13,6 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.LocalDate
 
 interface LearningRecordApi {
     @PUT("/api/records/{learning-record-id}")
@@ -26,7 +24,7 @@ interface LearningRecordApi {
     @DELETE("api/records/{learning-record-id}")
     suspend fun deleteLearningRecord(
         @Path("learning-record-id") learningRecordId: Long,
-    ): Result<ApiResponse<DeleteLearningRecordResponse>>
+    ): Result<ApiResponse<Unit>>
 
     @GET("/api/records/{learning-record-id}")
     suspend fun getLearningRecord(

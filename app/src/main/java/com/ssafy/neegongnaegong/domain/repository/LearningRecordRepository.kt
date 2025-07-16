@@ -10,7 +10,7 @@ interface LearningRecordRepository {
 
     suspend fun createLearningRecord(learningRecord: LearningRecord): Flow<Long>
 
-    suspend fun deleteLearningRecord(learningRecordId: Long): Flow<LearningRecord>
+    suspend fun deleteLearningRecord(learningRecordId: Long): Flow<Unit>
 
     suspend fun updateLearningRecord(
         learningRecordId: Long,

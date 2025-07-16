@@ -12,7 +12,6 @@ import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.module.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -35,9 +34,11 @@ class LearningRecordRepositoryImpl
                 dataSource.createLearningRecord(request = learningRecord.toCreateRequest())
             }
 
-        override suspend fun deleteLearningRecord(learningRecordId: Long): Flow<LearningRecord> {
-            TODO("Not yet implemented")
-        }
+        override suspend fun deleteLearningRecord(learningRecordId: Long): Flow<Unit> =
+            dataSource
+                .deleteLearningRecord(
+                    learningRecordId = learningRecordId,
+                ).flowOn(context = ioDispatcher)
 
         override suspend fun updateLearningRecord(
             learningRecordId: Long,
