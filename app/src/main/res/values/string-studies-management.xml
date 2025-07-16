@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 스터디 생성 화면 -->
-    <string name="studies_create_title">그룹 관리</string>
+    <string name="studies_create_title">그룹 생성</string>
     <string name="studies_create_study_name">스터디명</string>
     <string name="studies_create_public_private">공개 여부</string>
     <string name="studies_create_select_category">카테고리 선택</string>

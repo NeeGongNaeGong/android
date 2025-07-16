@@ -34,6 +34,7 @@ fun StudiesDetailKebabMenu(
     Box(modifier = modifier) {
         IconButton(onClick = { isMenuExpanded = true }) {
             Icon(
+                modifier = Modifier.size(24.dp),
                 painter = painterResource(R.drawable.ic_topbar_menu_kebab),
                 contentDescription = "더보기 메뉴",
                 tint = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -49,11 +50,10 @@ fun StudiesDetailKebabMenu(
             DropdownMenuItem(
                 leadingIcon =
                     {
-                        Icon(
-                            modifier = Modifier.size(20.dp),
-                            painter = painterResource(R.drawable.ic_studies_detail_notice),
-                            contentDescription = "공지사항",
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        Text(
+                            modifier = Modifier,
+                            text = "\uD83D\uDCE2",
+                            style = NeeGongNaeGongTheme.typography.bodySmall,
                         )
                     },
                 text = { Text(text = "공지사항", style = NeeGongNaeGongTheme.typography.bodySmall) },
@@ -71,11 +71,10 @@ fun StudiesDetailKebabMenu(
             DropdownMenuItem(
                 leadingIcon =
                     {
-                        Icon(
-                            modifier = Modifier.size(20.dp),
-                            painter = painterResource(R.drawable.ic_studies_detail_voting),
-                            contentDescription = "공지사항",
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                        Text(
+                            modifier = Modifier,
+                            text = "\uD83D\uDDF3\uFE0F",
+                            style = NeeGongNaeGongTheme.typography.bodySmall,
                         )
                     },
                 text = { Text(text = "투표", style = NeeGongNaeGongTheme.typography.bodySmall) },
