@@ -15,6 +15,6 @@ sealed interface StudiesLatestContentResponse {
     data class VoteResponse(
         override val id: Long,
         override val title: String,
-        val endTime: LocalDateTime,
+        val endTime: LocalDateTime?,
     ) : StudiesLatestContentResponse
 }

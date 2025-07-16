@@ -104,7 +104,8 @@ fun LatestContentWindow(
                                 .background(
                                     color = NeeGongNaeGongTheme.colorScheme.peach,
                                     shape = RoundedCornerShape(4.dp),
-                                ).padding(horizontal = 2.dp),
+                                )
+                                .padding(horizontal = 2.dp),
                         text = "new",
                         color = NeeGongNaeGongTheme.colorScheme.background,
                         fontWeight = FontWeight.SemiBold,
@@ -132,11 +133,13 @@ fun LatestContentWindow(
 
                 is StudiesLatestContent.LatestVote -> {
                     // 종료 시간
-                    Text(
-                        text = "종료 : ${latestContent.endTime.toDateString()}",
-                        color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                        fontSize = 14.sp,
-                    )
+                    if (latestContent.endTime != null) {
+                        Text(
+                            text = "종료 : ${latestContent.endTime.toDateString()}",
+                            color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                            fontSize = 14.sp,
+                        )
+                    }
                 }
             }
         }
