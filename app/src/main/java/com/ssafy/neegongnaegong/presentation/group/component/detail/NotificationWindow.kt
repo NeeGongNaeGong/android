@@ -77,8 +77,7 @@ fun LatestContentWindow(
                             .padding(start = 10.dp),
                     text = "등록된 내용이 없습니다.",
                     color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                 )
                 return@Row
             }
@@ -94,8 +93,7 @@ fun LatestContentWindow(
                             .padding(start = 8.dp, end = 4.dp),
                     text = latestContent.title,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
                 )
                 if (readStatus.not()) {
                     Text(
@@ -127,7 +125,7 @@ fun LatestContentWindow(
                     Text(
                         text = relativeTime,
                         color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                        fontSize = 14.sp,
+                        style = NeeGongNaeGongTheme.typography.labelMedium,
                     )
                 }
 
@@ -137,7 +135,7 @@ fun LatestContentWindow(
                         Text(
                             text = "종료 : ${latestContent.endTime.toDateString()}",
                             color = NeeGongNaeGongTheme.colorScheme.secondaryText,
-                            fontSize = 14.sp,
+                            style = NeeGongNaeGongTheme.typography.labelMedium,
                         )
                     }
                 }
