@@ -14,6 +14,8 @@ class StudyRecordEditContract {
         data object OnConfirmClicked : Event()
 
         // record
+        data object OnDelete : Event()
+
         data class OnTitleChanged(
             val title: String,
         ) : Event()
