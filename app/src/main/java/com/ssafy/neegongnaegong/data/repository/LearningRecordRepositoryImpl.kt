@@ -34,7 +34,7 @@ class LearningRecordRepositoryImpl
                 dataSource.createLearningRecord(request = learningRecord.toCreateRequest())
             }
 
-        override suspend fun deleteLearningRecord(learningRecordId: Long): Flow<Unit> =
+        override fun deleteLearningRecord(learningRecordId: Long): Flow<Unit> =
             dataSource
                 .deleteLearningRecord(
                     learningRecordId = learningRecordId,

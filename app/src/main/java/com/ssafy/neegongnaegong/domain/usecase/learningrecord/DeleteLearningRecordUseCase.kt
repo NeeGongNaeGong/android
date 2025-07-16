@@ -9,5 +9,5 @@ class DeleteLearningRecordUseCase
     constructor(
         private val learningRecordRepository: LearningRecordRepository,
     ) {
-        suspend operator fun invoke(learningRecordId: Long): Flow<Unit> = learningRecordRepository.deleteLearningRecord(learningRecordId)
+        operator fun invoke(learningRecordId: Long): Flow<Unit> = learningRecordRepository.deleteLearningRecord(learningRecordId)
     }
