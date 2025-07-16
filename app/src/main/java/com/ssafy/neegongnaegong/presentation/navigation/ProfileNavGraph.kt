@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.navigation
 
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -30,28 +31,54 @@ fun NavGraphBuilder.profileNavGraph(navController: NavController) {
             NotificationRoute(
                 navigateUp = navController::navigateUp,
                 navigateToGroup = { groupId: Long ->
-                    val detail = AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId)
-                    navController.navigate(route = detail)
+                    with(navController) {
+                        navigate(AppNavigation.Tab.Studies) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                        navigate(AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId))
+                    }
                 },
                 navigateToNotice = { groupId: Long, noticeId: Long ->
-                    val detail = AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId)
-                    val notice =
-                        AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(
-                            studyGroupId = groupId,
-                            noticeId = noticeId,
+                    with(navController) {
+                        navigate(AppNavigation.Tab.Studies) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                        navigate(AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId))
+                        navigate(AppNavigation.Screen.Studies.SubTab.Main(0, groupId))
+                        navigate(
+                            AppNavigation.Screen.Studies.SubTab.Screen.NoticeDetail(
+                                studyGroupId = groupId,
+                                noticeId = noticeId,
+                            ),
                         )
-                    navController.navigate(route = detail)
-                    navController.navigate(route = notice)
+                    }
                 },
                 navigateToVote = { groupId: Long, voteId: Long ->
-                    val detail = AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId)
-                    val vote =
-                        AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(
-                            studyGroupId = groupId,
-                            voteId = voteId,
+                    with(navController) {
+                        navigate(AppNavigation.Tab.Studies) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                        navigate(AppNavigation.Screen.Studies.StudiesDetail(studyGroupId = groupId))
+                        navigate(AppNavigation.Screen.Studies.SubTab.Main(1, groupId))
+                        navigate(
+                            AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail(
+                                studyGroupId = groupId,
+                                voteId = voteId,
+                            ),
                         )
-                    navController.navigate(route = detail)
-                    navController.navigate(route = vote)
+                    }
                 },
             )
         }

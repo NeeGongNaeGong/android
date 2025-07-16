@@ -304,7 +304,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                         listOf(
                             navDeepLink {
                                 uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}/vote/{voteId}"
-                                action = Intent.ACTION_VIEW
+//                                action = Intent.ACTION_VIEW
                             },
                         ),
                 ) {
@@ -361,4 +361,4 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
     }
 }
 
-const val BASE_DEEP_LINK: String = BuildConfig.BASE_URL
+private const val BASE_DEEP_LINK: String = BuildConfig.BASE_URL

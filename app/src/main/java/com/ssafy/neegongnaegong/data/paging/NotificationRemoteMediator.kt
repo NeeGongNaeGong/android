@@ -39,11 +39,13 @@ class NotificationRemoteMediator
                     LoadType.REFRESH -> null
                     LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                     LoadType.APPEND -> {
-                        val remoteKey: NotificationRemoteKeyEntity? = getRemoteKeyForLastItem(state = state)
-                        if (remoteKey == null) return MediatorResult.Success(endOfPaginationReached = false)
+                        val remoteKey: NotificationRemoteKeyEntity =
+                            getRemoteKeyForLastItem(state = state)
+                                ?: return MediatorResult.Success(endOfPaginationReached = false)
 
-                        val nextCursor: Long? = remoteKey.nextCursor
-                        if (nextCursor == null) return MediatorResult.Success(endOfPaginationReached = true)
+                        val nextCursor: Long =
+                            remoteKey.nextCursor
+                                ?: return MediatorResult.Success(endOfPaginationReached = true)
                         nextCursor
                     }
                 }
@@ -63,6 +65,7 @@ class NotificationRemoteMediator
                     }
 
                     remoteKeyDao.insertAll(keys = remotePager.content.toKey(cursorId = remotePager.cursorId))
+
                     localNotificationDataSource.insertAll(notifications = remotePager.content.toEntity())
                 }
 

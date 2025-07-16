@@ -17,7 +17,6 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiMapper.toUiModel
 import com.ssafy.neegongnaegong.presentation.notification.data.NotificationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -37,7 +36,6 @@ class NotificationViewModel
         private val approveStudyGroupJoinUseCase: ApproveStudyGroupJoinUseCase,
         private val rejectStudyGroupJoinUseCase: RejectStudyGroupJoinUseCase,
     ) : BaseViewModel<NotificationContract.Event, NotificationContract.State, NotificationContract.Effect>() {
-        @OptIn(ExperimentalCoroutinesApi::class)
         val notificationList: StateFlow<PagingData<NotificationUiModel>> by lazy {
             uiState.distinctUntilChangedBy { uiState: NotificationContract.State ->
                 uiState.isLoading
@@ -138,7 +136,7 @@ class NotificationViewModel
             }
 
             when (data.type) {
-                NotificationType.GROUP_JOIN_APPROVE -> {
+                NotificationType.GROUP_JOIN_APPROVE, NotificationType.GROUP_INVITE_ACCEPT -> {
                     val effect = NotificationContract.Effect.NavigateToGroup(groupId = data.senderId)
                     setEffect { effect }
                 }
@@ -153,17 +151,7 @@ class NotificationViewModel
                     setEffect { effect }
                 }
 
-                NotificationType.VOTE_CREATED -> {
-                    if (data.studyGroupId == null) throw InvalidGroupIdException()
-                    val effect =
-                        NotificationContract.Effect.NavigateToVote(
-                            groupId = data.studyGroupId,
-                            voteId = data.senderId,
-                        )
-                    setEffect { effect }
-                }
-
-                NotificationType.VOTE_ENDED -> {
+                NotificationType.VOTE_REMINDER, NotificationType.VOTE_CREATED, NotificationType.VOTE_ENDED -> {
                     if (data.studyGroupId == null) throw InvalidGroupIdException()
                     val effect =
                         NotificationContract.Effect.NavigateToVote(
