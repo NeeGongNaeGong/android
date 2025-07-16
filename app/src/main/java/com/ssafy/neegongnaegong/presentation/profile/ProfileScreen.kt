@@ -29,6 +29,7 @@ import com.ssafy.neegongnaegong.presentation.profile.compopnent.ProfileImage
 import com.ssafy.neegongnaegong.presentation.profile.compopnent.ProfileNickname
 import com.ssafy.neegongnaegong.presentation.profile.compopnent.WithdrawalDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
+import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun ProfileScreen(
@@ -135,21 +136,23 @@ fun ProfileScreen(
 @Composable
 @NeeGongNaeGongPreviews
 fun ProfileScreenPreview() {
-    ProfileScreen(
-        profileImg = "",
-        nickname = "닉네임",
-        isEditing = false,
-        hasUnReadNotification = false,
-        shouldShowProfileImageWarningInfo = false,
-        onCheckProfileImageWarning = {},
-        onChangeNickName = {},
-        onClickEdit = {},
-        onClickEditCancel = {},
-        onImageSelected = {},
-        onClickNotification = {},
-        onClickPrivacyInfo = {},
-        onClickInquiry = {},
-        onClickLogout = {},
-        onClickDeleteAccount = {},
-    )
+    NeeGongNaeGongTheme {
+        ProfileScreen(
+            profileImg = "",
+            nickname = "닉네임",
+            isEditing = false,
+            hasUnReadNotification = false,
+            shouldShowProfileImageWarningInfo = false,
+            onCheckProfileImageWarning = {},
+            onChangeNickName = {},
+            onClickEdit = {},
+            onClickEditCancel = {},
+            onImageSelected = {},
+            onClickNotification = {},
+            onClickPrivacyInfo = {},
+            onClickInquiry = {},
+            onClickLogout = {},
+            onClickDeleteAccount = {},
+        )
+    }
 }
