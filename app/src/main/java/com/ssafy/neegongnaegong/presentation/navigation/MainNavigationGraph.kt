@@ -15,8 +15,10 @@ fun MainNavigationGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
+        exitTransition = { ExitTransition.None },
         popExitTransition = { ExitTransition.None },
         enterTransition = { EnterTransition.None },
+        popEnterTransition = { EnterTransition.None },
     ) {
         authNavGraph(navController)
         studiesNavGraph(navController)
