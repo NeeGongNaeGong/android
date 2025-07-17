@@ -2,7 +2,6 @@ package com.ssafy.neegongnaegong.module.di.usecase
 
 import com.ssafy.neegongnaegong.domain.repository.LearningRecordRepository
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.CreateLearningRecordUseCase
-import com.ssafy.neegongnaegong.domain.usecase.learningrecord.DeleteLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordDatesByMonthUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordUseCase
@@ -27,13 +26,6 @@ object LearningRecordUseCaseModule {
     @Singleton
     fun provideUpdateLearningRecordUseCase(learningRecordRepository: LearningRecordRepository): UpdateLearningRecordUseCase =
         UpdateLearningRecordUseCase(
-            learningRecordRepository,
-        )
-
-    @Provides
-    @Singleton
-    fun provideDeleteLearningRecordUseCase(learningRecordRepository: LearningRecordRepository): DeleteLearningRecordUseCase =
-        DeleteLearningRecordUseCase(
             learningRecordRepository,
         )
 

@@ -5,7 +5,6 @@ import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearning
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
-import com.ssafy.neegongnaegong.data.model.learningrecord.response.DeleteLearningRecordResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordDatesByMonthResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordResponse
 import com.ssafy.neegongnaegong.data.remote.LearningRecordApi
@@ -22,8 +21,7 @@ class NetworkLearningRecordDataSourceImpl
             request: UpdateLearningRecordRequest,
         ): Flow<Unit> = apiFlow { api.updateLearningRecord(learningRecordId, request) }
 
-        override fun deleteLearningRecord(learningRecordId: Long): Flow<DeleteLearningRecordResponse> =
-            apiFlow { api.deleteLearningRecord(learningRecordId) }
+        override fun deleteLearningRecord(learningRecordId: Long): Flow<Unit> = apiFlow { api.deleteLearningRecord(learningRecordId) }
 
         override fun getLearningRecord(learningRecordId: Long): Flow<GetLearningRecordResponse> =
             apiFlow { api.getLearningRecord(learningRecordId) }

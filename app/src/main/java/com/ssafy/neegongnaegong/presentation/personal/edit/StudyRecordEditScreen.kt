@@ -4,18 +4,23 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
@@ -26,9 +31,9 @@ import com.ssafy.neegongnaegong.presentation.timer.component.write.ContentTextFi
 import com.ssafy.neegongnaegong.presentation.timer.component.write.DateTimeHeader
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TitleTextField
-import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteScreen
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
 import com.ssafy.neegongnaegong.presentation.util.toDateString
 import com.ssafy.neegongnaegong.presentation.util.toTimeString
 import kotlinx.coroutines.flow.Flow
@@ -53,6 +58,7 @@ fun StudyRecordEditRoute(
         modifier = modifier,
         effect = viewModel.effect,
         uiState = uiState.value,
+        onDelete = { viewModel.setEvent(StudyRecordEditContract.Event.OnDelete) },
         onCancelClicked = { viewModel.setEvent(StudyRecordEditContract.Event.OnCancelClicked) },
         onConfirmClicked = { viewModel.setEvent(StudyRecordEditContract.Event.OnConfirmClicked) },
         onTitleChanged = { viewModel.setEvent(StudyRecordEditContract.Event.OnTitleChanged(it)) },
@@ -79,6 +85,7 @@ fun StudyRecordEditContent(
     modifier: Modifier = Modifier,
     effect: Flow<StudyRecordEditContract.Effect>,
     uiState: StudyRecordEditContract.State,
+    onDelete: () -> Unit,
     onCancelClicked: () -> Unit,
     onConfirmClicked: () -> Unit,
     onTitleChanged: (String) -> Unit,
@@ -129,9 +136,10 @@ fun StudyRecordEditContent(
         }
     }
 
-    LearningRecordWriteScreen(
+    StudyRecordEditScreen(
         modifier = modifier,
         tags = uiState.tags,
+        onDelete = onDelete,
         learningRecord = uiState.learningRecord,
         onTitleChanged = onTitleChanged,
         onContentChanged = onContentChanged,
@@ -145,10 +153,11 @@ fun StudyRecordEditContent(
 }
 
 @Composable
-fun StudyRecordEditScreen(
+private fun StudyRecordEditScreen(
     modifier: Modifier = Modifier,
     learningRecord: LearningRecord,
     tags: List<Tag>,
+    onDelete: () -> Unit,
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
     onTagPlusClicked: () -> Unit,
@@ -166,11 +175,25 @@ fun StudyRecordEditScreen(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-            DateTimeHeader(
-                dateText = learningRecord.startAt.toDateString(),
-                timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
-            )
-
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                DateTimeHeader(
+                    modifier = Modifier.weight(1f),
+                    dateText = learningRecord.startAt.toDateString(),
+                    timeText = "${learningRecord.startAt.toTimeString()} ~ ${learningRecord.endAt.toTimeString()}",
+                )
+                Icon(
+                    modifier =
+                        Modifier
+                            .padding(end = 4.dp)
+                            .noRippleClickable { onDelete() },
+                    painter = painterResource(R.drawable.ic_common_trash),
+                    contentDescription = "기록 삭제",
+                    tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                )
+            }
             TitleTextField(
                 modifier = Modifier.fillMaxWidth(),
                 title = learningRecord.title,
@@ -215,6 +238,7 @@ private fun PreviewWriteScreen() {
         StudyRecordEditScreen(
             learningRecord = LearningRecord.default(),
             tags = PersonalPreviewDataProvider().getTags(),
+            onDelete = {},
             onTitleChanged = {},
             onContentChanged = {},
             onTagPlusClicked = {},

@@ -3,6 +3,7 @@ package com.ssafy.neegongnaegong.presentation.personal.edit
 import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.DeleteLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.UpdateLearningRecordUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class StudyRecordEditViewModel
     @Inject
     constructor(
+        private val deleteLearningRecordUseCase: DeleteLearningRecordUseCase,
         private val updateLearningRecordUseCase: UpdateLearningRecordUseCase,
         private val getLearningRecordUseCase: GetLearningRecordUseCase,
     ) : BaseViewModel<StudyRecordEditContract.Event, StudyRecordEditContract.State, StudyRecordEditContract.Effect>() {
@@ -49,13 +51,17 @@ class StudyRecordEditViewModel
                     setState { copy(learningRecord = learningRecord.copy(content = event.content)) }
                 }
 
-                // 취소, 확인
+                // 취소, 확인, 삭제
                 is StudyRecordEditContract.Event.OnCancelClicked -> {
                     setEffect { StudyRecordEditContract.Effect.NavigateToHome }
                 }
 
                 is StudyRecordEditContract.Event.OnConfirmClicked -> {
                     updateLearningRecord()
+                }
+
+                is StudyRecordEditContract.Event.OnDelete -> {
+                    deleteLearningRecord()
                 }
 
                 // 태그 추가,삭제
@@ -120,6 +126,18 @@ class StudyRecordEditViewModel
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect {
+                    setEffect { StudyRecordEditContract.Effect.NavigateToHome }
+                }
+            }
+
+        private fun deleteLearningRecord() =
+            viewModelScope.launch {
+                deleteLearningRecordUseCase(
+                    learningRecordId = uiState.value.learningRecord.id,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect {
+                    showSuccessMessage(message = "공부기록을 삭제했습니다.")
                     setEffect { StudyRecordEditContract.Effect.NavigateToHome }
                 }
             }
