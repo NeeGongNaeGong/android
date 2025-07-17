@@ -275,7 +275,7 @@ fun ChartLegendScreen(
                             Modifier
                                 .size(12.dp)
                                 .clip(CircleShape)
-                                .background(color[index % 4]),
+                                .background(color[index % 5]),
                         )
                         Spacer(Modifier.width(8.dp))
                         Column {
