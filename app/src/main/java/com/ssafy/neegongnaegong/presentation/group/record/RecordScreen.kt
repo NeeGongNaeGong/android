@@ -96,7 +96,7 @@ fun RecordRoute(
 
         RecordContent(
             modifier
-                .weight(1F),
+                .weight(1F).padding(horizontal = 15.dp),
             pagingItem,
             uiState,
         )
@@ -122,7 +122,6 @@ fun RecordContent(
 
     Column(modifier = modifier) {
         Row(
-            modifier = Modifier.padding(horizontal = 15.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
             PieChartScreen(
