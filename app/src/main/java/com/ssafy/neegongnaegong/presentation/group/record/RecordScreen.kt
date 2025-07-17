@@ -89,6 +89,7 @@ fun RecordRoute(
                 Text(
                     text = "이번주 공부내용",
                     style = NeeGongNaeGongTheme.typography.titleSmall,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             onNavigationClick = { popBackStack() },
