@@ -163,17 +163,12 @@ class StudyRecordEditViewModel
         private fun clearDialogTags() = setState { copy(selectedTags = emptyList(), unSelectedTags = emptyList()) }
 
         private fun moveFromSelectedTagsToTags() {
-            val tags = uiState.value.tags.toSet()
-            val selected = uiState.value.selectedTags.toSet()
-
-            val merged = tags + selected
-
             setState {
                 copy(
-                    tags = merged.toList(),
+                    tags = uiState.value.selectedTags,
                     selectedTags = emptyList(),
                     unSelectedTags = emptyList(),
-                    learningRecord = learningRecord.copy(tags = merged.toList()),
+                    learningRecord = learningRecord.copy(tags = uiState.value.selectedTags),
                 )
             }
         }
@@ -188,7 +183,14 @@ class StudyRecordEditViewModel
 
         private fun deleteTag(tag: Tag) {
             val newTags = uiState.value.tags - tag
-            setState { copy(tags = newTags) }
+            setState {
+                copy(
+                    tags = newTags,
+                    learningRecord = learningRecord.copy(tags = newTags),
+                    selectedTags = uiState.value.selectedTags - tag,
+                    unSelectedTags = uiState.value.unSelectedTags + tag,
+                )
+            }
         }
 
         private fun selectTag(tag: Tag) {
