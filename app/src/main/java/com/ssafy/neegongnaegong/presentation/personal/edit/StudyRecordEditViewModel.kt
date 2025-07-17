@@ -187,10 +187,6 @@ class StudyRecordEditViewModel
                 copy(
                     tags = newTags,
                     learningRecord = learningRecord.copy(tags = newTags),
-                )
-            }
-            setState {
-                copy(
                     selectedTags = uiState.value.selectedTags - tag,
                     unSelectedTags = uiState.value.unSelectedTags + tag,
                 )
