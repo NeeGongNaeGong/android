@@ -127,7 +127,7 @@ object CustomDateTimeFormatter {
         return if (days > 0) {
             String.format(
                 Locale.getDefault(),
-                "%02dD%02dH%02dM",
+                "%2dd%2dh%2dm",
                 days,
                 hours,
                 minutes,
@@ -135,14 +135,14 @@ object CustomDateTimeFormatter {
         } else if (hours > 0) {
             String.format(
                 Locale.getDefault(),
-                "%02dH%02dM",
+                "%2dh%2dm",
                 hours,
                 minutes,
             )
         } else if (minutes > 0) {
-            String.format(Locale.getDefault(), "%02dM", minutes)
+            String.format(Locale.getDefault(), "%2dm", minutes)
         } else {
-            String.format(Locale.getDefault(), "%02dS", seconds)
+            String.format(Locale.getDefault(), "%2ds", seconds)
         }
     }
 }
