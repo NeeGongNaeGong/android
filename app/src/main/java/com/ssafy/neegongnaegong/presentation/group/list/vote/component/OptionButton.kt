@@ -102,14 +102,12 @@ fun OptionButton(
                         color = NeeGongNaeGongTheme.colorScheme.primaryText,
                     )
                 }
-                if ((alreadyVoted || !state) && !isAnonymous) {
+                if (alreadyVoted || !state) {
                     Row(
                         modifier =
                             Modifier
                                 .wrapContentSize()
-                                .clickable {
-                                    onClickPersonList()
-                                },
+                                .clickable { if (!isAnonymous) onClickPersonList() },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         val iconSizeDp: Dp =
@@ -124,16 +122,18 @@ fun OptionButton(
                             style = NeeGongNaeGongTheme.typography.labelSmall,
                             color = NeeGongNaeGongTheme.colorScheme.gray4,
                         )
-                        Icon(
-                            modifier = Modifier.size(iconSizeDp),
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            contentDescription = "투표한 사람 목록",
-                        )
+                        if (!isAnonymous) {
+                            Icon(
+                                modifier = Modifier.size(iconSizeDp),
+                                imageVector = Icons.Filled.ArrowDropDown,
+                                tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                contentDescription = "투표한 사람 목록",
+                            )
+                        }
                     }
                 }
             }
-            if ((alreadyVoted || !state) && !isAnonymous) {
+            if (alreadyVoted || !state) {
                 Box(
                     modifier =
                         Modifier
@@ -185,6 +185,24 @@ fun PreviewOptionButtonEditMode() {
             votedUsers = listOf(StudyGroupVoteStatusInfo.VotedMemberInfo(0, ",", "")),
             optionTitle = "종료 시간",
             castMode = true,
+            onClick = {},
+        ) {}
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+fun PreviewOptionButtonAnonymousMode() {
+    NeeGongNaeGongTheme {
+        OptionButton(
+            isSelected = true,
+            progress = 0.3F,
+            alreadyVoted = true,
+            state = false,
+            isAnonymous = true,
+            votedUsers = listOf(StudyGroupVoteStatusInfo.VotedMemberInfo(0, ",", "")),
+            optionTitle = "종료 시간",
+            castMode = false,
             onClick = {},
         ) {}
     }
