@@ -112,16 +112,37 @@ object CustomDateTimeFormatter {
     }
 
     /**
-     * 밀리초로 들어온 기간을 00H00M으로 바꾸기 위한 함수
+     * 초로 들어온 기간을 00H00M으로 바꾸기 위한 함수
      * @param Long 기간
      * @return String 00H00M 꼴
      */
     @SuppressLint("DefaultLocale")
-    fun formatDurationToHM(millis: Long): String {
-        val totalMinutes = millis / (1000 * 60)
-        val hours = totalMinutes / 60
+    fun formatDurationToHM(seconds: Long): String {
+        val totalMinutes = seconds / 60
+        val totalHours = totalMinutes / 60
+        val days = totalHours / 24
+        val hours = totalHours % 24
         val minutes = totalMinutes % 60
 
-        return String.format(Locale.getDefault(), "%02dH%02dM", hours, minutes)
+        return if (days > 0) {
+            String.format(
+                Locale.getDefault(),
+                "%2dd %2dh %2dm",
+                days,
+                hours,
+                minutes,
+            )
+        } else if (hours > 0) {
+            String.format(
+                Locale.getDefault(),
+                "%2dh %2dm",
+                hours,
+                minutes,
+            )
+        } else if (minutes > 0) {
+            String.format(Locale.getDefault(), "%2dm", minutes)
+        } else {
+            String.format(Locale.getDefault(), "%2ds", seconds)
+        }
     }
 }

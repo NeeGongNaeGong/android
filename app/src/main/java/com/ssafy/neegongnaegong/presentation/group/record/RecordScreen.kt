@@ -89,6 +89,7 @@ fun RecordRoute(
                 Text(
                     text = "이번주 공부내용",
                     style = NeeGongNaeGongTheme.typography.titleSmall,
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             onNavigationClick = { popBackStack() },
@@ -96,7 +97,7 @@ fun RecordRoute(
 
         RecordContent(
             modifier
-                .weight(1F),
+                .weight(1F).padding(horizontal = 15.dp),
             pagingItem,
             uiState,
         )
@@ -122,7 +123,6 @@ fun RecordContent(
 
     Column(modifier = modifier) {
         Row(
-            modifier = Modifier.padding(horizontal = 15.dp),
             horizontalArrangement = Arrangement.Center,
         ) {
             PieChartScreen(
@@ -276,7 +276,7 @@ fun ChartLegendScreen(
                             Modifier
                                 .size(12.dp)
                                 .clip(CircleShape)
-                                .background(color[index % 4]),
+                                .background(color[index % 5]),
                         )
                         Spacer(Modifier.width(8.dp))
                         Column {

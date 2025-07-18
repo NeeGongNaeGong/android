@@ -23,6 +23,7 @@ data class Typography(
             fontWeight = FontWeight.Bold,
             fontSize = 28.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val titleMedium: TextStyle =
         TextStyle(
@@ -30,6 +31,7 @@ data class Typography(
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val titleSmall: TextStyle =
         TextStyle(
@@ -37,6 +39,7 @@ data class Typography(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val bodyLarge: TextStyle =
         TextStyle(
@@ -44,6 +47,7 @@ data class Typography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 20.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val bodyMedium: TextStyle =
         TextStyle(
@@ -51,6 +55,7 @@ data class Typography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val bodySmall: TextStyle =
         TextStyle(
@@ -58,6 +63,7 @@ data class Typography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val labelLarge: TextStyle =
         TextStyle(
@@ -65,6 +71,7 @@ data class Typography(
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val labelMedium: TextStyle =
         TextStyle(
@@ -72,6 +79,7 @@ data class Typography(
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
     val labelSmall: TextStyle =
         TextStyle(
@@ -79,5 +87,6 @@ data class Typography(
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
             letterSpacing = letterSpacing,
+            fontFeatureSettings = "tnum",
         ),
 )
