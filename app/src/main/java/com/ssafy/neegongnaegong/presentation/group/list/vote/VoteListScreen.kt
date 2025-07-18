@@ -12,6 +12,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ssafy.neegongnaegong.domain.exception.ApiException
 import com.ssafy.neegongnaegong.domain.model.studygroup.VoteHistoryInfo
 import com.ssafy.neegongnaegong.presentation.group.list.component.ErrorItem
 import com.ssafy.neegongnaegong.presentation.group.list.component.From
@@ -63,13 +64,17 @@ fun VoteListScreen(
             lazyItems.loadState.refresh is LoadState.Error ->
                 item {
                     val e = lazyItems.loadState.refresh as LoadState.Error
-                    ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
+                    if (e.error !is ApiException.NetworkException) {
+                        ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
+                    }
                 }
 
             lazyItems.loadState.append is LoadState.Error ->
                 item {
                     val e = lazyItems.loadState.append as LoadState.Error
-                    ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
+                    if (e.error !is ApiException.NetworkException) {
+                        ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
+                    }
                 }
 
             lazyItems.itemCount == 0 ->
