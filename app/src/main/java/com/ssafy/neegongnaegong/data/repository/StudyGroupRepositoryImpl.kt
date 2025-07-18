@@ -1,17 +1,21 @@
 package com.ssafy.neegongnaegong.data.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
+import com.ssafy.neegongnaegong.data.local.database.NeeGongNaeGongDatabase
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupDetailMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupNoticeDetailInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupVoteDetailInfoMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupVoteHistoryInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyLogByTagInfoMapper.toDomain
+import com.ssafy.neegongnaegong.data.paging.GetStudyGroupVoteHistoryRemoteMediatorFactory
 import com.ssafy.neegongnaegong.data.paging.MemberStudyContentsPagingSource
 import com.ssafy.neegongnaegong.data.paging.MyStudyGroupListPagingSource
 import com.ssafy.neegongnaegong.data.paging.StudyGroupNoticeListPagingSource
-import com.ssafy.neegongnaegong.data.paging.StudyGroupVoteListPagingSource
 import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.NoticeHistoryInfo
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
@@ -33,6 +37,8 @@ class StudyGroupRepositoryImpl
     @Inject
     constructor(
         private val dataSource: NetworkStudyGroupDataSource,
+        private val database: NeeGongNaeGongDatabase,
+        private val studyGroupVoteHistoryRemoteMediatorFactory: GetStudyGroupVoteHistoryRemoteMediatorFactory,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : StudyGroupRepository {
         override fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagInfo>> =
@@ -50,16 +56,15 @@ class StudyGroupRepositoryImpl
                 },
             ).flow
 
-        override fun getVoteList(request: Long): Flow<PagingData<VoteHistoryInfo>> =
+        @OptIn(ExperimentalPagingApi::class)
+        override fun getVoteList(studyGroupId: Long): Flow<PagingData<VoteHistoryInfo>> =
             Pager(
                 config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+                remoteMediator = studyGroupVoteHistoryRemoteMediatorFactory.create(studyGroupId),
                 pagingSourceFactory = {
-                    StudyGroupVoteListPagingSource(
-                        dataSource,
-                        request,
-                    )
+                    database.studyGroupVoteHistoryDao().getAll(studyGroupId = studyGroupId)
                 },
-            ).flow
+            ).flow.map { pagingData -> pagingData.map { voteHistory -> voteHistory.toDomain() } }
 
         override fun getNoticeList(request: Long): Flow<PagingData<NoticeHistoryInfo>> =
             Pager(

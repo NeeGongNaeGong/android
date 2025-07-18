@@ -17,7 +17,7 @@ interface StudyGroupRepository {
 
     fun getMemberStudyContents(request: StudyMemberInfo): Flow<PagingData<StudyContentInfo>>
 
-    fun getVoteList(request: Long): Flow<PagingData<VoteHistoryInfo>>
+    fun getVoteList(studyGroupId: Long): Flow<PagingData<VoteHistoryInfo>>
 
     fun getNoticeList(request: Long): Flow<PagingData<NoticeHistoryInfo>>
 

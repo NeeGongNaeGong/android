@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.remote.adapter.json
 
+import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -28,18 +29,11 @@ class LocalDateTimeAdapter :
         typeOfT: Type,
         context: JsonDeserializationContext,
     ): LocalDateTime {
-        val formatter =
-            listOf(
-                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"), // 마이크로초
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"), // 마이크로초
-            )
-        formatter.forEach {
-            try {
-                return LocalDateTime.parse(json.asString, it)
-            } catch (_: DateTimeParseException) {
-            }
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        try {
+            return LocalDateTime.parse(json.asString, formatter)
+        } catch (_: DateTimeParseException) {
+            Log.e("TimeFormatter", "deserialize: 변환 에러 발생")
         }
         throw JsonParseException("Unparseable date: ${json.asString}")
     }
