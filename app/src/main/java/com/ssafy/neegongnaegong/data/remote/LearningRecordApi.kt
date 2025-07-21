@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRe
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -27,7 +28,7 @@ interface LearningRecordApi {
         @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE(PREFIX)
+    @HTTP(method = "DELETE", path = PREFIX, hasBody = true)
     suspend fun deleteSelectedLearningRecords(
         @Body request: DeleteSelectedLearningRecordsRequest,
     ): Result<ApiResponse<Unit>>
