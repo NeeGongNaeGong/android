@@ -204,7 +204,7 @@ fun PersonalScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
+                .padding(start = 8.dp, end = 8.dp),
     ) {
         TabRow(
             modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
