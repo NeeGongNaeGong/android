@@ -49,6 +49,21 @@ class PersonalContract {
 
         data object OnRecordRefresh : Event()
 
+        // Delete selected
+        data class OnDeleteSelecte(
+            val recordId: Long,
+        ) : Event()
+
+        data object OnSelectModeChange : Event()
+
+        data object OnSelectCancel : Event()
+
+        data object OnSelectDelete : Event()
+
+        data object OnSelectDialogConfirm : Event()
+
+        data object OnSelectDialogCancel : Event()
+
         // Date
         data class OnDateSelected(
             val date: String,
@@ -82,6 +97,10 @@ class PersonalContract {
         val hasDateDataNext: Boolean = false,
         val dateCursorId: Long? = null,
         val dateCursorCreatedAt: String? = null,
+        // delete selected
+        val isSelectedMode: Boolean = false,
+        val deleteSelectedRecordIds: Set<Long> = emptySet(),
+        val isDeleteDialogShow: Boolean = false,
     ) : UiState
 
     sealed class Effect : UiEffect {

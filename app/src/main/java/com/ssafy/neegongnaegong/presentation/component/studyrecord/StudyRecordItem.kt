@@ -15,14 +15,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -43,12 +47,21 @@ import com.ssafy.neegongnaegong.presentation.util.toTimeString
 fun StudyRecordItem(
     record: LearningRecord,
     isStudyFeed: Boolean = false,
+    isSelectedMode: Boolean = false,
+    isDeleteSelected: Boolean = false,
     onClick: (Long) -> Unit = {},
+    onDeleteSelect: (Long) -> Unit = {},
 ) {
     if (isStudyFeed) {
         StudyFeedItem(record, onClick)
     } else {
-        PersonalRecordItem(record, onClick)
+        PersonalRecordItem(
+            record = record,
+            isSelectedMode = isSelectedMode,
+            isDeleteSelected = isDeleteSelected,
+            onClick = onClick,
+            onDeleteSelect = onDeleteSelect,
+        )
     }
 }
 
@@ -56,8 +69,12 @@ fun StudyRecordItem(
 @Composable
 private fun PersonalRecordItem(
     record: LearningRecord,
+    isSelectedMode: Boolean = false,
+    isDeleteSelected: Boolean = false,
     onClick: (Long) -> Unit = {},
+    onDeleteSelect: (Long) -> Unit = {},
 ) {
+    val currentAlpha = if (isDeleteSelected) 0.5f else 1.0f
     Box(
         modifier =
             Modifier
@@ -66,7 +83,13 @@ private fun PersonalRecordItem(
                 .background(
                     NeeGongNaeGongTheme.colorScheme.recordBackground,
                     RoundedCornerShape(8.dp),
-                ).clickable(onClick = { onClick(record.id) })
+                ).clickable(onClick = {
+                    if (isSelectedMode) {
+                        onDeleteSelect(record.id)
+                    } else {
+                        onClick(record.id)
+                    }
+                })
                 .padding(16.dp),
     ) {
         Column {
@@ -76,8 +99,23 @@ private fun PersonalRecordItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                if (isSelectedMode) {
+                    Checkbox(
+                        modifier = Modifier.requiredSize(16.dp).padding(end = 8.dp),
+                        checked = isDeleteSelected,
+                        onCheckedChange = {
+                            onDeleteSelect(record.id)
+                        },
+                        colors =
+                            CheckboxDefaults.colors(
+                                checkedColor = NeeGongNaeGongTheme.colorScheme.blue,
+                                uncheckedColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                checkmarkColor = NeeGongNaeGongTheme.colorScheme.primaryText,
+                            ),
+                    )
+                }
                 Text(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).alpha(currentAlpha),
                     text = record.title.ifBlank { "제목을 설정해주세요." },
                     style = NeeGongNaeGongTheme.typography.titleMedium.copy(fontSize = 20.sp),
                     maxLines = 1,
@@ -91,6 +129,7 @@ private fun PersonalRecordItem(
                 val end = record.endAt.toHourMinuteString()
 
                 Text(
+                    modifier = Modifier.alpha(currentAlpha),
                     text = "$start ~ $end",
                     style =
                         NeeGongNaeGongTheme.typography.bodySmall.copy(
@@ -104,6 +143,7 @@ private fun PersonalRecordItem(
 
             // 내용
             Text(
+                modifier = Modifier.alpha(currentAlpha),
                 text = record.content.ifBlank { "내용을 설정해주세요" },
                 style = NeeGongNaeGongTheme.typography.bodySmall.copy(fontSize = 12.sp),
                 maxLines = 4,
@@ -114,7 +154,10 @@ private fun PersonalRecordItem(
             Spacer(modifier = Modifier.height(12.dp))
 
             // 태그
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            FlowRow(
+                modifier = Modifier.alpha(currentAlpha),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
                 record.tags.forEach { tag ->
                     Text(
                         text = "#${tag.koName}",

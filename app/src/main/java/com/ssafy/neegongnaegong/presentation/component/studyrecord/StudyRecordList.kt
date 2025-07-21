@@ -40,6 +40,10 @@ fun StudyRecordList(
     onLoadMore: () -> Unit,
     hasNext: Boolean,
     isStudyFeed: Boolean = false,
+    // delete selected
+    isSelectedMode: Boolean = false,
+    deleteSelectedRecordIds: Set<Long> = setOf(),
+    onDeleteSelect: (Long) -> Unit = {},
 ) {
     if (learningRecords.isEmpty()) {
         Box(
@@ -95,7 +99,14 @@ fun StudyRecordList(
                 }
 
                 items(recordsForDate) { record ->
-                    StudyRecordItem(record = record, isStudyFeed = isStudyFeed, onClick = onClick)
+                    StudyRecordItem(
+                        record = record,
+                        isStudyFeed = isStudyFeed,
+                        isSelectedMode = isSelectedMode,
+                        isDeleteSelected = record.id in deleteSelectedRecordIds,
+                        onClick = onClick,
+                        onDeleteSelect = onDeleteSelect,
+                    )
                 }
             }
 
