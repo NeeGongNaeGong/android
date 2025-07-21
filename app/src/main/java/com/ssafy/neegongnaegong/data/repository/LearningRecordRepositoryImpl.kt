@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.repository
 
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkLearningRecordDataSource
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toCreateRequest
+import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDeleteSelectedRequest
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toLocalDates
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toUpdateRequest
@@ -38,6 +39,12 @@ class LearningRecordRepositoryImpl
             dataSource
                 .deleteLearningRecord(
                     learningRecordId = learningRecordId,
+                ).flowOn(context = ioDispatcher)
+
+        override fun deleteSelectedLearningRecords(recordIds: List<Long>): Flow<Unit> =
+            dataSource
+                .deleteSelectedLearningRecords(
+                    request = recordIds.toDeleteSelectedRequest(),
                 ).flowOn(context = ioDispatcher)
 
         override suspend fun updateLearningRecord(

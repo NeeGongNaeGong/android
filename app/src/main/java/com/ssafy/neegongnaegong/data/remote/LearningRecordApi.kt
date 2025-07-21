@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.remote
 
 import com.ssafy.neegongnaegong.data.model.ApiResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.request.DeleteSelectedLearningRecordsRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordDatesByMonthResponse
@@ -15,28 +16,33 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LearningRecordApi {
-    @PUT("/api/records/{learning-record-id}")
+    @PUT("$PREFIX/{learning-record-id}")
     suspend fun updateLearningRecord(
         @Path("learning-record-id") learningRecordId: Long,
         @Body request: UpdateLearningRecordRequest,
     ): Result<ApiResponse<Unit>>
 
-    @DELETE("api/records/{learning-record-id}")
+    @DELETE("$PREFIX/{learning-record-id}")
     suspend fun deleteLearningRecord(
         @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<Unit>>
 
-    @GET("/api/records/{learning-record-id}")
+    @DELETE(PREFIX)
+    suspend fun deleteSelectedLearningRecords(
+        @Body request: DeleteSelectedLearningRecordsRequest,
+    ): Result<ApiResponse<Unit>>
+
+    @GET("$PREFIX/{learning-record-id}")
     suspend fun getLearningRecord(
         @Path("learning-record-id") learningRecordId: Long,
     ): Result<ApiResponse<GetLearningRecordResponse>>
 
-    @POST("/api/records")
+    @POST(PREFIX)
     suspend fun createLearningRecord(
         @Body request: CreateLearningRecordRequest,
     ): Result<ApiResponse<Long>>
 
-    @GET("/api/records/list")
+    @GET("$PREFIX/list")
     suspend fun getLearningRecordList(
         @Query("tag") tag: List<Long>?,
         @Query("target-date") targetDate: String?,
@@ -45,8 +51,12 @@ interface LearningRecordApi {
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceResponse>>
 
-    @GET("/api/records/date/{year-month}")
+    @GET("$PREFIX/date/{year-month}")
     suspend fun getLearningRecordDatesByMonth(
         @Path("year-month") yearMonth: String,
     ): Result<ApiResponse<GetLearningRecordDatesByMonthResponse>>
+
+    companion object {
+        const val PREFIX = "/api/records"
+    }
 }
