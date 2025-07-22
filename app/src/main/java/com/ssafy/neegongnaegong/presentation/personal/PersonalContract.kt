@@ -50,7 +50,7 @@ class PersonalContract {
         data object OnRecordRefresh : Event()
 
         // Delete selected
-        data class OnDeleteSelecte(
+        data class OnDeleteSelect(
             val recordId: Long,
         ) : Event()
 

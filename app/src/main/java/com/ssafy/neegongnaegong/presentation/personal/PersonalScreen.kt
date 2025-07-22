@@ -98,7 +98,7 @@ fun PersonalRoute(
         onDateSelected = { viewModel.setEvent(PersonalContract.Event.OnDateSelected(it)) },
         navigateToEditScreen = navigateToEditScreen,
         onLoadMore = { viewModel.setEvent(PersonalContract.Event.OnRecordLoadMore) },
-        onDeleteSelect = { viewModel.setEvent(PersonalContract.Event.OnDeleteSelecte(it)) },
+        onDeleteSelect = { viewModel.setEvent(PersonalContract.Event.OnDeleteSelect(it)) },
         onSelectModeChange = { viewModel.setEvent(PersonalContract.Event.OnSelectModeChange) },
         onSelectCancel = { viewModel.setEvent(PersonalContract.Event.OnSelectCancel) },
         onSelectDelete = { viewModel.setEvent(PersonalContract.Event.OnSelectDelete) },

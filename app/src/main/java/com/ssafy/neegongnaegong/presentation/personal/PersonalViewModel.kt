@@ -113,7 +113,7 @@ class PersonalViewModel
                     loadLearningRecords()
                 }
 
-                is PersonalContract.Event.OnDeleteSelecte -> {
+                is PersonalContract.Event.OnDeleteSelect -> {
                     deleteSelectedRecord(event.recordId)
                 }
 
