@@ -246,9 +246,9 @@ fun PersonalScreen(
         PersonalTopAppBar(
             isSelectedMode = isSelectedMode,
             deleteSelectedRecordIds = deleteSelectedRecordIds,
-            onModeChange = { onSelectModeChange() },
-            onCancel = { onSelectCancel() },
-            onDelete = { onSelectDelete() },
+            onModeChange = onSelectModeChange,
+            onCancel = onSelectCancel,
+            onDelete = onSelectDelete,
         )
 
         TabRow(
