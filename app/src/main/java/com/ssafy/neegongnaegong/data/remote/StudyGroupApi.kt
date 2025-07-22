@@ -112,7 +112,7 @@ interface StudyGroupApi {
 
     @GET("$PREFIX/my/list")
     suspend fun getMyStudyGroupList(
-        @Query("cursor-created-at") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-value") cursorCreatedAt: LocalDateTime?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<MyStudyGroupListResponse>>

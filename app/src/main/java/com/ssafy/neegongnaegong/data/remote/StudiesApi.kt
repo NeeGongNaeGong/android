@@ -45,7 +45,7 @@ interface StudiesApi {
 
     @GET("$PREFIX/list")
     suspend fun getStudiesList(
-        @Query("cursor-created-at") cursorCreatedAt: String?,
+        @Query("cursor-value") cursorCreatedAt: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<CursorSliceStudiesListResponse>>
