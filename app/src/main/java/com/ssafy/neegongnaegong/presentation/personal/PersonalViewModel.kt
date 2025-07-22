@@ -406,20 +406,19 @@ class PersonalViewModel
         private fun deleteRecords() {
             val deleteSelectedRecordIdsList = uiState.value.deleteSelectedRecordIds.toList()
             viewModelScope.launch {
-                deleteSelectedLearningRecordsUseCase
-                    .invoke(
-                        recordIds = deleteSelectedRecordIdsList,
-                    ).withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect {
-                        setState { copy(deleteSelectedRecordIds = emptySet()) }
-                        setState { copy(isSelectedMode = false) }
-                        showMessage(
-                            message = "선택된 기록을 삭제했습니다.",
-                            type = SnackbarManager.Type.Success,
-                        )
-                        loadLearningRecords()
-                    }
+                deleteSelectedLearningRecordsUseCase(
+                    recordIds = deleteSelectedRecordIdsList,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect {
+                    setState { copy(deleteSelectedRecordIds = emptySet()) }
+                    setState { copy(isSelectedMode = false) }
+                    showMessage(
+                        message = "선택된 기록을 삭제했습니다.",
+                        type = SnackbarManager.Type.Success,
+                    )
+                    loadLearningRecords()
+                }
             }
         }
     }
