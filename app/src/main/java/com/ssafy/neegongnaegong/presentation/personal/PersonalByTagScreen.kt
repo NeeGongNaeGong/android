@@ -26,6 +26,10 @@ fun PersonalByTagScreen(
     // Paging
     onLoadMore: () -> Unit,
     hasTagDataNext: Boolean,
+    // delete selected
+    isSelectedMode: Boolean = false,
+    deleteSelectedRecordIds: Set<Long> = setOf(),
+    onDeleteSelect: (Long) -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         TagList(
@@ -44,6 +48,9 @@ fun PersonalByTagScreen(
             onClick = navigateToEditScreen,
             onLoadMore = onLoadMore,
             hasNext = hasTagDataNext,
+            isSelectedMode = isSelectedMode,
+            deleteSelectedRecordIds = deleteSelectedRecordIds,
+            onDeleteSelect = onDeleteSelect,
         )
     }
 }

@@ -12,6 +12,8 @@ interface LearningRecordRepository {
 
     fun deleteLearningRecord(learningRecordId: Long): Flow<Unit>
 
+    fun deleteSelectedLearningRecords(recordIds: List<Long>): Flow<Unit>
+
     suspend fun updateLearningRecord(
         learningRecordId: Long,
         learningRecord: LearningRecord,

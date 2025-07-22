@@ -4,10 +4,12 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.data.mapper.learningrecord.LearningRecordMapper.toDomain
 import com.ssafy.neegongnaegong.domain.data.TagData
 import com.ssafy.neegongnaegong.domain.model.learning.Tag
+import com.ssafy.neegongnaegong.domain.usecase.learningrecord.DeleteSelectedLearningRecordsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordDatesByMonthUseCase
 import com.ssafy.neegongnaegong.domain.usecase.learningrecord.GetLearningRecordListUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.timer.learning.LearningRecordWriteViewModel.Companion.MAX_TAG_LIMIT
+import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
 import com.ssafy.neegongnaegong.presentation.util.toYearMonthTriple
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
@@ -25,6 +27,7 @@ class PersonalViewModel
     constructor(
         private val getLearningRecordListUseCase: GetLearningRecordListUseCase,
         private val getLearningRecordDatesByMonthUseCase: GetLearningRecordDatesByMonthUseCase,
+        private val deleteSelectedLearningRecordsUseCase: DeleteSelectedLearningRecordsUseCase,
     ) : BaseViewModel<PersonalContract.Event, PersonalContract.State, PersonalContract.Effect>() {
         override fun createInitialState(): PersonalContract.State = PersonalContract.State().copy(selectedDate = LocalDate.now().toString())
 
@@ -108,6 +111,31 @@ class PersonalViewModel
 
                 is PersonalContract.Event.OnRecordRefresh -> {
                     loadLearningRecords()
+                }
+
+                is PersonalContract.Event.OnDeleteSelect -> {
+                    deleteSelectedRecord(event.recordId)
+                }
+
+                is PersonalContract.Event.OnSelectModeChange -> {
+                    setState { copy(isSelectedMode = isSelectedMode.not()) }
+                }
+
+                is PersonalContract.Event.OnSelectCancel -> {
+                    setState { copy(deleteSelectedRecordIds = emptySet()) }
+                }
+
+                is PersonalContract.Event.OnSelectDelete -> {
+                    setState { copy(isDeleteDialogShow = true) }
+                }
+
+                is PersonalContract.Event.OnSelectDialogCancel -> {
+                    setState { copy(isDeleteDialogShow = false) }
+                }
+
+                is PersonalContract.Event.OnSelectDialogConfirm -> {
+                    deleteRecords()
+                    setState { copy(isDeleteDialogShow = false) }
                 }
             }
         }
@@ -363,5 +391,34 @@ class PersonalViewModel
                 }
             }
             return pi
+        }
+
+        private fun deleteSelectedRecord(recordId: Long) {
+            val currentSelectedRecordIds = uiState.value.deleteSelectedRecordIds.toMutableSet()
+            if (currentSelectedRecordIds.contains(recordId)) {
+                currentSelectedRecordIds.remove(recordId)
+            } else {
+                currentSelectedRecordIds.add(recordId)
+            }
+            setState { copy(deleteSelectedRecordIds = currentSelectedRecordIds) }
+        }
+
+        private fun deleteRecords() {
+            val deleteSelectedRecordIdsList = uiState.value.deleteSelectedRecordIds.toList()
+            viewModelScope.launch {
+                deleteSelectedLearningRecordsUseCase(
+                    recordIds = deleteSelectedRecordIdsList,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect {
+                    setState { copy(deleteSelectedRecordIds = emptySet()) }
+                    setState { copy(isSelectedMode = false) }
+                    showMessage(
+                        message = "선택된 기록을 삭제했습니다.",
+                        type = SnackbarManager.Type.Success,
+                    )
+                    loadLearningRecords()
+                }
+            }
         }
     }

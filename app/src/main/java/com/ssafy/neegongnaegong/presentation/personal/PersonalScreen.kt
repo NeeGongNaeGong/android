@@ -38,6 +38,8 @@ import com.ssafy.neegongnaegong.domain.model.learning.Tag
 import com.ssafy.neegongnaegong.domain.model.preview.personal.PersonalPreviewDataProvider
 import com.ssafy.neegongnaegong.presentation.component.LoadingDialog
 import com.ssafy.neegongnaegong.presentation.component.picker.date.rememberDatePickerState
+import com.ssafy.neegongnaegong.presentation.personal.component.DeleteSelectedLearningRecordsDialog
+import com.ssafy.neegongnaegong.presentation.personal.component.PersonalTopAppBar
 import com.ssafy.neegongnaegong.presentation.timer.component.write.TagSelectDialog
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
@@ -96,6 +98,12 @@ fun PersonalRoute(
         onDateSelected = { viewModel.setEvent(PersonalContract.Event.OnDateSelected(it)) },
         navigateToEditScreen = navigateToEditScreen,
         onLoadMore = { viewModel.setEvent(PersonalContract.Event.OnRecordLoadMore) },
+        onDeleteSelect = { viewModel.setEvent(PersonalContract.Event.OnDeleteSelect(it)) },
+        onSelectModeChange = { viewModel.setEvent(PersonalContract.Event.OnSelectModeChange) },
+        onSelectCancel = { viewModel.setEvent(PersonalContract.Event.OnSelectCancel) },
+        onSelectDelete = { viewModel.setEvent(PersonalContract.Event.OnSelectDelete) },
+        onSelectDialogConfirm = { viewModel.setEvent(PersonalContract.Event.OnSelectDialogConfirm) },
+        onSelectDialogCancel = { viewModel.setEvent(PersonalContract.Event.OnSelectDialogCancel) },
     )
 }
 
@@ -119,6 +127,13 @@ fun PersonalContent(
     navigateToEditScreen: (Long) -> Unit,
     // paging
     onLoadMore: () -> Unit,
+    // delete selected
+    onDeleteSelect: (Long) -> Unit,
+    onSelectModeChange: () -> Unit,
+    onSelectCancel: () -> Unit,
+    onSelectDelete: () -> Unit,
+    onSelectDialogConfirm: () -> Unit,
+    onSelectDialogCancel: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -131,6 +146,14 @@ fun PersonalContent(
             onSearchQueryChanged = onSearchQueryChanged,
             onTagSelected = onTagSelected,
             onTagDeselected = onTagDeselected,
+        )
+    }
+
+    if (uiState.isDeleteDialogShow) {
+        DeleteSelectedLearningRecordsDialog(
+            selectedCount = uiState.deleteSelectedRecordIds.size,
+            onConfirm = onSelectDialogConfirm,
+            onCancel = onSelectDialogCancel,
         )
     }
 
@@ -167,6 +190,13 @@ fun PersonalContent(
         hasTagDataNext = uiState.hasTagDataNext,
         hasDateDataNext = uiState.hasDateDataNext,
         studiedDates = uiState.learningDates,
+        // delete selected
+        isSelectedMode = uiState.isSelectedMode,
+        deleteSelectedRecordIds = uiState.deleteSelectedRecordIds,
+        onDeleteSelect = onDeleteSelect,
+        onSelectModeChange = onSelectModeChange,
+        onSelectCancel = onSelectCancel,
+        onSelectDelete = onSelectDelete,
     )
 
     if (uiState.isLoading) {
@@ -194,6 +224,13 @@ fun PersonalScreen(
     hasDateDataNext: Boolean,
     // study point
     studiedDates: ImmutableSet<LocalDate>,
+    // delete selected
+    isSelectedMode: Boolean = false,
+    deleteSelectedRecordIds: Set<Long> = setOf(),
+    onDeleteSelect: (Long) -> Unit = {},
+    onSelectModeChange: () -> Unit = {},
+    onSelectCancel: () -> Unit = {},
+    onSelectDelete: () -> Unit = {},
 ) {
     val tabTitles = listOf("태그별", "날짜별")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -204,8 +241,16 @@ fun PersonalScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
+                .padding(start = 8.dp, end = 8.dp),
     ) {
+        PersonalTopAppBar(
+            isSelectedMode = isSelectedMode,
+            deleteSelectedRecordIds = deleteSelectedRecordIds,
+            onModeChange = onSelectModeChange,
+            onCancel = onSelectCancel,
+            onDelete = onSelectDelete,
+        )
+
         TabRow(
             modifier = Modifier.background(NeeGongNaeGongTheme.colorScheme.background),
             selectedTabIndex = pagerState.currentPage,
@@ -271,6 +316,9 @@ fun PersonalScreen(
                         navigateToEditScreen = navigateToEditScreen,
                         onLoadMore = onLoadMore,
                         hasTagDataNext = hasTagDataNext,
+                        isSelectedMode = isSelectedMode,
+                        deleteSelectedRecordIds = deleteSelectedRecordIds,
+                        onDeleteSelect = onDeleteSelect,
                     )
                 }
 
@@ -285,6 +333,9 @@ fun PersonalScreen(
                         onLoadMore = onLoadMore,
                         hasDateDataNext = hasDateDataNext,
                         studiedDates = studiedDates,
+                        isSelectedMode = isSelectedMode,
+                        deleteSelectedRecordIds = deleteSelectedRecordIds,
+                        onDeleteSelect = onDeleteSelect,
                     )
                 }
             }

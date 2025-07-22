@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.datasource.network
 
 import com.ssafy.neegongnaegong.data.model.apiFlow
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.request.DeleteSelectedLearningRecordsRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.GetLearningRecordListRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.CursorSliceResponse
@@ -22,6 +23,9 @@ class NetworkLearningRecordDataSourceImpl
         ): Flow<Unit> = apiFlow { api.updateLearningRecord(learningRecordId, request) }
 
         override fun deleteLearningRecord(learningRecordId: Long): Flow<Unit> = apiFlow { api.deleteLearningRecord(learningRecordId) }
+
+        override fun deleteSelectedLearningRecords(request: DeleteSelectedLearningRecordsRequest): Flow<Unit> =
+            apiFlow { api.deleteSelectedLearningRecords(request = request) }
 
         override fun getLearningRecord(learningRecordId: Long): Flow<GetLearningRecordResponse> =
             apiFlow { api.getLearningRecord(learningRecordId) }

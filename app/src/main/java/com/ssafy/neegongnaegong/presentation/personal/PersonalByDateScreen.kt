@@ -40,6 +40,10 @@ fun PersonalByDateScreen(
     hasDateDataNext: Boolean,
     // study point
     studiedDates: ImmutableSet<LocalDate>,
+    // delete selected
+    isSelectedMode: Boolean = false,
+    deleteSelectedRecordIds: Set<Long> = setOf(),
+    onDeleteSelect: (Long) -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         DatePicker(
@@ -78,6 +82,9 @@ fun PersonalByDateScreen(
                 onClick = navigateToEditScreen,
                 onLoadMore = onLoadMore,
                 hasNext = hasDateDataNext,
+                isSelectedMode = isSelectedMode,
+                deleteSelectedRecordIds = deleteSelectedRecordIds,
+                onDeleteSelect = onDeleteSelect,
             )
         }
     }

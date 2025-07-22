@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.data.mapper.learningrecord
 
 import com.ssafy.neegongnaegong.data.mapper.tag.LearningRecordTagMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.CreateLearningRecordRequest
+import com.ssafy.neegongnaegong.data.model.learningrecord.request.DeleteSelectedLearningRecordsRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.request.UpdateLearningRecordRequest
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.AuthorResponse
 import com.ssafy.neegongnaegong.data.model.learningrecord.response.GetLearningRecordDatesByMonthResponse
@@ -51,5 +52,10 @@ internal object LearningRecordMapper {
             id = id,
             nickname = username,
             profileImg = profileImg,
+        )
+
+    fun List<Long>.toDeleteSelectedRequest() =
+        DeleteSelectedLearningRecordsRequest(
+            recordIds = this,
         )
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +40,10 @@ fun StudyRecordList(
     onLoadMore: () -> Unit,
     hasNext: Boolean,
     isStudyFeed: Boolean = false,
+    // delete selected
+    isSelectedMode: Boolean = false,
+    deleteSelectedRecordIds: Set<Long> = setOf(),
+    onDeleteSelect: (Long) -> Unit = {},
 ) {
     if (learningRecords.isEmpty()) {
         Box(
@@ -80,6 +85,7 @@ fun StudyRecordList(
                     .fillMaxSize()
                     .overscroll(overscrollEffect),
             state = listState,
+            contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             groupedRecords.forEach { (date, recordsForDate) ->
@@ -93,7 +99,14 @@ fun StudyRecordList(
                 }
 
                 items(recordsForDate) { record ->
-                    StudyRecordItem(record = record, isStudyFeed = isStudyFeed, onClick = onClick)
+                    StudyRecordItem(
+                        record = record,
+                        isStudyFeed = isStudyFeed,
+                        isSelectedMode = isSelectedMode,
+                        isDeleteSelected = record.id in deleteSelectedRecordIds,
+                        onClick = onClick,
+                        onDeleteSelect = onDeleteSelect,
+                    )
                 }
             }
 
