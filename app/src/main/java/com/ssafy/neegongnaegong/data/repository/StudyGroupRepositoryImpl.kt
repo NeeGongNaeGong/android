@@ -146,4 +146,6 @@ class StudyGroupRepositoryImpl
                     )
                 },
             ).flow.flowOn(ioDispatcher)
+
+        override fun leaveStudyGroup(studyGroupId: Long): Flow<Unit> = dataSource.leaveStudyGroup(studyGroupId)
     }

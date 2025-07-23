@@ -117,6 +117,11 @@ interface StudyGroupApi {
         @Query("size") size: Int,
     ): Result<ApiResponse<MyStudyGroupListResponse>>
 
+    @DELETE("$PREFIX/{study-group-id}/withdrawal")
+    suspend fun leaveStudyGroup(
+        @Path("study-group-id") studyGroupId: Long,
+    ): Result<ApiResponse<Unit>>
+
     companion object {
         private const val PREFIX = "/api/study-groups"
     }

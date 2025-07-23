@@ -65,4 +65,6 @@ interface StudyGroupRepository {
     fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailInfo>
 
     fun getMyStudyGroupList(size: Int): Flow<PagingData<MyStudyGroupInfo>>
+
+    fun leaveStudyGroup(studyGroupId: Long): Flow<Unit>
 }
