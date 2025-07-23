@@ -23,12 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
 fun DeleteStudiesDialog(
     modifier: Modifier = Modifier,
+    role: Role,
     onCancel: () -> Unit,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -48,7 +50,11 @@ fun DeleteStudiesDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "스터디 삭제",
+                    text = "스터디 ${if (role == Role.TEAM_LEADER) {
+                        "삭제"
+                    } else {
+                        "탈퇴"
+                    }}",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
@@ -57,7 +63,11 @@ fun DeleteStudiesDialog(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
-                    text = "스터디를 삭제 할까요?",
+                    text = "스터디를 ${if (role == Role.TEAM_LEADER) {
+                        "삭제"
+                    } else {
+                        "탈퇴"
+                    }} 할까요?",
                     fontSize = 14.sp,
                     color = Color.Gray,
                 )
@@ -117,6 +127,7 @@ private fun PreviewDeleteStudiesDialog() {
             onCancel = {},
             onDismiss = {},
             onConfirm = {},
+            role = Role.TEAM_LEADER,
         )
     }
 }

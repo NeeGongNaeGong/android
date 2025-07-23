@@ -32,6 +32,7 @@ class StudiesDetailContract {
 
         data class OndDeleteStudies(
             val studyGroupId: Long,
+            val role: Role,
         ) : Event
 
         data class OnClickLatestNotice(

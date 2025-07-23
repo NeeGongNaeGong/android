@@ -83,11 +83,12 @@ fun StudiesDrawerContent(
 
     if (uiState.showDeleteDialog) {
         DeleteStudiesDialog(
+            role = role,
             onCancel = { viewModel.setEvent(StudiesDetailContract.Event.OnDeleteDialogDismiss) },
             onDismiss = { viewModel.setEvent(StudiesDetailContract.Event.OnDeleteDialogDismiss) },
             onConfirm = {
                 viewModel.setEvent(
-                    StudiesDetailContract.Event.OndDeleteStudies(uiState.studyGroupDetailInfo.id),
+                    StudiesDetailContract.Event.OndDeleteStudies(uiState.studyGroupDetailInfo.id, role),
                 )
             },
         )
@@ -181,12 +182,19 @@ private fun StudiesDrawer(
             )
         }
 
-        if (role == Role.TEAM_LEADER) {
-            item {
+        item {
+            if (role == Role.TEAM_LEADER) {
                 // 스터디 삭제 버튼
                 DrawerMenuItem(
                     icon = R.drawable.ic_studies_drw_studies_delete,
                     title = stringResource(R.string.studies_drw_studies_delete),
+                    onClick = onStudyDeleteClick,
+                )
+            } else {
+                // 스터디 삭제 버튼
+                DrawerMenuItem(
+                    icon = R.drawable.ic_studies_drw_studies_delete,
+                    title = "그룹 탈퇴",
                     onClick = onStudyDeleteClick,
                 )
             }

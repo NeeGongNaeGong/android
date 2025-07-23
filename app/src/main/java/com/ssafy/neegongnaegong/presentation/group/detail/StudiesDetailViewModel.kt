@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
+import com.ssafy.neegongnaegong.domain.model.studygroup.Role
 import com.ssafy.neegongnaegong.domain.usecase.studies.DeleteStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesFeedsUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesLatestContentsUseCase
@@ -12,6 +13,7 @@ import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesWeeklyRankingsU
 import com.ssafy.neegongnaegong.domain.usecase.studies.PatchStudiesLatestContentsReadStatusUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetMyStudyListUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studygroup.GetStudyGroupDetailUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studygroup.LeaveStudyGroupUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.group.find.StudiesFindContract
@@ -33,6 +35,7 @@ class StudiesDetailViewModel
         private val getStudiesLatestContentsUseCase: GetStudiesLatestContentsUseCase,
         private val patchStudiesLatestContentsReadStatusUseCase: PatchStudiesLatestContentsReadStatusUseCase,
         private val deleteStudiesUseCase: DeleteStudiesUseCase,
+        private val leaveStudyGroupUseCase: LeaveStudyGroupUseCase,
         private val getMyStudyListUseCase: GetMyStudyListUseCase,
     ) : BaseViewModel<StudiesDetailContract.Event, StudiesDetailContract.State, StudiesDetailContract.Effect>() {
         var myStudyList: Flow<PagingData<MyStudyGroupInfo>> = emptyFlow()
@@ -55,7 +58,7 @@ class StudiesDetailViewModel
                 is StudiesDetailContract.Event.OnLoadWeeklyRankings -> onLoadWeeklyRankings(event.studyGroupId)
                 is StudiesDetailContract.Event.OnLoadLatestContents -> onLoadLatestContents(event.studyGroupId)
                 is StudiesDetailContract.Event.OndDeleteStudies -> {
-                    deleteStudies(event.studyGroupId)
+                    deleteStudies(event.studyGroupId, event.role)
                 }
                 is StudiesDetailContract.Event.OnClickLatestNotice -> {
                     setEffect {
@@ -179,15 +182,28 @@ class StudiesDetailViewModel
             }
         }
 
-        private fun deleteStudies(studyGroupId: Long) {
+        private fun deleteStudies(
+            studyGroupId: Long,
+            role: Role,
+        ) {
             viewModelScope.launch {
-                deleteStudiesUseCase(studyGroupId)
-                    .withLoading {
-                        setState { copy(isLoading = it) }
-                    }.safeCollect {
-                        showSuccessMessage("스터디가 삭제되었습니다.")
-                        setEffect { StudiesDetailContract.Effect.NavigateToMain }
-                    }
+                if (role == Role.TEAM_LEADER) {
+                    deleteStudiesUseCase(studyGroupId)
+                        .withLoading {
+                            setState { copy(isLoading = it) }
+                        }.safeCollect {
+                            showSuccessMessage("스터디가 삭제되었습니다.")
+                            setEffect { StudiesDetailContract.Effect.NavigateToMain }
+                        }
+                } else {
+                    leaveStudyGroupUseCase(studyGroupId)
+                        .withLoading {
+                            setState { copy(isLoading = it) }
+                        }.safeCollect {
+                            showSuccessMessage("스터디에서 탈퇴하셨습니다.")
+                            setEffect { StudiesDetailContract.Effect.NavigateToMain }
+                        }
+                }
             }
         }
 
