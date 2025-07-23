@@ -4,6 +4,7 @@ import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudiesDataSource
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesApplicationsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesContentsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesFeedsMapper.toDomain
+import com.ssafy.neegongnaegong.data.mapper.studies.StudiesMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesMemberMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.studies.StudiesWeeklyRankingsMapper.toDomain
 import com.ssafy.neegongnaegong.data.mapper.vote.VoteMapper.toCreateRequest
@@ -74,9 +75,8 @@ class StudiesRepositoryImpl
                     ).map { slice ->
                         CursorSliceStudiesListResponse(
                             content = slice.content,
-                            cursorCreatedAt = slice.cursorCreatedAt,
                             hasNext = slice.hasNext,
-                            cursorId = slice.cursorId,
+                            nextCursor = slice.nextCursor,
                         ).toDomain()
                     }
             }

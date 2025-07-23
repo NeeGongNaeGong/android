@@ -38,7 +38,7 @@ class StudiesFindContract {
         val isLoading: Boolean = false,
         val studiesList: List<Studies> = emptyList(),
         val hasNext: Boolean = true,
-        val cursorCreateAt: String? = null,
+        val cursorValue: String? = null,
         val cursorId: Long? = null,
         // 선택한 스터디 및 다이어로그 상태
         val selectedStudies: Studies? = null,

@@ -83,7 +83,7 @@ class StudiesFindViewModel
 
             viewModelScope.launch {
                 getStudiesListUseCase(
-                    cursorCreatedAt = uiState.value.cursorCreateAt,
+                    cursorCreatedAt = uiState.value.cursorValue,
                     cursorId = uiState.value.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }
@@ -96,8 +96,8 @@ class StudiesFindViewModel
                     setState {
                         copy(
                             hasNext = result.hasNext,
-                            cursorCreateAt = result.cursorCreatedAt,
-                            cursorId = result.cursorId,
+                            cursorValue = result.nextCursor.cursorValue,
+                            cursorId = result.nextCursor.cursorId,
                         )
                     }
                 }
