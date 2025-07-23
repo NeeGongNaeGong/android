@@ -17,7 +17,6 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequ
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class NetworkStudyGroupDataSourceImpl
@@ -148,7 +147,7 @@ class NetworkStudyGroupDataSourceImpl
             }
 
         override fun getMyStudyGroupList(
-            cursorCreatedAt: LocalDateTime?,
+            cursorCreatedAt: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<MyStudyGroupListResponse> =

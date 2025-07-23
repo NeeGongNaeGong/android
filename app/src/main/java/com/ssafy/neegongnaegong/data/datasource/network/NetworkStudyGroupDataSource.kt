@@ -13,7 +13,6 @@ import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupNoticeListRequ
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyGroupVoteListRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyMemberInfo
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDateTime
 
 interface NetworkStudyGroupDataSource {
     fun getMemberStudyLogsByTag(request: StudyMemberInfo): Flow<List<StudyLogByTagResponse>>
@@ -68,7 +67,7 @@ interface NetworkStudyGroupDataSource {
     fun getStudyGroupDetail(studyGroupId: Long): Flow<StudyGroupDetailResponse>
 
     fun getMyStudyGroupList(
-        cursorCreatedAt: LocalDateTime?,
+        cursorCreatedAt: String?,
         cursorId: Long?,
         size: Int,
     ): Flow<MyStudyGroupListResponse>
