@@ -119,7 +119,7 @@ interface StudyGroupApi {
 
     @DELETE("$PREFIX/{study-group-id}/withdrawal")
     suspend fun leaveStudyGroup(
-        @Query("study-group-id")studyGroupId: Long,
+        @Path("study-group-id") studyGroupId: Long,
     ): Result<ApiResponse<Unit>>
 
     companion object {
