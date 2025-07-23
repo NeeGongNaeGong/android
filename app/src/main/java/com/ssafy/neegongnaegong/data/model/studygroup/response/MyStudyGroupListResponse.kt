@@ -1,13 +1,13 @@
 package com.ssafy.neegongnaegong.data.model.studygroup.response
 
+import com.ssafy.neegongnaegong.data.model.cursor.NextCursorData
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class MyStudyGroupListResponse(
     val content: List<MyStudyGroupResponse>,
     val hasNext: Boolean,
-    val cursorCreatedAt: LocalDateTime,
-    val cursorId: Long,
+    val nextCursor: NextCursorData,
 ) {
     data class MyStudyGroupResponse(
         val id: Long,

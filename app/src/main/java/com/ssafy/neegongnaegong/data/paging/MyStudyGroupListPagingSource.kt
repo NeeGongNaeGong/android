@@ -4,16 +4,15 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
 import com.ssafy.neegongnaegong.data.mapper.studygroup.MyStudyGroupListMapper.toDomain
-import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyGroupVoteHistoryInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studygroup.response.MyStudyGroupListResponse
-import com.ssafy.neegongnaegong.domain.model.studygroup.CursorSliceKey
+import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupCursorSliceKey
 import com.ssafy.neegongnaegong.domain.model.studygroup.MyStudyGroupInfo
 import kotlinx.coroutines.flow.first
 
 class MyStudyGroupListPagingSource(
     private val dataSource: NetworkStudyGroupDataSource,
-) : PagingSource<CursorSliceKey, MyStudyGroupInfo>() {
-    override suspend fun load(params: LoadParams<CursorSliceKey>): LoadResult<CursorSliceKey, MyStudyGroupInfo> {
+) : PagingSource<MyStudyGroupCursorSliceKey, MyStudyGroupInfo>() {
+    override suspend fun load(params: LoadParams<MyStudyGroupCursorSliceKey>): LoadResult<MyStudyGroupCursorSliceKey, MyStudyGroupInfo> {
         return try {
             val cursor = params.key
 
@@ -32,7 +31,7 @@ class MyStudyGroupListPagingSource(
                 prevKey = null,
                 nextKey =
                     if (response.hasNext) {
-                        CursorSliceKey(response.cursorCreatedAt, response.cursorId)
+                        MyStudyGroupCursorSliceKey(response.nextCursor.cursorValue, response.nextCursor.cursorId)
                     } else {
                         null
                     },
@@ -42,9 +41,9 @@ class MyStudyGroupListPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<CursorSliceKey, MyStudyGroupInfo>): CursorSliceKey? {
+    override fun getRefreshKey(state: PagingState<MyStudyGroupCursorSliceKey, MyStudyGroupInfo>): MyStudyGroupCursorSliceKey? {
         return state.firstItemOrNull()?.let {
-            CursorSliceKey(it.cursorCreatedAt, it.cursorId)
+            MyStudyGroupCursorSliceKey(it.cursorCreatedAt.toString(), it.cursorId)
         }
     }
 }
