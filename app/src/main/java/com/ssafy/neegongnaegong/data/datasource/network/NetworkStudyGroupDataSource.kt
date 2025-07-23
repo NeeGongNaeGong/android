@@ -72,4 +72,6 @@ interface NetworkStudyGroupDataSource {
         cursorId: Long?,
         size: Int,
     ): Flow<MyStudyGroupListResponse>
+
+    fun leaveStudyGroup(studyGroupId: Long): Flow<Unit>
 }

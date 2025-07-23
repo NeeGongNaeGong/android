@@ -159,4 +159,9 @@ class NetworkStudyGroupDataSourceImpl
                     size = size,
                 )
             }
+
+        override fun leaveStudyGroup(studyGroupId: Long): Flow<Unit> =
+            apiFlow {
+                api.leaveStudyGroup(studyGroupId)
+            }
     }
