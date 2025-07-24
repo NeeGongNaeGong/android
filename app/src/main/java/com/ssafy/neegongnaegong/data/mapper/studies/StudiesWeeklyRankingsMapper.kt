@@ -5,7 +5,6 @@ import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRank
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesWeeklyRankingsResponse
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesWeeklyRankings
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
-import com.ssafy.neegongnaegong.presentation.util.TimeUnit
 
 internal object StudiesWeeklyRankingsMapper {
     fun GetStudiesWeeklyRankingsMemberResponse.toDomain() =
@@ -13,7 +12,7 @@ internal object StudiesWeeklyRankingsMapper {
             userId = userId,
             name = name,
             profileImageUrl = profileImageUrl,
-            studyTimeSeconds = studyTimeSeconds * TimeUnit.MINUTE.seconds, // TODO : (가중치 적용)
+            studyTimeSeconds = studyTimeSeconds,
         )
 
     fun List<GetStudiesWeeklyRankingsMemberResponse>.toDomain() = map { it.toDomain() }
