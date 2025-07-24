@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkStudyGroupDataSource
 import com.ssafy.neegongnaegong.data.mapper.studygroup.StudyContentInfoMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studygroup.response.StudyContentResponse
-import com.ssafy.neegongnaegong.domain.model.studygroup.CursorSliceKey
+import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentCursorSliceKey
 import com.ssafy.neegongnaegong.domain.model.studygroup.MemberStudyContentsRequest
 import com.ssafy.neegongnaegong.domain.model.studygroup.StudyContentInfo
 import kotlinx.coroutines.flow.first
@@ -14,15 +14,17 @@ class MemberStudyContentsPagingSource(
     private val dataSource: NetworkStudyGroupDataSource,
     private val studyGroupId: Long,
     private val userId: Long,
-) : PagingSource<CursorSliceKey, StudyContentInfo>() {
-    override suspend fun load(params: LoadParams<CursorSliceKey>): LoadResult<CursorSliceKey, StudyContentInfo> {
+) : PagingSource<MemberStudyContentCursorSliceKey, StudyContentInfo>() {
+    override suspend fun load(
+        params: LoadParams<MemberStudyContentCursorSliceKey>,
+    ): LoadResult<MemberStudyContentCursorSliceKey, StudyContentInfo> {
         return try {
             val cursor = params.key
             val request =
                 MemberStudyContentsRequest(
                     studyGroupId = studyGroupId,
                     userId = userId,
-                    cursorCreatedAt = cursor?.cursorCreatedAt,
+                    cursorValue = cursor?.cursorValue,
                     cursorId = cursor?.cursorId,
                 )
             val response = dataSource.getMemberStudyContents(request).first()
@@ -32,7 +34,7 @@ class MemberStudyContentsPagingSource(
                 prevKey = null,
                 nextKey =
                     if (response.hasNext) {
-                        CursorSliceKey(response.cursorCreatedAt, response.cursorId)
+                        MemberStudyContentCursorSliceKey(response.nextCursor.cursorValue, response.nextCursor.cursorId)
                     } else {
                         null
                     },
@@ -42,7 +44,7 @@ class MemberStudyContentsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<CursorSliceKey, StudyContentInfo>): CursorSliceKey? {
+    override fun getRefreshKey(state: PagingState<MemberStudyContentCursorSliceKey, StudyContentInfo>): MemberStudyContentCursorSliceKey? {
         /**
          * 현재 보고있는 부분의 Page 데이터의 맨 앞의 키를 바탕으로 다시 갱신
          * 현재 보여지고 있는 부분의 데이터를 갱신하는데 가장 확실한 방법일 것 같아서
@@ -54,7 +56,7 @@ class MemberStudyContentsPagingSource(
             state.closestPageToPosition(anchorPosition)?.let { page ->
                 page.data.first().let { item ->
                     item.let {
-                        CursorSliceKey(it.cursorCreatedAt, it.cursorId)
+                        MemberStudyContentCursorSliceKey(it.cursorCreatedAt.toString(), it.cursorId)
                     }
                 }
             }

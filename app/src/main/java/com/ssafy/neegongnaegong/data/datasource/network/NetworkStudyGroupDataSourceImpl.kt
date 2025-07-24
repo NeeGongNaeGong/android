@@ -34,7 +34,7 @@ class NetworkStudyGroupDataSourceImpl
                 api.getMemberStudyContents(
                     request.studyGroupId,
                     request.userId,
-                    request.cursorCreatedAt,
+                    request.cursorValue,
                     request.cursorId,
                     request.size,
                 )

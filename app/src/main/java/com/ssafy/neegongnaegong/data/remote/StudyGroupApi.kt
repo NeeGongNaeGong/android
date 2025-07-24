@@ -34,7 +34,7 @@ interface StudyGroupApi {
     suspend fun getMemberStudyContents(
         @Path("study-group-id") studyGroupId: Long,
         @Path("user-id") userId: Long,
-        @Query("cursor-created-at") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-value") cursorCreatedAt: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<MemberWeeklyStudyContentBySliceResponse>>
