@@ -144,8 +144,8 @@ class StudiesDetailViewModel
             viewModelScope.launch {
                 getStudiesWeeklyRankingsUseCase(
                     studyGroupId = studyGroupId,
-                    cursorStudyTime = uiState.value.weeklyNextCursor?.cursorValue?.toLong(),
-                    cursorUserId = uiState.value.weeklyNextCursor?.cursorId,
+                    cursorValue = uiState.value.weeklyNextCursor?.cursorValue,
+                    cursorId = uiState.value.weeklyNextCursor?.cursorId,
                     firstPageRequestedAt = null,
                 ).withLoading {
                     setState { copy(isLoading = it) }

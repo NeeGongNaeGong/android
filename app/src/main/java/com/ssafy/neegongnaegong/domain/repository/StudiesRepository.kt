@@ -92,8 +92,8 @@ interface StudiesRepository {
 
     fun getStudiesWeeklyRankings(
         studyGroupId: Long,
-        cursorStudyTime: Long?,
-        cursorUserId: Long?,
+        cursorValue: String?,
+        cursorId: Long?,
         firstPageRequestedAt: LocalDateTime?,
         size: Int,
     ): Flow<CursorStudiesWeeklyRankings>

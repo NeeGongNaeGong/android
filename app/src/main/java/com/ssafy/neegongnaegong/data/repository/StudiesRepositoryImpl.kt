@@ -212,16 +212,16 @@ class StudiesRepositoryImpl
 
         override fun getStudiesWeeklyRankings(
             studyGroupId: Long,
-            cursorStudyTime: Long?,
-            cursorUserId: Long?,
+            cursorValue: String?,
+            cursorId: Long?,
             firstPageRequestedAt: LocalDateTime?,
             size: Int,
         ): Flow<CursorStudiesWeeklyRankings> =
             dataSource
                 .getStudiesWeeklyRankings(
                     studyGroupId = studyGroupId,
-                    cursorStudyTime = cursorStudyTime,
-                    cursorUserId = cursorUserId,
+                    cursorValue = cursorValue,
+                    cursorId = cursorId,
                     firstPageRequestedAt = firstPageRequestedAt,
                     size = size,
                 ).map { getStudiesWeeklyRankingsResponse: GetStudiesWeeklyRankingsResponse -> getStudiesWeeklyRankingsResponse.toDomain() }
