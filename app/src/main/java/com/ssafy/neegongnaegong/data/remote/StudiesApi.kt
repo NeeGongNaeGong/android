@@ -129,7 +129,7 @@ interface StudiesApi {
     @GET("$PREFIX/{study-group-id}/feeds")
     suspend fun getStudiesFeeds(
         @Path("study-group-id") studyGroupId: Long,
-        @Query("cursor-created-at") cursorCreatedAt: String?,
+        @Query("cursor-value") cursorValue: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesFeedsResponse>>

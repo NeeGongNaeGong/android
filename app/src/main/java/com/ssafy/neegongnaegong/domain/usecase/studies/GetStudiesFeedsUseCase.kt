@@ -10,12 +10,12 @@ class GetStudiesFeedsUseCase
     ) {
         operator fun invoke(
             studyGroupId: Long,
-            cursorCreatedAt: String?,
+            cursorValue: String?,
             cursorId: Long?,
             size: Int = 10,
         ) = repository.getStudiesFeeds(
             studyGroupId = studyGroupId,
-            cursorCreatedAt = cursorCreatedAt,
+            cursorValue = cursorValue,
             cursorId = cursorId,
             size = size,
         )

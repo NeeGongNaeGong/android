@@ -77,7 +77,7 @@ interface NetworkStudiesDataSource {
 
     fun getStudiesFeeds(
         studyGroupId: Long,
-        cursorCreatedAt: String?,
+        cursorValue: String?,
         cursorId: Long?,
         size: Int,
     ): Flow<GetStudiesFeedsResponse>

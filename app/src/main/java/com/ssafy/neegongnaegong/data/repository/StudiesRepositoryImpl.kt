@@ -197,14 +197,14 @@ class StudiesRepositoryImpl
 
         override fun getStudiesFeeds(
             studyGroupId: Long,
-            cursorCreatedAt: String?,
+            cursorValue: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<CursorStudiesFeeds> =
             dataSource
                 .getStudiesFeeds(
                     studyGroupId = studyGroupId,
-                    cursorCreatedAt = cursorCreatedAt,
+                    cursorValue = cursorValue,
                     cursorId = cursorId,
                     size = size,
                 ).map { it.toDomain() }

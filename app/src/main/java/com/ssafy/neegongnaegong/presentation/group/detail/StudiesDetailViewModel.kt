@@ -123,7 +123,7 @@ class StudiesDetailViewModel
             viewModelScope.launch {
                 getStudiesFeedsUseCase(
                     studyGroupId = studyGroupId,
-                    cursorCreatedAt = uiState.value.feedsNextCursor?.cursorValue,
+                    cursorValue = uiState.value.feedsNextCursor?.cursorValue,
                     cursorId = uiState.value.feedsNextCursor?.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }

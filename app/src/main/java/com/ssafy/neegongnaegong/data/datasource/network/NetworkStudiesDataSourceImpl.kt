@@ -153,14 +153,14 @@ class NetworkStudiesDataSourceImpl
 
         override fun getStudiesFeeds(
             studyGroupId: Long,
-            cursorCreatedAt: String?,
+            cursorValue: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<GetStudiesFeedsResponse> =
             apiFlow {
                 studiesApi.getStudiesFeeds(
                     studyGroupId = studyGroupId,
-                    cursorCreatedAt = cursorCreatedAt,
+                    cursorValue = cursorValue,
                     cursorId = cursorId,
                     size = size,
                 )
