@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.data.mapper.studies
 
+import com.ssafy.neegongnaegong.data.mapper.cursor.CursorMapper.toDomain
 import com.ssafy.neegongnaegong.data.model.studies.response.GetStudiesApplicationsMembersResponse
 import com.ssafy.neegongnaegong.data.model.studies.response.StudiesApplicationsMemberResponse
 import com.ssafy.neegongnaegong.domain.model.studies.CursorStudiesApplications
@@ -21,6 +22,6 @@ internal object StudiesApplicationsMapper {
         CursorStudiesApplications(
             content = content.map { it.toDomain() },
             hasNext = hasNext,
-            cursorId = cursorId,
+            nextCursor = nextCursor.toDomain(),
         )
 }

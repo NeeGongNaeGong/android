@@ -47,8 +47,13 @@ class StudiesWaitingToJoinViewModel
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { result ->
-                    setState { copy(applicationsList = applicationsList + result.content) }
-                    setState { copy(hasNext = result.hasNext, cursorId = result.cursorId) }
+                    setState {
+                        copy(
+                            applicationsList = applicationsList + result.content,
+                            hasNext = result.hasNext,
+                            cursorId = result.nextCursor.cursorId,
+                        )
+                    }
                 }
             }
         }
