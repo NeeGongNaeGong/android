@@ -145,9 +145,9 @@ class StudiesDetailViewModel
             viewModelScope.launch {
                 getStudiesWeeklyRankingsUseCase(
                     studyGroupId = studyGroupId,
-                    cursorStudyTime = uiState.value.weeklyRankingsCursorStudyTime,
-                    cursorUserId = uiState.value.weeklyRankingsCursorUserId,
-                    firstPageRequestedAt = uiState.value.weeklyRankingsFirstPageRequestedAt,
+                    cursorStudyTime = uiState.value.weeklyNextCursor?.cursorValue?.toLong(),
+                    cursorUserId = uiState.value.weeklyNextCursor?.cursorId,
+                    firstPageRequestedAt = null,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { rankings ->
@@ -155,9 +155,7 @@ class StudiesDetailViewModel
                         copy(
                             weeklyRankings = weeklyRankings + rankings.content,
                             weeklyRankingsHasNext = rankings.hasNext,
-                            weeklyRankingsCursorStudyTime = rankings.cursorTimeSeconds,
-                            weeklyRankingsCursorUserId = rankings.cursorUserId,
-                            weeklyRankingsFirstPageRequestedAt = rankings.baseTime,
+                            weeklyNextCursor = rankings.nextCursor,
                         )
                     }
                 }

@@ -1,5 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.detail
 
+import com.ssafy.neegongnaegong.domain.model.cursor.NextCursorDomain
 import com.ssafy.neegongnaegong.domain.model.learning.LearningRecord
 import com.ssafy.neegongnaegong.domain.model.studies.StudiesLatestContent
 import com.ssafy.neegongnaegong.domain.model.studies.WeeklyRankingsMember
@@ -88,9 +89,7 @@ class StudiesDetailContract {
         // weekly-rankings
         val weeklyRankings: List<WeeklyRankingsMember> = emptyList(),
         val weeklyRankingsHasNext: Boolean = true,
-        val weeklyRankingsCursorStudyTime: Long? = null,
-        val weeklyRankingsCursorUserId: Long? = null,
-        val weeklyRankingsFirstPageRequestedAt: LocalDateTime? = null,
+        val weeklyNextCursor: NextCursorDomain? = null,
         // latest-contents
         val latestNotice: StudiesLatestContent.LatestNotice? = null,
         val latestNoticeReadChecked: Boolean = false,
