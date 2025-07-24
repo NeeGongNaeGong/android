@@ -153,7 +153,7 @@ class NetworkStudiesDataSourceImpl
 
         override fun getStudiesFeeds(
             studyGroupId: Long,
-            cursorCreatedAt: LocalDateTime?,
+            cursorCreatedAt: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<GetStudiesFeedsResponse> =

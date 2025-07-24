@@ -11,7 +11,6 @@ import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class StudiesDetailContract {
     sealed interface Event : UiEvent {
@@ -84,8 +83,7 @@ class StudiesDetailContract {
         // feed
         val feeds: List<LearningRecord> = emptyList(),
         val feedsHasNext: Boolean = true,
-        val feedsCursorCreatedAt: LocalDateTime? = null,
-        val feedsCursorId: Long? = null,
+        val feedsNextCursor: NextCursorDomain? = null,
         // weekly-rankings
         val weeklyRankings: List<WeeklyRankingsMember> = emptyList(),
         val weeklyRankingsHasNext: Boolean = true,

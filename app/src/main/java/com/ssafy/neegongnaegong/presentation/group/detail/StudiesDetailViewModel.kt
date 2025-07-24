@@ -123,8 +123,8 @@ class StudiesDetailViewModel
             viewModelScope.launch {
                 getStudiesFeedsUseCase(
                     studyGroupId = studyGroupId,
-                    cursorCreatedAt = uiState.value.feedsCursorCreatedAt,
-                    cursorId = uiState.value.feedsCursorId,
+                    cursorCreatedAt = uiState.value.feedsNextCursor?.cursorValue,
+                    cursorId = uiState.value.feedsNextCursor?.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { feed ->
@@ -132,8 +132,7 @@ class StudiesDetailViewModel
                         copy(
                             feeds = feeds + feed.content,
                             feedsHasNext = feed.hasNext,
-                            feedsCursorCreatedAt = feed.cursorCreatedAt,
-                            feedsCursorId = feed.cursorId,
+                            feedsNextCursor = feed.nextCursor,
                         )
                     }
                 }
