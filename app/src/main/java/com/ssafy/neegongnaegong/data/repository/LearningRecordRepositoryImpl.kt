@@ -61,7 +61,7 @@ class LearningRecordRepositoryImpl
         override suspend fun getLearningRecordList(
             tag: List<Long>?,
             targetDate: String?,
-            cursorCreatedAt: String?,
+            cursorValue: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<CursorSliceResponse> =
@@ -71,7 +71,7 @@ class LearningRecordRepositoryImpl
                         GetLearningRecordListRequest(
                             tag = tag,
                             targetDate = targetDate,
-                            cursorCreatedAt = cursorCreatedAt,
+                            cursorValue = cursorValue,
                             cursorId = cursorId,
                             size = size,
                         ),
@@ -79,8 +79,7 @@ class LearningRecordRepositoryImpl
                         CursorSliceResponse(
                             content = slice.content,
                             hasNext = slice.hasNext,
-                            cursorCreatedAt = slice.cursorCreatedAt,
-                            cursorId = slice.cursorId,
+                            nextCursor = slice.nextCursor,
                         )
                     }
             }

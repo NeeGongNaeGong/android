@@ -37,7 +37,7 @@ class NetworkLearningRecordDataSourceImpl
                 api.getLearningRecordList(
                     tag = request.tag,
                     targetDate = request.targetDate,
-                    cursorCreatedAt = request.cursorCreatedAt,
+                    cursorValue = request.cursorValue,
                     cursorId = request.cursorId,
                     size = request.size,
                 )
