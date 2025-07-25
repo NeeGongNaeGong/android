@@ -85,15 +85,15 @@ interface StudiesRepository {
 
     fun getStudiesFeeds(
         studyGroupId: Long,
-        cursorCreatedAt: LocalDateTime?,
+        cursorValue: String?,
         cursorId: Long?,
         size: Int,
     ): Flow<CursorStudiesFeeds>
 
     fun getStudiesWeeklyRankings(
         studyGroupId: Long,
-        cursorStudyTime: Long?,
-        cursorUserId: Long?,
+        cursorValue: String?,
+        cursorId: Long?,
         firstPageRequestedAt: LocalDateTime?,
         size: Int,
     ): Flow<CursorStudiesWeeklyRankings>

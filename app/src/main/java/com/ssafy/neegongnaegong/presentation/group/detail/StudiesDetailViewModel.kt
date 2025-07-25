@@ -123,8 +123,8 @@ class StudiesDetailViewModel
             viewModelScope.launch {
                 getStudiesFeedsUseCase(
                     studyGroupId = studyGroupId,
-                    cursorCreatedAt = uiState.value.feedsCursorCreatedAt,
-                    cursorId = uiState.value.feedsCursorId,
+                    cursorValue = uiState.value.feedsNextCursor?.cursorValue,
+                    cursorId = uiState.value.feedsNextCursor?.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { feed ->
@@ -132,8 +132,7 @@ class StudiesDetailViewModel
                         copy(
                             feeds = feeds + feed.content,
                             feedsHasNext = feed.hasNext,
-                            feedsCursorCreatedAt = feed.cursorCreatedAt,
-                            feedsCursorId = feed.cursorId,
+                            feedsNextCursor = feed.nextCursor,
                         )
                     }
                 }
@@ -145,9 +144,9 @@ class StudiesDetailViewModel
             viewModelScope.launch {
                 getStudiesWeeklyRankingsUseCase(
                     studyGroupId = studyGroupId,
-                    cursorStudyTime = uiState.value.weeklyRankingsCursorStudyTime,
-                    cursorUserId = uiState.value.weeklyRankingsCursorUserId,
-                    firstPageRequestedAt = uiState.value.weeklyRankingsFirstPageRequestedAt,
+                    cursorValue = uiState.value.weeklyNextCursor?.cursorValue,
+                    cursorId = uiState.value.weeklyNextCursor?.cursorId,
+                    firstPageRequestedAt = null,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { rankings ->
@@ -155,9 +154,7 @@ class StudiesDetailViewModel
                         copy(
                             weeklyRankings = weeklyRankings + rankings.content,
                             weeklyRankingsHasNext = rankings.hasNext,
-                            weeklyRankingsCursorStudyTime = rankings.cursorTimeSeconds,
-                            weeklyRankingsCursorUserId = rankings.cursorUserId,
-                            weeklyRankingsFirstPageRequestedAt = rankings.baseTime,
+                            weeklyNextCursor = rankings.nextCursor,
                         )
                     }
                 }

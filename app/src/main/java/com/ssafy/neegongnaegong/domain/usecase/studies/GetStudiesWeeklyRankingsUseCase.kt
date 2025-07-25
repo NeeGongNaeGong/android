@@ -11,14 +11,14 @@ class GetStudiesWeeklyRankingsUseCase
     ) {
         operator fun invoke(
             studyGroupId: Long,
-            cursorStudyTime: Long?,
-            cursorUserId: Long?,
+            cursorValue: String?,
+            cursorId: Long?,
             firstPageRequestedAt: LocalDateTime?,
             size: Int = 10,
         ) = repository.getStudiesWeeklyRankings(
             studyGroupId = studyGroupId,
-            cursorStudyTime = cursorStudyTime,
-            cursorUserId = cursorUserId,
+            cursorValue = cursorValue,
+            cursorId = cursorId,
             firstPageRequestedAt = firstPageRequestedAt,
             size = size,
         )

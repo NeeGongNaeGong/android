@@ -129,7 +129,7 @@ interface StudiesApi {
     @GET("$PREFIX/{study-group-id}/feeds")
     suspend fun getStudiesFeeds(
         @Path("study-group-id") studyGroupId: Long,
-        @Query("cursor-created-at") cursorCreatedAt: LocalDateTime?,
+        @Query("cursor-value") cursorValue: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesFeedsResponse>>
@@ -137,8 +137,8 @@ interface StudiesApi {
     @GET("$PREFIX/{study-group-id}/members/weekly-rankings")
     suspend fun getStudiesWeeklyRankings(
         @Path("study-group-id") studyGroupId: Long,
-        @Query("cursor-study-time") cursorStudyTime: Long?,
-        @Query("cursor-user-id") cursorUserId: Long?,
+        @Query("cursor-value") cursorValue: String?,
+        @Query("cursor-id") cursorId: Long?,
         @Query("first-page-requested-at") firstPageRequestedAt: LocalDateTime?,
         @Query("size") size: Int,
     ): Result<ApiResponse<GetStudiesWeeklyRankingsResponse>>

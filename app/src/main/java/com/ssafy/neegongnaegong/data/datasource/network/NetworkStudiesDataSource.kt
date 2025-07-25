@@ -77,15 +77,15 @@ interface NetworkStudiesDataSource {
 
     fun getStudiesFeeds(
         studyGroupId: Long,
-        cursorCreatedAt: LocalDateTime?,
+        cursorValue: String?,
         cursorId: Long?,
         size: Int,
     ): Flow<GetStudiesFeedsResponse>
 
     fun getStudiesWeeklyRankings(
         studyGroupId: Long,
-        cursorStudyTime: Long?,
-        cursorUserId: Long?,
+        cursorValue: String?,
+        cursorId: Long?,
         firstPageRequestedAt: LocalDateTime?,
         size: Int,
     ): Flow<GetStudiesWeeklyRankingsResponse>

@@ -153,14 +153,14 @@ class NetworkStudiesDataSourceImpl
 
         override fun getStudiesFeeds(
             studyGroupId: Long,
-            cursorCreatedAt: LocalDateTime?,
+            cursorValue: String?,
             cursorId: Long?,
             size: Int,
         ): Flow<GetStudiesFeedsResponse> =
             apiFlow {
                 studiesApi.getStudiesFeeds(
                     studyGroupId = studyGroupId,
-                    cursorCreatedAt = cursorCreatedAt,
+                    cursorValue = cursorValue,
                     cursorId = cursorId,
                     size = size,
                 )
@@ -168,16 +168,16 @@ class NetworkStudiesDataSourceImpl
 
         override fun getStudiesWeeklyRankings(
             studyGroupId: Long,
-            cursorStudyTime: Long?,
-            cursorUserId: Long?,
+            cursorValue: String?,
+            cursorId: Long?,
             firstPageRequestedAt: LocalDateTime?,
             size: Int,
         ): Flow<GetStudiesWeeklyRankingsResponse> =
             apiFlow {
                 studiesApi.getStudiesWeeklyRankings(
                     studyGroupId = studyGroupId,
-                    cursorStudyTime = cursorStudyTime,
-                    cursorUserId = cursorUserId,
+                    cursorValue = cursorValue,
+                    cursorId = cursorId,
                     firstPageRequestedAt = firstPageRequestedAt,
                     size = size,
                 )

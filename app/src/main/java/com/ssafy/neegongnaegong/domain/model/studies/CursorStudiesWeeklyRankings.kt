@@ -1,11 +1,9 @@
 package com.ssafy.neegongnaegong.domain.model.studies
 
-import java.time.LocalDateTime
+import com.ssafy.neegongnaegong.domain.model.cursor.NextCursorDomain
 
 data class CursorStudiesWeeklyRankings(
     val content: List<WeeklyRankingsMember>,
     val hasNext: Boolean,
-    val cursorTimeSeconds: Long,
-    val cursorUserId: Long,
-    val baseTime: LocalDateTime,
+    val nextCursor: NextCursorDomain,
 )
