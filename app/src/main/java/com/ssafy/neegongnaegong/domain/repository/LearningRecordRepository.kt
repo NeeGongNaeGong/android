@@ -22,7 +22,7 @@ interface LearningRecordRepository {
     suspend fun getLearningRecordList(
         tag: List<Long>? = null,
         targetDate: String? = null,
-        cursorCreatedAt: String? = null,
+        cursorValue: String? = null,
         cursorId: Long? = null,
         size: Int = 20,
     ): Flow<CursorSliceResponse>

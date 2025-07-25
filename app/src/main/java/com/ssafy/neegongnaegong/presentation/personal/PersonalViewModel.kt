@@ -153,8 +153,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByTag = result.content.toDomain().toImmutableList(),
                                 hasTagDataNext = result.hasNext,
-                                tagCursorId = result.cursorId,
-                                tagCursorCreatedAt = result.cursorCreatedAt,
+                                tagCursorId = result.nextCursor.cursorId,
+                                tagCursorValue = result.nextCursor.cursorValue,
                             )
                         }
                     }
@@ -168,8 +168,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByDate = result.content.toDomain().toImmutableList(),
                                 hasDateDataNext = result.hasNext,
-                                dateCursorId = result.cursorId,
-                                dateCursorCreatedAt = result.cursorCreatedAt,
+                                dateCursorId = result.nextCursor.cursorId,
+                                dateCursorValue = result.nextCursor.cursorValue,
                             )
                         }
                     }
@@ -187,7 +187,7 @@ class PersonalViewModel
                     getLearningRecordListUseCase(
                         tag = uiState.value.tags.map { it.id },
                         cursorId = state.tagCursorId,
-                        cursorCreatedAt = state.tagCursorCreatedAt,
+                        cursorValue = state.tagCursorValue,
                     ).safeCollect { result ->
                         setState {
                             val newRecords = result.content.toDomain()
@@ -199,8 +199,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByTag = updatedList,
                                 hasTagDataNext = result.hasNext,
-                                tagCursorId = result.cursorId,
-                                tagCursorCreatedAt = result.cursorCreatedAt,
+                                tagCursorId = result.nextCursor.cursorId,
+                                tagCursorValue = result.nextCursor.cursorValue,
                             )
                         }
                     }
@@ -208,7 +208,7 @@ class PersonalViewModel
                     getLearningRecordListUseCase(
                         targetDate = uiState.value.selectedDate,
                         cursorId = state.dateCursorId,
-                        cursorCreatedAt = state.dateCursorCreatedAt,
+                        cursorValue = state.dateCursorValue,
                     ).safeCollect { result ->
                         setState {
                             val newRecords = result.content.toDomain()
@@ -220,8 +220,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByDate = updatedList,
                                 hasDateDataNext = result.hasNext,
-                                dateCursorId = result.cursorId,
-                                dateCursorCreatedAt = result.cursorCreatedAt,
+                                dateCursorId = result.nextCursor.cursorId,
+                                dateCursorValue = result.nextCursor.cursorValue,
                             )
                         }
                     }

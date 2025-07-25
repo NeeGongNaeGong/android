@@ -10,14 +10,14 @@ class GetLearningRecordListUseCase(
     suspend operator fun invoke(
         tag: List<Long>? = null,
         targetDate: String? = null,
-        cursorCreatedAt: String? = null,
+        cursorValue: String? = null,
         cursorId: Long? = null,
-        size: Int = 30,
+        size: Int = 10,
     ): Flow<CursorSliceResponse> =
         repository.getLearningRecordList(
             tag = tag,
             targetDate = targetDate,
-            cursorCreatedAt = cursorCreatedAt,
+            cursorValue = cursorValue,
             cursorId = cursorId,
             size = size,
         )

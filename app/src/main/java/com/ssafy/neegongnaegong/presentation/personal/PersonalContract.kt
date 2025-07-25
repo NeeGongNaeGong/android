@@ -92,11 +92,11 @@ class PersonalContract {
         // api tag
         val hasTagDataNext: Boolean = false,
         val tagCursorId: Long? = null,
-        val tagCursorCreatedAt: String? = null,
+        val tagCursorValue: String? = null,
         // api date
         val hasDateDataNext: Boolean = false,
         val dateCursorId: Long? = null,
-        val dateCursorCreatedAt: String? = null,
+        val dateCursorValue: String? = null,
         // delete selected
         val isSelectedMode: Boolean = false,
         val deleteSelectedRecordIds: Set<Long> = emptySet(),
