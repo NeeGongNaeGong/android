@@ -19,7 +19,6 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.LocalDateTime
 
 interface StudyGroupApi {
     // 해당 유저의 주간 태그별 학습시간을 반환하는 함수
@@ -42,7 +41,7 @@ interface StudyGroupApi {
     @GET("$PREFIX/vote/{study-group-id}")
     suspend fun getStudyGroupVoteList(
         @Path("study-group-id") studyGroupId: Long,
-        @Query("cursor-time") cursorTime: LocalDateTime?,
+        @Query("cursor-value") cursorValue: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,
     ): Result<ApiResponse<StudyGroupVoteListBySliceResponse>>

@@ -1,10 +1,9 @@
 package com.ssafy.neegongnaegong.data.model.studygroup.response
 
-import java.time.LocalDateTime
+import com.ssafy.neegongnaegong.data.model.cursor.NextCursorData
 
 data class StudyGroupVoteListBySliceResponse(
     val content: List<StudyGroupVoteHistoryResponse>,
     val hasNext: Boolean,
-    val cursorCreatedAt: LocalDateTime,
-    val cursorId: Long,
+    val nextCursor: NextCursorData,
 )

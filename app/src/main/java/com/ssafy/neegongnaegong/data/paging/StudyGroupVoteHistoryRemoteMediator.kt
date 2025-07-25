@@ -45,8 +45,8 @@ class StudyGroupVoteHistoryRemoteMediator
                     dataSource.getStudyGroupVoteList(
                         StudyGroupVoteListRequest(
                             studyGroupId = studyGroupId,
-                            cursorId = remoteKey?.cursorId,
-                            cursorTime = remoteKey?.cursorTime,
+                            cursorId = remoteKey?.nextCursor?.cursorId,
+                            cursorValue = remoteKey?.nextCursor?.cursorValue,
                         ),
                     ).first()
 
@@ -61,8 +61,7 @@ class StudyGroupVoteHistoryRemoteMediator
                     remoteKeyDao.insertOrReplace(
                         StudyGroupVoteHistoryRemoteKey(
                             studyGroupId = studyGroupId,
-                            cursorTime = response.cursorCreatedAt,
-                            cursorId = response.cursorId,
+                            nextCursor = response.nextCursor,
                         ),
                     )
 

@@ -7,6 +7,7 @@ import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationDataSou
 import com.ssafy.neegongnaegong.data.local.database.dao.LocalNotificationRemoteKeyDataSource
 import com.ssafy.neegongnaegong.data.local.database.migration.MigrationFrom1To2
 import com.ssafy.neegongnaegong.data.local.database.migration.MigrationFrom3To4
+import com.ssafy.neegongnaegong.data.local.database.migration.MigrationFrom4To5
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +29,7 @@ object DBModule {
                 klass = NeeGongNaeGongDatabase::class.java,
                 name = "neegongnaegong.db",
             )
-            .addMigrations(MigrationFrom1To2(), MigrationFrom3To4())
+            .addMigrations(MigrationFrom1To2(), MigrationFrom3To4(), MigrationFrom4To5())
             .build()
 
     @Singleton
