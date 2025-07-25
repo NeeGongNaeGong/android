@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationEntity
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKeyEntity
+import com.ssafy.neegongnaegong.data.model.cursor.NextCursorData
 import com.ssafy.neegongnaegong.data.model.notification.GetNotificationResponse
 import com.ssafy.neegongnaegong.data.model.notification.NotificationRemoteType
 import com.ssafy.neegongnaegong.domain.model.notification.Notification
@@ -13,13 +14,16 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 internal object NotificationMapper {
-    fun GetNotificationResponse.toKey(cursorId: Long?) =
+    fun GetNotificationResponse.toKey(cursorId: NextCursorData?) =
         NotificationRemoteKeyEntity(
             id = id,
             nextCursor = cursorId,
         )
 
-    fun List<GetNotificationResponse>.toKey(cursorId: Long?): List<NotificationRemoteKeyEntity> = map { it.toKey(cursorId = cursorId) }
+    fun List<GetNotificationResponse>.toKey(cursorId: NextCursorData?): List<NotificationRemoteKeyEntity> =
+        map {
+            it.toKey(cursorId = cursorId)
+        }
 
     fun GetNotificationResponse.toEntity() =
         NotificationEntity(
