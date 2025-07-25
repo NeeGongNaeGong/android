@@ -29,7 +29,7 @@ class StudyGroupNoticeListPagingSource(
                 prevKey = null,
                 nextKey =
                     if (response.hasNext) {
-                        response.cursorId
+                        response.nextCursor.cursorId
                     } else {
                         null
                     },
