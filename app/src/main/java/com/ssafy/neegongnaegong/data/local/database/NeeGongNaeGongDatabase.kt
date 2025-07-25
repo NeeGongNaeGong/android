@@ -21,7 +21,8 @@ import com.ssafy.neegongnaegong.data.local.database.entity.StudyGroupVoteHistory
         StudyGroupVoteHistory::class,
         StudyGroupVoteHistoryRemoteKey::class,
     ],
-    version = 3,
+    version = 4,
+    exportSchema = true,
     autoMigrations = [
         // 투표 목록 저장하는 Table 생성
         AutoMigration(from = 2, to = 3),

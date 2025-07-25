@@ -14,6 +14,7 @@ import com.ssafy.neegongnaegong.data.local.database.data.NotificationMapper.toEn
 import com.ssafy.neegongnaegong.data.local.database.data.NotificationMapper.toKey
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationEntity
 import com.ssafy.neegongnaegong.data.local.database.entity.NotificationRemoteKeyEntity
+import com.ssafy.neegongnaegong.data.model.cursor.NextCursorData
 import com.ssafy.neegongnaegong.data.model.notification.NotificationPage
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -34,7 +35,7 @@ class NotificationRemoteMediator
             loadType: LoadType,
             state: PagingState<Int, NotificationEntity>,
         ): MediatorResult {
-            val cursor: Long? =
+            val cursor: NextCursorData? =
                 when (loadType) {
                     LoadType.REFRESH -> null
                     LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
@@ -43,7 +44,7 @@ class NotificationRemoteMediator
                             getRemoteKeyForLastItem(state = state)
                                 ?: return MediatorResult.Success(endOfPaginationReached = false)
 
-                        val nextCursor: Long =
+                        val nextCursor =
                             remoteKey.nextCursor
                                 ?: return MediatorResult.Success(endOfPaginationReached = true)
                         nextCursor
@@ -53,7 +54,7 @@ class NotificationRemoteMediator
             return runCatching {
                 val remotePager: NotificationPage =
                     networkNotificationDataSource.getNotifications(
-                        cursorId = cursor,
+                        cursorId = cursor?.cursorId,
                         size = state.config.pageSize,
                     ).first()
                 val endOfPaginationReached: Boolean = !remotePager.hasNext
@@ -64,7 +65,7 @@ class NotificationRemoteMediator
                         localNotificationDataSource.clearAll()
                     }
 
-                    remoteKeyDao.insertAll(keys = remotePager.content.toKey(cursorId = remotePager.cursorId))
+                    remoteKeyDao.insertAll(keys = remotePager.content.toKey(cursorId = remotePager.nextCursor))
 
                     localNotificationDataSource.insertAll(notifications = remotePager.content.toEntity())
                 }
