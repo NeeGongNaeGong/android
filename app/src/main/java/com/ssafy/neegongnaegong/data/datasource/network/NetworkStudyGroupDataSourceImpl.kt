@@ -44,7 +44,7 @@ class NetworkStudyGroupDataSourceImpl
             apiFlow {
                 api.getStudyGroupVoteList(
                     studyGroupId = request.studyGroupId,
-                    cursorTime = request.cursorTime,
+                    cursorValue = request.cursorValue,
                     cursorId = request.cursorId,
                     size = request.size,
                 )
