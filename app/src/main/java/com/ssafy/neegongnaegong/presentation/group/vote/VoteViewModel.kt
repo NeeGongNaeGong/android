@@ -172,7 +172,7 @@ class VoteViewModel
                     }
                 }
 
-                VoteContract.Event.OnClickPopBackStackButton -> setEvent(VoteContract.Event.OnClickPopBackStackButton)
+                VoteContract.Event.OnClickPopBackStackButton -> setEffect { VoteContract.Effect.NavigateToBackStack }
             }
         }
     }
