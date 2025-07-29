@@ -63,12 +63,17 @@ fun VoteRoute(
                 Text(
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     text = "투표 만들기",
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             onNavigationClick = { viewModel.setEvent(VoteContract.Event.OnClickPopBackStackButton) },
             actionButtons = {
                 TextButton(
-                    enabled = uiState.voteTitle.isNotEmpty() && uiState.voteItemList.filter { it.isNotEmpty() }.isNotEmpty(),
+                    enabled =
+                        uiState.voteTitle.isNotEmpty() &&
+                            uiState.voteItemList
+                                .filter { it.isNotEmpty() }
+                                .isNotEmpty(),
                     colors =
                         ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
@@ -95,7 +100,11 @@ fun VoteRoute(
                 when (effect) {
                     VoteContract.Effect.NavigateToBackStack -> popBackStack()
 
-                    is VoteContract.Effect.NavigateToMain -> navigateToMain(effect.startIndex, effect.studyGroupId)
+                    is VoteContract.Effect.NavigateToMain ->
+                        navigateToMain(
+                            effect.startIndex,
+                            effect.studyGroupId,
+                        )
                 }
             }
         }
@@ -357,9 +366,18 @@ fun VoteOption(
             .fillMaxWidth()
             .background(NeeGongNaeGongTheme.colorScheme.gray2),
     ) {
-        OptionButton(isSelected = isMultipleSelectionEnabled, optionTitle = "복수선택") { onClickMultipleSelectionOption() }
-        OptionButton(isSelected = isAnonymousVotingEnabled, optionTitle = "익명투표") { onClickAnonymousVotingOption() }
-        OptionButton(isSelected = allowAddingSelection, optionTitle = "선택 항목 추가 허용") { onClickAllowAddingSelectionOption() }
+        OptionButton(
+            isSelected = isMultipleSelectionEnabled,
+            optionTitle = "복수선택",
+        ) { onClickMultipleSelectionOption() }
+        OptionButton(
+            isSelected = isAnonymousVotingEnabled,
+            optionTitle = "익명투표",
+        ) { onClickAnonymousVotingOption() }
+        OptionButton(
+            isSelected = allowAddingSelection,
+            optionTitle = "선택 항목 추가 허용",
+        ) { onClickAllowAddingSelectionOption() }
     }
 }
 
@@ -380,7 +398,10 @@ fun EndOption(
             .background(NeeGongNaeGongTheme.colorScheme.gray2)
             .padding(13.dp),
     ) {
-        OptionButton(isSelected = isEndDateEnabled, optionTitle = "종료 시간") { onClickEndDateOption() }
+        OptionButton(
+            isSelected = isEndDateEnabled,
+            optionTitle = "종료 시간",
+        ) { onClickEndDateOption() }
 
         Row(
             Modifier
@@ -452,16 +473,16 @@ fun LoadDialog(
                 object : SelectableDates {
                     // 오늘 이전 날짜는 선택할 수 없도록 설정
                     val today =
-                        Calendar.getInstance().apply {
-                            set(Calendar.HOUR_OF_DAY, 0)
-                            set(Calendar.MINUTE, 0)
-                            set(Calendar.SECOND, 0)
-                            set(Calendar.MILLISECOND, 0)
-                        }.timeInMillis
+                        Calendar
+                            .getInstance()
+                            .apply {
+                                set(Calendar.HOUR_OF_DAY, 0)
+                                set(Calendar.MINUTE, 0)
+                                set(Calendar.SECOND, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }.timeInMillis
 
-                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                        return utcTimeMillis >= today
-                    }
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean = utcTimeMillis >= today
 
                     override fun isSelectableYear(year: Int): Boolean {
                         val currentYear = Calendar.getInstance().get(Calendar.YEAR)

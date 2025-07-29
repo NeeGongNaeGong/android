@@ -96,6 +96,7 @@ fun ListRoute(
                         Icon(
                             imageVector = Icons.Filled.Create,
                             contentDescription = "추가 아이콘",
+                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
                         )
                     }
                 },

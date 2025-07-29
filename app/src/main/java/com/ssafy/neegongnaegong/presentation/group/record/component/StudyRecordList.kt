@@ -52,11 +52,13 @@ fun StudyRecordListBySlice(
                     val e = lazyItems.loadState.refresh as LoadState.Error
                     ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
                 }
+
             lazyItems.loadState.append is LoadState.Error ->
                 item {
                     val e = lazyItems.loadState.append as LoadState.Error
                     ErrorItem(e.error.localizedMessage.orEmpty()) { lazyItems.retry() }
                 }
+
             lazyItems.itemCount == 0 ->
                 item {
                     NoDataItem()
@@ -83,7 +85,11 @@ fun ErrorItem(
 @Composable
 fun NoDataItem() {
     Box(Modifier.fillMaxSize(), Alignment.Center) {
-        Text("아직 기록이 없습니다!")
+        Text(
+            text = "아직 기록이 없습니다!",
+            style = NeeGongNaeGongTheme.typography.bodyMedium,
+            color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+        )
     }
 }
 

@@ -39,6 +39,7 @@ fun NoticeRoute(
                 Text(
                     style = NeeGongNaeGongTheme.typography.titleSmall,
                     text = "공지 만들기",
+                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
             onNavigationClick = { viewModel.setEvent(NoticeContract.Event.OnClickPopBackStackButton) },
