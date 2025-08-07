@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.neegongnaegong.domain.usecase.studies.ApplyStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CancelApplicationsStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
+import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesSearchUseCase
 import com.ssafy.neegongnaegong.presentation.base.BaseViewModel
 import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.util.SnackbarManager
@@ -21,6 +22,7 @@ class StudiesFindViewModel
         private val getStudiesListUseCase: GetStudiesListUseCase,
         private val applyStudiesUseCase: ApplyStudiesUseCase,
         private val cancelApplyStudiesUseCase: CancelApplicationsStudiesUseCase,
+        private val getStudiesSearchUseCase: GetStudiesSearchUseCase,
     ) : BaseViewModel<StudiesFindContract.Event, StudiesFindContract.State, StudiesFindContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -73,6 +75,11 @@ class StudiesFindViewModel
 
                 is StudiesFindContract.Event.OnStudiesInfoDialogDismiss ->
                     setState { copy(isStudiesInfoDialogShow = false) }
+
+                is StudiesFindContract.Event.OnTypingSearch -> {
+                    setState { copy(searchKeyword = event.keyword) }
+                    searchStudies(searchKeyword = event.keyword)
+                }
             }
         }
 
@@ -123,6 +130,25 @@ class StudiesFindViewModel
                     }.safeCollect { result ->
                         showMessage("가입 신청이 철회되었습니다.")
                     }
+            }
+        }
+
+        private fun searchStudies(searchKeyword: String) {
+            viewModelScope.launch {
+                getStudiesSearchUseCase(
+                    searchKeyword = searchKeyword,
+                ).withLoading {
+                    setState { copy(isLoading = it) }
+                }.safeCollect { result ->
+                    setState {
+                        copy(
+                            studiesList = result.content,
+                            hasNext = result.hasNext,
+                            cursorValue = result.nextCursor.cursorValue,
+                            cursorId = result.nextCursor.cursorId,
+                        )
+                    }
+                }
             }
         }
     }

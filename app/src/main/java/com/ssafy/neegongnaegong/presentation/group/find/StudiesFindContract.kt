@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.group.user.search.UserSearchContract.Event
 
 class StudiesFindContract {
     sealed class Event : UiEvent {
@@ -32,6 +33,11 @@ class StudiesFindContract {
         data object OnStudiesInfoDialogCancel : Event()
 
         data object OnStudiesInfoDialogDismiss : Event()
+
+        // 키워드 검색
+        data class OnTypingSearch(
+            val keyword: String,
+        ) : Event()
     }
 
     data class State(
@@ -43,6 +49,8 @@ class StudiesFindContract {
         // 선택한 스터디 및 다이어로그 상태
         val selectedStudies: Studies? = null,
         val isStudiesInfoDialogShow: Boolean = false,
+        // 스터디 검색
+        val searchKeyword: String = "",
     ) : UiState
 
     sealed class Effect : UiEffect {

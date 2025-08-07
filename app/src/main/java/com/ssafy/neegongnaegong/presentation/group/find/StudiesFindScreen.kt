@@ -1,32 +1,28 @@
 package com.ssafy.neegongnaegong.presentation.group.find
 
-import androidx.compose.foundation.layout.Arrangement
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesWindow
 import com.ssafy.neegongnaegong.presentation.group.component.dialog.StudiesInfoDialog
+import com.ssafy.neegongnaegong.presentation.group.find.component.SearchTextField
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
@@ -55,6 +51,9 @@ fun StudiesFindRoute(
         onSelectedStudies = { studies ->
             viewModel.setEvent(StudiesFindContract.Event.OnSelectedStudies(studies))
         },
+        onSearchKeywordChanged = {
+            viewModel.setEvent(StudiesFindContract.Event.OnTypingSearch(it))
+        },
         onStudiesInfoDialogShow = {
             viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogShow)
         },
@@ -79,6 +78,7 @@ private fun StudiesFindContent(
     onLoadStudies: () -> Unit,
     navigateToStudiesManagement: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
+    onSearchKeywordChanged: (String) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     onStudiesInfoDialogConfirm: (Long) -> Unit,
     onStudiesInfoDialogCancel: () -> Unit,
@@ -113,8 +113,10 @@ private fun StudiesFindContent(
         modifier = modifier,
         studiesList = uiState.studiesList,
         isLoading = uiState.isLoading,
+        searchKeyword = uiState.searchKeyword,
         onLoadStudies = onLoadStudies,
         onSelectedStudies = onSelectedStudies,
+        onSearchKeywordChanged = onSearchKeywordChanged,
         onStudiesInfoDialogShow = onStudiesInfoDialogShow,
         navigateToStudiesManagement = navigateToStudiesManagement,
         popBackStack = popBackStack,
@@ -126,8 +128,10 @@ private fun StudiesFindScreen(
     modifier: Modifier = Modifier,
     studiesList: List<Studies>,
     isLoading: Boolean,
+    searchKeyword: String,
     onLoadStudies: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
+    onSearchKeywordChanged: (String) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     navigateToStudiesManagement: () -> Unit,
     popBackStack: () -> Unit,
@@ -135,35 +139,38 @@ private fun StudiesFindScreen(
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
+        Log.d("임시", "StudiesFindScreen: $navigateToStudiesManagement")
         TopAppBar(
             title = {
-                Text(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    text = "스터디 검색",
-                    style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                SearchTextField(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 20.dp),
+                    content = searchKeyword,
+                    onContentChanged = onSearchKeywordChanged,
                 )
             },
             navigationType = TopAppBarNavigationType.Back,
             onNavigationClick = popBackStack,
-            actionButtons = {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Box {
-                        Icon(
-                            modifier =
-                                Modifier
-                                    .noRippleClickable { navigateToStudiesManagement() }
-                                    .padding(8.dp),
-                            // 클릭 영역을 더 크게 만들기 위한 패딩
-                            painter = painterResource(R.drawable.ic_topbar_studies_create),
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            contentDescription = "스터디 생성",
-                        )
-                    }
-                }
-            },
+//            actionButtons = {
+//                Row(
+//                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+//                ) {
+//                    Box {
+//                        Icon(
+//                            modifier =
+//                                Modifier
+//                                    .noRippleClickable { navigateToStudiesManagement() }
+//                                    .padding(8.dp),
+//                            // 클릭 영역을 더 크게 만들기 위한 패딩
+//                            painter = painterResource(R.drawable.ic_topbar_studies_create),
+//                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+//                            contentDescription = "스터디 생성",
+//                        )
+//                    }
+//                }
+//            },
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -227,8 +234,10 @@ private fun PreviewStudiesFindScreen() {
         StudiesFindScreen(
             studiesList = StudiesPreviewDataProvider().getStudies(),
             isLoading = false,
+            searchKeyword = "",
             onLoadStudies = {},
             onSelectedStudies = {},
+            onSearchKeywordChanged = {},
             onStudiesInfoDialogShow = {},
             navigateToStudiesManagement = {},
             popBackStack = {},
