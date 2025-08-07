@@ -252,4 +252,28 @@ class StudiesRepositoryImpl
                     readNotice = readNotice,
                     readVote = readVote,
                 ).flowOn(context = ioDispatcher)
+
+        override fun getStudiesSearch(
+            keyword: String,
+            sort: String?,
+            categoryIds: List<Int>?,
+            cursorValue: String?,
+            cursorId: Long?,
+            size: Int,
+        ): Flow<CursorStudiesPage> =
+            dataSource
+                .getSearchStudies(
+                    keyword = keyword,
+                    sort = sort,
+                    categoryIds = categoryIds,
+                    cursorValue = cursorValue,
+                    cursorId = cursorId,
+                    size = size,
+                ).map { slice ->
+                    CursorSliceStudiesListResponse(
+                        content = slice.content,
+                        hasNext = slice.hasNext,
+                        nextCursor = slice.nextCursor,
+                    ).toDomain()
+                }.flowOn(context = ioDispatcher)
     }

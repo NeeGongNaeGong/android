@@ -107,4 +107,13 @@ interface StudiesRepository {
         readNotice: Boolean?,
         readVote: Boolean?,
     ): Flow<Unit>
+
+    fun getStudiesSearch(
+        keyword: String,
+        sort: String?,
+        categoryIds: List<Int>?,
+        cursorValue: String?,
+        cursorId: Long?,
+        size: Int,
+    ): Flow<CursorStudiesPage>
 }

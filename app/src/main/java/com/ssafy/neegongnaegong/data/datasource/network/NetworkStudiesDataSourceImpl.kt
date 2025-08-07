@@ -205,4 +205,23 @@ class NetworkStudiesDataSourceImpl
                     readVote = readVote,
                 )
             }
+
+        override fun getSearchStudies(
+            keyword: String,
+            sort: String?,
+            categoryIds: List<Int>?,
+            cursorValue: String?,
+            cursorId: Long?,
+            size: Int,
+        ): Flow<CursorSliceStudiesListResponse> =
+            apiFlow {
+                studiesApi.getSearchStudies(
+                    keyword = keyword,
+                    sort = sort,
+                    categoryIds = categoryIds,
+                    cursorValue = cursorValue,
+                    cursorId = cursorId,
+                    size = size,
+                )
+            }
     }
