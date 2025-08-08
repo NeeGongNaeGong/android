@@ -10,13 +10,18 @@ class GetStudiesSearchUseCase
     constructor(
         private val repository: StudiesRepository,
     ) {
-        suspend operator fun invoke(searchKeyword: String): Flow<CursorStudiesPage> =
+        suspend operator fun invoke(
+            searchKeyword: String,
+            sortingStandard: String,
+            cursorValue: String?,
+            cursorId: Long?,
+        ): Flow<CursorStudiesPage> =
             repository.getStudiesSearch(
                 keyword = searchKeyword,
-                sort = null,
+                sort = sortingStandard,
                 categoryIds = null,
-                cursorValue = null,
-                cursorId = null,
+                cursorValue = cursorValue,
+                cursorId = cursorId,
                 size = 10,
             )
     }

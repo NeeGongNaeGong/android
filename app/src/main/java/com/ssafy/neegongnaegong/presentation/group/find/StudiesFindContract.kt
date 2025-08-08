@@ -5,6 +5,7 @@ import com.ssafy.neegongnaegong.presentation.base.ErrorContext
 import com.ssafy.neegongnaegong.presentation.base.UiEffect
 import com.ssafy.neegongnaegong.presentation.base.UiEvent
 import com.ssafy.neegongnaegong.presentation.base.UiState
+import com.ssafy.neegongnaegong.presentation.group.find.component.StudiesFilterType
 import com.ssafy.neegongnaegong.presentation.group.user.search.UserSearchContract.Event
 
 class StudiesFindContract {
@@ -40,6 +41,10 @@ class StudiesFindContract {
         ) : Event()
 
         data object OnSearch : Event()
+
+        data class OnSelectedFilterType(
+            val selectedFilterType: StudiesFilterType,
+        ) : Event()
     }
 
     data class State(
@@ -53,6 +58,8 @@ class StudiesFindContract {
         val isStudiesInfoDialogShow: Boolean = false,
         // 스터디 검색
         val searchKeyword: String = "",
+        // 스터디 검색 정렬
+        val selectedFilterType: StudiesFilterType = StudiesFilterType.CREATED_AT,
     ) : UiState
 
     sealed class Effect : UiEffect {

@@ -52,7 +52,7 @@ class StudiesFindViewModel
 
         override fun handleEvent(event: StudiesFindContract.Event) {
             when (event) {
-                is StudiesFindContract.Event.OnLoadStudies -> loadStudies()
+                is StudiesFindContract.Event.OnLoadStudies -> searchStudies()
                 is StudiesFindContract.Event.StudiesClicked -> {
                     setEffect { StudiesFindContract.Effect.NavigateToGroupDetail(event.studiesId) }
                 }
@@ -79,7 +79,15 @@ class StudiesFindViewModel
                 is StudiesFindContract.Event.OnTypingSearch -> {
                     setState { copy(searchKeyword = event.keyword) }
                 }
+
                 is StudiesFindContract.Event.OnSearch -> {
+                    clearData()
+                    searchStudies()
+                }
+
+                is StudiesFindContract.Event.OnSelectedFilterType -> {
+                    clearData()
+                    setState { copy(selectedFilterType = event.selectedFilterType) }
                     searchStudies()
                 }
             }
@@ -136,21 +144,33 @@ class StudiesFindViewModel
         }
 
         private fun searchStudies() {
+            if (uiState.value.hasNext.not() || uiState.value.isLoading) { // 더 이상 불러올 데이터가 없으면 리턴
+                return
+            }
             viewModelScope.launch {
                 getStudiesSearchUseCase(
                     searchKeyword = uiState.value.searchKeyword,
+                    sortingStandard = uiState.value.selectedFilterType.requestParam,
+                    cursorValue = uiState.value.cursorValue,
+                    cursorId = uiState.value.cursorId,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { result ->
                     setState {
                         copy(
-                            studiesList = result.content,
+                            studiesList = studiesList + result.content,
                             hasNext = result.hasNext,
                             cursorValue = result.nextCursor.cursorValue,
                             cursorId = result.nextCursor.cursorId,
                         )
                     }
                 }
+            }
+        }
+
+        private fun clearData() {
+            setState {
+                copy(studiesList = emptyList(), hasNext = true, cursorValue = null, cursorId = null)
             }
         }
     }

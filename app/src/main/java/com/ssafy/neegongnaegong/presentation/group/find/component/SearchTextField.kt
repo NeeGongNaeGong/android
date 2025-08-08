@@ -18,7 +18,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,7 @@ fun SearchTextField(
     TextField(
         modifier =
             modifier
-                .scale(0.9f)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp)),
         value = content,
         onValueChange = onContentChanged,

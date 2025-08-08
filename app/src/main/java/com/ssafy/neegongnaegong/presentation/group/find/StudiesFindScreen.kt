@@ -23,6 +23,8 @@ import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesWindow
 import com.ssafy.neegongnaegong.presentation.group.component.dialog.StudiesInfoDialog
 import com.ssafy.neegongnaegong.presentation.group.find.component.SearchTextField
+import com.ssafy.neegongnaegong.presentation.group.find.component.StudiesFilterKebabMenu
+import com.ssafy.neegongnaegong.presentation.group.find.component.StudiesFilterType
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
@@ -57,6 +59,9 @@ fun StudiesFindRoute(
         onSearch = {
             viewModel.setEvent(StudiesFindContract.Event.OnSearch)
         },
+        onSelectedFilterType = {
+            viewModel.setEvent(StudiesFindContract.Event.OnSelectedFilterType(it))
+        },
         onStudiesInfoDialogShow = {
             viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogShow)
         },
@@ -83,6 +88,7 @@ private fun StudiesFindContent(
     onSelectedStudies: (Studies) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
     onSearch: () -> Unit,
+    onSelectedFilterType: (StudiesFilterType) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     onStudiesInfoDialogConfirm: (Long) -> Unit,
     onStudiesInfoDialogCancel: () -> Unit,
@@ -118,10 +124,12 @@ private fun StudiesFindContent(
         studiesList = uiState.studiesList,
         isLoading = uiState.isLoading,
         searchKeyword = uiState.searchKeyword,
+        selectedFilterType = uiState.selectedFilterType,
         onLoadStudies = onLoadStudies,
         onSelectedStudies = onSelectedStudies,
         onSearchKeywordChanged = onSearchKeywordChanged,
         onSearch = onSearch,
+        onSelectedFilterType = onSelectedFilterType,
         onStudiesInfoDialogShow = onStudiesInfoDialogShow,
         navigateToStudiesManagement = navigateToStudiesManagement,
         popBackStack = popBackStack,
@@ -134,10 +142,12 @@ private fun StudiesFindScreen(
     studiesList: List<Studies>,
     isLoading: Boolean,
     searchKeyword: String,
+    selectedFilterType: StudiesFilterType,
     onLoadStudies: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
     onSearch: () -> Unit,
+    onSelectedFilterType: (StudiesFilterType) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     navigateToStudiesManagement: () -> Unit,
     popBackStack: () -> Unit,
@@ -152,7 +162,7 @@ private fun StudiesFindScreen(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(start = 20.dp),
+                            .padding(horizontal = 48.dp),
                     content = searchKeyword,
                     onContentChanged = onSearchKeywordChanged,
                     onSearch = onSearch,
@@ -160,24 +170,13 @@ private fun StudiesFindScreen(
             },
             navigationType = TopAppBarNavigationType.Back,
             onNavigationClick = popBackStack,
-//            actionButtons = {
-//                Row(
-//                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-//                ) {
-//                    Box {
-//                        Icon(
-//                            modifier =
-//                                Modifier
-//                                    .noRippleClickable { navigateToStudiesManagement() }
-//                                    .padding(8.dp),
-//                            // 클릭 영역을 더 크게 만들기 위한 패딩
-//                            painter = painterResource(R.drawable.ic_topbar_studies_create),
-//                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-//                            contentDescription = "스터디 생성",
-//                        )
-//                    }
-//                }
-//            },
+            actionButtons = {
+                StudiesFilterKebabMenu(
+                    modifier = Modifier,
+                    selectedFilter = selectedFilterType,
+                    onFilterSelected = onSelectedFilterType,
+                )
+            },
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -242,10 +241,12 @@ private fun PreviewStudiesFindScreen() {
             studiesList = StudiesPreviewDataProvider().getStudies(),
             isLoading = false,
             searchKeyword = "",
+            selectedFilterType = StudiesFilterType.CREATED_AT,
             onLoadStudies = {},
             onSelectedStudies = {},
             onSearchKeywordChanged = {},
             onSearch = {},
+            onSelectedFilterType = {},
             onStudiesInfoDialogShow = {},
             navigateToStudiesManagement = {},
             popBackStack = {},
