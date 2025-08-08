@@ -58,12 +58,14 @@ class StudyGroupVoteHistoryRemoteMediator
                         studyGroupVoteHistoryDao.deleteVoteHistory(studyGroupId)
                     }
 
-                    remoteKeyDao.insertOrReplace(
-                        StudyGroupVoteHistoryRemoteKey(
-                            studyGroupId = studyGroupId,
-                            nextCursor = response.nextCursor,
-                        ),
-                    )
+                    response.nextCursor?.let {
+                        remoteKeyDao.insertOrReplace(
+                            StudyGroupVoteHistoryRemoteKey(
+                                studyGroupId = studyGroupId,
+                                nextCursor = it,
+                            ),
+                        )
+                    }
 
                     studyGroupVoteHistoryDao.insertVoteHistory(response.content.toEntity(studyGroupId))
                 }
