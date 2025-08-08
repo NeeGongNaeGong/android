@@ -3,6 +3,8 @@ package com.ssafy.neegongnaegong.presentation.group.find.component
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
@@ -28,6 +31,7 @@ fun SearchTextField(
     modifier: Modifier = Modifier,
     content: String,
     onContentChanged: (String) -> Unit,
+    onSearch: () -> Unit,
 ) {
     TextField(
         modifier =
@@ -67,6 +71,14 @@ fun SearchTextField(
                 }
             }
         },
+        keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Search,
+            ),
+        keyboardActions =
+            KeyboardActions(
+                onSearch = { onSearch() },
+            ),
         maxLines = 1,
         colors =
             TextFieldDefaults.colors(
@@ -96,8 +108,12 @@ fun SearchTextField(
 
 @NeeGongNaeGongPreviews
 @Composable
-fun UserSearchTextFieldPreview() {
+private fun UserSearchTextFieldPreview() {
     NeeGongNaeGongTheme {
-        SearchTextField(content = "as", onContentChanged = {})
+        SearchTextField(
+            content = "as",
+            onContentChanged = {},
+            onSearch = {},
+        )
     }
 }

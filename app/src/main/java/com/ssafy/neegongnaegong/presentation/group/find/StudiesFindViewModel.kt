@@ -78,7 +78,9 @@ class StudiesFindViewModel
 
                 is StudiesFindContract.Event.OnTypingSearch -> {
                     setState { copy(searchKeyword = event.keyword) }
-                    searchStudies(searchKeyword = event.keyword)
+                }
+                is StudiesFindContract.Event.OnSearch -> {
+                    searchStudies()
                 }
             }
         }
@@ -133,10 +135,10 @@ class StudiesFindViewModel
             }
         }
 
-        private fun searchStudies(searchKeyword: String) {
+        private fun searchStudies() {
             viewModelScope.launch {
                 getStudiesSearchUseCase(
-                    searchKeyword = searchKeyword,
+                    searchKeyword = uiState.value.searchKeyword,
                 ).withLoading {
                     setState { copy(isLoading = it) }
                 }.safeCollect { result ->

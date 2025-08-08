@@ -54,6 +54,9 @@ fun StudiesFindRoute(
         onSearchKeywordChanged = {
             viewModel.setEvent(StudiesFindContract.Event.OnTypingSearch(it))
         },
+        onSearch = {
+            viewModel.setEvent(StudiesFindContract.Event.OnSearch)
+        },
         onStudiesInfoDialogShow = {
             viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogShow)
         },
@@ -79,6 +82,7 @@ private fun StudiesFindContent(
     navigateToStudiesManagement: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
+    onSearch: () -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     onStudiesInfoDialogConfirm: (Long) -> Unit,
     onStudiesInfoDialogCancel: () -> Unit,
@@ -117,6 +121,7 @@ private fun StudiesFindContent(
         onLoadStudies = onLoadStudies,
         onSelectedStudies = onSelectedStudies,
         onSearchKeywordChanged = onSearchKeywordChanged,
+        onSearch = onSearch,
         onStudiesInfoDialogShow = onStudiesInfoDialogShow,
         navigateToStudiesManagement = navigateToStudiesManagement,
         popBackStack = popBackStack,
@@ -132,6 +137,7 @@ private fun StudiesFindScreen(
     onLoadStudies: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
+    onSearch: () -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     navigateToStudiesManagement: () -> Unit,
     popBackStack: () -> Unit,
@@ -149,6 +155,7 @@ private fun StudiesFindScreen(
                             .padding(start = 20.dp),
                     content = searchKeyword,
                     onContentChanged = onSearchKeywordChanged,
+                    onSearch = onSearch,
                 )
             },
             navigationType = TopAppBarNavigationType.Back,
@@ -238,6 +245,7 @@ private fun PreviewStudiesFindScreen() {
             onLoadStudies = {},
             onSelectedStudies = {},
             onSearchKeywordChanged = {},
+            onSearch = {},
             onStudiesInfoDialogShow = {},
             navigateToStudiesManagement = {},
             popBackStack = {},

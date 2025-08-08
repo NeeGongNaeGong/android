@@ -38,6 +38,8 @@ class StudiesFindContract {
         data class OnTypingSearch(
             val keyword: String,
         ) : Event()
+
+        data object OnSearch : Event()
     }
 
     data class State(
