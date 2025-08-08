@@ -117,7 +117,7 @@ fun NoticeContent(
                 Modifier
                     .fillMaxWidth(),
             // 여기선 Text 자체 padding 조절
-            textStyle = NeeGongNaeGongTheme.typography.titleSmall,
+            textStyle = NeeGongNaeGongTheme.typography.titleSmall.copy(color = NeeGongNaeGongTheme.colorScheme.primaryText),
             cursorBrush = SolidColor(NeeGongNaeGongTheme.colorScheme.primaryText),
         )
 
@@ -141,7 +141,7 @@ fun NoticeContent(
                     .weight(1F)
                     .padding(0.dp),
             // 여기선 Text 자체 padding 조절
-            textStyle = NeeGongNaeGongTheme.typography.bodyMedium,
+            textStyle = NeeGongNaeGongTheme.typography.bodyMedium.copy(color = NeeGongNaeGongTheme.colorScheme.primaryText),
             cursorBrush = SolidColor(NeeGongNaeGongTheme.colorScheme.primaryText),
         )
     }
