@@ -57,7 +57,7 @@ object NetworkModule {
     ): Retrofit =
         Retrofit
             .Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(if (BuildConfig.DEBUG) BuildConfig.DEV_BASE_URL else BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ListQueryConverter())
@@ -74,7 +74,7 @@ object NetworkModule {
     ): Retrofit =
         Retrofit
             .Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(if (BuildConfig.DEBUG) BuildConfig.DEV_BASE_URL else BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ListQueryConverter())
@@ -101,7 +101,7 @@ object NetworkModule {
         OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                    level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
                 },
             )
             .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
@@ -119,7 +119,7 @@ object NetworkModule {
             .addInterceptor(authInterceptor)
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                    level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
                 },
             )
             .authenticator(reissueAuthenticator)
@@ -134,7 +134,7 @@ object NetworkModule {
         OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                    level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
                 },
             )
             .build()
