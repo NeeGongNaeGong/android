@@ -153,8 +153,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByTag = result.content.toDomain().toImmutableList(),
                                 hasTagDataNext = result.hasNext,
-                                tagCursorId = result.nextCursor.cursorId,
-                                tagCursorValue = result.nextCursor.cursorValue,
+                                tagCursorId = result.nextCursor?.cursorId,
+                                tagCursorValue = result.nextCursor?.cursorValue,
                             )
                         }
                     }
@@ -168,8 +168,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByDate = result.content.toDomain().toImmutableList(),
                                 hasDateDataNext = result.hasNext,
-                                dateCursorId = result.nextCursor.cursorId,
-                                dateCursorValue = result.nextCursor.cursorValue,
+                                dateCursorId = result.nextCursor?.cursorId,
+                                dateCursorValue = result.nextCursor?.cursorValue,
                             )
                         }
                     }
@@ -199,8 +199,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByTag = updatedList,
                                 hasTagDataNext = result.hasNext,
-                                tagCursorId = result.nextCursor.cursorId,
-                                tagCursorValue = result.nextCursor.cursorValue,
+                                tagCursorId = result.nextCursor?.cursorId,
+                                tagCursorValue = result.nextCursor?.cursorValue,
                             )
                         }
                     }
@@ -220,8 +220,8 @@ class PersonalViewModel
                             copy(
                                 selectedRecordsByDate = updatedList,
                                 hasDateDataNext = result.hasNext,
-                                dateCursorId = result.nextCursor.cursorId,
-                                dateCursorValue = result.nextCursor.cursorValue,
+                                dateCursorId = result.nextCursor?.cursorId,
+                                dateCursorValue = result.nextCursor?.cursorValue,
                             )
                         }
                     }
