@@ -35,6 +35,7 @@ android {
         manifestPlaceholders["deepLinkHostName"] =
             properties.getProperty("DEEP_LINK_HOST")
         buildConfigField("String", "BASE_URL", properties.getProperty("BASE_URL"))
+        buildConfigField("String", "DEV_BASE_URL", properties.getProperty("DEV_BASE_URL"))
         buildConfigField("String", "GOOGLE_CLIENT_ID", properties.getProperty("GOOGLE_CLIENT_ID"))
     }
 
