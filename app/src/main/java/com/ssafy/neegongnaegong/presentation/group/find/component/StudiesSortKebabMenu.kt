@@ -25,20 +25,21 @@ import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 
 @Composable
-fun StudiesFilterKebabMenu(
+fun StudiesSortKebabMenu(
     modifier: Modifier = Modifier,
-    selectedFilter: StudiesFilterType,
-    onFilterSelected: (StudiesFilterType) -> Unit,
+    selectedFilter: StudiesSortType,
+    onFilterSelected: (StudiesSortType) -> Unit,
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         IconButton(
             modifier = Modifier.size(24.dp),
-            onClick = { isMenuExpanded = true },
+            onClick = { isMenuExpanded = true }
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_filter),
+                modifier = Modifier.size(24.dp), // Box 안에서 아이콘 중앙 정렬
+                painter = painterResource(R.drawable.ic_sort),
                 contentDescription = "스터디 검색 필터",
                 tint = NeeGongNaeGongTheme.colorScheme.primaryText,
             )
@@ -48,7 +49,7 @@ fun StudiesFilterKebabMenu(
             expanded = isMenuExpanded,
             onDismissRequest = { isMenuExpanded = false },
         ) {
-            StudiesFilterType.entries.forEach { filterType ->
+            StudiesSortType.entries.forEach { filterType ->
                 val isSelected = (filterType == selectedFilter)
                 val contentColor =
                     if (isSelected) {
@@ -91,21 +92,21 @@ fun StudiesFilterKebabMenu(
 
 @Composable
 @NeeGongNaeGongPreviews
-private fun PreviewsStudiesFilterKebabMenu() {
+private fun PreviewsStudiesSortKebabMenu() {
     NeeGongNaeGongTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopEnd,
         ) {
-            StudiesFilterKebabMenu(
-                selectedFilter = StudiesFilterType.CREATED_AT,
+            StudiesSortKebabMenu(
+                selectedFilter = StudiesSortType.CREATED_AT,
                 onFilterSelected = {},
             )
         }
     }
 }
 
-enum class StudiesFilterType(
+enum class StudiesSortType(
     @DrawableRes val iconResId: Int,
     val display: String,
     val requestParam: String,

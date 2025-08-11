@@ -2,6 +2,7 @@ package com.ssafy.neegongnaegong.presentation.group.find
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.ssafy.neegongnaegong.domain.usecase.category.GetCategoriesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.ApplyStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.CancelApplicationsStudiesUseCase
 import com.ssafy.neegongnaegong.domain.usecase.studies.GetStudiesListUseCase
@@ -23,6 +24,7 @@ class StudiesFindViewModel
         private val applyStudiesUseCase: ApplyStudiesUseCase,
         private val cancelApplyStudiesUseCase: CancelApplicationsStudiesUseCase,
         private val getStudiesSearchUseCase: GetStudiesSearchUseCase,
+        private val getCategoriesUseCase: GetCategoriesUseCase,
     ) : BaseViewModel<StudiesFindContract.Event, StudiesFindContract.State, StudiesFindContract.Effect>() {
         override fun handleException(
             e: Throwable,
@@ -52,7 +54,10 @@ class StudiesFindViewModel
 
         override fun handleEvent(event: StudiesFindContract.Event) {
             when (event) {
-                is StudiesFindContract.Event.OnLoadStudies -> searchStudies()
+                is StudiesFindContract.Event.OnLoad -> {
+                    searchStudies()
+                    getAllCategory()
+                }
                 is StudiesFindContract.Event.StudiesClicked -> {
                     setEffect { StudiesFindContract.Effect.NavigateToGroupDetail(event.studiesId) }
                 }
@@ -87,9 +92,26 @@ class StudiesFindViewModel
 
                 is StudiesFindContract.Event.OnSelectedFilterType -> {
                     clearData()
-                    setState { copy(selectedFilterType = event.selectedFilterType) }
+                    setState { copy(selectedSortType = event.selectedFilterType) }
                     searchStudies()
                 }
+
+                is StudiesFindContract.Event.OnCategoryFilterDialogShow ->
+                    setState { copy(isCategoryFilterDialogShow = true) }
+
+                is StudiesFindContract.Event.OnCategoryFilterDialogConfirm -> {
+                    clearData()
+                    setState {
+                        copy(
+                            isCategoryFilterDialogShow = false,
+                            selectedCategoryFilter = event.selectedCategorise,
+                        )
+                    }
+                    searchStudies()
+                }
+
+                is StudiesFindContract.Event.OnCategoryFilterDialogCancel ->
+                    setState { copy(isCategoryFilterDialogShow = false) }
             }
         }
 
@@ -147,10 +169,12 @@ class StudiesFindViewModel
             if (uiState.value.hasNext.not() || uiState.value.isLoading) { // 더 이상 불러올 데이터가 없으면 리턴
                 return
             }
+            val cursorIds = uiState.value.selectedCategoryFilter.map { it.id }
             viewModelScope.launch {
                 getStudiesSearchUseCase(
                     searchKeyword = uiState.value.searchKeyword,
-                    sortingStandard = uiState.value.selectedFilterType.requestParam,
+                    sortingStandard = uiState.value.selectedSortType.requestParam,
+                    categoryIds = cursorIds,
                     cursorValue = uiState.value.cursorValue,
                     cursorId = uiState.value.cursorId,
                 ).withLoading {
@@ -165,6 +189,21 @@ class StudiesFindViewModel
                         )
                     }
                 }
+            }
+        }
+
+        private fun getAllCategory() {
+            viewModelScope.launch {
+                getCategoriesUseCase()
+                    .withLoading {
+                        setState { copy(isLoading = it) }
+                    }.safeCollect { result ->
+                        setState {
+                            copy(
+                                categories = result,
+                            )
+                        }
+                    }
             }
         }
 
