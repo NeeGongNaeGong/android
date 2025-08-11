@@ -164,7 +164,7 @@ interface StudiesApi {
     suspend fun getSearchStudies(
         @Query("keyword") keyword: String,
         @Query("sort") sort: String?,
-        @Query("categoryids") categoryIds: List<Int>?,
+        @Query("categoryIds") categoryIds: List<Long>?,
         @Query("cursor-value") cursorValue: String?,
         @Query("cursor-id") cursorId: Long?,
         @Query("size") size: Int,

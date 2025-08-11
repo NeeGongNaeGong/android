@@ -111,7 +111,7 @@ interface StudiesRepository {
     fun getStudiesSearch(
         keyword: String,
         sort: String?,
-        categoryIds: List<Int>?,
+        categoryIds: List<Long>?,
         cursorValue: String?,
         cursorId: Long?,
         size: Int,
