@@ -29,7 +29,9 @@ class StudiesWaitingToJoinContract {
         val cursorId: Long? = null,
     ) : UiState
 
-    sealed class Effect : UiEffect
+    sealed interface Effect : UiEffect {
+        data object NavigateToStudiesDetail : Effect
+    }
 
-    sealed class Error : ErrorContext
+    sealed interface Error : ErrorContext
 }

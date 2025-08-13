@@ -135,17 +135,27 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                         },
                     ),
             ) { backStackEntry ->
-                val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesApplication>()
+                val route =
+                    backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesApplication>()
                 StudiesWaitingToJoinRoute(
                     modifier = Modifier,
                     studyGroupId = route.studyGroupId,
                     role = route.role,
-                    popBackStack = navController::popBackStack,
+                    navigateToStudiesDetail = {
+                        navController.navigate(
+                            AppNavigation.Screen.Studies.StudiesDetail(route.studyGroupId),
+                        ) {
+                            popUpTo<AppNavigation.Screen.Studies.StudiesDetail> {
+                                inclusive = true
+                            }
+                        }
+                    },
                 )
             }
 
             composable<AppNavigation.Screen.Studies.StudiesMembersRole> { backStackEntry ->
-                val route = backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesMembersRole>()
+                val route =
+                    backStackEntry.toRoute<AppNavigation.Screen.Studies.StudiesMembersRole>()
                 StudiesMemberRoleRoute(
                     modifier = Modifier,
                     studyGroupId = route.studyGroupId,
@@ -222,7 +232,9 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
             }
 
             navigation<AppNavigation.Tab.StudiesSubTabDetail>(
-                startDestination = AppNavigation.Screen.Studies.SubTab.Main(0, -1),
+                startDestination =
+                    AppNavigation.Screen.Studies.SubTab
+                        .Main(0, -1),
             ) {
                 composable<AppNavigation.Screen.Studies.SubTab.Main> { backStackEntry ->
                     val (startTabIndex, studyGroupId) = backStackEntry.toRoute<AppNavigation.Screen.Studies.SubTab.Main>()
@@ -274,7 +286,8 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                     deepLinks =
                         listOf(
                             navDeepLink {
-                                uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}/notice/{noticeId}"
+                                uriPattern =
+                                    "$BASE_DEEP_LINK/study-group/{studyGroupId}/notice/{noticeId}"
                                 action = Intent.ACTION_VIEW
                             },
                         ),
@@ -299,11 +312,12 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                     }
                 }
 
-                composable<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail> (
+                composable<AppNavigation.Screen.Studies.SubTab.Screen.VoteDetail>(
                     deepLinks =
                         listOf(
                             navDeepLink {
-                                uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}/vote/{voteId}"
+                                uriPattern =
+                                    "$BASE_DEEP_LINK/study-group/{studyGroupId}/vote/{voteId}"
 //                                action = Intent.ACTION_VIEW
                             },
                         ),
