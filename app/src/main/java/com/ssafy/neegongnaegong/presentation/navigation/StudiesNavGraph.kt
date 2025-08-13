@@ -160,7 +160,15 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                     modifier = Modifier,
                     studyGroupId = route.studyGroupId,
                     role = route.role,
-                    popBackStack = navController::popBackStack,
+                    navigateToStudiesDetail = {
+                        navController.navigate(
+                            AppNavigation.Screen.Studies.StudiesDetail(route.studyGroupId),
+                        ) {
+                            popUpTo<AppNavigation.Screen.Studies.StudiesDetail> {
+                                inclusive = true
+                            }
+                        }
+                    },
                 )
             }
 
