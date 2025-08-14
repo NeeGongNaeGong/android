@@ -108,7 +108,7 @@ class NotificationViewModel
                     studyGroupId = data.studyGroupId,
                     userId = data.senderId,
                     notificationId = data.id,
-                ).firstOrNull()
+                ).withLoading(0) { setState { copy(isModifying = it) } }.firstOrNull()
             }
         }
 
@@ -118,7 +118,7 @@ class NotificationViewModel
                     studyGroupId = data.studyGroupId,
                     userId = data.senderId,
                     notificationId = data.id,
-                ).firstOrNull()
+                ).withLoading { setState { copy(isModifying = it) } }.firstOrNull()
             }
         }
 
