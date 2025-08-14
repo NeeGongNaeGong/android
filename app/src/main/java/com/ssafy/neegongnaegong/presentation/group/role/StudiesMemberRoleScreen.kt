@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.role
 
-import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +28,7 @@ import com.ssafy.neegongnaegong.presentation.group.role.component.StudiesMemberR
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun StudiesMemberRoleRoute(
@@ -35,8 +36,11 @@ fun StudiesMemberRoleRoute(
     viewModel: StudiesMemberRoleViewModel = hiltViewModel(),
     studyGroupId: Long,
     role: Role,
-    popBackStack: () -> Unit,
+    navigateToStudiesDetail: () -> Unit,
 ) {
+    BackHandler {
+        navigateToStudiesDetail()
+    }
     LaunchedEffect(Unit) {
         viewModel.setEvent(StudiesMemberRoleContract.Event.OnLoadStudiesMembers(studyGroupId))
     }
@@ -72,7 +76,7 @@ fun StudiesMemberRoleRoute(
             )
         },
         onExpelMemberDialogDismiss = { viewModel.setEvent(StudiesMemberRoleContract.Event.OnExpelMemberDialogDismiss) },
-        popBackStack = popBackStack,
+        navigateToStudiesDetail = navigateToStudiesDetail,
     )
 }
 
@@ -93,9 +97,15 @@ private fun StudiesMemberRoleContent(
     onExpelMemberDialogCancel: () -> Unit,
     onExpelMemberDialogConfirm: (Long) -> Unit,
     onExpelMemberDialogDismiss: () -> Unit,
-    popBackStack: () -> Unit,
+    navigateToStudiesDetail: () -> Unit,
 ) {
-    Log.d("임시", "$effect") // TODO (effect 처리예정)
+    LaunchedEffect(effect) {
+        effect.collectLatest { effect ->
+            when (effect) {
+                is StudiesMemberRoleContract.Effect.NavigateToStudiesDetail -> navigateToStudiesDetail()
+            }
+        }
+    }
     if (uiState.isChangeRoleDialogShow) {
         if (uiState.selectedMember != null) {
             RoleChangeDialog(
@@ -133,7 +143,7 @@ private fun StudiesMemberRoleContent(
         onSelectedMember = onSelectedMember,
         onChangeRoleDialogShow = onChangeRoleDialogShow,
         onExpelMemberDialogShow = onExpelMemberDialogShow,
-        popBackStack = popBackStack,
+        navigateToStudiesDetail = navigateToStudiesDetail,
     )
 }
 
@@ -146,7 +156,7 @@ private fun StudiesMemberRoleScreen(
     onSelectedMember: (StudiesMember) -> Unit,
     onChangeRoleDialogShow: () -> Unit,
     onExpelMemberDialogShow: () -> Unit,
-    popBackStack: () -> Unit,
+    navigateToStudiesDetail: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -160,7 +170,7 @@ private fun StudiesMemberRoleScreen(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            onNavigationClick = popBackStack,
+            onNavigationClick = navigateToStudiesDetail,
         )
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -213,7 +223,7 @@ private fun Preview_Leader_StudiesMemberRoleScreen() {
             onSelectedMember = {},
             onChangeRoleDialogShow = {},
             onExpelMemberDialogShow = {},
-            popBackStack = {},
+            navigateToStudiesDetail = {},
         )
     }
 }
@@ -229,7 +239,7 @@ private fun Preview_Member_StudiesMemberRoleScreen() {
             onSelectedMember = {},
             onChangeRoleDialogShow = {},
             onExpelMemberDialogShow = {},
-            popBackStack = {},
+            navigateToStudiesDetail = {},
         )
     }
 }

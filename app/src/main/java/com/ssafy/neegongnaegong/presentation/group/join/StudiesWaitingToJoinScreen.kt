@@ -1,6 +1,6 @@
 package com.ssafy.neegongnaegong.presentation.group.join
 
-import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +25,7 @@ import com.ssafy.neegongnaegong.presentation.group.join.component.StudiesApplica
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun StudiesWaitingToJoinRoute(
@@ -32,8 +33,11 @@ fun StudiesWaitingToJoinRoute(
     viewModel: StudiesWaitingToJoinViewModel = hiltViewModel(),
     studyGroupId: Long,
     role: Role,
-    popBackStack: () -> Unit,
+    navigateToStudiesDetail: () -> Unit,
 ) {
+    BackHandler {
+        navigateToStudiesDetail()
+    }
     LaunchedEffect(Unit) {
         viewModel.setEvent(StudiesWaitingToJoinContract.Event.OnLoadStudiesApplications(studyGroupId))
     }
@@ -59,7 +63,7 @@ fun StudiesWaitingToJoinRoute(
                 StudiesWaitingToJoinContract.Event.OnReject(it),
             )
         },
-        popBackStack = popBackStack,
+        navigateToStudiesDetail = navigateToStudiesDetail,
     )
 }
 
@@ -72,10 +76,16 @@ private fun StudiesWaitingToJoinContent(
     onLoadApplicationsList: () -> Unit,
     onApproval: (Long) -> Unit,
     onReject: (Long) -> Unit,
-    popBackStack: () -> Unit,
+    navigateToStudiesDetail: () -> Unit,
 ) {
-    Log.d("임시", "$effect") // TODO (effect 처리예정)
-
+    LaunchedEffect(effect) {
+        effect.collectLatest { effect ->
+            when (effect) {
+                is StudiesWaitingToJoinContract.Effect.NavigateToStudiesDetail ->
+                    navigateToStudiesDetail()
+            }
+        }
+    }
     StudiesWaitingToJoinScreen(
         modifier = modifier,
         role = role,
@@ -84,7 +94,7 @@ private fun StudiesWaitingToJoinContent(
         onLoadApplicationsList = onLoadApplicationsList,
         onApproval = onApproval,
         onReject = onReject,
-        popBackStack = popBackStack,
+        navigateToStudiesDetail = navigateToStudiesDetail,
     )
 }
 
@@ -97,7 +107,7 @@ private fun StudiesWaitingToJoinScreen(
     onLoadApplicationsList: () -> Unit,
     onApproval: (Long) -> Unit,
     onReject: (Long) -> Unit,
-    popBackStack: () -> Unit,
+    navigateToStudiesDetail: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -111,7 +121,7 @@ private fun StudiesWaitingToJoinScreen(
                     color = NeeGongNaeGongTheme.colorScheme.primaryText,
                 )
             },
-            onNavigationClick = popBackStack,
+            onNavigationClick = navigateToStudiesDetail,
         )
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -165,7 +175,7 @@ private fun Preview_Manager_StudiesWaitingToJoinScreen() {
             onLoadApplicationsList = {},
             onApproval = {},
             onReject = {},
-            popBackStack = {},
+            navigateToStudiesDetail = {},
         )
     }
 }
@@ -181,7 +191,7 @@ private fun Preview_Member_StudiesWaitingToJoinScreen() {
             onLoadApplicationsList = {},
             onApproval = {},
             onReject = {},
-            popBackStack = {},
+            navigateToStudiesDetail = {},
         )
     }
 }

@@ -67,7 +67,7 @@ class StudiesEditViewModel
                 }
 
                 is StudiesEditContract.Event.OnClearProfileImg -> {
-                    setStudyInfo(profileImg = null)
+                    setStudyInfo(profileImg = "")
                 }
 
                 is StudiesEditContract.Event.OnProfileImgChanged -> setStudyInfo(profileImg = event.profileImg)

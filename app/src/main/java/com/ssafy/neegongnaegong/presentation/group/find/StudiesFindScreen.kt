@@ -1,32 +1,47 @@
 package com.ssafy.neegongnaegong.presentation.group.find
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssafy.neegongnaegong.R
 import com.ssafy.neegongnaegong.domain.model.preview.studies.StudiesPreviewDataProvider
+import com.ssafy.neegongnaegong.domain.model.studies.Category
 import com.ssafy.neegongnaegong.domain.model.studies.Studies
 import com.ssafy.neegongnaegong.presentation.component.TopAppBar
 import com.ssafy.neegongnaegong.presentation.component.TopAppBarNavigationType
 import com.ssafy.neegongnaegong.presentation.group.component.StudiesWindow
 import com.ssafy.neegongnaegong.presentation.group.component.dialog.StudiesInfoDialog
+import com.ssafy.neegongnaegong.presentation.group.find.component.CategorySelectDialog
+import com.ssafy.neegongnaegong.presentation.group.find.component.SearchTextField
+import com.ssafy.neegongnaegong.presentation.group.find.component.StudiesSortKebabMenu
+import com.ssafy.neegongnaegong.presentation.group.find.component.StudiesSortType
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
 import com.ssafy.neegongnaegong.presentation.util.noRippleClickable
@@ -37,11 +52,10 @@ import kotlinx.coroutines.flow.collectLatest
 fun StudiesFindRoute(
     modifier: Modifier = Modifier,
     viewModel: StudiesFindViewModel = hiltViewModel(),
-    navigateToStudiesManagement: () -> Unit,
     popBackStack: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies)
+        viewModel.setEvent(StudiesFindContract.Event.OnLoad)
     }
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -50,10 +64,18 @@ fun StudiesFindRoute(
         modifier = modifier,
         uiState = uiState,
         effect = viewModel.effect,
-        onLoadStudies = { viewModel.setEvent(StudiesFindContract.Event.OnLoadStudies) },
-        navigateToStudiesManagement = navigateToStudiesManagement,
+        onLoadStudies = { viewModel.setEvent(StudiesFindContract.Event.OnLoad) },
         onSelectedStudies = { studies ->
             viewModel.setEvent(StudiesFindContract.Event.OnSelectedStudies(studies))
+        },
+        onSearchKeywordChanged = {
+            viewModel.setEvent(StudiesFindContract.Event.OnTypingSearch(it))
+        },
+        onSearch = {
+            viewModel.setEvent(StudiesFindContract.Event.OnSearch)
+        },
+        onSelectedSortType = {
+            viewModel.setEvent(StudiesFindContract.Event.OnSelectedFilterType(it))
         },
         onStudiesInfoDialogShow = {
             viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogShow)
@@ -67,6 +89,15 @@ fun StudiesFindRoute(
         onStudiesInfoDialogDismiss = {
             viewModel.setEvent(StudiesFindContract.Event.OnStudiesInfoDialogDismiss)
         },
+        onCategoryFilterDialogShow = {
+            viewModel.setEvent(StudiesFindContract.Event.OnCategoryFilterDialogShow)
+        },
+        onCategoryFilterDialogConfirm = {
+            viewModel.setEvent(StudiesFindContract.Event.OnCategoryFilterDialogConfirm(it))
+        },
+        onCategoryFilterDialogCancel = {
+            viewModel.setEvent(StudiesFindContract.Event.OnCategoryFilterDialogCancel)
+        },
         popBackStack = popBackStack,
     )
 }
@@ -77,12 +108,17 @@ private fun StudiesFindContent(
     uiState: StudiesFindContract.State,
     effect: Flow<StudiesFindContract.Effect>,
     onLoadStudies: () -> Unit,
-    navigateToStudiesManagement: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
+    onSearchKeywordChanged: (String) -> Unit,
+    onSearch: () -> Unit,
+    onSelectedSortType: (StudiesSortType) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
     onStudiesInfoDialogConfirm: (Long) -> Unit,
     onStudiesInfoDialogCancel: () -> Unit,
     onStudiesInfoDialogDismiss: () -> Unit,
+    onCategoryFilterDialogShow: () -> Unit,
+    onCategoryFilterDialogConfirm: (Set<Category>) -> Unit,
+    onCategoryFilterDialogCancel: () -> Unit,
     popBackStack: () -> Unit,
 ) {
     if (uiState.isStudiesInfoDialogShow) {
@@ -93,6 +129,16 @@ private fun StudiesFindContent(
             onConfirm = onStudiesInfoDialogConfirm,
             onCancel = onStudiesInfoDialogCancel,
             onDismiss = onStudiesInfoDialogDismiss,
+        )
+    }
+
+    if (uiState.isCategoryFilterDialogShow) {
+        CategorySelectDialog(
+            modifier = modifier,
+            categories = uiState.categories,
+            initialSelectedCategories = uiState.selectedCategoryFilter,
+            onConfirm = onCategoryFilterDialogConfirm,
+            onCancel = onCategoryFilterDialogCancel,
         )
     }
 
@@ -112,11 +158,17 @@ private fun StudiesFindContent(
     StudiesFindScreen(
         modifier = modifier,
         studiesList = uiState.studiesList,
-        isLoading = uiState.isLoading,
+        hasNext = uiState.hasNext,
+        searchKeyword = uiState.searchKeyword,
+        selectedSortType = uiState.selectedSortType,
+        filterCount = uiState.selectedCategoryFilter.size,
         onLoadStudies = onLoadStudies,
         onSelectedStudies = onSelectedStudies,
+        onSearchKeywordChanged = onSearchKeywordChanged,
+        onSearch = onSearch,
+        onSelectedSortType = onSelectedSortType,
         onStudiesInfoDialogShow = onStudiesInfoDialogShow,
-        navigateToStudiesManagement = navigateToStudiesManagement,
+        onCategoryFilterDialogShow = onCategoryFilterDialogShow,
         popBackStack = popBackStack,
     )
 }
@@ -125,11 +177,17 @@ private fun StudiesFindContent(
 private fun StudiesFindScreen(
     modifier: Modifier = Modifier,
     studiesList: List<Studies>,
-    isLoading: Boolean,
+    hasNext: Boolean,
+    searchKeyword: String,
+    selectedSortType: StudiesSortType,
+    filterCount: Int,
     onLoadStudies: () -> Unit,
     onSelectedStudies: (Studies) -> Unit,
+    onSearchKeywordChanged: (String) -> Unit,
+    onSearch: () -> Unit,
+    onSelectedSortType: (StudiesSortType) -> Unit,
     onStudiesInfoDialogShow: () -> Unit,
-    navigateToStudiesManagement: () -> Unit,
+    onCategoryFilterDialogShow: () -> Unit,
     popBackStack: () -> Unit,
 ) {
     Column(
@@ -137,31 +195,64 @@ private fun StudiesFindScreen(
     ) {
         TopAppBar(
             title = {
-                Text(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    text = "스터디 검색",
-                    style = NeeGongNaeGongTheme.typography.bodyMedium,
-                    color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                SearchTextField(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 48.dp)
+                            .padding(end = 80.dp),
+                    content = searchKeyword,
+                    onContentChanged = onSearchKeywordChanged,
+                    onSearch = onSearch,
                 )
             },
             navigationType = TopAppBarNavigationType.Back,
             onNavigationClick = popBackStack,
             actionButtons = {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Box {
-                        Icon(
+                    Box(modifier = Modifier) {
+                        IconButton(
+                            modifier = Modifier.size(24.dp),
+                            onClick = onCategoryFilterDialogShow,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_filter),
+                                tint = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                contentDescription = "스터디 필터",
+                            )
+                        }
+                        if (filterCount == 0) return@Box
+                        Box(
                             modifier =
                                 Modifier
-                                    .noRippleClickable { navigateToStudiesManagement() }
-                                    .padding(8.dp),
-                            // 클릭 영역을 더 크게 만들기 위한 패딩
-                            painter = painterResource(R.drawable.ic_topbar_studies_create),
-                            tint = NeeGongNaeGongTheme.colorScheme.primaryText,
-                            contentDescription = "스터디 생성",
-                        )
+                                    .align(Alignment.TopEnd)
+                                    .size(12.dp)
+                                    .clip(CircleShape)
+                                    .background(NeeGongNaeGongTheme.colorScheme.peach),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            val fontSizeSp =
+                                with(LocalDensity.current) {
+                                    10.dp.toSp()
+                                }
+                            Text(
+                                text = if (filterCount < 10) "$filterCount" else "9+",
+                                color = NeeGongNaeGongTheme.colorScheme.primaryText,
+                                fontSize = fontSizeSp,
+                                style = NeeGongNaeGongTheme.typography.labelSmall,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
+                    StudiesSortKebabMenu(
+                        modifier = Modifier,
+                        selectedFilter = selectedSortType,
+                        onFilterSelected = onSelectedSortType,
+                    )
                 }
             },
         )
@@ -198,22 +289,32 @@ private fun StudiesFindScreen(
                         }
                     }
                 }
-
-                if (isLoading) {
-                    item {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator(
-                                strokeWidth = 4.dp,
-                                color = NeeGongNaeGongTheme.colorScheme.blue,
-                            )
-                        }
-                    }
+            }
+            if (hasNext) {
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .fillMaxHeight(fraction = 0.15f)
+                            .background(
+                                brush =
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Transparent, // 상단: 완전 투명
+                                                NeeGongNaeGongTheme.colorScheme.primaryText.copy(
+                                                    alpha = 0.1f,
+                                                ), // 하단: 10% 반투명
+                                            ),
+                                    ),
+                            ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(
+                        strokeWidth = 4.dp,
+                        color = NeeGongNaeGongTheme.colorScheme.blue,
+                    )
                 }
             }
         }
@@ -226,11 +327,17 @@ private fun PreviewStudiesFindScreen() {
     NeeGongNaeGongTheme {
         StudiesFindScreen(
             studiesList = StudiesPreviewDataProvider().getStudies(),
-            isLoading = false,
+            hasNext = true,
+            searchKeyword = "",
+            selectedSortType = StudiesSortType.CREATED_AT,
+            filterCount = 22,
             onLoadStudies = {},
             onSelectedStudies = {},
+            onSearchKeywordChanged = {},
+            onSearch = {},
+            onSelectedSortType = {},
             onStudiesInfoDialogShow = {},
-            navigateToStudiesManagement = {},
+            onCategoryFilterDialogShow = {},
             popBackStack = {},
         )
     }

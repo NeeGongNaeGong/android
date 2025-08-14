@@ -99,4 +99,13 @@ interface NetworkStudiesDataSource {
         readNotice: Boolean?,
         readVote: Boolean?,
     ): Flow<Unit>
+
+    fun getSearchStudies(
+        keyword: String,
+        sort: String?,
+        categoryIds: List<Long>?,
+        cursorValue: String?,
+        cursorId: Long?,
+        size: Int,
+    ): Flow<CursorSliceStudiesListResponse>
 }

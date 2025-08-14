@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -152,46 +153,59 @@ private fun StudiesScreen(
                 }
             },
         )
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(
-                count = myStudyList.itemCount,
-                key = myStudyList.itemKey(MyStudyGroupInfo::id),
-            ) { idx ->
-                myStudyList[idx]?.let { studies ->
-                    StudiesWindow(
-                        modifier =
-                            Modifier
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 8.dp)
-                                .noRippleClickable {
-                                    onClickMyStudies(studies.id)
-                                },
-                        category = studies.category.name,
-                        isPublic = studies.isPublic,
-                        name = studies.name,
-                        targetStudyTime = studies.targetStudyTime,
-                        currentMembers = studies.currentMembers,
-                        maxMembers = studies.maxMembers,
-                        leader = studies.leader.name,
-                        createdDate = studies.createdDate.toString(),
-                        profileImageUrl = studies.profileImg,
-                    )
-                }
+        if (myStudyList.loadState.refresh is LoadState.NotLoading && myStudyList.itemCount == 0) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "가입한 스터디가 없습니다.",
+                    style = NeeGongNaeGongTheme.typography.bodyMedium,
+                    color = NeeGongNaeGongTheme.colorScheme.secondaryText,
+                )
             }
-
-            if (isLoading) {
-                item {
-                    Box(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator(
-                            strokeWidth = 4.dp,
-                            color = NeeGongNaeGongTheme.colorScheme.blue,
+        } else {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(
+                    count = myStudyList.itemCount,
+                    key = myStudyList.itemKey(MyStudyGroupInfo::id),
+                ) { idx ->
+                    myStudyList[idx]?.let { studies ->
+                        StudiesWindow(
+                            modifier =
+                                Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .padding(bottom = 8.dp)
+                                    .noRippleClickable {
+                                        onClickMyStudies(studies.id)
+                                    },
+                            category = studies.category.name,
+                            isPublic = studies.isPublic,
+                            name = studies.name,
+                            targetStudyTime = studies.targetStudyTime,
+                            currentMembers = studies.currentMembers,
+                            maxMembers = studies.maxMembers,
+                            leader = studies.leader.name,
+                            createdDate = studies.createdDate.toString(),
+                            profileImageUrl = studies.profileImg,
                         )
+                    }
+                }
+
+                if (isLoading) {
+                    item {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                strokeWidth = 4.dp,
+                                color = NeeGongNaeGongTheme.colorScheme.blue,
+                            )
+                        }
                     }
                 }
             }
@@ -236,6 +250,23 @@ private fun PreviewStudiesScreen() {
     val pagingData = PagingData.from(sampleItems)
     val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
 
+    NeeGongNaeGongTheme {
+        StudiesScreen(
+            isLoading = false,
+            myStudyList = lazyItems,
+            onClickMyStudies = {},
+            onClickStudiesCreate = {},
+            onClickStudiesFind = {},
+        )
+    }
+}
+
+@NeeGongNaeGongPreviews
+@Composable
+private fun PreviewEmptyStudiesScreen() {
+    val emptyItems = mutableListOf<MyStudyGroupInfo>()
+    val pagingData = PagingData.from(emptyItems)
+    val lazyItems = MutableStateFlow(pagingData).collectAsLazyPagingItems()
     NeeGongNaeGongTheme {
         StudiesScreen(
             isLoading = false,
