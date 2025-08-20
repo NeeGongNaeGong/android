@@ -1,6 +1,7 @@
 package com.ssafy.neegongnaegong.presentation.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -16,7 +17,7 @@ fun LoadingDialog(modifier: Modifier = Modifier) {
         modifier =
             modifier
                 .fillMaxSize()
-                .background(color = NeeGongNaeGongTheme.colorScheme.background.copy(alpha = 0.5f)),
+                .background(color = NeeGongNaeGongTheme.colorScheme.background.copy(alpha = 0.5f)).clickable { /* 터치 이벤트 흡수 */ },
         contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(

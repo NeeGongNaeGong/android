@@ -99,5 +99,5 @@ fun NotificationRoute(
         },
     )
 
-    if (uiState.isModifying) LoadingDialog()
+    if (uiState.isModifying || uiState.isLoading) LoadingDialog()
 }
