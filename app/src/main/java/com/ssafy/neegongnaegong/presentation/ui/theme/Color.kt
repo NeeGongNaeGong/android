@@ -18,6 +18,7 @@ data class Color(
     val background: Color,
     val chartLegend: Color,
     val yellow: Color,
+    val disable: Color,
 )
 
 val LightColorScheme =
@@ -37,6 +38,7 @@ val LightColorScheme =
         background = Color(0xFFFAFAFA),
         chartLegend = Color(0x612E2626),
         yellow = Color(0xFFF9F871),
+        disable = Color(0x61000000),
     )
 
 val DarkColorScheme =
@@ -56,4 +58,5 @@ val DarkColorScheme =
         chartLegend = Color(0x612E2626),
         recordBackground = Color(0xFF222222),
         yellow = Color(0xFFF9F871),
+        disable = Color(0x61FFFFFF),
     )
