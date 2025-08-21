@@ -4,6 +4,8 @@ import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFcmDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFileDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalFileDataSourceImpl
+import com.ssafy.neegongnaegong.data.datasource.local.LocalUpdateDataSource
+import com.ssafy.neegongnaegong.data.datasource.local.LocalUpdateDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSource
 import com.ssafy.neegongnaegong.data.datasource.local.LocalUserDataSourceImpl
 import com.ssafy.neegongnaegong.data.datasource.network.NetworkAuthDataSource
@@ -89,4 +91,8 @@ internal interface DataSourceModule {
     @Singleton
     @Binds
     fun bindLocalFileDataSource(localFileDataSourceImpl: LocalFileDataSourceImpl): LocalFileDataSource
+
+    @Singleton
+    @Binds
+    fun bindLocalUpdateDataSource(localUpdateDataSourceImpl: LocalUpdateDataSourceImpl): LocalUpdateDataSource
 }

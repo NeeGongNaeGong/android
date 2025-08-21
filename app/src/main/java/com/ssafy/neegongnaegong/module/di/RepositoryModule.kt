@@ -10,6 +10,7 @@ import com.ssafy.neegongnaegong.data.repository.NotificationRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.S3RepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.StudiesRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.StudyGroupRepositoryImpl
+import com.ssafy.neegongnaegong.data.repository.UpdateRepositoryImpl
 import com.ssafy.neegongnaegong.data.repository.UserRepositoryImpl
 import com.ssafy.neegongnaegong.domain.repository.AuthRepository
 import com.ssafy.neegongnaegong.domain.repository.CalendarRepository
@@ -21,6 +22,7 @@ import com.ssafy.neegongnaegong.domain.repository.NotificationRepository
 import com.ssafy.neegongnaegong.domain.repository.S3Repository
 import com.ssafy.neegongnaegong.domain.repository.StudiesRepository
 import com.ssafy.neegongnaegong.domain.repository.StudyGroupRepository
+import com.ssafy.neegongnaegong.domain.repository.UpdateRepository
 import com.ssafy.neegongnaegong.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -74,4 +76,8 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindLocalFileRepository(localFileRepositoryImpl: LocalFileRepositoryImpl): LocalFileRepository
+
+    @Binds
+    @Singleton
+    fun bindUpdateRepository(updateRepositoryImpl: UpdateRepositoryImpl): UpdateRepository
 }
