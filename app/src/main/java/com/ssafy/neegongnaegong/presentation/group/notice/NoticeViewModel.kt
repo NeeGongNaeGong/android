@@ -69,7 +69,7 @@ class NoticeViewModel
                     }
                 }
 
-                NoticeContract.Event.OnClickPopBackStackButton -> setEvent(NoticeContract.Event.OnClickPopBackStackButton)
+                NoticeContract.Event.OnClickPopBackStackButton -> setEffect { NoticeContract.Effect.NavigateToBackStack }
             }
         }
     }
