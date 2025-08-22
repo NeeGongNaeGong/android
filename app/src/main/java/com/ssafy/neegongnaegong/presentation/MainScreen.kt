@@ -24,10 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -35,7 +38,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.ssafy.neegongnaegong.presentation.base.UpdateStatusViewModel
 import com.ssafy.neegongnaegong.presentation.common.LocalDrawerState
+import com.ssafy.neegongnaegong.presentation.component.InAppUpdateDialog
 import com.ssafy.neegongnaegong.presentation.component.snackbar.NeeGongNaeGongSnackbarHost
 import com.ssafy.neegongnaegong.presentation.group.component.drawer.StudiesDrawerContent
 import com.ssafy.neegongnaegong.presentation.navigation.AppNavigation
@@ -46,13 +51,19 @@ import com.ssafy.neegongnaegong.presentation.personal.PersonalViewModel
 import com.ssafy.neegongnaegong.presentation.timer.TimerActivity
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongPreviews
 import com.ssafy.neegongnaegong.presentation.ui.theme.NeeGongNaeGongTheme
+import com.ssafy.neegongnaegong.presentation.util.openPlayStoreForUpdate
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
     navController: NavHostController,
     startDestination: AppNavigation.Tab,
+    updateStatusViewModel: UpdateStatusViewModel = hiltViewModel(),
 ) {
+    val updateStatus by updateStatusViewModel.updateStatus.collectAsStateWithLifecycle()
+    // 업데이트 다이얼로그를 띄울지 결정하는 상태
+    var showUpdateDialog by remember { mutableStateOf(false) }
+
     val resultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val needRefresh = result.data?.getBooleanExtra("needRefreshRecordList", false) ?: false
@@ -110,6 +121,28 @@ fun MainScreen(
 
     LaunchedEffect(studiesDrawerState.currentValue) {
         enableGestures.value = studiesDrawerState.isOpen
+    }
+
+    // 앱이 처음 시작될 때 업데이트가 있는지 '정보'만 확인
+    LaunchedEffect(updateStatus) {
+        if (updateStatus.updateAvailability) {
+            showUpdateDialog = true
+        }
+    }
+
+    // 업데이트 다이얼로그
+    if (showUpdateDialog) {
+        InAppUpdateDialog(
+            onUpdateClick = {
+                // 업데이트 버튼 누르면 플레이스토어로 이동
+                openPlayStoreForUpdate(context)
+                showUpdateDialog = false
+            },
+            onDismiss = {
+                updateStatusViewModel.skipUpdate(updateStatus.availableVersionCode)
+                showUpdateDialog = false
+            },
+        )
     }
 
     CompositionLocalProvider(

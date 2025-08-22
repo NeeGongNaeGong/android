@@ -28,7 +28,7 @@ android {
         applicationId = "com.ssafy.neegongnaegong"
         minSdk = 28
         targetSdk = 35
-        versionCode = 4
+        versionCode = 11
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -156,6 +156,11 @@ dependencies {
 
     // firebase
     implementation(libs.firebase.crashlytics)
+
+    // 플레이스토어 인앱 업데이트
+    implementation(libs.app.update)
+    // 플레이 스토어 인앱 업데이트 코틀린 확장 라이브러리
+    implementation(libs.app.update.ktx)
 }
 
 // ./gradlew assembleRelease -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true 를 이용해서 성능 및 보고서 생성 가능

@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -57,7 +58,9 @@ class MainActivity : ComponentActivity() {
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             if (!state.isLoading) {
-                val destination: AppNavigation.Tab = if (state.isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Tab.Auth
+                val destination: AppNavigation.Tab =
+                    if (state.isLoginSuccess) AppNavigation.Tab.Studies else AppNavigation.Tab.Auth
+
                 NeeGongNaeGongTheme {
                     Surface(color = NeeGongNaeGongTheme.colorScheme.background) {
                         MainScreen(navController, destination)
