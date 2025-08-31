@@ -87,10 +87,10 @@ class NetworkStudyGroupDataSourceImpl
 
         override fun deleteVoteDetail(
             studyGroupId: Long,
-            noticeId: Long,
+            voteId: Long,
         ): Flow<Unit> =
             apiFlow {
-                api.deleteVoteDetail(studyGroupId, noticeId)
+                api.deleteVoteDetail(studyGroupId, voteId)
             }
 
         override fun castVote(
