@@ -127,7 +127,7 @@ fun NavGraphBuilder.studiesNavGraph(navController: NavController) {
                 deepLinks =
                     listOf(
                         navDeepLink {
-                            uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}/manage/{role}"
+                            uriPattern = "$BASE_DEEP_LINK/study-group/{studyGroupId}/manage/{role}/join-approval"
                             action = Intent.ACTION_VIEW
                         },
                     ),
