@@ -41,7 +41,7 @@ fun StudiesApplicationJoinUnit(
     onReject: (Long) -> Unit = {},
 ) {
     val (backgroundColor, visibleButton) =
-        if (role in listOf(Role.TEAM_MANAGER, Role.PENDING)) {
+        if (role in listOf(Role.TEAM_MEMBER, Role.PENDING)) {
             Pair(NeeGongNaeGongTheme.colorScheme.background, false)
         } else {
             when (status) {
@@ -180,7 +180,7 @@ private fun PreviewApprovedStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
-            role = Role.TEAM_MEMBER,
+            role = Role.TEAM_MANAGER,
             status = StudiesJoinApplicationStatus.APPROVED,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
@@ -196,7 +196,7 @@ private fun PreviewRejectedStudiesApplicationJoinUnit() {
     NeeGongNaeGongTheme {
         StudiesApplicationJoinUnit(
             name = "심터디",
-            role = Role.TEAM_MEMBER,
+            role = Role.TEAM_MANAGER,
             status = StudiesJoinApplicationStatus.REJECTED,
             userId = 1,
             profileImageUrl = "https://picsum.photos/200",
